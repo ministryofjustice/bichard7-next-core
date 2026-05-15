@@ -8,13 +8,13 @@
           "additionalOffenceMarker": false,
           "adjudication": "G",
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100002213D",
+          "arrestSummonsReference": "26/0000/00/100002722G",
           "chargeStatusMarker": "C",
           "cjsOffenceCode": "RT88007",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/9998/001802P",
-          "crimeReference": "VHGCIERHKQ0MLPH",
+          "courtCaseReferenceNumber": "26/1910/000023H",
+          "crimeReference": "4BKBZXQVX8/KK7M",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -47,10 +47,10 @@
       ],
       "convictionDate": "2011-09-26",
       "court": {
-        "courtIdentityType": "name",
-        "courtName": "Magistrates' Courts Hertfordshire St Albans"
+        "courtCode": "1910",
+        "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/9998/001802P",
+      "courtCaseReference": "26/1910/000023H",
       "subsequentAppearances": []
     }
   ],

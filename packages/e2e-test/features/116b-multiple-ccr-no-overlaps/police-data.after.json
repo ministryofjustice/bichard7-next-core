@@ -8,13 +8,64 @@
           "additionalOffenceMarker": false,
           "adjudication": "G",
           "arrestChargeNumber": 2,
-          "arrestSummonsReference": "26/0000/00/100002583F",
+          "arrestSummonsReference": "26/0000/00/100002862J",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "PC53001",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000905K",
+          "crimeReference": "IEVWQKLGDKZO4RX",
+          "forceStationChargeOrig": "01VK",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "1 Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01VK",
+          "npccOffenceCode": "11.6.4.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "PC53001",
+          "results": [
+            {
+              "disposalCode": "1002",
+              "disposalDuration": {
+                "count": 9,
+                "units": "months"
+              },
+              "disposalQualifierCodes": []
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2009-06-01"
+        }
+      ],
+      "convictionDate": "2009-11-01",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000905K",
+      "subsequentAppearances": []
+    },
+    {
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 3,
+          "arrestSummonsReference": "26/0000/00/100002862J",
           "chargeStatusMarker": "C",
           "cjsOffenceCode": "TH68001",
           "committedOnBail": false,
           "courtCaseChargeNumber": 2,
-          "courtCaseReferenceNumber": "26/9998/002122M",
-          "crimeReference": "0WJCM71N7HSZFQP",
+          "courtCaseReferenceNumber": "26/2576/000904J",
+          "crimeReference": "QMOVS8T TMW1DSG",
           "forceStationChargeOrig": "01VK",
           "legislationQualifier": [],
           "locationAddress": {
@@ -44,13 +95,13 @@
           "additionalOffenceMarker": false,
           "adjudication": "N",
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100002583F",
+          "arrestSummonsReference": "26/0000/00/100002862J",
           "chargeStatusMarker": "C",
           "cjsOffenceCode": "OF61016",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/9998/002122M",
-          "crimeReference": "OFPSAKNWTKRML4Q",
+          "courtCaseReferenceNumber": "26/2576/000904J",
+          "crimeReference": "FABF50WJDXX8U3I",
           "forceStationChargeOrig": "01VK",
           "legislationQualifier": [],
           "locationAddress": {
@@ -77,10 +128,10 @@
       ],
       "convictionDate": "2009-10-01",
       "court": {
-        "courtIdentityType": "name",
-        "courtName": "Magistrates' Courts London Croydon"
+        "courtCode": "2576",
+        "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/9998/002122M",
+      "courtCaseReference": "26/2576/000904J",
       "subsequentAppearances": [
         {
           "appearanceNumber": 1,
@@ -89,14 +140,14 @@
               "additionalMarker": false,
               "additionalOffenceMarker": false,
               "adjudication": "G",
-              "arrestChargeNumber": 2,
-              "arrestSummonsReference": "26/0000/00/100002583F",
+              "arrestChargeNumber": 3,
+              "arrestSummonsReference": "26/0000/00/100002862J",
               "chargeStatusMarker": "C",
               "cjsOffenceCode": "TH68001",
               "committedOnBail": false,
               "courtCaseChargeNumber": 2,
-              "courtCaseReferenceNumber": "26/9998/002122M",
-              "crimeReference": "0WJCM71N7HSZFQP",
+              "courtCaseReferenceNumber": "26/2576/000904J",
+              "crimeReference": "QMOVS8T TMW1DSG",
               "forceStationChargeOrig": "01VK",
               "legislationQualifier": [],
               "locationAddress": {
@@ -133,57 +184,6 @@
           "sentenceDate": "2009-11-01"
         }
       ]
-    },
-    {
-      "caseStatusMarker": "C",
-      "charges": [
-        {
-          "additionalMarker": false,
-          "additionalOffenceMarker": false,
-          "adjudication": "G",
-          "arrestChargeNumber": 3,
-          "arrestSummonsReference": "26/0000/00/100002583F",
-          "chargeStatusMarker": "C",
-          "cjsOffenceCode": "PC53001",
-          "committedOnBail": false,
-          "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/2576/000634Q",
-          "crimeReference": "V2FF0MEQ0Y1YHX8",
-          "forceStationChargeOrig": "01VK",
-          "legislationQualifier": [],
-          "locationAddress": {
-            "locationText": "1 Kingston High Street",
-            "locationType": "description"
-          },
-          "locationFSCode": "01VK",
-          "npccOffenceCode": "11.6.4.1",
-          "offenceChargeNumber": 1,
-          "offenceDescription": [],
-          "offencesTakenIntoConsideration": 0,
-          "othersCharged": [],
-          "plea": "2",
-          "qualifiedCjsCode": "PC53001",
-          "results": [
-            {
-              "disposalCode": "1002",
-              "disposalDuration": {
-                "count": 9,
-                "units": "months"
-              },
-              "disposalQualifierCodes": []
-            }
-          ],
-          "roleQualifier": [],
-          "startDate": "2009-06-01"
-        }
-      ],
-      "convictionDate": "2009-11-01",
-      "court": {
-        "courtCode": "2576",
-        "courtIdentityType": "code"
-      },
-      "courtCaseReference": "26/2576/000634Q",
-      "subsequentAppearances": []
     }
   ],
   "remands": [
