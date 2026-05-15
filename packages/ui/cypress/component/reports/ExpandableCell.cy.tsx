@@ -73,4 +73,26 @@ describe("<ReportTableRow />", () => {
         cy.get("@expandableCell").should("contain", "show less")
       })
   })
+
+  it("renders abbreviated text when 'show less' button is clicked", () => {
+    cy.mount(
+      <table>
+        <tbody>
+          <ReportTableRow row={mockRow} columns={mockColumns} />
+        </tbody>
+      </table>
+    )
+
+    cy.get("td")
+      .eq(4)
+      .within(() => {
+        cy.get('[data-testid="expandable-cell"]').as("expandableCell")
+        cy.get("@expandableCell").should("exist").find("button").click()
+        cy.get("@expandableCell").should("exist").find("button").click()
+
+        cy.get('[data-testid="expandable-cell-text"]')
+          .should("exist")
+          .should("have.text", "Lorem ipsum dolor sit amet, co...")
+      })
+  })
 })
