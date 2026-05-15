@@ -10,7 +10,6 @@ export default (ncm: string, { policeApi }: Bichard) => [
       <TXT>I1008 - GWAY - ENQUIRY ERROR MORE THAN 3 DISPOSAL GROUPS 09/0000/00/20004H                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </TXT>
       <GMT>000003073ENQR010175E</GMT>
     </CXU02>`,
-    expectedRequest: "",
     count: 1
   }),
   policeApi.mockUpdate("CXU02", {
