@@ -1,7 +1,5 @@
-import type { ReportColumn } from "./Columns"
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
-
-type Formatter = "date" | "datetime"
+import type { ReportColumn } from "./Columns"
 
 export type ReportStructure = "flat" | "grouped" | "nested"
 
@@ -20,6 +18,10 @@ export type FlatReportConfig<TRow> = {
   columns: ReportColumn<TRow>[]
 } & BaseConfig
 
+export interface Formatter {
+  formatter?: "date" | "datetime"
+}
+
 export type GroupedReportConfig<TGroup, TRow> = {
   structure: Extract<ReportStructure, "grouped">
   groupNameKey: Extract<keyof TGroup, string>
@@ -27,7 +29,10 @@ export type GroupedReportConfig<TGroup, TRow> = {
   columns: ReportColumn<TRow>[]
   formatter?: Formatter
   totalsConfig?: TotalColumnConfig[]
-} & BaseConfig
+} & BaseConfig &
+  Formatter
+
+export type ColumnResolver<T> = (data: unknown) => ReportColumn<T>[]
 
 export type NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow> = {
   structure: Extract<ReportStructure, "nested">
@@ -35,10 +40,12 @@ export type NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow> = {
   outerDataListKey: Extract<keyof TOuterGroup, string>
   innerGroupNameKey: Extract<keyof TInnerGroup, string>
   innerDataListKey: Extract<keyof TInnerGroup, string>
-  columns: ReportColumn<TRow>[]
+  columns: ReportColumn<TRow>[] | Record<string, ReportColumn<TRow>[]>
+  columnSelectorKey: keyof TInnerGroup
   formatter?: Formatter
   totalsConfig?: TotalColumnConfig[]
-} & BaseConfig
+} & BaseConfig &
+  Formatter
 
 export type ReportConfig<TOuterGroup = Record<string, never>, TInnerGroup = Record<string, never>, TRow = never> =
   | FlatReportConfig<TRow>
