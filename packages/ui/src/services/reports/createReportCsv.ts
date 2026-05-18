@@ -1,3 +1,4 @@
+import getMappedColumns from "@/utils/reports/getMappedColumns"
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { csvMetadata } from "services/reports/utils/csvMetadata"
 import { escapeCsvCell } from "services/reports/utils/escapeCsvCell"
@@ -12,9 +13,39 @@ export const createReportCsv = async (
   toDate: string | null
 ): Promise<Blob> => {
   const csvChunks: string[] = ["", csvMetadata(reportType, fromDate, toDate), ""]
-
   if (config.structure === "nested") {
-    return new Blob([], { type: "text/csv;charset=utf-8;" })
+    parsedData.forEach((group) => {
+      const groupName = group[config.outerGroupNameKey]
+      const dataList = group[config.outerDataListKey]
+
+      if (!Array.isArray(dataList)) {
+        return
+      }
+
+      dataList.forEach((innerGroup) => {
+        const innerGroupName = innerGroup[config.innerGroupNameKey]
+        const innerDataList = innerGroup[config.innerDataListKey]
+
+        if (!Array.isArray(innerDataList)) {
+          return
+        }
+
+        const mappedColumns = getMappedColumns(config, innerGroup)
+
+        csvChunks.push(
+          `"",${escapeCsvCell(groupName)},${escapeCsvCell(innerGroupName)}`,
+          mappedColumns.map((col) => escapeCsvCell(col.header)).join(",")
+        )
+
+        innerDataList.forEach((rawRow) => {
+          if (isRecord(rawRow)) {
+            csvChunks.push(mappedColumns.map((col) => escapeCsvCell(rawRow[col.key])).join(","))
+          }
+        })
+      })
+    })
+
+    return new Blob([csvChunks.join("\n")], { type: "text/csv;charset=utf-8;" })
   }
 
   if (config.structure === "grouped") {
