@@ -19,7 +19,7 @@ export const mapToUserPerformanceDetailDtoDay = (date: Date, row?: UserDetailJso
         ...exc,
         description: ExceptionMap.get(exc.code) ?? "Description unavailable",
         type: "exception" as const,
-        users: exc.users.map((user) => ({
+        users: exc.users?.map((user) => ({
           ...user,
           fullName: user.fullName || user.username
         }))
@@ -28,7 +28,7 @@ export const mapToUserPerformanceDetailDtoDay = (date: Date, row?: UserDetailJso
         ...trig,
         description: TriggerMap.get(trig.code) ?? "Description unavailable",
         type: "trigger" as const,
-        users: trig.users.map((user) => ({
+        users: trig.users?.map((user) => ({
           ...user,
           fullName: user.fullName || user.username
         }))
