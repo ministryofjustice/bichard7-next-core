@@ -1,5 +1,5 @@
 import type { NestedGroupedReportConfig } from "@/types/reports/Config"
-import getMappedColumns from "./getMappedColumns"
+import { getMappedColumns } from "./getMappedColumns"
 
 describe("getMappedColumns", () => {
   const mockColumnsA = [{ header: "Column A", key: "a" }]
