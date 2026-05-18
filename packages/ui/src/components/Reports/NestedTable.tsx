@@ -32,7 +32,7 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
     }
   })
 
-  const getResolvedColumns = <TOuter, TInner, TRow>(
+  const getMappedColumns = <TOuter, TInner, TRow>(
     config: NestedGroupedReportConfig<TOuter, TInner, TRow>,
     innerGroup: Record<string, unknown>
   ): BaseReportColumn[] => {
@@ -78,11 +78,11 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
               {renderableInnerGroups.map((innerGroup, index) => {
                 const innerGroupName = ensureString(innerGroup[config.innerGroupNameKey])
 
-                const resolvedColumns = getResolvedColumns(config, innerGroup)
+                const mappedColumns = getMappedColumns(config, innerGroup)
 
                 const innerConfig: FlatReportConfig<Record<string, unknown>> = {
                   structure: "flat",
-                  columns: resolvedColumns,
+                  columns: mappedColumns,
                   endpoint: config.endpoint,
                   reportType: config.reportType
                 }
