@@ -1,10 +1,10 @@
 import { ReportTable } from "@/features/ReportSelectionFilter/ReportTable"
 import { ensureString } from "@/services/reports/utils/ensureString"
 import { formatGroupName } from "@/services/reports/utils/formatGroupName"
-import { BaseReportColumn, ReportColumn } from "@/types/reports/Columns"
+import { getMappedColumns } from "@/services/reports/utils/getMappedColumns"
 import { isRecord } from "services/reports/utils/isRecord"
 import { isRecordArray } from "services/reports/utils/isRecordArray"
-import { FlatReportConfig, NestedGroupedReportConfig, ReportConfig } from "types/reports/Config"
+import { FlatReportConfig, ReportConfig } from "types/reports/Config"
 import { ReportContainer } from "./GroupTable.styles"
 import { Totals } from "./Totals"
 
@@ -31,21 +31,6 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
       totals
     }
   })
-
-  const getResolvedColumns = <TOuter, TInner, TRow>(
-    config: NestedGroupedReportConfig<TOuter, TInner, TRow>,
-    innerGroup: Record<string, unknown>
-  ): BaseReportColumn[] => {
-    const cols = config.columns
-
-    if (config.columnSelectorKey && typeof cols === "object") {
-      const selectorValue = String(innerGroup[config.columnSelectorKey as string])
-      const dynamicCols = (cols as Record<string, ReportColumn<unknown>[]>)[selectorValue]
-      return dynamicCols || []
-    }
-
-    return []
-  }
 
   return (
     <ReportContainer className="report-container">
@@ -78,11 +63,11 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
               {renderableInnerGroups.map((innerGroup, index) => {
                 const innerGroupName = ensureString(innerGroup[config.innerGroupNameKey])
 
-                const resolvedColumns = getResolvedColumns(config, innerGroup)
+                const mappedColumns = getMappedColumns(config, innerGroup)
 
                 const innerConfig: FlatReportConfig<Record<string, unknown>> = {
                   structure: "flat",
-                  columns: resolvedColumns,
+                  columns: mappedColumns,
                   endpoint: config.endpoint,
                   reportType: config.reportType
                 }
@@ -93,11 +78,11 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
 
                 return (
                   <section key={innerSectionId} aria-labelledby={innerSectionId}>
-                    <h3 id={innerSectionId} className="govuk-heading-m">
+                    <h4 id={innerSectionId} className="govuk-heading-m">
                       {innerGroupName}
 
                       <Totals totals={innerGroup.totals} totalsConfig={config.totalsConfig} />
-                    </h3>
+                    </h4>
                     <ReportTable
                       key={innerSectionId}
                       config={innerConfig}

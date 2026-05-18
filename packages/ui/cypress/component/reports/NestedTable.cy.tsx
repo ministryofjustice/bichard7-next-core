@@ -54,11 +54,11 @@ describe("NestedTable", () => {
   it("renders inner group headers and their respective totals", () => {
     cy.mount(<NestedTable config={mockConfig} groups={mockGroups} />)
 
-    cy.get("h3").should("contain.text", "Alpha")
-    cy.get("h3").should("contain.text", "People Ops")
+    cy.get("h4").should("contain.text", "Alpha")
+    cy.get("h4").should("contain.text", "People Ops")
 
-    cy.get("h3").should("contain.text", "Count: 2")
-    cy.get("h3").should("contain.text", "Count: 1")
+    cy.get("h4").should("contain.text", "Count: 2")
+    cy.get("h4").should("contain.text", "Count: 1")
   })
 
   it("maps the correct columns based on the columnSelectorKey value", () => {
@@ -105,6 +105,6 @@ describe("NestedTable", () => {
 
     cy.mount(<NestedTable config={mockConfig} groups={noTotalsGroup} />)
 
-    cy.get("h3").contains("No Totals").invoke("text").should("not.contain", "Count:")
+    cy.get("h4").contains("No Totals").invoke("text").should("not.contain", "Count:")
   })
 })

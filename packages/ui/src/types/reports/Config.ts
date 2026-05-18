@@ -40,7 +40,7 @@ export type NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow> = {
   outerDataListKey: Extract<keyof TOuterGroup, string>
   innerGroupNameKey: Extract<keyof TInnerGroup, string>
   innerDataListKey: Extract<keyof TInnerGroup, string>
-  columns: ReportColumn<TRow>[] | Record<string, ReportColumn<TRow>[]>
+  columns: Record<string, ReportColumn<TRow>[]>
   columnSelectorKey: keyof TInnerGroup
   formatter?: Formatter
   totalsConfig?: TotalColumnConfig[]
