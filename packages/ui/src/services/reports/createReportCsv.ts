@@ -4,6 +4,7 @@ import { csvMetadata } from "services/reports/utils/csvMetadata"
 import { escapeCsvCell } from "services/reports/utils/escapeCsvCell"
 import { isRecord } from "services/reports/utils/isRecord"
 import type { ReportConfig } from "types/reports/Config"
+import { formatGroupName } from "./utils/formatGroupName"
 
 export const createReportCsv = async (
   parsedData: Record<string, unknown>[],
@@ -15,8 +16,10 @@ export const createReportCsv = async (
   const csvChunks: string[] = ["", csvMetadata(reportType, fromDate, toDate), ""]
   if (config.structure === "nested") {
     parsedData.forEach((group) => {
-      const groupName = group[config.outerGroupNameKey]
+      const groupName = group[config.outerGroupNameKey] as string
       const dataList = group[config.outerDataListKey]
+
+      const formattedGroupName = config.formatter ? formatGroupName(config, groupName) : groupName
 
       if (!Array.isArray(dataList)) {
         return
@@ -33,7 +36,7 @@ export const createReportCsv = async (
         const mappedColumns = getMappedColumns(config, innerGroup)
 
         csvChunks.push(
-          `"",${escapeCsvCell(groupName)},${escapeCsvCell(innerGroupName)}`,
+          `"",${escapeCsvCell(formattedGroupName)},${escapeCsvCell(innerGroupName)}`,
           mappedColumns.map((col) => escapeCsvCell(col.header)).join(",")
         )
 
@@ -48,14 +51,19 @@ export const createReportCsv = async (
 
   if (config.structure === "grouped") {
     parsedData.forEach((group) => {
-      const groupName = group[config.groupNameKey]
+      const groupName = group[config.groupNameKey] as string
       const dataList = group[config.dataListKey]
+
+      const formattedGroupName = config.formatter ? formatGroupName(config, groupName) : groupName
 
       if (!Array.isArray(dataList)) {
         return
       }
 
-      csvChunks.push(`"",${escapeCsvCell(groupName)}`, config.columns.map((col) => escapeCsvCell(col.header)).join(","))
+      csvChunks.push(
+        `"",${escapeCsvCell(formattedGroupName)}`,
+        config.columns.map((col) => escapeCsvCell(col.header)).join(",")
+      )
 
       dataList.forEach((rawRow) => {
         if (isRecord(rawRow)) {
