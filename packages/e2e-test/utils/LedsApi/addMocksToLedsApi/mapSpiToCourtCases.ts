@@ -37,6 +37,7 @@ const mapSpiToCourtCases = (spi: IncomingMessageParsedXml): NonEmptyCourtCaseArr
     organisationUnit.find(
       (ou) => ou.topLevelCode === hearingLocation[0] && ou.secondLevelCode === hearingLocation.substring(1, 3)
     )
+  const courtCode = courtOrganisationUnit?.thirdLevelPsaCode
   const courtName = [
     courtOrganisationUnit?.topLevelName,
     courtOrganisationUnit?.secondLevelName,
@@ -55,10 +56,15 @@ const mapSpiToCourtCases = (spi: IncomingMessageParsedXml): NonEmptyCourtCaseArr
       dateOfHearing,
       courtHearingLocation,
       offences,
-      court: {
-        courtIdentityType: "name",
-        courtName
-      }
+      court: courtCode
+        ? {
+            courtIdentityType: "code",
+            courtCode
+          }
+        : {
+            courtIdentityType: "name",
+            courtName
+          }
     }
   ]
 }

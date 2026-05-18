@@ -1,0 +1,90 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002781W",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "TH68023",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 2,
+          "courtCaseReferenceNumber": "26/2576/000847X",
+          "crimeReference": "55LOO6E1ABGGIIH",
+          "forceStationChargeOrig": "01VK",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01VK",
+          "npccOffenceCode": "5.1.1.1",
+          "offenceChargeNumber": 2,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "TH68023",
+          "results": [
+            {
+              "disposalCode": "1002",
+              "disposalDuration": {
+                "count": 3,
+                "units": "months"
+              },
+              "disposalQualifierCodes": []
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2009-10-01"
+        },
+        {
+          "additionalMarker": true,
+          "additionalOffenceMarker": true,
+          "adjudication": "G",
+          "arrestChargeNumber": 2,
+          "arrestSummonsReference": "26/0000/00/100002781W",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "CJ03511",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000847X",
+          "forceStationChargeOrig": "01YZ",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01VK",
+          "npccOffenceCode": "8.7.69.4",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "1",
+          "qualifiedCjsCode": "CJ03511",
+          "results": [
+            {
+              "disposalCode": "1029",
+              "disposalQualifierCodes": []
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2009-10-01"
+        }
+      ],
+      "convictionDate": "2009-10-26",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000847X",
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}

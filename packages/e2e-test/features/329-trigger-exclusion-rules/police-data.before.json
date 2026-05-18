@@ -1,0 +1,44 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002812E",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "TH68023",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000869W",
+          "crimeReference": "YG5AOJYGUXNTH7W",
+          "endDate": "1993-11-28",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "11 Meudon Avenue Farnborough",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.1.1.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "TH68023",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "1993-11-28"
+        }
+      ],
+      "convictionDate": "2008-09-28",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000869W"
+    }
+  ],
+  "remands": []
+}

@@ -1,0 +1,110 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002599Y",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "CJ88116",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000651J",
+          "crimeReference": "SLPAHIT KK0A RQ",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "1.8.11.2",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "CJ88116",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2010-11-28"
+        }
+      ],
+      "convictionDate": "2011-09-26",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000651J"
+    }
+  ],
+  "remands": [
+    {
+      "appearanceResult": "remanded-on-bail",
+      "currentAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        }
+      },
+      "nextAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        },
+        "date": "2011-10-26"
+      },
+      "ownerCode": "01YZ",
+      "remandConditions": [
+        "Exclusion: not to contact directly or indirectly\nSome One save via a solicitor to arrange contact\nwith child\n",
+        "Exclusion: not to enter Some Road or Some Lane in\nSome Place until he has attended in the company of\na Police oficer to confirm Some One has left the\narea"
+      ],
+      "remandDate": "2011-09-26"
+    },
+    {
+      "appearanceResult": "remanded-on-bail",
+      "currentAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        }
+      },
+      "nextAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        },
+        "date": "2011-10-26"
+      },
+      "ownerCode": "01YZ",
+      "remandConditions": [
+        "Exclusion: not to contact directly or indirectly\nSome One save via a solicitor to arrange contact\nwith child\n",
+        "Exclusion: not to enter Some Road or Some Lane in\nSome Place until he has attended in the company of\na Police oficer to confirm Some One has left the\narea"
+      ],
+      "remandDate": "2011-10-10"
+    },
+    {
+      "appearanceResult": "remanded-on-bail",
+      "currentAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        }
+      },
+      "nextAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        },
+        "date": "2011-11-26"
+      },
+      "ownerCode": "01YZ",
+      "remandConditions": [
+        "Exclusion: not to contact directly or indirectly\nSome One save via a solicitor to arrange contact\nwith child\n",
+        "Exclusion: not to enter Some Road or Some Lane in\nSome Place until he has attended in the company of\na Police oficer to confirm Some One has left the\narea"
+      ],
+      "remandDate": "2011-10-26"
+    }
+  ]
+}

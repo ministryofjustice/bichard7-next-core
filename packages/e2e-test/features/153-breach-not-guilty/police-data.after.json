@@ -1,0 +1,52 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "N",
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002604D",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "CJ03510",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000655N",
+          "crimeReference": "G9DDU45PICPLOUQ",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "8.7.69.3",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "3",
+          "qualifiedCjsCode": "CJ03510",
+          "results": [
+            {
+              "disposalCode": "2004",
+              "disposalQualifierCodes": []
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2010-10-01"
+        }
+      ],
+      "convictionDate": "2011-10-26",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000655N",
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}
