@@ -44,8 +44,6 @@ export const createReportCsv = async (
         })
       })
     })
-
-    return new Blob([csvChunks.join("\n")], { type: "text/csv;charset=utf-8;" })
   }
 
   if (config.structure === "grouped") {
@@ -65,7 +63,9 @@ export const createReportCsv = async (
         }
       })
     })
-  } else {
+  }
+
+  if (config.structure === "flat") {
     csvChunks.push(config.columns.map((col) => escapeCsvCell(col.header)).join(","))
     parsedData.forEach((row) => {
       csvChunks.push(config.columns.map((col) => escapeCsvCell(row[col.key])).join(","))
