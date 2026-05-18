@@ -49,6 +49,20 @@ describe("createReportCsv", () => {
     ]
   }
 
+  const nestedConfig = {
+    ...commonConfigPart,
+    structure: "nested",
+    outerGroupNameKey: "outerGroupName",
+    outerDataListKey: "outerDataList",
+    innerGroupNameKey: "innerGroupName",
+    innerDataListKey: "innerDataList",
+    columns: {
+      typeA: [{ header: "TypeAHeader", key: "name" }],
+      typeB: [{ header: "TypeBHeader", key: "name" }]
+    },
+    columnSelectorKey: "type"
+  } as unknown as ReportConfig
+
   it("should generate a valid CSV Blob for an ungrouped report", async () => {
     const config: ReportConfig = {
       ...commonConfigPart,
@@ -152,5 +166,114 @@ describe("createReportCsv", () => {
     expect(lines[4]).toBe("ID,Name")
     expect(lines[5]).toBe("10,Case 1")
     expect(lines[6]).toBeUndefined()
+  })
+
+  it("should generate a valid CSV Blob for a nested report", async () => {
+    const data = [
+      {
+        outerGroupName: "Outer Group A",
+        outerDataList: [
+          {
+            innerGroupName: "Inner Group 1",
+            type: "typeA",
+            innerDataList: [
+              { id: 10, name: "Case 1" },
+              { id: 11, name: "Case 2" }
+            ]
+          }
+        ]
+      }
+    ]
+
+    const mockMappedCols = [{ header: "TypeAHeader", key: "name" }]
+    mockedGetMappedColumns.mockReturnValue(mockMappedCols)
+
+    const result = await createReportCsv(
+      data as Record<string, unknown>[],
+      nestedConfig,
+      "NESTED_REPORT" as ReportType,
+      null,
+      null
+    )
+
+    const blobContent = (result as any).content[0]
+    const lines = blobContent.split("\n")
+
+    expect(lines[3]).toBe('"",Outer Group A,Inner Group 1')
+    expect(lines[4]).toBe("TypeAHeader")
+    expect(lines[5]).toBe("Case 1")
+    expect(lines[6]).toBe("Case 2")
+    expect(mockedGetMappedColumns).toHaveBeenCalledWith(nestedConfig, data[0].outerDataList[0])
+  })
+
+  it("should skip nested generation if outerDataList is not an array", async () => {
+    const data = [
+      {
+        outerGroupName: "Outer Group A",
+        outerDataList: "Not an array"
+      }
+    ]
+
+    const result = await createReportCsv(data, nestedConfig, "NESTED_REPORT" as ReportType, null, null)
+    const blobContent = (result as any).content[0]
+    const lines = blobContent.split("\n")
+
+    expect(lines).toHaveLength(3)
+  })
+
+  it("should skip nested generation if innerDataList is not an array", async () => {
+    const data = [
+      {
+        outerGroupName: "Outer Group A",
+        outerDataList: [
+          {
+            innerGroupName: "Inner Group 1",
+            type: "typeA",
+            innerDataList: "Not an array"
+          }
+        ]
+      }
+    ]
+
+    const result = await createReportCsv(data, nestedConfig, "NESTED_REPORT" as ReportType, null, null)
+    const blobContent = (result as any).content[0]
+    const lines = blobContent.split("\n")
+
+    expect(lines).toHaveLength(3)
+  })
+
+  it("should skip row generation if innerDataItem is not a record", async () => {
+    const data = [
+      {
+        outerGroupName: "Outer Group A",
+        outerDataList: [
+          {
+            innerGroupName: "Inner Group 1",
+            type: "typeA",
+            innerDataList: [{ id: 10, name: "Case 1" }, "Invalid String Row"]
+          }
+        ]
+      }
+    ]
+
+    const mockMappedCols = [{ header: "TypeAHeader", key: "name" }]
+    mockedGetMappedColumns.mockReturnValue(mockMappedCols)
+
+    const result = await createReportCsv(
+      data as Record<string, unknown>[],
+      nestedConfig,
+      "NESTED_REPORT" as ReportType,
+      null,
+      null
+    )
+
+    const blobContent = (result as any).content[0]
+    const lines = blobContent.split("\n")
+
+    expect(lines[3]).toBe('"",Outer Group A,Inner Group 1')
+    expect(lines[4]).toBe("TypeAHeader")
+    expect(lines[5]).toBe("Case 1")
+    expect(lines[6]).toBe("undefined")
+    expect(mockedGetMappedColumns).toHaveBeenCalledWith(nestedConfig, data[0].outerDataList[0])
   })
 })
