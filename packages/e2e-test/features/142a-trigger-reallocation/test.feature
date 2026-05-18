@@ -47,7 +47,6 @@ Feature: {142a} Trigger Reallocation
     When I open the record for "Allocation Trigger"
       And I click the "Notes" tab
     Then I see "Error codes: 1 x HO100206" in the table
-    And I wait 3000 seconds
       And I see "essex.user: Portal Action: Resolved Trigger. Code: PR04" in the table
       And I see "essex.user: Portal Action: Update Applied. Element: asn. New Value:" in the table
       And I see "essex.user: Portal Action: Resubmitted Message" in the table
