@@ -47,7 +47,7 @@ export type NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow> = {
 } & BaseConfig &
   Formatter
 
-export type ReportConfig<TOuterGroup = Record<string, never>, TInnerGroup = Record<string, never>, TRow = never> =
+export type ReportConfig<TOuterGroup = Record<string, never>, TInnerGroup = Record<string, never>, TRow = unknown> =
   | FlatReportConfig<TRow>
   | GroupedReportConfig<TOuterGroup, TRow>
   | NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow>

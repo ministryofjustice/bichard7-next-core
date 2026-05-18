@@ -12,7 +12,6 @@ import type {
   UserPerformanceSummaryDto
 } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
-import type { ReportDataMap } from "services/api/BichardV1Report"
 import {
   bailsColumns,
   codeDetailUserColumns,
@@ -21,14 +20,9 @@ import {
   userPerformanceSummaryColumns,
   warrantsColumns
 } from "types/reports/Columns"
-import type {
-  FlatReportConfig,
-  GroupedReportConfig,
-  NestedGroupedReportConfig,
-  ReportConfig
-} from "types/reports/Config"
+import type { FlatReportConfig, GroupedReportConfig, NestedGroupedReportConfig } from "types/reports/Config"
 
-export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
+export const ReportConfigs = {
   bails: {
     endpoint: V1.CasesReportsBails,
     structure: "flat",

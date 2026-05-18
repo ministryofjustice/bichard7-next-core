@@ -27,7 +27,9 @@ export const ReportSelectionFilter: React.FC = () => {
 
   const [filterValues, dispatch] = useReducer(filterReducer, initialFilterState)
 
-  const config = filterValues.reportType ? ReportConfigs[filterValues.reportType as keyof typeof ReportConfigs] : null
+  const config = filterValues.reportType
+    ? (ReportConfigs[filterValues.reportType as keyof typeof ReportConfigs] as unknown as ReportConfig)
+    : null
 
   const handleSetDateFrom = (date: string) => {
     dispatch({ type: "SET_DATE_FROM", payload: date })

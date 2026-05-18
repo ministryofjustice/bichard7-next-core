@@ -1,21 +1,44 @@
 import { ReportTableHeader } from "components/Reports/ReportTableHeader"
 import { Table } from "components/Table"
-import { ReportConfig } from "types/reports/Config"
+import { FlatReportConfig } from "types/reports/Config"
 import { ReportTableBody } from "./ReportTableBody"
+import { Totals } from "./Totals"
+import { REPORT_TYPE_MAP } from "@moj-bichard7/common/types/reports/ReportType"
+import { calculateTotalsForFlatStructure } from "@/utils/reports/calculateTotalsForFlatStructure"
 
 interface SimpleTableProps<T> {
-  config: ReportConfig
+  config: FlatReportConfig<T>
   rows: T[]
   tableName: string
+  nested: boolean
 }
 
-export const SimpleTable = <T extends Record<string, unknown>>({ config, rows, tableName }: SimpleTableProps<T>) => {
+export const SimpleTable = <T extends Record<string, unknown>>({
+  config,
+  rows,
+  tableName,
+  nested
+}: SimpleTableProps<T>) => {
   if (config.structure !== "flat") {
     return null
   }
 
+  const totals = calculateTotalsForFlatStructure(rows, config.totalsConfig, config.calculateTotalsCallback)
+
   return (
     <section aria-label={`${tableName} container`}>
+      {nested ? null : (
+        <div>
+          <div className="govuk-body">
+            <strong>
+              {REPORT_TYPE_MAP[config.reportType]} {"report"}
+            </strong>
+
+            <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} />
+          </div>
+        </div>
+      )}
+
       <Table>
         <caption className={"govuk-visually-hidden"}>{tableName}</caption>
 
