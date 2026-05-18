@@ -21,7 +21,7 @@ export const mapToUserPerformanceDetailDtoDay = (date: Date, row?: UserDetailJso
         type: "exception" as const,
         users: exc.users.map((user) => ({
           ...user,
-          fullName: user.fullName || user.username
+          fullName: user.fullName ?? user.username
         }))
       })),
       ...row.triggers.map((trig) => ({
@@ -30,7 +30,7 @@ export const mapToUserPerformanceDetailDtoDay = (date: Date, row?: UserDetailJso
         type: "trigger" as const,
         users: trig.users.map((user) => ({
           ...user,
-          fullName: user.fullName || user.username
+          fullName: user.fullName ?? user.username
         }))
       }))
     ],
