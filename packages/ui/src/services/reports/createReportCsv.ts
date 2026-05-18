@@ -1,10 +1,10 @@
-import getMappedColumns from "@/utils/reports/getMappedColumns"
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { csvMetadata } from "services/reports/utils/csvMetadata"
 import { escapeCsvCell } from "services/reports/utils/escapeCsvCell"
 import { isRecord } from "services/reports/utils/isRecord"
 import type { ReportConfig } from "types/reports/Config"
 import { formatGroupName } from "./utils/formatGroupName"
+import { getMappedColumns } from "./utils/getMappedColumns"
 
 export const createReportCsv = async (
   parsedData: Record<string, unknown>[],

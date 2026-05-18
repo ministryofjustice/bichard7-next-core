@@ -1,7 +1,7 @@
 import { ReportTable } from "@/features/ReportSelectionFilter/ReportTable"
 import { ensureString } from "@/services/reports/utils/ensureString"
 import { formatGroupName } from "@/services/reports/utils/formatGroupName"
-import getMappedColumns from "@/utils/reports/getMappedColumns"
+import { getMappedColumns } from "@/services/reports/utils/getMappedColumns"
 import { isRecord } from "services/reports/utils/isRecord"
 import { isRecordArray } from "services/reports/utils/isRecordArray"
 import { FlatReportConfig, ReportConfig } from "types/reports/Config"

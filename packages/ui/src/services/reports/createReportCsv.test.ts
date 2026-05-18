@@ -1,17 +1,20 @@
-import { createReportCsv } from "./createReportCsv"
+import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
+import { csvMetadata } from "services/reports/utils/csvMetadata"
 import { escapeCsvCell } from "services/reports/utils/escapeCsvCell"
 import { isRecord } from "services/reports/utils/isRecord"
-import { csvMetadata } from "services/reports/utils/csvMetadata"
 import type { ReportConfig } from "types/reports/Config"
-import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
+import { createReportCsv } from "./createReportCsv"
+import { getMappedColumns } from "./utils/getMappedColumns"
 
 jest.mock("services/reports/utils/escapeCsvCell")
 jest.mock("services/reports/utils/isRecord")
 jest.mock("services/reports/utils/csvMetadata")
+jest.mock("services/reports/utils/getMappedColumns")
 
 const mockedEscapeCsvCell = escapeCsvCell as jest.MockedFunction<typeof escapeCsvCell>
 const mockedIsRecord = isRecord as jest.MockedFunction<typeof isRecord>
 const mockedCsvMetadata = csvMetadata as jest.MockedFunction<typeof csvMetadata>
+const mockedGetMappedColumns = getMappedColumns as jest.MockedFunction<typeof getMappedColumns>
 
 describe("createReportCsv", () => {
   const originalBlob = global.Blob
@@ -22,6 +25,10 @@ describe("createReportCsv", () => {
     mockedEscapeCsvCell.mockImplementation((val) => String(val))
     mockedIsRecord.mockReturnValue(true)
     mockedCsvMetadata.mockReturnValue("Mocked Metadata Row")
+    mockedGetMappedColumns.mockReturnValue([
+      { header: "ID", key: "id" },
+      { header: "Name", key: "name" }
+    ])
 
     global.Blob = jest.fn().mockImplementation((content, options) => ({
       content,
