@@ -16,8 +16,8 @@ export const createReportCsv = async (
   const csvChunks: string[] = ["", csvMetadata(reportType, fromDate, toDate), ""]
   if (config.structure === "nested") {
     parsedData.forEach((group) => {
-      const groupName = group[config.outerGroupNameKey] as string
-      const dataList = group[config.outerDataListKey]
+      const groupName = group[config.groupNameKey] as string
+      const dataList = group[config.groupDataListKey]
 
       const formattedGroupName = config.formatter ? formatGroupName(config, groupName) : groupName
 
@@ -26,8 +26,8 @@ export const createReportCsv = async (
       }
 
       dataList.forEach((innerGroup) => {
-        const innerGroupName = innerGroup[config.innerGroupNameKey]
-        const innerDataList = innerGroup[config.innerDataListKey]
+        const innerGroupName = innerGroup[config.tableNameKey]
+        const innerDataList = innerGroup[config.tableDataListKey]
 
         if (!Array.isArray(innerDataList)) {
           return

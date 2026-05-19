@@ -26,26 +26,17 @@ export const NestedTable = <TOuterGroup extends Record<string, unknown>>({
             </h3>
 
             <section id={outerSectionBodyId} aria-labelledby={outerSectionBodyId} itemID={"outer-group-body"}>
-              {tables.map((innerGroup, index) => {
-                const tableName = innerGroup.tableName
-
+              {tables.map(({ tableName, rows, tableConfig, totals }, index) => {
                 const innerSectionId = `inner-group-${tableName}-${index}-${outerSectionId}`
-
-                const innerRows = innerGroup[config.innerDataListKey] as unknown as Record<string, unknown>[]
 
                 return (
                   <section key={innerSectionId} aria-labelledby={innerSectionId}>
                     <h4 id={innerSectionId} className="govuk-heading-m">
                       {tableName}
 
-                      <Totals totals={innerGroup.totals} totalsConfig={config.totalsConfig} />
+                      <Totals totals={totals} totalsConfig={config.totalsConfig} />
                     </h4>
-                    <ReportTable
-                      key={innerSectionId}
-                      config={innerGroup.tableConfig}
-                      rows={innerRows}
-                      tableName={innerGroup.tableName}
-                    />
+                    <ReportTable key={innerSectionId} config={tableConfig} rows={rows} tableName={tableName} />
                   </section>
                 )
               })}

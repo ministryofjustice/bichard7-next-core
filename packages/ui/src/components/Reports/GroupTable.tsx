@@ -5,16 +5,16 @@ import { ReportTableBody } from "./ReportTableBody"
 import { ReportTableHeader } from "./ReportTableHeader"
 import { Totals } from "./Totals"
 
-export const MultiTable = <TGroup extends Record<string, unknown>>({ config, groups }: GroupedTableProps<TGroup>) => {
+export const GroupTable = <TGroup extends Record<string, unknown>>({ config, groups }: GroupedTableProps<TGroup>) => {
   if (config.structure !== "grouped") {
     return null
   }
 
-  const renderableGroups = groupTable({ config, groups })
+  const groupTableData = groupTable({ config, groups })
 
   return (
     <ReportContainer className="report-container">
-      {renderableGroups?.map(({ groupName, formattedGroupName, rows, totals }) => {
+      {groupTableData?.map(({ groupName, formattedGroupName, rows, totals }) => {
         const sectionId = `report-group-${formattedGroupName}`
 
         return (

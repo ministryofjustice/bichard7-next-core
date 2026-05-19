@@ -19,15 +19,15 @@ export const nestedTable = <TOuterGroup extends Record<string, unknown>>({
   }
 
   return groups.map((group) => {
-    const groupName = ensureString(group[config.outerGroupNameKey])
-    const rawDataList = group[config.outerDataListKey]
+    const groupName = ensureString(group[config.groupNameKey])
+    const rawDataList = group[config.groupDataListKey]
     const totals = isRecord(group.totals) ? group.totals : undefined
     const dataList = isRecordArray(rawDataList) ? rawDataList : []
     const cleanRows = dataList.filter(isRecord)
 
     const tables = cleanRows.map((innerGroup) => {
-      const tableName = ensureString(innerGroup[config.innerGroupNameKey])
-      const rawDataList = innerGroup[config.innerDataListKey]
+      const tableName = ensureString(innerGroup[config.tableNameKey])
+      const rawDataList = innerGroup[config.tableDataListKey]
       const totals = isRecord(innerGroup.totals) ? innerGroup.totals : undefined
       const dataList = isRecordArray(rawDataList) ? rawDataList : []
       const cleanTableRows = dataList.filter(isRecord)
@@ -43,16 +43,15 @@ export const nestedTable = <TOuterGroup extends Record<string, unknown>>({
 
       return {
         tableName,
-        [config.innerDataListKey]: cleanTableRows,
-        [config.columnSelectorKey]: group[config.columnSelectorKey as string],
+        rows: cleanTableRows,
         totals,
         tableConfig
       }
     })
 
     return {
-      formattedGroupName: config.formatter ? formatGroupName(config, groupName) : groupName,
       groupName,
+      formattedGroupName: config.formatter ? formatGroupName(config, groupName) : groupName,
       totals,
       tables
     }
