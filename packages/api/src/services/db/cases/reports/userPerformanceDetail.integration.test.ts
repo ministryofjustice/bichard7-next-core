@@ -151,7 +151,7 @@ describe("usersDetailPerformance - Integration", () => {
     const todayResult = results.find((r) => r.date.toISOString() === endOfDay(today).toISOString())!
 
     const exceptionCodeGroup = todayResult.codeDetails.find((c) => c.code === "HO100322")
-    expect(exceptionCodeGroup?.description).toBe("Next Result Source Organisation is absent for a remand") // Assert description exists
+    expect(exceptionCodeGroup?.description).toBe("Next Result Source Organisation is absent for a remand")
     expect(exceptionCodeGroup?.totals.resolved).toBe(0)
     expect(exceptionCodeGroup?.totals.totalLocked).toBe(1)
 
