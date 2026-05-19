@@ -45,7 +45,8 @@ export const nestedTable = <TOuterGroup extends Record<string, unknown>>({
         tableName,
         rows: cleanTableRows,
         totals,
-        tableConfig
+        tableConfig,
+        mappedColumns
       }
     })
 
