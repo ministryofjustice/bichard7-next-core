@@ -16,6 +16,8 @@ interface BaseConfig {
 export type FlatReportConfig<TRow> = {
   structure: Extract<ReportStructure, "flat">
   columns: ReportColumn<TRow>[]
+  totalsConfig?: TotalColumnConfig[]
+  calculateTotalsCallback?: (totals: Record<string, number>, rows: TRow[]) => void
 } & BaseConfig
 
 export interface Formatter {
@@ -47,7 +49,15 @@ export type NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow> = {
 } & BaseConfig &
   Formatter
 
-export type ReportConfig<TOuterGroup = Record<string, never>, TInnerGroup = Record<string, never>, TRow = never> =
+export type ReportConfig<TOuterGroup = Record<string, never>, TInnerGroup = Record<string, never>, TRow = unknown> =
   | FlatReportConfig<TRow>
   | GroupedReportConfig<TOuterGroup, TRow>
   | NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow>
+
+export type ReportData =
+  | { config: FlatReportConfig<Record<string, unknown>>; rows: Record<string, unknown>[] }
+  | { config: GroupedReportConfig<Record<string, unknown>, Record<string, unknown>>; rows: Record<string, unknown>[] }
+  | {
+      config: NestedGroupedReportConfig<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>
+      rows: Record<string, unknown>[]
+    }
