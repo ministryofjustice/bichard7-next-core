@@ -2,7 +2,7 @@ import endpoints from "@moj-bichard7/core/lib/policeGateway/leds/endpoints"
 import { randomUUID } from "crypto"
 import type { LedsMock, LedsMockUpdateOptions } from "../../../types/LedsMock"
 import { Operation } from "../../../types/Operation"
-import convertPncUpdateResponseToLeds from "../../converters/convertPncJsonToLeds/convertPncUpdateResponseToLeds"
+import convertMockUpdateResponseToLeds from "../../converters/convertMockJsonToLeds/convertMockUpdateResponseToLeds"
 import createMockRequest from "./createMockRequest"
 import createMockResponse from "./createMockResponse"
 
@@ -33,7 +33,7 @@ export const generateUpdate = (code: string, options: LedsMockUpdateOptions): Le
     body: undefined
   })
 
-  const { mockResponse, statusCode } = convertPncUpdateResponseToLeds(options.response)
+  const { mockResponse, statusCode } = convertMockUpdateResponseToLeds(options.response)
   const response = createMockResponse(mockResponse, statusCode)
 
   return {

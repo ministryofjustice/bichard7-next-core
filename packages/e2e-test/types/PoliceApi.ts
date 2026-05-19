@@ -1,19 +1,21 @@
+import type { UpdateResponse } from "@moj-bichard7/core/types/leds/UpdateResponse"
 import type { MockAddDisposalRequest } from "./MockAddDisposalRequest"
 import type { MockAsnQueryErrorResponse } from "./MockAsnQueryErrorResponse"
 import type { MockAsnQueryResponse } from "./MockAsnQueryResponse"
+import type { MockErrorResponse } from "./MockErrorResponse"
 import type { MockRemandRequest } from "./MockRemandRequest"
 import type { MockSubsequentDisposalResultsRequest } from "./MockSubsequentDisposalResultsRequest"
 
 export type PoliceApiRequestMockQueryOptions = {
   matchRegex?: string
-  response?: string
+  response?: UpdateResponse | MockErrorResponse
   expectedRequest?: MockAddDisposalRequest | MockRemandRequest | MockSubsequentDisposalResultsRequest
   count?: number
 }
 
 export type PoliceApiRequestMockUpdateOptions = {
   matchRegex?: string
-  response?: string
+  response?: UpdateResponse | MockErrorResponse
   expectedRequest?: MockAddDisposalRequest | MockRemandRequest | MockSubsequentDisposalResultsRequest
   count?: number
   courtCaseId?: string
