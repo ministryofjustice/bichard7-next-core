@@ -9,14 +9,11 @@ export const getGroupReportCsvChunks = async (
 ) => {
   const groupTableData = groupTable({ config, groups: parsedData })
 
-  groupTableData?.forEach(({ rows, formattedGroupName }) => {
-    csvChunks.push(
-      `"",${escapeCsvCell(formattedGroupName)}`,
-      config.columns.map((col) => escapeCsvCell(col.header)).join(",")
-    )
+  groupTableData?.forEach(({ rows, formattedGroupName, columns }) => {
+    csvChunks.push(`"",${escapeCsvCell(formattedGroupName)}`, columns.map((col) => escapeCsvCell(col.header)).join(","))
 
     rows?.forEach((row) => {
-      csvChunks.push(config.columns.map((col) => escapeCsvCell(row[col.key])).join(","))
+      csvChunks.push(columns.map((col) => escapeCsvCell(row[col.key])).join(","))
     })
   })
 

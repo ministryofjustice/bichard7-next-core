@@ -8,18 +8,19 @@ describe("getGroupReportCsvChunks", () => {
   const groupConfig = {
     endpoint: "",
     structure: "grouped",
-    groupNameKey: "courtName",
-    dataListKey: "cases",
-    columns: [
-      { header: "ID", key: "id" },
-      { header: "Name", key: "name" }
-    ]
+    groupNameKey: "",
+    dataListKey: "",
+    columns: [{}]
   } as GroupedReportConfig<any, any>
 
   it("should handle grouped data structures correctly", async () => {
     ;(groupTable as jest.Mock).mockReturnValue([
       {
         formattedGroupName: "Court A",
+        columns: [
+          { header: "ID", key: "id" },
+          { header: "Name", key: "name" }
+        ],
         rows: [
           { id: "10", name: "Case 1" },
           { id: "11", name: "Case 2" }
@@ -27,17 +28,7 @@ describe("getGroupReportCsvChunks", () => {
       }
     ])
 
-    const data = [
-      {
-        courtName: "Court A",
-        cases: [
-          { id: 10, name: "Case 1" },
-          { id: 11, name: "Case 2" }
-        ]
-      }
-    ]
-
-    const result = await getGroupReportCsvChunks(data, groupConfig, [])
+    const result = await getGroupReportCsvChunks([], groupConfig, [])
 
     expect(result).toEqual(['"","Court A"', '"ID","Name"', '"10","Case 1"', '"11","Case 2"'])
   })
@@ -46,21 +37,15 @@ describe("getGroupReportCsvChunks", () => {
     ;(groupTable as jest.Mock).mockReturnValue([
       {
         formattedGroupName: "Court A",
-        rows: null
+        rows: null,
+        columns: [
+          { header: "ID", key: "id" },
+          { header: "Name", key: "name" }
+        ]
       }
     ])
 
-    const data = [
-      {
-        courtName: "Court A",
-        cases: [
-          { id: 10, name: "Case 1" },
-          { id: 11, name: "Case 2" }
-        ]
-      }
-    ]
-
-    const result = await getGroupReportCsvChunks(data, groupConfig, [])
+    const result = await getGroupReportCsvChunks([], groupConfig, [])
 
     expect(result).toEqual(['"","Court A"', '"ID","Name"'])
   })

@@ -1,20 +1,21 @@
 import type { NestedGroupedReportConfig } from "@/types/reports/Config"
 import { nestedTable } from "@/utils/tables/nestedTable"
+import type { ReportType } from "aws-sdk/clients/codebuild"
 import { getNestedReportCsvChunks } from "./getNestedReportCsvChunks"
 
 jest.mock("@/utils/tables/nestedTable")
 
 describe("getNestedReportCsvChunks", () => {
-  const nestedConfig = {
+  const dummyConfig = {
     structure: "nested",
     endpoint: "",
-    groupNameKey: "courtName",
-    groupDataListKey: "codeDetails",
-    tableNameKey: "description",
-    tableDataListKey: "users",
+    groupNameKey: "",
+    groupDataListKey: "",
+    tableNameKey: "",
+    tableDataListKey: "",
     columns: {},
-    columnSelectorKey: "type",
-    reportType: "user detail"
+    columnSelectorKey: "",
+    reportType: "TEST_REPORT_TYPE" as ReportType
   } as NestedGroupedReportConfig<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>
 
   it("should handle nested data structures correctly", async () => {
@@ -52,7 +53,7 @@ describe("getNestedReportCsvChunks", () => {
       }
     ])
 
-    const result = await getNestedReportCsvChunks([], nestedConfig, [])
+    const result = await getNestedReportCsvChunks([], dummyConfig, [])
 
     expect(result).toEqual([
       '"","Group A","Table A"',
@@ -72,7 +73,7 @@ describe("getNestedReportCsvChunks", () => {
       }
     ])
 
-    const result = await getNestedReportCsvChunks([], nestedConfig, [])
+    const result = await getNestedReportCsvChunks([], dummyConfig, [])
 
     expect(result).toEqual([])
   })
@@ -94,7 +95,7 @@ describe("getNestedReportCsvChunks", () => {
       }
     ])
 
-    const result = await getNestedReportCsvChunks([], nestedConfig, [])
+    const result = await getNestedReportCsvChunks([], dummyConfig, [])
 
     expect(result).toEqual(['"","Group A","Table A"', '"ID_A","Name_A"'])
   })

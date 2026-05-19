@@ -25,7 +25,8 @@ export const groupTable = <TGroup extends Record<string, unknown>>({ config, gro
       formattedGroupName: config.formatter ? formatGroupName(config, groupName) : groupName,
       groupName,
       rows: cleanRows,
-      totals
+      totals,
+      columns: config.columns
     }
   })
 }
