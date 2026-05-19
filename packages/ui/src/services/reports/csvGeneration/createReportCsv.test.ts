@@ -1,5 +1,5 @@
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
-import { csvMetadata } from "services/reports/utils/csvMetadata"
+import { csvMetadata } from "../utils/csvMetadata"
 import { createReportCsv } from "./createReportCsv"
 import { getFlatReportCsvChunks } from "./getFlatReportCsvChunks"
 import { getGroupReportCsvChunks } from "./getGroupReportCsvChunks"
@@ -10,7 +10,10 @@ jest.mock("./getFlatReportCsvChunks")
 jest.mock("./getNestedReportCsvChunks")
 jest.mock("services/reports/utils/csvMetadata")
 
+const mockedCsvMetadata = csvMetadata as jest.MockedFunction<typeof csvMetadata>
+
 describe("createReportCsv Orchestrator", () => {
+  const originalBlob = global.Blob
   const mockFlatData = [{ id: 1 }]
   const mockGroupedData = [{ id: 1, group: "A" }]
   const mockNestedData = [{ id: 1, nested: [{ id: 2 }] }]
@@ -18,7 +21,16 @@ describe("createReportCsv Orchestrator", () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    ;(csvMetadata as jest.Mock).mockReturnValue(mockMetadata)
+    mockedCsvMetadata.mockReturnValue(mockMetadata)
+
+    global.Blob = jest.fn().mockImplementation((content, options) => ({
+      content,
+      options
+    })) as unknown as typeof Blob
+  })
+
+  afterAll(() => {
+    global.Blob = originalBlob
   })
 
   it("should route to getFlatReportCsvChunks when structure is flat", async () => {
@@ -49,5 +61,42 @@ describe("createReportCsv Orchestrator", () => {
     expect(getNestedReportCsvChunks).toHaveBeenCalled()
     expect(getFlatReportCsvChunks).not.toHaveBeenCalled()
     expect(getGroupReportCsvChunks).not.toHaveBeenCalled()
+  })
+
+  it("should join csv chunks with newlines and include metadata", async () => {
+    const config = { structure: "flat" } as any
+    const mockChunks = ["row1", "row2"]
+    ;(getFlatReportCsvChunks as jest.Mock).mockResolvedValue([...["", mockMetadata, ""], ...mockChunks])
+
+    const blob = await createReportCsv([], config, "TEST_TYPE" as ReportType, null, null)
+
+    const finalString = (blob as any).content[0]
+
+    const expected = `\n${mockMetadata}\n\nrow1\nrow2`
+    expect(finalString).toBe(expected)
+  })
+
+  it("should pass the correct dates and report type to csvMetadata", async () => {
+    const config = { structure: "flat" } as any
+    ;(getFlatReportCsvChunks as jest.Mock).mockResolvedValue([])
+
+    const from = "2023-01-01"
+    const to = "2023-12-31"
+    const type = "USER_REPORT" as ReportType
+
+    await createReportCsv([], config, type, from, to)
+
+    expect(mockedCsvMetadata).toHaveBeenCalledWith(type, from, to)
+  })
+
+  it("should produce a Blob with the correct CSV content type", async () => {
+    const config = { structure: "flat" } as any
+    ;(getFlatReportCsvChunks as jest.Mock).mockResolvedValue([])
+
+    const blob = await createReportCsv([], config, "type" as ReportType, null, null)
+
+    expect((blob as any).options).toEqual({
+      type: "text/csv;charset=utf-8;"
+    })
   })
 })
