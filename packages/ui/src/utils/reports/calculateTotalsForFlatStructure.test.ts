@@ -1,4 +1,4 @@
-import { calculateTotalsForFlatStructure } from "./calculateTotalsForFlatStructure" // Adjust the import path as needed
+import { calculateTotalsForFlatStructure } from "./calculateTotalsForFlatStructure"
 import type { TotalColumnConfig } from "types/reports/Config"
 
 type TestRow = {
