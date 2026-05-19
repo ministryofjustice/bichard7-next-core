@@ -15,7 +15,7 @@ export const getGroupReportCsvChunks = async (
       config.columns.map((col) => escapeCsvCell(col.header)).join(",")
     )
 
-    rows.forEach((row) => {
+    rows?.forEach((row) => {
       csvChunks.push(config.columns.map((col) => escapeCsvCell(row[col.key])).join(","))
     })
   })

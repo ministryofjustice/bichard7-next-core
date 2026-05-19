@@ -20,19 +20,19 @@ export const nestedTable = <TOuterGroup extends Record<string, unknown>>({
 
   return groups.map((group) => {
     const groupName = ensureString(group[config.groupNameKey])
-    const rawDataList = group[config.groupDataListKey]
-    const totals = isRecord(group.totals) ? group.totals : undefined
-    const dataList = isRecordArray(rawDataList) ? rawDataList : []
-    const cleanRows = dataList.filter(isRecord)
+    const rawGroupDataList = group[config.groupDataListKey]
+    const groupTotals = isRecord(group.totals) ? group.totals : undefined
+    const groupDataList = isRecordArray(rawGroupDataList) ? rawGroupDataList : []
+    const cleanTables = groupDataList.filter(isRecord)
 
-    const tables = cleanRows.map((innerGroup) => {
-      const tableName = ensureString(innerGroup[config.tableNameKey])
-      const rawDataList = innerGroup[config.tableDataListKey]
-      const totals = isRecord(innerGroup.totals) ? innerGroup.totals : undefined
-      const dataList = isRecordArray(rawDataList) ? rawDataList : []
-      const cleanTableRows = dataList.filter(isRecord)
+    const tables = cleanTables.map((table) => {
+      const tableName = ensureString(table[config.tableNameKey])
+      const rawTableDataList = table[config.tableDataListKey]
+      const tableTotals = isRecord(table.totals) ? table.totals : undefined
+      const tableDataList = isRecordArray(rawTableDataList) ? rawTableDataList : []
+      const cleanTableRows = tableDataList.filter(isRecord)
 
-      const mappedColumns = getMappedColumns(config, innerGroup)
+      const mappedColumns = getMappedColumns(config, table)
 
       const tableConfig: FlatReportConfig<Record<string, unknown>> = {
         structure: "flat",
@@ -44,7 +44,7 @@ export const nestedTable = <TOuterGroup extends Record<string, unknown>>({
       return {
         tableName,
         rows: cleanTableRows,
-        totals,
+        totals: tableTotals,
         tableConfig,
         mappedColumns
       }
@@ -53,7 +53,7 @@ export const nestedTable = <TOuterGroup extends Record<string, unknown>>({
     return {
       groupName,
       formattedGroupName: config.formatter ? formatGroupName(config, groupName) : groupName,
-      totals,
+      totals: groupTotals,
       tables
     }
   })
