@@ -48,7 +48,7 @@ describe("createReportCsv Orchestrator", () => {
     ;(getGroupReportCsvChunks as jest.Mock).mockResolvedValue(["header", "grouped-data"])
     await createReportCsv(mockGroupedData, config, "type" as ReportType, null, null)
 
-    expect(getGroupReportCsvChunks).toHaveBeenCalled()
+    expect(getGroupReportCsvChunks).toHaveBeenCalledWith(mockGroupedData, config, ["", mockMetadata, ""])
     expect(getFlatReportCsvChunks).not.toHaveBeenCalled()
     expect(getNestedReportCsvChunks).not.toHaveBeenCalled()
   })
@@ -58,7 +58,7 @@ describe("createReportCsv Orchestrator", () => {
     ;(getNestedReportCsvChunks as jest.Mock).mockResolvedValue(["mock", "csv", "data"])
     await createReportCsv(mockNestedData, config, "type" as ReportType, null, null)
 
-    expect(getNestedReportCsvChunks).toHaveBeenCalled()
+    expect(getNestedReportCsvChunks).toHaveBeenCalledWith(mockNestedData, config, ["", mockMetadata, ""])
     expect(getFlatReportCsvChunks).not.toHaveBeenCalled()
     expect(getGroupReportCsvChunks).not.toHaveBeenCalled()
   })
