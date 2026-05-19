@@ -1,47 +1,26 @@
-import { ensureString } from "@/services/reports/utils/ensureString"
-import { formatGroupName } from "@/services/reports/utils/formatGroupName"
+import { GroupedTableProps, groupTable } from "@/utils/tables/groupTable"
 import { Table } from "components/Table"
-import { isRecord } from "services/reports/utils/isRecord"
-import { isRecordArray } from "services/reports/utils/isRecordArray"
-import { ReportConfig } from "types/reports/Config"
 import { ReportContainer } from "./GroupTable.styles"
 import { ReportTableBody } from "./ReportTableBody"
 import { ReportTableHeader } from "./ReportTableHeader"
 import { Totals } from "./Totals"
 
-interface GroupedTableProps<T> {
-  config: ReportConfig
-  groups: T[]
-}
-
-export const GroupTable = <T extends Record<string, unknown>>({ config, groups }: GroupedTableProps<T>) => {
+export const MultiTable = <TGroup extends Record<string, unknown>>({ config, groups }: GroupedTableProps<TGroup>) => {
   if (config.structure !== "grouped") {
     return null
   }
 
-  const renderableGroups = groups.map((group) => {
-    const groupName = ensureString(group[config.groupNameKey])
-    const rawDataList = group[config.dataListKey]
-    const totals = isRecord(group.totals) ? group.totals : undefined
-    const dataList = isRecordArray(rawDataList) ? rawDataList : []
-    const cleanRows = dataList.filter(isRecord)
-
-    return {
-      groupName,
-      rows: cleanRows,
-      totals
-    }
-  })
+  const renderableGroups = groupTable({ config, groups })
 
   return (
     <ReportContainer className="report-container">
-      {renderableGroups.map(({ groupName, rows, totals }) => {
-        const sectionId = `report-group-${groupName}`
+      {renderableGroups?.map(({ groupName, formattedGroupName, rows, totals }) => {
+        const sectionId = `report-group-${formattedGroupName}`
 
         return (
           <section key={sectionId} aria-labelledby={sectionId}>
             <h3 id={sectionId} className="govuk-heading-m">
-              {formatGroupName(config, groupName)}
+              {formattedGroupName}
 
               <Totals totals={totals} totalsConfig={config.totalsConfig} />
             </h3>
