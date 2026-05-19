@@ -3,18 +3,21 @@ import { formatGroupName } from "@/services/reports/utils/formatGroupName"
 import { Table } from "components/Table"
 import { isRecord } from "services/reports/utils/isRecord"
 import { isRecordArray } from "services/reports/utils/isRecordArray"
-import { ReportConfig } from "types/reports/Config"
+import { GroupedReportConfig } from "types/reports/Config"
 import { ReportContainer } from "./GroupTable.styles"
 import { ReportTableBody } from "./ReportTableBody"
 import { ReportTableHeader } from "./ReportTableHeader"
 import { Totals } from "./Totals"
 
-interface GroupedTableProps<T> {
-  config: ReportConfig
-  groups: T[]
+interface GroupedTableProps<TOuterGroup extends Record<string, unknown>, TRow extends Record<string, unknown>> {
+  config: GroupedReportConfig<TOuterGroup, TRow>
+  groups: TOuterGroup[]
 }
 
-export const GroupTable = <T extends Record<string, unknown>>({ config, groups }: GroupedTableProps<T>) => {
+export const GroupTable = <TOuterGroup extends Record<string, unknown>, TRow extends Record<string, unknown>>({
+  config,
+  groups
+}: GroupedTableProps<TOuterGroup, TRow>) => {
   if (config.structure !== "grouped") {
     return null
   }
@@ -28,7 +31,7 @@ export const GroupTable = <T extends Record<string, unknown>>({ config, groups }
 
     return {
       groupName,
-      rows: cleanRows,
+      rows: cleanRows as TRow[],
       totals
     }
   })

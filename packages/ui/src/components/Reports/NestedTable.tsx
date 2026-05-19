@@ -1,21 +1,47 @@
 import { ReportTable } from "@/features/ReportSelectionFilter/ReportTable"
 import { ensureString } from "@/services/reports/utils/ensureString"
 import { formatGroupName } from "@/services/reports/utils/formatGroupName"
-import { BaseReportColumn, ReportColumn } from "@/types/reports/Columns"
+import { ReportColumn } from "@/types/reports/Columns"
 import { isRecord } from "services/reports/utils/isRecord"
 import { isRecordArray } from "services/reports/utils/isRecordArray"
-import { FlatReportConfig, NestedGroupedReportConfig, ReportConfig } from "types/reports/Config"
+import { FlatReportConfig, NestedGroupedReportConfig } from "types/reports/Config"
 import { ReportContainer } from "./GroupTable.styles"
 import { Totals } from "./Totals"
 
-interface NestedTableProps<T> {
-  config: ReportConfig
-  groups: T[]
+interface NestedTableProps<
+  TOuterGroup extends Record<string, unknown>,
+  TInnerGroup extends Record<string, unknown>,
+  TRow extends Record<string, unknown>
+> {
+  config: NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow>
+  groups: TOuterGroup[]
 }
 
-export const NestedTable = <T extends Record<string, unknown>>({ config, groups }: NestedTableProps<T>) => {
+export const NestedTable = <
+  TOuterGroup extends Record<string, unknown>,
+  TInnerGroup extends Record<string, unknown>,
+  TRow extends Record<string, unknown>
+>({
+  config,
+  groups
+}: NestedTableProps<TOuterGroup, TInnerGroup, TRow>) => {
   if (config.structure !== "nested") {
     return null
+  }
+
+  const getResolvedColumns = (innerGroup: TInnerGroup): ReportColumn<TRow>[] => {
+    const cols = config.columns
+
+    if (Array.isArray(cols)) {
+      return cols
+    }
+
+    if (config.columnSelectorKey && typeof cols === "object" && cols !== null) {
+      const selectorValue = String(innerGroup[config.columnSelectorKey])
+      return cols[selectorValue] || []
+    }
+
+    return []
   }
 
   const renderableOuterGroups = groups.map((group) => {
@@ -23,47 +49,32 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
     const rawDataList = group[config.outerDataListKey]
     const totals = isRecord(group.totals) ? group.totals : undefined
     const dataList = isRecordArray(rawDataList) ? rawDataList : []
-    const cleanRows = dataList.filter(isRecord)
+    const cleanInnerGroups = dataList.filter(isRecord)
 
     return {
       outerGroupName,
-      rows: cleanRows,
+      innerGroups: cleanInnerGroups as TInnerGroup[],
       totals
     }
   })
 
-  const getResolvedColumns = <TOuter, TInner, TRow>(
-    config: NestedGroupedReportConfig<TOuter, TInner, TRow>,
-    innerGroup: Record<string, unknown>
-  ): BaseReportColumn[] => {
-    const cols = config.columns
-
-    if (config.columnSelectorKey && typeof cols === "object") {
-      const selectorValue = String(innerGroup[config.columnSelectorKey as string])
-      const dynamicCols = (cols as Record<string, ReportColumn<unknown>[]>)[selectorValue]
-      return dynamicCols || []
-    }
-
-    return []
-  }
-
   return (
     <ReportContainer className="report-container">
-      {renderableOuterGroups.map(({ outerGroupName, rows }) => {
+      {renderableOuterGroups.map(({ outerGroupName, innerGroups }) => {
         const outerSectionId = `outer-group-${outerGroupName}`
         const outerSectionBodyId = `outer-group-body-${outerGroupName}`
 
-        const renderableInnerGroups = rows.map((group) => {
-          const innerGroupName = ensureString(group[config.innerGroupNameKey])
-          const rawDataList = group[config.innerDataListKey]
-          const totals = isRecord(group.totals) ? group.totals : undefined
+        const renderableInnerGroups = innerGroups.map((innerGroup) => {
+          const innerGroupName = ensureString(innerGroup[config.innerGroupNameKey])
+          const rawDataList = innerGroup[config.innerDataListKey]
+          const totals = isRecord(innerGroup.totals) ? innerGroup.totals : undefined
           const dataList = isRecordArray(rawDataList) ? rawDataList : []
           const cleanRows = dataList.filter(isRecord)
 
           return {
-            [config.innerGroupNameKey]: innerGroupName,
-            [config.innerDataListKey]: cleanRows,
-            [config.columnSelectorKey]: group[config.columnSelectorKey],
+            innerGroupRef: innerGroup,
+            innerGroupName,
+            rows: cleanRows as TRow[],
             totals
           }
         })
@@ -75,34 +86,33 @@ export const NestedTable = <T extends Record<string, unknown>>({ config, groups 
             </h3>
 
             <section id={outerSectionBodyId} aria-labelledby={outerSectionBodyId} itemID={"outer-group-body"}>
-              {renderableInnerGroups.map((innerGroup, index) => {
-                const innerGroupName = ensureString(innerGroup[config.innerGroupNameKey])
+              {renderableInnerGroups.map(({ innerGroupName, rows, innerGroupRef, totals }, index) => {
+                const resolvedColumns = getResolvedColumns(innerGroupRef)
 
-                const resolvedColumns = getResolvedColumns(config, innerGroup)
-
-                const innerConfig: FlatReportConfig<Record<string, unknown>> = {
+                const innerConfig: FlatReportConfig<TRow> = {
                   structure: "flat",
                   columns: resolvedColumns,
                   endpoint: config.endpoint,
-                  reportType: config.reportType
+                  reportType: config.reportType,
+                  totalsConfig: config.totalsConfig
                 }
 
                 const innerSectionId = `inner-group-${innerGroupName}-${index}-${outerSectionId}`
-
-                const innerRows = innerGroup[config.innerDataListKey] as unknown as Record<string, unknown>[]
 
                 return (
                   <section key={innerSectionId} aria-labelledby={innerSectionId}>
                     <h3 id={innerSectionId} className="govuk-heading-m">
                       {innerGroupName}
 
-                      <Totals totals={innerGroup.totals} totalsConfig={config.totalsConfig} />
+                      <Totals totals={totals} totalsConfig={config.totalsConfig} />
                     </h3>
-                    <ReportTable
+
+                    <ReportTable<TInnerGroup, Record<string, never>, TRow>
                       key={innerSectionId}
                       config={innerConfig}
-                      rows={innerRows}
+                      rows={rows}
                       tableName={innerGroupName}
+                      nested={true}
                     />
                   </section>
                 )
