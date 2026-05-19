@@ -18,7 +18,7 @@ export const nestedTable = <TOuterGroup extends Record<string, unknown>>({
     return null
   }
 
-  return groups.map((group) => {
+  return groups.filter(isRecord).map((group) => {
     const groupName = ensureString(group[config.groupNameKey])
     const rawGroupDataList = group[config.groupDataListKey]
     const groupTotals = isRecord(group.totals) ? group.totals : undefined
