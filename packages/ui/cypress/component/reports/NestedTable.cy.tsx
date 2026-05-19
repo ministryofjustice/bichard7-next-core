@@ -1,20 +1,23 @@
+import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { NestedTable } from "components/Reports/NestedTable"
-import { ReportConfig } from "types/reports/Config"
+import { NestedGroupedReportConfig, ReportConfig } from "types/reports/Config"
 
 describe("NestedTable", () => {
   const mockConfig = {
     structure: "nested",
-    outerGroupNameKey: "region",
-    outerDataListKey: "allTeams",
-    innerGroupNameKey: "teamName",
-    innerDataListKey: "members",
-    columnSelectorKey: "type",
+    endpoint: "test",
+    groupNameKey: "region",
+    groupDataListKey: "allTeams",
+    tableNameKey: "teamName",
+    tableDataListKey: "members",
     columns: {
       IT: [{ key: "devName", header: "Developer" }],
       HR: [{ key: "hrName", header: "HR Rep" }]
     },
-    totalsConfig: [{ key: "headcount", label: "Count" }]
-  } as unknown as ReportConfig
+    columnSelectorKey: "type",
+    totalsConfig: [{ key: "headcount", label: "Count" }],
+    reportType: "TEST_REPORT_TYPE" as ReportType
+  } as NestedGroupedReportConfig<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>
 
   const mockGroups = [
     {
