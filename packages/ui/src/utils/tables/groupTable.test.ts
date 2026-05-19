@@ -51,8 +51,8 @@ describe("groupTable", () => {
   })
 
   it("should return null if config structure is 'nested'", () => {
-    const flatConfig = { ...mockConfig, structure: "nested" }
-    const result = groupTable({ config: flatConfig, groups: mockGroups })
+    const nestedConfig = { ...mockConfig, structure: "nested" }
+    const result = groupTable({ config: nestedConfig, groups: mockGroups })
     expect(result).toBeNull()
   })
 
