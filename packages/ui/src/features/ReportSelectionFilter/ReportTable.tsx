@@ -18,8 +18,8 @@ export type ReportTableProps<
 )
 
 export const ReportTable = <
-  TOuterGroup extends Record<string, unknown> = Record<string, unknown>, // <-- Sync constraints
-  TInnerGroup extends Record<string, unknown> = Record<string, unknown>, // <-- Sync constraints
+  TOuterGroup extends Record<string, unknown> = Record<string, unknown>,
+  TInnerGroup extends Record<string, unknown> = Record<string, unknown>,
   TRow extends Record<string, unknown> = Record<string, unknown>
 >({
   config,

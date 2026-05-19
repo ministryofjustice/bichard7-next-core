@@ -18,6 +18,7 @@ import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { SelectReportDropdown } from "./SelectReportDropdown"
 import { filterReducer, initialFilterState } from "./reducers/filters"
+import bundleReportData from "utils/reports/bundleReportData"
 
 export const ReportSelectionFilter: React.FC = () => {
   const [isStreaming, setIsStreaming] = useState(false)
@@ -30,6 +31,8 @@ export const ReportSelectionFilter: React.FC = () => {
   const config = filterValues.reportType
     ? (ReportConfigs[filterValues.reportType as keyof typeof ReportConfigs] as unknown as ReportConfig)
     : null
+
+  const reportData = bundleReportData(config, rows)
 
   const handleSetDateFrom = (date: string) => {
     dispatch({ type: "SET_DATE_FROM", payload: date })
@@ -213,8 +216,7 @@ export const ReportSelectionFilter: React.FC = () => {
 
       <ReportResults
         reportType={filterValues.reportType as ReportType}
-        rows={rows}
-        config={config}
+        reportData={reportData}
         isStreaming={isStreaming}
       />
     </>
