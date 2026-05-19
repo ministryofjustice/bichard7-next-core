@@ -1,279 +1,50 @@
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { csvMetadata } from "services/reports/utils/csvMetadata"
-import { escapeCsvCell } from "services/reports/utils/escapeCsvCell"
-import { isRecord } from "services/reports/utils/isRecord"
-import type { ReportConfig } from "types/reports/Config"
 import { createReportCsv } from "./createReportCsv"
-import { getMappedColumns } from "./utils/getMappedColumns"
+import { getFlatReportCsvChunks } from "./getFlatReportCsvChunks"
+import { getGroupReportCsvChunks } from "./getGroupReportCsvChunks"
+import { getNestedReportCsvChunks } from "./getNestedReportCsvChunks"
 
-jest.mock("services/reports/utils/escapeCsvCell")
-jest.mock("services/reports/utils/isRecord")
+jest.mock("services/reports/csvGeneration/getFlatReportCsvChunks")
+jest.mock("services/reports/csvGeneration/getGroupReportCsvChunks")
+jest.mock("services/reports/csvGeneration/getNestedReportCsvChunks")
 jest.mock("services/reports/utils/csvMetadata")
-jest.mock("services/reports/utils/getMappedColumns")
 
-const mockedEscapeCsvCell = escapeCsvCell as jest.MockedFunction<typeof escapeCsvCell>
-const mockedIsRecord = isRecord as jest.MockedFunction<typeof isRecord>
-const mockedCsvMetadata = csvMetadata as jest.MockedFunction<typeof csvMetadata>
-const mockedGetMappedColumns = getMappedColumns as jest.MockedFunction<typeof getMappedColumns>
-
-describe("createReportCsv", () => {
-  const originalBlob = global.Blob
+describe("createReportCsv Orchestrator", () => {
+  const mockFlatData = [{ id: 1 }]
+  const mockGroupedData = [{ id: 1, group: "A" }]
+  const mockNestedData = [{ id: 1, nested: [{ id: 2 }] }]
+  const mockMetadata = "Mocked Metadata"
 
   beforeEach(() => {
     jest.clearAllMocks()
-
-    mockedEscapeCsvCell.mockImplementation((val) => String(val))
-    mockedIsRecord.mockReturnValue(true)
-    mockedCsvMetadata.mockReturnValue("Mocked Metadata Row")
-    mockedGetMappedColumns.mockReturnValue([
-      { header: "ID", key: "id" },
-      { header: "Name", key: "name" }
-    ])
-
-    global.Blob = jest.fn().mockImplementation((content, options) => ({
-      content,
-      options
-    })) as unknown as typeof Blob
+    ;(csvMetadata as jest.Mock).mockReturnValue(mockMetadata)
   })
 
-  afterAll(() => {
-    global.Blob = originalBlob
+  it("should route to getFlatReportCsvChunks when structure is flat", async () => {
+    const config = { structure: "flat" } as any
+    await createReportCsv(mockFlatData, config, "type" as ReportType, "start", "end")
+
+    expect(getFlatReportCsvChunks).toHaveBeenCalledWith(mockFlatData, config, ["", mockMetadata, ""])
+    expect(getGroupReportCsvChunks).not.toHaveBeenCalled()
+    expect(getNestedReportCsvChunks).not.toHaveBeenCalled()
   })
 
-  const commonConfigPart = {
-    reportType: "bails" as ReportType,
-    endpoint: "dummy-endpoint",
-    columns: [
-      { header: "ID", key: "id" },
-      { header: "Name", key: "name" }
-    ]
-  }
+  it("should route to getGroupReportCsvChunks when structure is grouped", async () => {
+    const config = { structure: "grouped" } as any
+    await createReportCsv(mockGroupedData, config, "type" as ReportType, null, null)
 
-  const nestedConfig = {
-    ...commonConfigPart,
-    structure: "nested",
-    outerGroupNameKey: "outerGroupName",
-    outerDataListKey: "outerDataList",
-    innerGroupNameKey: "innerGroupName",
-    innerDataListKey: "innerDataList",
-    columns: {
-      typeA: [{ header: "TypeAHeader", key: "name" }],
-      typeB: [{ header: "TypeBHeader", key: "name" }]
-    },
-    columnSelectorKey: "type"
-  } as unknown as ReportConfig
-
-  it("should generate a valid CSV Blob for an ungrouped report", async () => {
-    const config: ReportConfig = {
-      ...commonConfigPart,
-      structure: "flat"
-    }
-    const data = [
-      { id: 1, name: "Alice" },
-      { id: 2, name: "Bob" }
-    ]
-
-    const result = await createReportCsv(data, config, "TEST_REPORT" as ReportType, "2023-01-01", "2023-12-31")
-
-    expect(mockedCsvMetadata).toHaveBeenCalledWith("TEST_REPORT", "2023-01-01", "2023-12-31")
-
-    const blobContent = (result as any).content[0]
-
-    const lines = blobContent.split("\n")
-
-    expect(lines[0]).toBe("")
-    expect(lines[1]).toBe("Mocked Metadata Row")
-    expect(lines[2]).toBe("")
-    expect(lines[3]).toBe("ID,Name")
-    expect(lines[4]).toBe("1,Alice")
-    expect(lines[5]).toBe("2,Bob")
-
-    expect((result as any).options).toEqual({ type: "text/csv;charset=utf-8;" })
+    expect(getGroupReportCsvChunks).toHaveBeenCalled()
+    expect(getFlatReportCsvChunks).not.toHaveBeenCalled()
+    expect(getNestedReportCsvChunks).not.toHaveBeenCalled()
   })
 
-  it("should generate a valid CSV Blob for a grouped report", async () => {
-    const config: ReportConfig = {
-      ...commonConfigPart,
-      structure: "grouped",
-      groupNameKey: "courtName",
-      dataListKey: "cases"
-    }
+  it("should route to getNestedReportCsvChunks when structure is nested", async () => {
+    const config = { structure: "nested" } as any
+    await createReportCsv(mockNestedData, config, "type" as ReportType, null, null)
 
-    const data = [
-      {
-        courtName: "Court A",
-        cases: [
-          { id: 10, name: "Case 1" },
-          { id: 11, name: "Case 2" }
-        ]
-      }
-    ]
-
-    const result = await createReportCsv(data, config, "GROUPED_REPORT" as ReportType, null, null)
-    const blobContent = (result as any).content[0]
-    const lines = blobContent.split("\n")
-
-    expect(lines[3]).toBe('"",Court A')
-    expect(lines[4]).toBe("ID,Name")
-    expect(lines[5]).toBe("10,Case 1")
-    expect(lines[6]).toBe("11,Case 2")
-  })
-
-  it("should skip group generation if dataList is not an array", async () => {
-    const config: ReportConfig = {
-      ...commonConfigPart,
-      structure: "grouped",
-      groupNameKey: "courtName",
-      dataListKey: "cases"
-    }
-
-    const data = [
-      {
-        courtName: "Court A",
-        cases: "Not an array"
-      }
-    ]
-
-    const result = await createReportCsv(data, config, "TEST" as ReportType, null, null)
-    const blobContent = (result as any).content[0]
-    const lines = blobContent.split("\n")
-
-    expect(lines).toHaveLength(3)
-  })
-
-  it("should skip row generation in grouped data if the row is not a record", async () => {
-    const config: ReportConfig = {
-      ...commonConfigPart,
-      structure: "grouped",
-      groupNameKey: "courtName",
-      dataListKey: "cases"
-    }
-
-    const data = [
-      {
-        courtName: "Court A",
-        cases: [{ id: 10, name: "Case 1" }, "Invalid String Row"] // Mixed valid/invalid rows
-      }
-    ]
-
-    mockedIsRecord.mockImplementation((val) => typeof val === "object" && val !== null)
-
-    const result = await createReportCsv(data, config, "TEST" as ReportType, null, null)
-    const blobContent = (result as any).content[0]
-    const lines = blobContent.split("\n")
-
-    expect(lines[3]).toBe('"",Court A')
-    expect(lines[4]).toBe("ID,Name")
-    expect(lines[5]).toBe("10,Case 1")
-    expect(lines[6]).toBeUndefined()
-  })
-
-  it("should generate a valid CSV Blob for a nested report", async () => {
-    const data = [
-      {
-        outerGroupName: "Outer Group A",
-        outerDataList: [
-          {
-            innerGroupName: "Inner Group 1",
-            type: "typeA",
-            innerDataList: [
-              { id: 10, name: "Case 1" },
-              { id: 11, name: "Case 2" }
-            ]
-          }
-        ]
-      }
-    ]
-
-    const mockMappedCols = [{ header: "TypeAHeader", key: "name" }]
-    mockedGetMappedColumns.mockReturnValue(mockMappedCols)
-
-    const result = await createReportCsv(
-      data as Record<string, unknown>[],
-      nestedConfig,
-      "NESTED_REPORT" as ReportType,
-      null,
-      null
-    )
-
-    const blobContent = (result as any).content[0]
-    const lines = blobContent.split("\n")
-
-    expect(lines[3]).toBe('"",Outer Group A,Inner Group 1')
-    expect(lines[4]).toBe("TypeAHeader")
-    expect(lines[5]).toBe("Case 1")
-    expect(lines[6]).toBe("Case 2")
-    expect(mockedGetMappedColumns).toHaveBeenCalledWith(nestedConfig, data[0].outerDataList[0])
-  })
-
-  it("should skip nested generation if outerDataList is not an array", async () => {
-    const data = [
-      {
-        outerGroupName: "Outer Group A",
-        outerDataList: "Not an array"
-      }
-    ]
-
-    const result = await createReportCsv(data, nestedConfig, "NESTED_REPORT" as ReportType, null, null)
-    const blobContent = (result as any).content[0]
-    const lines = blobContent.split("\n")
-
-    expect(lines).toHaveLength(3)
-  })
-
-  it("should skip nested generation if innerDataList is not an array", async () => {
-    const data = [
-      {
-        outerGroupName: "Outer Group A",
-        outerDataList: [
-          {
-            innerGroupName: "Inner Group 1",
-            type: "typeA",
-            innerDataList: "Not an array"
-          }
-        ]
-      }
-    ]
-
-    const result = await createReportCsv(data, nestedConfig, "NESTED_REPORT" as ReportType, null, null)
-    const blobContent = (result as any).content[0]
-    const lines = blobContent.split("\n")
-
-    expect(lines).toHaveLength(3)
-  })
-
-  it("should skip row generation if innerDataItem is not a record", async () => {
-    const data = [
-      {
-        outerGroupName: "Outer Group A",
-        outerDataList: [
-          {
-            innerGroupName: "Inner Group 1",
-            type: "typeA",
-            innerDataList: [{ id: 10, name: "Case 1" }, "Invalid String Row"]
-          }
-        ]
-      }
-    ]
-
-    const mockMappedCols = [{ header: "TypeAHeader", key: "name" }]
-    mockedGetMappedColumns.mockReturnValue(mockMappedCols)
-
-    const result = await createReportCsv(
-      data as Record<string, unknown>[],
-      nestedConfig,
-      "NESTED_REPORT" as ReportType,
-      null,
-      null
-    )
-
-    const blobContent = (result as any).content[0]
-    const lines = blobContent.split("\n")
-
-    expect(lines[3]).toBe('"",Outer Group A,Inner Group 1')
-    expect(lines[4]).toBe("TypeAHeader")
-    expect(lines[5]).toBe("Case 1")
-    expect(lines[6]).toBe("undefined")
-    expect(mockedGetMappedColumns).toHaveBeenCalledWith(nestedConfig, data[0].outerDataList[0])
+    expect(getNestedReportCsvChunks).toHaveBeenCalled()
+    expect(getFlatReportCsvChunks).not.toHaveBeenCalled()
+    expect(getGroupReportCsvChunks).not.toHaveBeenCalled()
   })
 })
