@@ -5,7 +5,6 @@ import { ReportTableBody } from "./ReportTableBody"
 import { Totals } from "./Totals"
 import { REPORT_TYPE_MAP } from "@moj-bichard7/common/types/reports/ReportType"
 import { calculateTotalsForFlatStructure } from "@/utils/reports/calculateTotalsForFlatStructure"
-import { useMemo } from "react"
 
 interface SimpleTableProps<T> {
   config: FlatReportConfig<T>
@@ -24,9 +23,7 @@ export const SimpleTable = <T extends Record<string, unknown>>({
     return null
   }
 
-  const totals = useMemo(() => {
-    return calculateTotalsForFlatStructure(rows, config.totalsConfig, config.calculateTotalsCallback)
-  }, [rows, config.totalsConfig, config.calculateTotalsCallback])
+  const totals = calculateTotalsForFlatStructure(rows, config.totalsConfig, config.calculateTotalsCallback)
 
   return (
     <section aria-label={`${tableName} container`}>
