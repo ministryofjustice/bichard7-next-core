@@ -33,7 +33,8 @@ describe("nestedTable", () => {
     },
     columnSelectorKey: "type",
     totalsConfig: [{ key: "total", label: "Total" }],
-    reportType: "TEST_REPORT_TYPE" as ReportType
+    reportType: "TEST_REPORT_TYPE" as ReportType,
+    formatter: "date"
   } as NestedGroupedReportConfig<any, any, any>
 
   const mockGroups = [
@@ -78,7 +79,7 @@ describe("nestedTable", () => {
 
     mockedEnsureString.mockImplementation((val) => String(val))
     mockedIsRecordArray.mockImplementation((val) => Array.isArray(val))
-    mockedFormatGroupName.mockImplementation((cfg, name) => name)
+    mockedFormatGroupName.mockImplementation((cfg, name) => `Formatted ${name}`)
     mockedIsRecord.mockReturnValue(true)
     mockedGetMappedColumns.mockImplementation((config, innerGroup) => {
       const selectorValue = innerGroup[config.columnSelectorKey] as string
@@ -105,6 +106,7 @@ describe("nestedTable", () => {
     for (let groupIndex = 0; groupIndex < 2; groupIndex++) {
       const group = result![groupIndex]
       expect(group.groupName).toBe(groupIndex === 0 ? "Group A" : "Group B")
+      expect(group.formattedGroupName).toBe(groupIndex === 0 ? "Formatted Group A" : "Formatted Group B")
       expect(group.tables).toHaveLength(2)
 
       for (let tableIndex = 0; tableIndex < 2; tableIndex++) {
