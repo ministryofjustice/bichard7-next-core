@@ -1,3 +1,5 @@
+import type { ReportData } from "@/types/reports/Config"
+import bundleReportData from "@/utils/reports/bundleReportData"
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { csvMetadata } from "../utils/csvMetadata"
 import { createReportCsv } from "./createReportCsv"
@@ -36,7 +38,8 @@ describe("createReportCsv Orchestrator", () => {
   it("should route to getFlatReportCsvChunks when structure is flat", async () => {
     const config = { structure: "flat" } as any
     ;(getFlatReportCsvChunks as jest.Mock).mockResolvedValue(["flat", "csv", "data"])
-    await createReportCsv(mockFlatData, config, "type" as ReportType, "start", "end")
+    const reportData = bundleReportData(config, mockFlatData) as ReportData
+    await createReportCsv(reportData, "type" as ReportType, "start", "end")
 
     expect(getFlatReportCsvChunks).toHaveBeenCalledWith(mockFlatData, config, ["", mockMetadata, ""])
     expect(getGroupReportCsvChunks).not.toHaveBeenCalled()
@@ -46,7 +49,8 @@ describe("createReportCsv Orchestrator", () => {
   it("should route to getGroupReportCsvChunks when structure is grouped", async () => {
     const config = { structure: "grouped" } as any
     ;(getGroupReportCsvChunks as jest.Mock).mockResolvedValue(["header", "grouped-data"])
-    await createReportCsv(mockGroupedData, config, "type" as ReportType, null, null)
+    const reportData = bundleReportData(config, mockGroupedData) as ReportData
+    await createReportCsv(reportData, "type" as ReportType, null, null)
 
     expect(getGroupReportCsvChunks).toHaveBeenCalledWith(mockGroupedData, config, ["", mockMetadata, ""])
     expect(getFlatReportCsvChunks).not.toHaveBeenCalled()
@@ -55,8 +59,9 @@ describe("createReportCsv Orchestrator", () => {
 
   it("should route to getNestedReportCsvChunks when structure is nested", async () => {
     const config = { structure: "nested" } as any
+    const reportData = bundleReportData(config, mockNestedData) as ReportData
     ;(getNestedReportCsvChunks as jest.Mock).mockResolvedValue(["mock", "csv", "data"])
-    await createReportCsv(mockNestedData, config, "type" as ReportType, null, null)
+    await createReportCsv(reportData, "type" as ReportType, null, null)
 
     expect(getNestedReportCsvChunks).toHaveBeenCalledWith(mockNestedData, config, ["", mockMetadata, ""])
     expect(getFlatReportCsvChunks).not.toHaveBeenCalled()
@@ -65,10 +70,11 @@ describe("createReportCsv Orchestrator", () => {
 
   it("should join csv chunks with newlines and include metadata", async () => {
     const config = { structure: "flat" } as any
+    const reportData = bundleReportData(config, []) as ReportData
     const mockChunks = ["row1", "row2"]
     ;(getFlatReportCsvChunks as jest.Mock).mockResolvedValue([...["", mockMetadata, ""], ...mockChunks])
 
-    const blob = await createReportCsv([], config, "TEST_TYPE" as ReportType, null, null)
+    const blob = await createReportCsv(reportData, "TEST_TYPE" as ReportType, null, null)
 
     const finalString = (blob as any).content[0]
 
@@ -79,12 +85,13 @@ describe("createReportCsv Orchestrator", () => {
   it("should pass the correct dates and report type to csvMetadata", async () => {
     const config = { structure: "flat" } as any
     ;(getFlatReportCsvChunks as jest.Mock).mockResolvedValue([])
+    const reportData = bundleReportData(config, []) as ReportData
 
     const from = "2023-01-01"
     const to = "2023-12-31"
     const type = "USER_REPORT" as ReportType
 
-    await createReportCsv([], config, type, from, to)
+    await createReportCsv(reportData, type, from, to)
 
     expect(mockedCsvMetadata).toHaveBeenCalledWith(type, from, to)
   })
@@ -92,8 +99,9 @@ describe("createReportCsv Orchestrator", () => {
   it("should produce a Blob with the correct CSV content type", async () => {
     const config = { structure: "flat" } as any
     ;(getFlatReportCsvChunks as jest.Mock).mockResolvedValue([])
+    const reportData = bundleReportData(config, []) as ReportData
 
-    const blob = await createReportCsv([], config, "type" as ReportType, null, null)
+    const blob = await createReportCsv(reportData, "type" as ReportType, null, null)
 
     expect((blob as any).options).toEqual({
       type: "text/csv;charset=utf-8;"
