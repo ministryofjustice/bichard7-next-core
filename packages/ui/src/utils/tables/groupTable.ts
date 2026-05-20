@@ -21,8 +21,6 @@ export const groupTable = <TTable extends Record<string, unknown>, TRow extends 
     const dataList = isRecordArray(rawDataList) ? rawDataList : []
     const cleanRows = dataList.filter(isRecord)
 
-    console.log(cleanRows)
-
     return {
       formattedTableName: config.formatter ? formatGroupName(config, tableName) : tableName,
       tableName: tableName,
