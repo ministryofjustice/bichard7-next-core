@@ -33,7 +33,11 @@ export const ReportConfigs = {
     endpoint: V1.CasesReportsDomesticViolence,
     structure: "flat",
     columns: domesticViolenceColumns,
-    reportType: "domestic violence"
+    reportType: "domestic violence",
+    totalsConfig: [{ key: "total", label: "Total court cases" }],
+    calculateTotalsCallback: (totals: Record<string, number>, rows: CaseForDomesticViolenceReportDto[]) => {
+      totals.total = new Set(rows.map((row) => row.errorId)).size
+    }
   } satisfies FlatReportConfig<CaseForDomesticViolenceReportDto>,
   exceptions: {
     endpoint: V1.CasesReportsExceptions,
