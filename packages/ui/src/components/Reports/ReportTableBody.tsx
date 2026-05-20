@@ -3,13 +3,13 @@ import { ReportTableRow } from "components/Reports/ReportTableRow"
 import { BaseReportColumn } from "types/reports/Columns"
 
 interface TableBodyProps<T> {
-  rows?: T[]
+  rows: T[]
   columns: BaseReportColumn[]
 }
 
 export const ReportTableBody = <T extends Record<string, unknown>>({ rows, columns }: TableBodyProps<T>) => (
   <StyledReportTableBody>
-    {rows?.map((row, rowIdx) => (
+    {rows.map((row, rowIdx) => (
       <ReportTableRow key={`${row.asn ?? row.username}-${rowIdx}`} row={row} columns={columns} />
     ))}
   </StyledReportTableBody>
