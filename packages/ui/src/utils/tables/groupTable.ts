@@ -18,13 +18,13 @@ export const groupTable = <TTable extends Record<string, unknown>, TRow extends 
     const tableName = ensureString(table[config.tableNameKey])
     const rawDataList = table[config.tableDataListKey]
     const totals = isRecord(table.totals) ? table.totals : undefined
-    const dataList = isRecordArray(rawDataList) ? rawDataList : []
+    const dataList = isRecordArray<TRow>(rawDataList) ? rawDataList : []
     const cleanRows = dataList.filter(isRecord)
 
     return {
       formattedTableName: config.formatter ? formatGroupName(config, tableName) : tableName,
       tableName: tableName,
-      rows: cleanRows as TRow[],
+      rows: cleanRows,
       totals,
       columns: config.columns
     }

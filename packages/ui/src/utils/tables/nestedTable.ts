@@ -4,7 +4,7 @@ import { getMappedColumns } from "@/services/reports/utils/getMappedColumns"
 import { isRecord } from "@/services/reports/utils/isRecord"
 import { isRecordArray } from "@/services/reports/utils/isRecordArray"
 import type { NestedGroupedReportConfig } from "@/types/reports/Config"
-import type { default as ReportTableGroup } from "@/types/reports/ReportTableGroup"
+import type ReportTableGroup from "@/types/reports/ReportTableGroup"
 
 export interface NestedTableProps<
   TGroup extends Record<string, unknown>,
@@ -27,7 +27,7 @@ export const nestedTable = <
     const groupName = ensureString(group[config.groupNameKey])
     const rawGroupDataList = group[config.groupDataListKey]
     const groupTotals = isRecord(group.totals) ? group.totals : undefined
-    const groupDataList = isRecordArray<TTable>(rawGroupDataList) ? rawGroupDataList : []
+    const groupDataList = isRecordArray(rawGroupDataList) ? rawGroupDataList : []
     const cleanTables = groupDataList.filter(isRecord)
 
     const tables = cleanTables.map((table) => {
@@ -37,13 +37,11 @@ export const nestedTable = <
       const tableDataList = isRecordArray<TRow>(rawTableDataList) ? rawTableDataList : []
       const cleanTableRows = tableDataList.filter(isRecord)
 
-      const mappedColumns = getMappedColumns(config, table)
-
       return {
         tableName,
         rows: cleanTableRows,
         totals: tableTotals,
-        columns: mappedColumns
+        columns: getMappedColumns(config, table)
       }
     })
 
