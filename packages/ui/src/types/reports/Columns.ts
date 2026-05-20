@@ -10,9 +10,9 @@ export type ReportColumn<TRow> = {
   key: Extract<keyof TRow, string>
 }
 
-export type BaseReportColumn = {
+export type BaseReportColumn<TRow = Record<string, unknown>> = {
   header: string
-  key: string
+  key: Extract<keyof TRow, string>
 }
 
 export const exceptionsColumns: ReportColumn<CaseForExceptionReportDto>[] = [

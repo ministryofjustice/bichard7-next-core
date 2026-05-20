@@ -1,10 +1,10 @@
 import type ReportTable from "./ReportTable"
 
-interface ReportTableGroup {
+interface ReportTableGroup<TRow extends Record<string, unknown> = Record<string, unknown>> {
   groupName: string
   formattedGroupName: string
+  tables: ReportTable<TRow>[]
   totals?: Record<string, unknown>
-  tables: ReportTable[]
 }
 
 export default ReportTableGroup

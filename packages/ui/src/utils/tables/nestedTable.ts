@@ -3,19 +3,27 @@ import { formatGroupName } from "@/services/reports/utils/formatGroupName"
 import { getMappedColumns } from "@/services/reports/utils/getMappedColumns"
 import { isRecord } from "@/services/reports/utils/isRecord"
 import { isRecordArray } from "@/services/reports/utils/isRecordArray"
-import type { FlatReportConfig, ReportConfig } from "@/types/reports/Config"
+import type { FlatReportConfig, NestedGroupedReportConfig } from "@/types/reports/Config"
 import type ReportTable from "@/types/reports/ReportTable"
 import type { default as ReportTableGroup } from "@/types/reports/ReportTableGroup"
 
-export interface NestedTableProps<TOuterGroup> {
-  config: ReportConfig
+export interface NestedTableProps<
+  TOuterGroup extends Record<string, unknown>,
+  TInnerGroup extends Record<string, unknown>,
+  TRow extends Record<string, unknown>
+> {
+  config: NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow>
   groups: TOuterGroup[]
 }
 
-export const nestedTable = <TOuterGroup extends Record<string, unknown>>({
+export const nestedTable = <
+  TOuterGroup extends Record<string, unknown>,
+  TInnerGroup extends Record<string, unknown>,
+  TRow extends Record<string, unknown>
+>({
   config,
   groups
-}: NestedTableProps<TOuterGroup>): ReportTableGroup[] | null => {
+}: NestedTableProps<TOuterGroup, TInnerGroup, TRow>): ReportTableGroup<TRow>[] | null => {
   if (config.structure !== "nested") {
     return null
   }
@@ -49,7 +57,7 @@ export const nestedTable = <TOuterGroup extends Record<string, unknown>>({
         totals: tableTotals,
         tableConfig,
         columns: mappedColumns
-      } as ReportTable
+      } as ReportTable<TRow>
     })
 
     return {
@@ -57,6 +65,6 @@ export const nestedTable = <TOuterGroup extends Record<string, unknown>>({
       formattedGroupName: config.formatter ? formatGroupName(config, groupName) : groupName,
       totals: groupTotals,
       tables
-    } as ReportTableGroup
+    } as ReportTableGroup<TRow>
   })
 }

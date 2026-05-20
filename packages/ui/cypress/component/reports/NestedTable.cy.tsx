@@ -1,9 +1,23 @@
 import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { NestedTable } from "components/Reports/NestedTable"
-import { NestedGroupedReportConfig, ReportConfig } from "types/reports/Config"
+import { NestedGroupedReportConfig } from "types/reports/Config"
+
+type TestRow = { devName?: string; hrName?: string }
+
+type TestInnerGroup = {
+  teamName: string
+  type: string
+  members: TestRow[]
+  totals?: { headcount: number }
+}
+
+type TestOuterGroup = {
+  region: string
+  allTeams: TestInnerGroup[]
+}
 
 describe("NestedTable", () => {
-  const mockConfig = {
+  const mockConfig: NestedGroupedReportConfig<TestOuterGroup, TestInnerGroup, TestRow> = {
     structure: "nested",
     endpoint: "test",
     groupNameKey: "region",
@@ -17,9 +31,9 @@ describe("NestedTable", () => {
     columnSelectorKey: "type",
     totalsConfig: [{ key: "headcount", label: "Count" }],
     reportType: "TEST_REPORT_TYPE" as ReportType
-  } as NestedGroupedReportConfig<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>
+  }
 
-  const mockGroups = [
+  const mockGroups: TestOuterGroup[] = [
     {
       region: "North",
       allTeams: [
@@ -40,11 +54,13 @@ describe("NestedTable", () => {
   ]
 
   it("renders nothing if structure is not 'nested'", () => {
-    const flatConfig = { ...mockConfig, structure: "flat" } as ReportConfig
+    const flatConfig = { ...mockConfig, structure: "flat" }
+    // @ts-expect-error - Intentionally passing an invalid config to test the runtime guard
     cy.mount(<NestedTable config={flatConfig} groups={mockGroups} />)
     cy.get("section").should("not.exist")
 
-    const groupedConfig = { ...mockConfig, structure: "grouped" } as ReportConfig
+    const groupedConfig = { ...mockConfig, structure: "grouped" }
+    // @ts-expect-error - Intentionally passing an invalid config to test the runtime guard
     cy.mount(<NestedTable config={groupedConfig} groups={mockGroups} />)
     cy.get("section").should("not.exist")
   })
@@ -80,9 +96,10 @@ describe("NestedTable", () => {
   })
 
   it("filters out invalid inner groups gracefully", () => {
-    const corruptGroups = [
+    const corruptGroups: TestOuterGroup[] = [
       {
         region: "South",
+        // @ts-expect-error - Intentionally passing a string instead of an array to test the fallback
         allTeams: "not-an-array"
       }
     ]

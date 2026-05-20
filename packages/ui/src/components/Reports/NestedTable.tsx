@@ -3,10 +3,14 @@ import { nestedTable, NestedTableProps } from "@/utils/tables/nestedTable"
 import { ReportContainer } from "./GroupTable.styles"
 import { Totals } from "./Totals"
 
-export const NestedTable = <TOuterGroup extends Record<string, unknown>>({
+export const NestedTable = <
+  TOuterGroup extends Record<string, unknown>,
+  TInnerGroup extends Record<string, unknown>,
+  TRow extends Record<string, unknown>
+>({
   config,
   groups
-}: NestedTableProps<TOuterGroup>) => {
+}: NestedTableProps<TOuterGroup, TInnerGroup, TRow>) => {
   if (config.structure !== "nested") {
     return null
   }
