@@ -24,7 +24,7 @@ export const mapToUserPerformanceDetailDtoDay = (date: Date, row?: UserDetailJso
 
     codeDetails.push({
       ...exc,
-      description: ExceptionMap.get(exc.code) ?? "Description unavailable",
+      description: ExceptionMap.get(exc.code) ?? `Unknown Exception (${exc.code})`,
       type: "exception" as const
     })
   }
@@ -35,7 +35,7 @@ export const mapToUserPerformanceDetailDtoDay = (date: Date, row?: UserDetailJso
 
     codeDetails.push({
       ...trig,
-      description: TriggerMap.get(trig.code) ?? "Description unavailable",
+      description: TriggerMap.get(trig.code) ?? `Unknown Trigger (${trig.code})`,
       type: "trigger" as const
     })
   }
