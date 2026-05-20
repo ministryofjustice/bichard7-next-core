@@ -90,9 +90,9 @@ export const ReportConfigs = {
     columns: userPerformanceSummaryColumns,
     formatter: "date",
     totalsConfig: [
-      { key: "exceptionsResolved", label: "Exceptions Resolved" },
-      { key: "triggerResolved", label: "Triggers Resolved" },
-      { key: "totalNumberStillLocked", label: "Exceptions/Triggers Locked" }
+      { key: "exceptionsResolved", label: "Exceptions resolved" },
+      { key: "triggerResolved", label: "Triggers resolved" },
+      { key: "totalNumberStillLocked", label: "Exceptions or triggers locked" }
     ],
     reportType: "user summary"
   } satisfies GroupedReportConfig<UserPerformanceSummaryDto, UserForPerformanceSummaryDto>,
