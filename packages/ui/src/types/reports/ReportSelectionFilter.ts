@@ -1,7 +1,9 @@
+import type { AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 
 export type FilterState = {
-  reportType: ReportType | undefined
+  reportType: ReportType | AutomatedReportType | undefined
+  isAutomatedReport: boolean | undefined
   dateTo: string
   dateFrom: string
   exceptions: boolean
@@ -13,6 +15,7 @@ export type FilterState = {
 }
 
 export type FilterAction =
+  | { type: "SET_AUTOMATED_REPORT_TYPE"; payload: AutomatedReportType }
   | { type: "SET_REPORT_TYPE"; payload: ReportType }
   | { type: "SET_DATE_FROM"; payload: string }
   | { type: "SET_DATE_TO"; payload: string }

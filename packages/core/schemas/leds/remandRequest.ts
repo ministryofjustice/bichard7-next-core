@@ -13,7 +13,9 @@ export const appearanceResultSchema = z.enum([
 ])
 
 export const nextAppearanceSchema = z.object({
-  date: dateStringSchema.optional(),
+  date: dateStringSchema
+    .optional()
+    .describe("Mandatory if appearanceResult is B and Q. Optional for A, C, P and O. Not applicable for U."),
   forceStationCode: forceStationCodeSchema.optional(),
   court: courtSchema.optional()
 })
@@ -50,7 +52,7 @@ export const remandRequestSchema = z.object({
   personUrn: z.string().nonempty(),
   remandDate: dateStringSchema,
   appearanceResult: appearanceResultSchema,
-  currentAppearance: currentAppearanceSchema.optional(),
+  currentAppearance: currentAppearanceSchema,
   nextAppearance: nextAppearanceSchema.optional(),
   localAuthority: localAuthoritySchema.optional(),
   bailConditions: z

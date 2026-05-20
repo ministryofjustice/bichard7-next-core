@@ -66,6 +66,10 @@ const checkMocksForPncEmulator = async (bichard: PncBichard, pncHelper: PncHelpe
 
       if (bichard.config.parallel) {
         expect(mock.requests.length).toBeGreaterThanOrEqual(1)
+        if (typeof mock.expectedRequest !== "string") {
+          throw new Error("expectedRequest must be a string")
+        }
+
         const expectedRequest = updateExpectedRequest(mock.expectedRequest, bichard)
         let matchFound = "No request matched the expected request"
         for (const request of mock.requests) {
@@ -78,8 +82,16 @@ const checkMocksForPncEmulator = async (bichard: PncBichard, pncHelper: PncHelpe
         expect(matchFound).toBe("Yes")
       } else {
         const { expectedRequest } = mock
-        expect(mock.requests).toHaveLength(1)
-        expect(mock.requests[0]).toMatch(expectedRequest)
+        expect(mock.requests.length).toBeGreaterThanOrEqual(1)
+        if (typeof expectedRequest === "string") {
+          mock.requests.forEach((request) => {
+            expect(request).toMatch(expectedRequest)
+          })
+        } else {
+          mock.requests.forEach((request) => {
+            expect(request).toMatchObject(expectedRequest)
+          })
+        }
       }
     }
 

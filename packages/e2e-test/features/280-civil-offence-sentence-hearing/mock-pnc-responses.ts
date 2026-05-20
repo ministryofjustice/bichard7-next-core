@@ -1,20 +1,46 @@
+import { SET_BY_PROCESSOR } from "../../utils/constants"
 import extractAsnFromInputXml from "../../utils/extractAsnFromInputXml"
 import type Bichard from "../../utils/world"
 
 export default (_: string, { policeApi }: Bichard) => [
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000343RENQASIPNCA05A73000017300000120210901141073000001                                             050002370</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K21/25W     CIVILCASE               </IDS>
-        <CCR>K21/2732/20D                   </CCR>
-        <COF>K001    5:5:8:1      TH68010 26092011                </COF>
-        </ASI>
-      <GMT>000008073ENQR000343R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "CIVILCASE",
+      croNumber: "",
+      gmh: "073ENQR000343RENQASIPNCA05A73000017300000120210901141073000001                                             050002370",
+      gmt: "000008073ENQR000343R",
+      personId: SET_BY_PROCESSOR,
+      personUrn: "2021/25W",
+      reportId: SET_BY_PROCESSOR,
+      asn: "1301ZD0100000449618X",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: SET_BY_PROCESSOR,
+          courtCaseReference: "21/2732/000020D",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "5:5:8:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "TH68010",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              offenceTic: 0,
+              offenceStartDate: "2011-09-26",
+              offenceId: "eb9676fa-5255-4db3-a44b-01b8cf7c810c",
+              disposalResults: []
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message-1.xml`),
     expectedRequest: "",
     count: 1
@@ -25,7 +51,7 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       crimeOffenceReferenceNumber: "",
       ownerCode: "01YZ",
-      personUrn: "21/25W",
+      personUrn: "2021/25W",
       courtCaseReference: "21/2732/000020D",
       court: {
         courtIdentityType: "code",
@@ -63,10 +89,9 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       arrestSummonsNumber: "13/01ZD/01/449618X",
       crimeOffenceReferenceNo: "",
-      remandResult: "A",
       remandLocationFfss: "",
       ownerCode: "01YZ",
-      personUrn: "21/25W",
+      personUrn: "2021/25W",
       remandDate: "2011-09-26",
       appearanceResult: "adjourned",
       bailConditions: [],
@@ -88,19 +113,58 @@ export default (_: string, { policeApi }: Bichard) => [
   }),
   policeApi.mockAsnQuery({
     matchRegex: "CXE01",
-    response: `<?xml version="1.0" standalone="yes"?>
-    <CXE01>
-      <GMH>073ENQR000344RENQASIPNCA05A73000017300000120210901141073000001                                             050002373</GMH>
-      <ASI>
-        <FSC>K01ZD</FSC>
-        <IDS>K21/25W     CIVILCASE               </IDS>
-        <CCR>K21/2732/20D                   </CCR>
-        <COF>K001    5:5:8:1      TH68010 26092011                </COF>
-        <ADJ>IGUILTY       GUILTY        260920110000 </ADJ>
-        <DIS>I4011    26102011                                                                                        </DIS>
-      </ASI>
-      <GMT>000010073ENQR000344R</GMT>
-    </CXE01>`,
+    response: {
+      pncCheckName: "CIVILCASE",
+      croNumber: "",
+      gmh: "073ENQR000344RENQASIPNCA05A73000017300000120210901141073000001                                             050002373",
+      gmt: "000010073ENQR000344R",
+      personId: SET_BY_PROCESSOR,
+      personUrn: "2021/25W",
+      reportId: SET_BY_PROCESSOR,
+      asn: "1301ZD0100000449618X",
+      ownerCode: "01ZD",
+      disposals: [
+        {
+          crimeOffenceReferenceNumber: "",
+          courtCaseId: SET_BY_PROCESSOR,
+          courtCaseReference: "21/2732/000020D",
+          caseStatusMarker: "impending-prosecution-detail",
+          court: {
+            courtIdentityType: "code",
+            courtCode: "0000"
+          },
+          offences: [
+            {
+              acpoOffenceCode: "5:5:8:1",
+              courtOffenceSequenceNumber: 1,
+              cjsOffenceCode: "TH68010",
+              roleQualifiers: [],
+              legislationQualifiers: [],
+              plea: "Guilty",
+              offenceTic: 0,
+              offenceStartDate: "2011-09-26",
+              offenceId: "c645355a-bbac-4825-a4d0-9d01fdc4080f",
+              adjudications: [
+                {
+                  appearanceNumber: 1,
+                  adjudicationId: "616fac8b-b3db-4c41-8f9f-f651bccf05ae",
+                  disposalDate: "2011-09-26",
+                  adjudication: "Guilty"
+                }
+              ],
+              disposalResults: [
+                {
+                  disposalId: "7daf0286-37bf-4a31-8570-158e2f9a8493",
+                  disposalCode: 4011,
+                  disposalEffectiveDate: "2011-10-26",
+                  disposalText: ""
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
     asn: extractAsnFromInputXml(`${__dirname}/input-message-2.xml`),
     expectedRequest: "",
     count: 1
@@ -111,7 +175,7 @@ export default (_: string, { policeApi }: Bichard) => [
       croNumber: "",
       crimeOffenceReferenceNumber: "",
       ownerCode: "01YZ",
-      personUrn: "21/25W",
+      personUrn: "2021/25W",
       courtCaseReference: "21/2732/000020D",
       court: {
         courtIdentityType: "code",

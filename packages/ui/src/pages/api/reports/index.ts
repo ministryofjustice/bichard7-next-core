@@ -8,6 +8,8 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import type { AnyReportQuery } from "services/api/interfaces/BichardReportGateway"
 import { isReportType } from "services/reports/utils/isReportType"
 
+import type { ReportConfigs } from "types/reports/ReportConfigs"
+
 export const config = {
   api: {
     responseLimit: false,
@@ -49,7 +51,7 @@ export default async function index(request: NextApiRequest, response: NextApiRe
     triggers: triggers === "true"
   }
 
-  const reportStream = reportGateway.reportStrategy(reportType, params)
+  const reportStream = reportGateway.reportStrategy(reportType as keyof typeof ReportConfigs, params)
 
   if (isError(reportStream)) {
     res.status(400).send({ error: reportStream.message })

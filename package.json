@@ -51,11 +51,11 @@
     "prepare": "husky"
   },
   "workspaces": [
+    "packages/common",
+    "packages/core",
     "packages/api",
     "packages/cli",
-    "packages/common",
     "packages/conductor",
-    "packages/core",
     "packages/e2e-test",
     "packages/message-forwarder",
     "packages/uat-data",
@@ -98,6 +98,7 @@
     "jest": "30.3.0",
     "lint-staged": "^16.4.0",
     "npm-check-updates": "^21.0.2",
+    "typescript": "^6.0.3",
     "zod": "^4.3.6"
   }
 }

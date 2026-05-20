@@ -1,15 +1,26 @@
+import type { AppearanceResult } from "@moj-bichard7/core/types/leds/RemandRequest"
 import type { MockRemandRequest } from "../../../../types/MockRemandRequest"
 import * as CONSTANT from "../../../constants"
 import { convertToPncDate } from "../helpers/convertToPncDateTime"
 import { extractCourtCode, extractCourtName } from "../helpers/formatters"
 import generateRow from "../helpers/generateRow"
 
+const remandStatusPncCode: Record<AppearanceResult, string> = {
+  "remanded-on-bail": "B",
+  "remanded-in-care": "O",
+  adjourned: "A",
+  "remanded-in-custody": "C",
+  "remanded-on-police-bail": "",
+  "postal-requisition": "",
+  "released-under-investigation": ""
+}
+
 const remSegmentGenerator = (mockJson: MockRemandRequest): string => {
   const currentAppearance = mockJson.currentAppearance?.court
   const nextAppearance = mockJson.nextAppearance?.court
 
   const remandDate = convertToPncDate(mockJson.remandDate)
-  const remandResult = mockJson.remandResult
+  const remandResult = remandStatusPncCode[mockJson.appearanceResult]
   const remandLocationFfss = mockJson.remandLocationFfss
   const remandLocationCourt =
     mockJson.currentAppearance?.court?.courtIdentityType === "code"

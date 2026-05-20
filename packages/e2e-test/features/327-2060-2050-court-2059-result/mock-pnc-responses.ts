@@ -8,10 +8,9 @@ export default (ncm: string, { policeApi }: Bichard) => [
       croNumber: "",
       arrestSummonsNumber: "11/01ZD/01/500014C",
       crimeOffenceReferenceNo: "",
-      remandResult: "B",
       remandLocationFfss: "",
       ownerCode: "01YZ",
-      personUrn: "00/500014C",
+      personUrn: "2000/500014C",
       remandDate: "2011-09-26",
       appearanceResult: "remanded-on-bail",
       bailConditions: [],
@@ -36,7 +35,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
       croNumber: "",
       crimeOffenceReferenceNumber: "",
       ownerCode: "01YZ",
-      personUrn: "00/500014C",
+      personUrn: "2000/500014C",
       courtCaseReference: "97/1626/008395Q",
       court: {
         courtIdentityType: "code",
@@ -82,7 +81,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
                 cjsOffenceCode: "TH68151"
               },
               committedOnBail: false,
-              plea: "NOT GUILTY",
+              plea: "Not Guilty",
               offenceTic: 0,
               offenceStartDate: "2010-11-28",
               disposalResults: [

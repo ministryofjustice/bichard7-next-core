@@ -6,7 +6,6 @@ export const MockRemandRequestSchema = remandRequestSchema.extend({
   croNumber: z.string(),
   arrestSummonsNumber: z.string(),
   crimeOffenceReferenceNo: z.string(),
-  remandResult: z.string(),
   remandLocationFfss: z.string()
 })
 

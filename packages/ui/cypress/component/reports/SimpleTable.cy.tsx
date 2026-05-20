@@ -1,8 +1,9 @@
-import { ReportConfig } from "types/reports/Config"
 import { SimpleTable } from "components/Reports/SimpleTable"
+import { ReportConfig } from "types/reports/Config"
 
 describe("SimpleTable", () => {
   const mockConfig: ReportConfig = {
+    structure: "flat",
     columns: [
       { key: "name", header: "Product" },
       { key: "price", header: "Price" }

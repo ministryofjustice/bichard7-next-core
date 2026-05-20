@@ -1,10 +1,13 @@
-import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
+import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
+import { AUTOMATED_REPORT_TYPE_MAP, AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
+import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { Card } from "components/Card"
 import { SyntheticEvent, useEffect, useReducer, useState } from "react"
 import { createReportCsv } from "services/reports/createReportCsv"
 import { downloadReport } from "services/reports/downloadReport"
 import { csvFilename } from "services/reports/utils/csvFilename"
-import { ReportConfig, ReportConfigs } from "types/reports/Config"
+import { ReportConfig } from "types/reports/Config"
+import { ReportConfigs } from "types/reports/ReportConfigs"
 import { validateCheckboxes } from "utils/reports/validateCheckboxes"
 import { validateDateRange } from "utils/reports/validateDateRange"
 import { validateSelectReport } from "utils/reports/validateSelectReport"
@@ -15,16 +18,21 @@ import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { SelectReportDropdown } from "./SelectReportDropdown"
 import { filterReducer, initialFilterState } from "./reducers/filters"
+import bundleReportData from "utils/reports/bundleReportData"
 
 export const ReportSelectionFilter: React.FC = () => {
   const [isStreaming, setIsStreaming] = useState(false)
   const [rows, setRows] = useState<Record<string, unknown>[] | null>(null)
-  const [csvDownloadUrl, setCsvDownloadUrl] = useState<string | null>(null)
-  const [csvReportFilename, setCsvReportFilename] = useState<string>("")
+  const [fileDownloadUrl, setFileDownloadUrl] = useState<string | null>(null)
+  const [reportFilename, setReportFilename] = useState<string>("")
 
   const [filterValues, dispatch] = useReducer(filterReducer, initialFilterState)
 
-  const config = filterValues.reportType ? ReportConfigs[filterValues.reportType] : null
+  const config = filterValues.reportType
+    ? (ReportConfigs[filterValues.reportType as keyof typeof ReportConfigs] as unknown as ReportConfig)
+    : null
+
+  const reportData = bundleReportData(config, rows)
 
   const handleSetDateFrom = (date: string) => {
     dispatch({ type: "SET_DATE_FROM", payload: date })
@@ -35,7 +43,14 @@ export const ReportSelectionFilter: React.FC = () => {
   }
 
   const handleSelectChange = (event: SyntheticEvent<HTMLSelectElement>) => {
-    dispatch({ type: "SET_REPORT_TYPE", payload: event.currentTarget.value as ReportType })
+    const selectedValue = event.currentTarget.value
+
+    if (AUTOMATED_REPORT_TYPE_MAP[selectedValue as AutomatedReportType]) {
+      dispatch({ type: "SET_AUTOMATED_REPORT_TYPE", payload: selectedValue as AutomatedReportType })
+    }
+    if (REPORT_TYPE_MAP[selectedValue as ReportType]) {
+      dispatch({ type: "SET_REPORT_TYPE", payload: selectedValue as ReportType })
+    }
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -46,23 +61,23 @@ export const ReportSelectionFilter: React.FC = () => {
   const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault()
     setRows(null)
-    setCsvDownloadUrl(null)
+    setFileDownloadUrl(null)
     dispatch({ type: "RESET_FILTERS" })
   }
 
   const clearResults = () => {
     setRows(null)
-    setCsvDownloadUrl(null)
+    setFileDownloadUrl(null)
   }
 
   const validateFilters = (): boolean => {
     const rangeValidation = validateDateRange(filterValues.dateFrom, filterValues.dateTo)
     const checkboxesValidation = validateCheckboxes(
-      filterValues.reportType,
+      filterValues.reportType as ReportType,
       filterValues.triggers,
       filterValues.exceptions
     )
-    const selectReportValidation = validateSelectReport(filterValues.reportType)
+    const selectReportValidation = validateSelectReport(filterValues.reportType as ReportType)
 
     const newErrors = {
       dateFromError: rangeValidation.fromError,
@@ -77,6 +92,14 @@ export const ReportSelectionFilter: React.FC = () => {
       return false
     } else {
       return true
+    }
+  }
+
+  const handleAutomatedReportDownload = async () => {
+    if (filterValues.reportType) {
+      const filename = xlsxFilename(filterValues.reportType as AutomatedReportType)
+      setReportFilename(filename)
+      setFileDownloadUrl(`/reports/${filename}`)
     }
   }
 
@@ -98,10 +121,9 @@ export const ReportSelectionFilter: React.FC = () => {
         filterValues.dateFrom,
         filterValues.dateTo
       )
-
       setRows(parsedData)
-      setCsvDownloadUrl(globalThis.URL.createObjectURL(csvBlob))
-      setCsvReportFilename(csvFilename(reportType, urlQuery))
+      setFileDownloadUrl(globalThis.URL.createObjectURL(csvBlob))
+      setReportFilename(csvFilename(reportType, urlQuery))
     } catch (error) {
       console.error("Fetch failed:", error)
     } finally {
@@ -116,22 +138,28 @@ export const ReportSelectionFilter: React.FC = () => {
 
     setIsStreaming(true)
     setRows([])
-    setCsvDownloadUrl(null)
+    setFileDownloadUrl(null)
 
     await handleDownload()
   }
 
   useEffect(() => {
     return () => {
-      if (csvDownloadUrl) {
-        globalThis.URL.revokeObjectURL(csvDownloadUrl)
+      if (fileDownloadUrl) {
+        globalThis.URL.revokeObjectURL(fileDownloadUrl)
       }
     }
-  }, [csvDownloadUrl])
+  }, [fileDownloadUrl])
 
   useEffect(() => {
     clearResults()
   }, [filterValues])
+
+  useEffect(() => {
+    if (filterValues.reportType && filterValues.isAutomatedReport) {
+      handleAutomatedReportDownload()
+    }
+  }, [filterValues.reportType, filterValues.isAutomatedReport])
 
   return (
     <>
@@ -145,15 +173,18 @@ export const ReportSelectionFilter: React.FC = () => {
                 error={filterValues.reportTypeError}
               />
             </div>
+
             <div id={"date-range-section"} className="date-range-section-wrapper">
-              <DateRange
-                dateFromString={filterValues.dateFrom}
-                dateToString={filterValues.dateTo}
-                setDateFromString={handleSetDateFrom}
-                setDateToString={handleSetDateTo}
-                dateFromError={filterValues.dateFromError}
-                dateToError={filterValues.dateToError}
-              />
+              {filterValues.reportType && !filterValues.isAutomatedReport && (
+                <DateRange
+                  dateFromString={filterValues.dateFrom}
+                  dateToString={filterValues.dateTo}
+                  setDateFromString={handleSetDateFrom}
+                  setDateToString={handleSetDateTo}
+                  dateFromError={filterValues.dateFromError}
+                  dateToError={filterValues.dateToError}
+                />
+              )}
             </div>
             <div id={"include-section"} className="include-section-wrapper">
               {filterValues.reportType === "exceptions" && (
@@ -169,11 +200,12 @@ export const ReportSelectionFilter: React.FC = () => {
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break govuk-section-break--visible" />
           <ActionBar
             clearFilters={clearFilters}
-            csvDownloadUrl={csvDownloadUrl}
             handleRunReport={handleRunReport}
-            csvReportFilename={csvReportFilename}
+            fileDownloadUrl={fileDownloadUrl}
+            reportFilename={reportFilename}
             hasRows={!!rows && rows.length > 0}
             reportOptions={{
+              isAutomatedReport: filterValues.isAutomatedReport,
               reportType: filterValues.reportType,
               fromDate: filterValues.dateFrom,
               toDate: filterValues.dateTo
@@ -182,7 +214,11 @@ export const ReportSelectionFilter: React.FC = () => {
         </Card>
       </ReportSelectionFilterWrapper>
 
-      <ReportResults reportType={filterValues.reportType} rows={rows} config={config} isStreaming={isStreaming} />
+      <ReportResults
+        reportType={filterValues.reportType as ReportType}
+        reportData={reportData}
+        isStreaming={isStreaming}
+      />
     </>
   )
 }

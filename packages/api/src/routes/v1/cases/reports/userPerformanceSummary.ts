@@ -1,0 +1,69 @@
+import type { UserSummaryReportQuery } from "@moj-bichard7/common/contracts/UserSummaryReportQuery"
+import type { User } from "@moj-bichard7/common/types/User"
+import type { FastifyInstance, FastifyReply } from "fastify"
+import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
+
+import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { UserSummaryReportQuerySchema } from "@moj-bichard7/common/contracts/UserSummaryReportQuery"
+import { UserPerformanceSummaryDtoSchema } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
+import { isError } from "@moj-bichard7/common/types/Result"
+import { FORBIDDEN, OK } from "http-status"
+
+import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
+import type DatabaseGateway from "../../../../types/DatabaseGateway"
+
+import { jsonResponse } from "../../../../server/openapi/jsonResponse"
+import auth from "../../../../server/schemas/auth"
+import {
+  forbiddenError,
+  internalServerError,
+  unauthorizedError,
+  unprocessableEntityError
+} from "../../../../server/schemas/errorReasons"
+import useZod from "../../../../server/useZod"
+import { generateUserPerformanceSummaryReport } from "../../../../useCases/cases/reports/usersSummary/generateUserPerformanceSummaryReport"
+
+type HandlerProps = {
+  auditLogGateway: AuditLogDynamoGateway
+  database: DatabaseGateway
+  query: UserSummaryReportQuery
+  reply: FastifyReply
+  user: User
+}
+
+const schema = {
+  ...auth,
+  querystring: UserSummaryReportQuerySchema,
+  response: {
+    [OK]: jsonResponse("Users Performance Summary Report", UserPerformanceSummaryDtoSchema.array()),
+    ...unauthorizedError(),
+    ...forbiddenError(),
+    ...unprocessableEntityError(),
+    ...internalServerError()
+  },
+  tags: ["Cases V1"]
+} satisfies FastifyZodOpenApiSchema
+
+const handler = async ({ auditLogGateway, database, query, reply, user }: HandlerProps) => {
+  const result = await generateUserPerformanceSummaryReport(database, auditLogGateway, user, query, reply)
+
+  if (!isError(result)) {
+    return reply
+  }
+
+  return reply.code(FORBIDDEN).send()
+}
+
+const route = async (fastify: FastifyInstance) => {
+  useZod(fastify).get(V1.CasesReportsUserPerformanceSummary, { schema }, async (req, reply) => {
+    await handler({
+      auditLogGateway: req.auditLogGateway,
+      database: req.database,
+      query: req.query,
+      reply,
+      user: req.user
+    })
+  })
+}
+
+export default route

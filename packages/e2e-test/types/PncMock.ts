@@ -1,19 +1,17 @@
 import type { PncApi } from "../utils/PncApi"
 import type Bichard from "../utils/world"
+import type { MockAddDisposalRequest } from "./MockAddDisposalRequest"
+import type { MockRemandRequest } from "./MockRemandRequest"
+import type { MockSubsequentDisposalResultsRequest } from "./MockSubsequentDisposalResultsRequest"
 import type { PartialPoliceApiRequestMock, PoliceApiRequestMock, PoliceApiRequestMockOptions } from "./PoliceApi"
 
-export type PncMockOptions = PoliceApiRequestMockOptions & {
-  matchRegex?: string
-  response?: string
-  expectedRequest?: string
-  count?: number
-}
+export type PncMockOptions = PoliceApiRequestMockOptions
 
 export type PartialPncMock = PartialPoliceApiRequestMock & {
   matchRegex: string
   response: string
   count?: number
-  expectedRequest: string
+  expectedRequest: string | MockAddDisposalRequest | MockRemandRequest | MockSubsequentDisposalResultsRequest
 }
 
 export type PncBichard = Omit<Bichard, "policeApi"> & { policeApi: PncApi }

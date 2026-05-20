@@ -1,6 +1,6 @@
 import type OffenceResponse from "./OffenceResponse"
 
-type Charge = {
+export type Charge = {
   offenceId: string
   arrestSummonsId: string
   adjudication?: string
@@ -34,6 +34,14 @@ type Court = {
   courtName: string
 }
 
+export type SubsequentAppearance = {
+  appearanceNumber: number
+  court: Court
+  sentenceDate: string
+  reasonForVariation: string
+  charges: Charge[]
+}
+
 type Pagination = {
   recordTotal: number
   offset: number
@@ -47,7 +55,7 @@ export type DisposalEntry = {
   courtCaseReference: string
   caseStatusMarker: string
   charges: Charge[]
-  subsequentAppearances?: string[]
+  subsequentAppearances?: SubsequentAppearance[]
   owner?: string
   userReference?: string
 }

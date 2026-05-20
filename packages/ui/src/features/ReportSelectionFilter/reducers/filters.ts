@@ -1,9 +1,11 @@
+import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import type { FilterAction, FilterState } from "types/reports/ReportSelectionFilter"
 import { validateCheckboxes } from "utils/reports/validateCheckboxes"
 import { DATE_CANNOT_BE_AFTER_DATE_TO, DATE_CANNOT_BE_BEFORE_DATE_FROM } from "utils/reports/validationMessages"
 
 export const initialFilterState: FilterState = {
   reportType: undefined,
+  isAutomatedReport: undefined,
   dateTo: "",
   dateFrom: "",
   exceptions: true,
@@ -15,6 +17,15 @@ export const initialFilterState: FilterState = {
 }
 
 export function filterReducer(state: FilterState, action: FilterAction): FilterState {
+  const clearErrors = () => {
+    return {
+      reportTypeError: null,
+      dateFromError: null,
+      dateToError: null,
+      checkboxesError: null
+    }
+  }
+
   switch (action.type) {
     case "SET_REPORT_TYPE":
       return {
@@ -22,7 +33,15 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
         reportType: action.payload,
         exceptions: initialFilterState.exceptions,
         triggers: initialFilterState.triggers,
-        reportTypeError: null
+        isAutomatedReport: false,
+        ...clearErrors()
+      }
+    case "SET_AUTOMATED_REPORT_TYPE":
+      return {
+        ...state,
+        reportType: action.payload,
+        isAutomatedReport: true,
+        ...clearErrors()
       }
     case "SET_DATE_FROM":
       let dateToError = state.dateToError
@@ -42,7 +61,7 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
       const id = action.payload.id
       const checked = action.payload.checked
       const checkboxError = validateCheckboxes(
-        state.reportType,
+        state.reportType as ReportType,
         id === "triggers" ? checked : state.triggers,
         id === "exceptions" ? checked : state.exceptions
       )

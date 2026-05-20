@@ -31,8 +31,7 @@
     "@types/node-fetch": "^2.6.13",
     "@types/ws": "^8.18.1",
     "esbuild": "~0.25.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^6.0.3"
+    "ts-node": "^10.9.2"
   },
   "dependencies": {
     "@io-orkes/conductor-javascript": "~2.1.5",

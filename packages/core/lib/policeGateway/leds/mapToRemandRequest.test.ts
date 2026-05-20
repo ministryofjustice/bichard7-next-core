@@ -19,7 +19,7 @@ const expectedRequest = {
     date: "2024-12-11"
   },
   ownerCode: "02YZ",
-  personUrn: "22/858J",
+  personUrn: "2022/858J",
   remandDate: "2024-12-05"
 }
 

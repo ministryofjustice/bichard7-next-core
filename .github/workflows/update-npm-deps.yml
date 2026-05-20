@@ -23,6 +23,8 @@ jobs:
 
       - name: ⛓️ SLSA Supply Chain Security
         uses: ministryofjustice/devsecops-actions/sca/slsa@8c77d3a65a46d1d4b5416eafae5b84371ecd797d # v1.5.0
+        with:
+          security-patch-package-exclusion: '@moj-bichard7-developers/bichard7-next-data' # for release workflow
 
       - name: Install dependencies
         run: npm ci --ignore-scripts

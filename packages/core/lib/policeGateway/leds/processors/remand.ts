@@ -24,6 +24,7 @@ export const remand = (
   const validation = remandRequestSchema.safeParse(requestBody)
 
   if (!validation.success) {
+    console.error(validation.error)
     return new PoliceApiError(["Failed to validate LEDS request."])
   }
 

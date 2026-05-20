@@ -1,8 +1,8 @@
-import type { ReportConfig } from "types/reports/Config"
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
+import { csvMetadata } from "services/reports/utils/csvMetadata"
 import { escapeCsvCell } from "services/reports/utils/escapeCsvCell"
 import { isRecord } from "services/reports/utils/isRecord"
-import { csvMetadata } from "services/reports/utils/csvMetadata"
+import type { ReportConfig } from "types/reports/Config"
 
 export const createReportCsv = async (
   parsedData: Record<string, unknown>[],
@@ -13,7 +13,11 @@ export const createReportCsv = async (
 ): Promise<Blob> => {
   const csvChunks: string[] = ["", csvMetadata(reportType, fromDate, toDate), ""]
 
-  if (config.isGrouped) {
+  if (config.structure === "nested") {
+    return new Blob([], { type: "text/csv;charset=utf-8;" })
+  }
+
+  if (config.structure === "grouped") {
     parsedData.forEach((group) => {
       const groupName = group[config.groupNameKey]
       const dataList = group[config.dataListKey]

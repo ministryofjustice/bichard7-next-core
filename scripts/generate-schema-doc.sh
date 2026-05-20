@@ -12,7 +12,7 @@ fs.writeFileSync("spi.schema.json", JSON.stringify(z.toJSONSchema(incomingMessag
 END
 )
 
-echo $JSON_SCHEMA_SCRIPT | npx ts-node -T
+echo $JSON_SCHEMA_SCRIPT | npx ts-node -T -O '{"target":"es6","rootDir":"./packages/common/schemas/"}'
 
 if [[ "$(command -v generate-schema-doc 1>/dev/null 2>/dev/null || echo $?)x" == "1x" ]]; then
   echo "Installing json-schema-for-humans..."

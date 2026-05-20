@@ -1,5 +1,6 @@
+import { dateRange } from "@/utils/reports/dateRange"
 import DateInput from "components/CustomDateInput/DateInput"
-import { isAfter, isBefore, startOfToday, subDays } from "date-fns"
+import { startOfMonth, subMonths, startOfToday } from "date-fns"
 import { useMemo } from "react"
 
 interface DateRangeProps {
@@ -19,23 +20,33 @@ export const DateRange: React.FC<DateRangeProps> = ({
   dateFromError,
   dateToError
 }) => {
-  const thirtyOneDaysAgo = useMemo(() => subDays(startOfToday(), 31), [])
+  const today = startOfToday()
+  const earliestAllowedDate = useMemo(() => startOfMonth(subMonths(today, 12)), [])
 
-  const calculateDateFromMaxValue = (dateToString: string): Date => {
-    if (dateToString === "") {
-      return startOfToday()
-    } else {
-      const dateTo = new Date(dateToString)
-      return isBefore(dateTo, startOfToday()) ? dateTo : startOfToday()
-    }
-  }
-
-  const calculateDateToMinValue = (dateFromString: string): Date => {
+  const dateToConstraints = useMemo(() => {
     if (dateFromString === "") {
-      return thirtyOneDaysAgo
+      return null
+    }
+
+    const result = dateRange(new Date(dateFromString))
+    return result instanceof Error ? null : result
+  }, [dateFromString])
+
+  const handleDateFromChange = (value: string) => {
+    setDateFromString(value)
+    setDateToString("")
+
+    if (value === "") {
+      setDateToString("")
+      return
+    }
+
+    const result = dateRange(new Date(value))
+
+    if (result instanceof Error) {
+      setDateToString("")
     } else {
-      const dateFrom = new Date(dateFromString)
-      return isAfter(dateFrom, thirtyOneDaysAgo) ? dateFrom : thirtyOneDaysAgo
+      setDateToString(result.endDate.toISOString().slice(0, 10))
     }
   }
 
@@ -46,11 +57,11 @@ export const DateRange: React.FC<DateRangeProps> = ({
         <div id="report-selection-date-from" className="date">
           <DateInput
             dateType="from"
-            dispatch={(p) => setDateFromString(p.value as string)}
+            dispatch={(p) => handleDateFromChange(p.value as string)}
             value={dateFromString}
             dateRange={undefined}
-            minValue={thirtyOneDaysAgo}
-            maxValue={calculateDateFromMaxValue(dateToString)}
+            minValue={earliestAllowedDate}
+            maxValue={today}
             showError={!!dateFromError}
             errorMessage={dateFromError ?? ""}
           />
@@ -61,8 +72,9 @@ export const DateRange: React.FC<DateRangeProps> = ({
             dispatch={(p) => setDateToString(p.value as string)}
             value={dateToString}
             dateRange={undefined}
-            minValue={calculateDateToMinValue(dateFromString)}
-            maxValue={startOfToday()}
+            minValue={dateToConstraints?.startDate ?? earliestAllowedDate}
+            maxValue={dateToConstraints?.endDate ?? today}
+            disabled={dateFromString === ""}
             showError={!!dateToError}
             errorMessage={dateToError ?? ""}
           />

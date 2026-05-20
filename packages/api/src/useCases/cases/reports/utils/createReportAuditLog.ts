@@ -31,7 +31,7 @@ export const createReportAuditLog = async (options: CreateReportAuditLogOptions)
     "Date Range": `${formatDate(fromDate)} to ${formatDate(toDate)}`,
     "Number of Records Returned": totalRecords,
     "Output Format": "Viewed in UI",
-    "Report ID": REPORT_TYPE_MAP[reportType],
+    "Report ID": REPORT_TYPE_MAP[reportType] ?? reportType,
     "Time Taken": `${duration}ms`
   }
 
