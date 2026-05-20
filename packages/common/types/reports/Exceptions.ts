@@ -22,6 +22,11 @@ export const CaseForExceptionReportDtoSchema = CaseSchema.pick({
 
 export const ExceptionReportDtoSchema = z.object({
   cases: z.array(CaseForExceptionReportDtoSchema),
+  totals: z.object({
+    exceptions: z.number(),
+    total: z.number(),
+    triggers: z.number()
+  }),
   username: z.string()
 })
 
