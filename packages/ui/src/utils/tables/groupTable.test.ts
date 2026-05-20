@@ -2,6 +2,7 @@ import { ensureString } from "@/services/reports/utils/ensureString"
 import { formatGroupName } from "@/services/reports/utils/formatGroupName"
 import { isRecord } from "@/services/reports/utils/isRecord"
 import { isRecordArray } from "@/services/reports/utils/isRecordArray"
+import type { GroupedReportConfig } from "@/types/reports/Config"
 import { groupTable } from "./groupTable"
 
 jest.mock("@/services/reports/utils/ensureString")
@@ -14,24 +15,35 @@ const mockedFormatGroupName = formatGroupName as jest.MockedFunction<typeof form
 const mockedIsRecord = isRecord as jest.MockedFunction<typeof isRecord>
 const mockedIsRecordArray = isRecordArray as jest.MockedFunction<typeof isRecordArray>
 
+type TestRow = { id: string }
+
+type TestGroup = {
+  group: string
+  rows: TestRow[]
+  totals?: { total: number }
+}
+
 describe("groupTable", () => {
-  const mockConfig: any = {
+  const mockConfig: GroupedReportConfig<TestGroup, TestRow> = {
     structure: "grouped",
     groupNameKey: "group",
     dataListKey: "rows",
-    formatter: "date"
+    formatter: "date",
+    columns: [{ header: "ID", key: "id" }],
+    reportType: "user summary",
+    endpoint: ""
   }
 
   const mockGroups = [
     {
       group: "Group A",
-      rows: [{ id: 1 }, { id: 2 }],
-      totals: { count: 2 }
+      rows: [{ id: "1" }, { id: "2" }],
+      totals: { total: 2 }
     },
     {
       group: "Group B",
-      rows: [{ id: 3 }],
-      totals: { count: 1 }
+      rows: [{ id: "3" }],
+      totals: { total: 1 }
     }
   ]
 
@@ -44,37 +56,37 @@ describe("groupTable", () => {
     mockedFormatGroupName.mockImplementation((cfg, name) => `Formatted ${name}`)
   })
 
-  it("should return null if config structure is 'flat'", () => {
-    const flatConfig = { ...mockConfig, structure: "flat" }
-    const result = groupTable({ config: flatConfig, groups: mockGroups })
-    expect(result).toBeNull()
-  })
-
-  it("should return null if config structure is 'nested'", () => {
-    const nestedConfig = { ...mockConfig, structure: "nested" }
-    const result = groupTable({ config: nestedConfig, groups: mockGroups })
-    expect(result).toBeNull()
-  })
-
   it("should correctly map groups and their associated rows", () => {
     const result = groupTable({ config: mockConfig, groups: mockGroups })
 
     expect(result).toHaveLength(2)
 
-    console.log(result)
-
     expect(result![0]).toEqual({
-      groupName: "Group A",
-      formattedGroupName: "Formatted Group A",
-      rows: [{ id: 1 }, { id: 2 }],
-      totals: { count: 2 }
+      tableName: "Group A",
+      formattedTableName: "Formatted Group A",
+      rows: [{ id: "1" }, { id: "2" }],
+      columns: [{ header: "ID", key: "id" }],
+      totals: { total: 2 },
+      tableConfig: {
+        structure: "flat",
+        columns: [{ header: "ID", key: "id" }],
+        endpoint: "",
+        reportType: "user summary"
+      }
     })
 
     expect(result![1]).toEqual({
-      groupName: "Group B",
-      formattedGroupName: "Formatted Group B",
-      rows: [{ id: 3 }],
-      totals: { count: 1 }
+      tableName: "Group B",
+      formattedTableName: "Formatted Group B",
+      rows: [{ id: "3" }],
+      columns: [{ header: "ID", key: "id" }],
+      totals: { total: 1 },
+      tableConfig: {
+        structure: "flat",
+        columns: [{ header: "ID", key: "id" }],
+        endpoint: "",
+        reportType: "user summary"
+      }
     })
   })
 
@@ -82,7 +94,7 @@ describe("groupTable", () => {
     const noFormatConfig = { ...mockConfig, formatter: undefined }
     const result = groupTable({ config: noFormatConfig, groups: mockGroups })
 
-    expect(result![0].groupName).toBe("Group A")
+    expect(result![0].tableName).toBe("Group A")
     expect(mockedFormatGroupName).not.toHaveBeenCalled()
   })
 
@@ -90,14 +102,14 @@ describe("groupTable", () => {
     const groups = [
       {
         group: "Group A",
-        rows: [{ id: 1 }, "not-a-record", null, { id: 2 }]
+        rows: [{ id: "1" }, "not-a-record", null, { id: "2" }]
       }
     ]
 
     const result = groupTable({ config: mockConfig, groups: groups as any })
 
     expect(result![0].rows).toHaveLength(2)
-    expect(result![0].rows).toEqual([{ id: 1 }, { id: 2 }])
+    expect(result![0].rows).toEqual([{ id: "1" }, { id: "2" }])
   })
 
   it("should handle missing data lists by defaulting to an empty array", () => {

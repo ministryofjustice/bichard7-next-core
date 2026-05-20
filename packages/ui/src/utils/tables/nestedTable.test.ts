@@ -4,7 +4,6 @@ import { getMappedColumns } from "@/services/reports/utils/getMappedColumns"
 import { isRecord } from "@/services/reports/utils/isRecord"
 import { isRecordArray } from "@/services/reports/utils/isRecordArray"
 import type { NestedGroupedReportConfig } from "@/types/reports/Config"
-import type { ReportType } from "aws-sdk/clients/codebuild"
 import { nestedTable } from "./nestedTable"
 
 jest.mock("@/services/reports/utils/ensureString")
@@ -19,8 +18,22 @@ const mockedEnsureString = ensureString as jest.MockedFunction<typeof ensureStri
 const mockedIsRecordArray = isRecordArray as jest.MockedFunction<typeof isRecordArray>
 const mockedFormatGroupName = formatGroupName as jest.MockedFunction<typeof formatGroupName>
 
+type TestRow = { id: number }
+
+type TestInnerGroup = {
+  tableName: string
+  type: string
+  rows: TestRow[]
+  totals?: { total: number }
+}
+
+type TestOuterGroup = {
+  group: string
+  tables: TestInnerGroup[]
+}
+
 describe("nestedTable", () => {
-  const mockConfig: any = {
+  const mockConfig: NestedGroupedReportConfig<TestOuterGroup, TestInnerGroup, TestRow> = {
     structure: "nested",
     endpoint: "test",
     groupNameKey: "group",
@@ -33,9 +46,9 @@ describe("nestedTable", () => {
     },
     columnSelectorKey: "type",
     totalsConfig: [{ key: "total", label: "Total" }],
-    reportType: "TEST_REPORT_TYPE" as ReportType,
+    reportType: "user detail",
     formatter: "date"
-  } as NestedGroupedReportConfig<any, any, any>
+  }
 
   const mockGroups = [
     {
@@ -87,18 +100,6 @@ describe("nestedTable", () => {
     })
   })
 
-  it("should return null if config structure is 'flat'", () => {
-    const flatConfig = { ...mockConfig, structure: "flat" }
-    const result = nestedTable({ config: flatConfig, groups: mockGroups })
-    expect(result).toBeNull()
-  })
-
-  it("should return null if config structure is 'grouped'", () => {
-    const groupedConfig = { ...mockConfig, structure: "grouped" }
-    const result = nestedTable({ config: groupedConfig, groups: mockGroups })
-    expect(result).toBeNull()
-  })
-
   it("should transform nested groups into the expected report structure", () => {
     const result = nestedTable({ config: mockConfig, groups: mockGroups })
 
@@ -114,7 +115,7 @@ describe("nestedTable", () => {
         expect(table.tableName).toBe(tableIndex == 0 ? "Table A" : "Table B")
         expect(table.rows).toHaveLength(2)
         expect(table.totals).toEqual(tableIndex == 0 ? { total: 50 } : { total: 100 })
-        expect(table.mappedColumns).toEqual(
+        expect(table.columns).toEqual(
           tableIndex == 0 ? [{ header: "ID_A", key: "id" }] : [{ header: "ID_B", key: "id" }]
         )
 
@@ -122,7 +123,7 @@ describe("nestedTable", () => {
           structure: "flat",
           columns: expect.any(Array),
           endpoint: "test",
-          reportType: "TEST_REPORT_TYPE"
+          reportType: "user detail"
         })
       }
     }
@@ -174,7 +175,11 @@ describe("nestedTable", () => {
   })
 
   it("should call formatGroupName with correct arguments if formatter exists", () => {
-    const configWithFormatter = { ...mockConfig, formatter: "date" }
+    const configWithFormatter = { ...mockConfig, formatter: "date" } as NestedGroupedReportConfig<
+      TestOuterGroup,
+      TestInnerGroup,
+      TestRow
+    >
 
     nestedTable({ config: configWithFormatter, groups: [mockGroups[0]] })
 

@@ -24,10 +24,6 @@ export const nestedTable = <
   config,
   groups
 }: NestedTableProps<TOuterGroup, TInnerGroup, TRow>): ReportTableGroup<TRow>[] | null => {
-  if (config.structure !== "nested") {
-    return null
-  }
-
   return groups.filter(isRecord).map((group) => {
     const groupName = ensureString(group[config.groupNameKey])
     const rawGroupDataList = group[config.groupDataListKey]

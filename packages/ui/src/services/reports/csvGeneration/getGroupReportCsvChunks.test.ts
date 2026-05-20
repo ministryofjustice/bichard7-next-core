@@ -7,15 +7,14 @@ jest.mock("@/utils/tables/groupTable")
 
 type TestRow = { id: string; name: string }
 
-type TestInnerGroup = {
+type TestGroup = {
   teamName: string
-  type: string
   members: TestRow[]
   totals?: { headcount: number }
 }
 
 describe("getGroupReportCsvChunks", () => {
-  const groupConfig: GroupedReportConfig<TestInnerGroup, TestRow> = {
+  const groupConfig: GroupedReportConfig<TestGroup, TestRow> = {
     endpoint: "",
     structure: "grouped",
     groupNameKey: "teamName",

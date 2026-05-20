@@ -14,10 +14,6 @@ export const groupTable = <TOuterGroup extends Record<string, unknown>, TRow ext
   config,
   groups
 }: GroupedTableProps<TOuterGroup, TRow>): ReportTable<TRow>[] | null => {
-  if (config.structure !== "grouped") {
-    return null
-  }
-
   return groups.map((group) => {
     const groupName = ensureString(group[config.groupNameKey])
     const rawDataList = group[config.dataListKey]
