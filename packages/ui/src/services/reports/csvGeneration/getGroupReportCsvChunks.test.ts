@@ -37,16 +37,7 @@ describe("getGroupReportCsvChunks", () => {
       rows: [
         { id: "10", name: "Case 1" },
         { id: "11", name: "Case 2" }
-      ],
-      tableConfig: {
-        structure: "flat",
-        columns: [
-          { header: "ID", key: "id" },
-          { header: "Name", key: "name" }
-        ],
-        endpoint: "",
-        reportType: "user detail"
-      }
+      ]
     }
 
     ;(groupTable as jest.Mock).mockReturnValue([table])

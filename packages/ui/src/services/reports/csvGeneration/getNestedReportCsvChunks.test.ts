@@ -49,16 +49,7 @@ describe("getNestedReportCsvChunks", () => {
               id: "10",
               fullName: "Case 1"
             }
-          ],
-          tableConfig: {
-            structure: "flat",
-            columns: [
-              { header: "ID_A", key: "id" },
-              { header: "Name_A", key: "fullName" }
-            ],
-            endpoint: "",
-            reportType: "user detail"
-          }
+          ]
         },
         {
           tableName: "Table B",
@@ -72,16 +63,7 @@ describe("getNestedReportCsvChunks", () => {
               id: "11",
               fullName: "Case 2"
             }
-          ],
-          tableConfig: {
-            structure: "flat",
-            columns: [
-              { header: "ID_B", key: "id" },
-              { header: "Name_B", key: "fullName" }
-            ],
-            endpoint: "",
-            reportType: "user detail"
-          }
+          ]
         }
       ]
     }
