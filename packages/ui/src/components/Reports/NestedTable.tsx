@@ -47,20 +47,20 @@ export const NestedTable = <
   const renderableOuterGroups = groups.map((group) => {
     const outerGroupName = ensureString(group[config.outerGroupNameKey])
     const rawDataList = group[config.outerDataListKey]
-    const totals = isRecord(group.totals) ? group.totals : undefined
+    const outerTotals = isRecord(group.totals) ? group.totals : undefined
     const dataList = isRecordArray(rawDataList) ? rawDataList : []
     const cleanInnerGroups = dataList.filter(isRecord)
 
     return {
       outerGroupName,
       innerGroups: cleanInnerGroups as TInnerGroup[],
-      totals
+      outerTotals
     }
   })
 
   return (
     <ReportContainer className="report-container">
-      {renderableOuterGroups.map(({ outerGroupName, innerGroups }) => {
+      {renderableOuterGroups.map(({ outerGroupName, innerGroups, outerTotals }) => {
         const outerSectionId = `outer-group-${outerGroupName}`
         const outerSectionBodyId = `outer-group-body-${outerGroupName}`
 
@@ -83,6 +83,8 @@ export const NestedTable = <
           <section key={outerSectionId} aria-labelledby={outerSectionId}>
             <h3 id={outerSectionId} className="govuk-heading-m">
               {formatGroupName(config, outerGroupName)}
+
+              <Totals totals={outerTotals} totalsConfig={config.totalsConfig ?? []} />
             </h3>
 
             <section id={outerSectionBodyId} aria-labelledby={outerSectionBodyId} itemID={"outer-group-body"}>
@@ -104,7 +106,7 @@ export const NestedTable = <
                     <h3 id={innerSectionId} className="govuk-heading-m">
                       {innerGroupName}
 
-                      <Totals totals={totals} totalsConfig={config.totalsConfig} />
+                      <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} />
                     </h3>
 
                     <ReportTable<TInnerGroup, Record<string, never>, TRow>
