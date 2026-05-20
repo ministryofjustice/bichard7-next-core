@@ -5,6 +5,7 @@ import { format } from "date-fns"
 
 import type { CaseRowForExceptionReport } from "../../../types/reports/Exceptions"
 
+import { CASE_TYPES } from "../../../types/reports/Exceptions"
 import { formatDate } from "../../cases/reports/utils/formatDate"
 
 const NOTE_PORTAL_ACTION_RESUBMITTED = "Portal Action: Resubmitted Message"
@@ -12,8 +13,8 @@ const NOTE_PORTAL_ACTION_MANUALLY_RESOLVED = "Portal Action: Record Manually Res
 const NOTE_REASON_TEXT = " Reason Text: "
 
 export const caseToExceptionsReportDto = (caseRow: CaseRowForExceptionReport): CaseForExceptionReportDto => {
-  const isTrigger = caseRow.type?.toLowerCase().includes("trigger")
-  const isError = caseRow.type?.toLowerCase().includes("exception")
+  const isTrigger = caseRow.type === CASE_TYPES.Trigger
+  const isError = caseRow.type === CASE_TYPES.Exception
 
   let resolutionAction = isTrigger ? "Trigger activity performed" : ""
 

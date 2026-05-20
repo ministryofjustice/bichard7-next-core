@@ -9,6 +9,7 @@ import { endOfDay, startOfDay } from "date-fns"
 import type { TransactionConnection } from "../../../../types/DatabaseGateway"
 import type { UserExceptionReportRow } from "../../../../types/reports/Exceptions"
 
+import { CASE_TYPES } from "../../../../types/reports/Exceptions"
 import { processUsers } from "../../../../useCases/cases/reports/exceptions/processUsers"
 import { organisationUnitSql } from "../../organisationUnitSql"
 
@@ -25,7 +26,7 @@ export async function* exceptionsReport(
 
     return database.connection`
       SELECT
-        ${isException ? "Exception" : "Trigger"}::text as type,
+        ${isException ? CASE_TYPES.Exception : CASE_TYPES.Trigger}::text as type,
         el.${database.connection(resolvedByCol)} as resolver,
         el.error_id,
         el.asn,

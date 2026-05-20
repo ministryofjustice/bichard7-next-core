@@ -2,9 +2,8 @@ import type { UserDetailJsonRow } from "../../../types/reports/UserDetail"
 
 import { mapToUserPerformanceDetailDtoDay } from "./mapToUserPerformanceDetailDtoDay"
 
-jest.mock("@moj-bichard7-developers/bichard7-next-data/dist/data/exception-definitions.json", () => ({
-  def1: { code: "EXC_SHORT", description: "Long description", shortDescription: "Exception short description" },
-  def2: { code: "EXC_LONG", description: "Exception long description only" },
+jest.mock("../../data/exceptionDefinitions.json", () => ({
+  def1: { code: "EXC", description: "Exception description" },
   def3: { code: "EXC_EMPTY" }
 }))
 
@@ -28,7 +27,7 @@ describe("mapToUserPerformanceDetailDtoDay", () => {
 
   it("should map exceptions and triggers prioritizing shortDescription over description", () => {
     const mockRow = {
-      exceptions: [{ code: "EXC_SHORT", extraData: "foo" }],
+      exceptions: [{ code: "EXC", extraData: "foo" }],
       triggers: [{ code: "TRG_SHORT", extraData: "bar" }]
     } as unknown as UserDetailJsonRow
 
@@ -36,7 +35,7 @@ describe("mapToUserPerformanceDetailDtoDay", () => {
 
     expect(result).toEqual({
       codeDetails: [
-        { code: "EXC_SHORT", description: "Exception short description", extraData: "foo", type: "exception" },
+        { code: "EXC", description: "Exception description", extraData: "foo", type: "exception" },
         { code: "TRG_SHORT", description: "Trigger short description", extraData: "bar", type: "trigger" }
       ],
       date: mockDate
@@ -45,7 +44,7 @@ describe("mapToUserPerformanceDetailDtoDay", () => {
 
   it("should fall back to 'description' when 'shortDescription' is missing", () => {
     const mockRow = {
-      exceptions: [{ code: "EXC_LONG" }],
+      exceptions: [{ code: "EXC" }],
       triggers: [{ code: "TRG_LONG" }]
     } as unknown as UserDetailJsonRow
 
@@ -53,7 +52,7 @@ describe("mapToUserPerformanceDetailDtoDay", () => {
 
     expect(result).toEqual({
       codeDetails: [
-        { code: "EXC_LONG", description: "Exception long description only", type: "exception" },
+        { code: "EXC", description: "Exception description", type: "exception" },
         { code: "TRG_LONG", description: "Trigger long description only", type: "trigger" }
       ],
       date: mockDate

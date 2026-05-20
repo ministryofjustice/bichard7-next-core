@@ -12,7 +12,6 @@ import type {
   UserPerformanceSummaryDto
 } from "@moj-bichard7/common/types/reports/UserPerformanceSummary"
 import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
-import type { ReportDataMap } from "services/api/BichardV1Report"
 import {
   bailsColumns,
   codeDetailUserColumns,
@@ -21,25 +20,36 @@ import {
   userPerformanceSummaryColumns,
   warrantsColumns
 } from "types/reports/Columns"
-import type {
-  FlatReportConfig,
-  GroupedReportConfig,
-  NestedGroupedReportConfig,
-  ReportConfig
-} from "types/reports/Config"
+import type { FlatReportConfig, GroupedReportConfig, NestedGroupedReportConfig } from "types/reports/Config"
 
-export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
+export const ReportConfigs = {
   bails: {
     endpoint: V1.CasesReportsBails,
     structure: "flat",
     columns: bailsColumns,
-    reportType: "bails"
+    reportType: "bails",
+    totalsConfig: [
+      { key: "total", label: "Total triggers" },
+      { key: "resolved", label: "Resolved" },
+      { key: "unresolved", label: "Unresolved" }
+    ],
+    calculateTotalsCallback: (totals: Record<string, number>, rows: CaseForBailsReportDto[]) => {
+      rows.forEach((row) => {
+        totals.total = totals.total + 1
+        totals.resolved = totals.resolved + (row.triggerStatus === "Resolved" ? 1 : 0)
+        totals.unresolved = totals.unresolved + (row.triggerStatus === "Unresolved" ? 1 : 0)
+      })
+    }
   } satisfies FlatReportConfig<CaseForBailsReportDto>,
   "domestic violence": {
     endpoint: V1.CasesReportsDomesticViolence,
     structure: "flat",
     columns: domesticViolenceColumns,
-    reportType: "domestic violence"
+    reportType: "domestic violence",
+    totalsConfig: [{ key: "total", label: "Total court cases" }],
+    calculateTotalsCallback: (totals: Record<string, number>, rows: CaseForDomesticViolenceReportDto[]) => {
+      totals.total = new Set(rows.map((row) => row.errorId)).size
+    }
   } satisfies FlatReportConfig<CaseForDomesticViolenceReportDto>,
   exceptions: {
     endpoint: V1.CasesReportsExceptions,
@@ -47,13 +57,30 @@ export const ReportConfigs: Record<keyof ReportDataMap, ReportConfig> = {
     groupNameKey: "username",
     dataListKey: "cases",
     columns: exceptionsColumns,
-    reportType: "exceptions"
+    reportType: "exceptions",
+    totalsConfig: [
+      { key: "total", label: "Total exceptions and triggers" },
+      { key: "exceptions", label: "Exceptions" },
+      { key: "triggers", label: "Triggers" }
+    ]
   } satisfies GroupedReportConfig<ExceptionReportDto, CaseForExceptionReportDto>,
   warrants: {
     endpoint: V1.CasesReportsWarrants,
     structure: "flat",
     columns: warrantsColumns,
-    reportType: "warrants"
+    reportType: "warrants",
+    totalsConfig: [
+      { key: "total", label: "Total triggers" },
+      { key: "resolved", label: "Resolved" },
+      { key: "unresolved", label: "Unresolved" }
+    ],
+    calculateTotalsCallback: (totals: Record<string, number>, rows: CaseForWarrantsReportDto[]) => {
+      rows.forEach((row) => {
+        totals.total = totals.total + 1
+        totals.resolved = totals.resolved + (row.triggerStatus === "Resolved" ? 1 : 0)
+        totals.unresolved = totals.unresolved + (row.triggerStatus === "Unresolved" ? 1 : 0)
+      })
+    }
   } satisfies FlatReportConfig<CaseForWarrantsReportDto>,
   "user summary": {
     endpoint: V1.CasesReportsUserPerformanceSummary,
