@@ -388,7 +388,7 @@ describe("exceptions report", () => {
     expect(event.eventSource).toBe("Bichard New UI")
     expect(event.category).toBe("information")
     expect(event.attributes?.["Number of Records Returned"]).toBe(2)
-    expect(event.attributes?.["Report ID"]).toBe("Resolved Exceptions/Triggers")
+    expect(event.attributes?.["Report ID"]).toBe("Resolved exceptions and triggers")
     expect(event.attributes?.["Output Format"]).toBe("Viewed in UI")
   })
 
@@ -424,7 +424,7 @@ describe("exceptions report", () => {
     expect(event.eventSource).toBe("Bichard New UI")
     expect(event.category).toBe("information")
     expect(event.attributes?.["Number of Records Returned"]).toBe(0)
-    expect(event.attributes?.["Report ID"]).toBe("Resolved Exceptions/Triggers")
+    expect(event.attributes?.["Report ID"]).toBe("Resolved exceptions and triggers")
     expect(event.attributes?.["Output Format"]).toBe("Viewed in UI")
   })
 })

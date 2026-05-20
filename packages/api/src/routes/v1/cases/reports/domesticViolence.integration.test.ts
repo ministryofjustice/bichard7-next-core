@@ -370,7 +370,7 @@ describe("domestic violence report", () => {
     expect(event.eventSource).toBe("Bichard New UI")
     expect(event.category).toBe("information")
     expect(event.attributes?.["Number of Records Returned"]).toBe(3)
-    expect(event.attributes?.["Report ID"]).toBe("Domestic Violence & Vulnerable Victims")
+    expect(event.attributes?.["Report ID"]).toBe("Domestic violence and vulnerable victims")
     expect(event.attributes?.["Output Format"]).toBe("Viewed in UI")
   })
 
@@ -406,7 +406,7 @@ describe("domestic violence report", () => {
     expect(event.eventSource).toBe("Bichard New UI")
     expect(event.category).toBe("information")
     expect(event.attributes?.["Number of Records Returned"]).toBe(0)
-    expect(event.attributes?.["Report ID"]).toBe("Domestic Violence & Vulnerable Victims")
+    expect(event.attributes?.["Report ID"]).toBe("Domestic violence and vulnerable victims")
     expect(event.attributes?.["Output Format"]).toBe("Viewed in UI")
   })
 })

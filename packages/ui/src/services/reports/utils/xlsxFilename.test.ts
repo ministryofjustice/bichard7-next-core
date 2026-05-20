@@ -6,13 +6,13 @@ describe("xlsxFilename", () => {
     const reportType: AutomatedReportType = "automation rate"
     const result = xlsxFilename(reportType)
 
-    expect(result).toBe("AutomationRate.xlsx")
+    expect(result).toBe("Automation-rate.xlsx")
   })
 
   it("should return 'TopExceptions.xlsx' when the type is 'top exceptions'", () => {
     const reportType: AutomatedReportType = "top exceptions"
     const result = xlsxFilename(reportType)
 
-    expect(result).toBe("TopExceptions.xlsx")
+    expect(result).toBe("Top-exceptions.xlsx")
   })
 })

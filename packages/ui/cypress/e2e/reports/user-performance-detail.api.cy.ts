@@ -16,7 +16,7 @@ describe("User Performance Detail", () => {
     const toDate = format(today, "yyyy-MM-dd")
     const formattedGroupDate = format(today, "dd/MM/yyyy")
 
-    cy.get("#report-select").select("User Performance Detail")
+    cy.get("#report-select").select("User performance detail")
     cy.get("#date-from").type(fromDate)
     cy.get("#date-to").type(toDate)
     cy.get("#run-report").click()
@@ -70,7 +70,7 @@ describe("User Performance Detail", () => {
     const fromDate = format(subDays(today, 7), "yyyy-MM-dd")
     const toDate = format(today, "yyyy-MM-dd")
 
-    cy.get("#report-select").select("User Performance Detail")
+    cy.get("#report-select").select("User performance detail")
     cy.get("#date-from").type(fromDate)
     cy.get("#date-to").type(toDate)
     cy.get("#run-report").click()

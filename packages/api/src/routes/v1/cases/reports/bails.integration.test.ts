@@ -337,7 +337,7 @@ describe("bails report", () => {
     expect(event.eventSource).toBe("Bichard New UI")
     expect(event.category).toBe("information")
     expect(event.attributes?.["Number of Records Returned"]).toBe(1)
-    expect(event.attributes?.["Report ID"]).toBe("Bail Conditions")
+    expect(event.attributes?.["Report ID"]).toBe("Bail conditions")
     expect(event.attributes?.["Output Format"]).toBe("Viewed in UI")
   })
 
@@ -373,7 +373,7 @@ describe("bails report", () => {
     expect(event.eventSource).toBe("Bichard New UI")
     expect(event.category).toBe("information")
     expect(event.attributes?.["Number of Records Returned"]).toBe(0)
-    expect(event.attributes?.["Report ID"]).toBe("Bail Conditions")
+    expect(event.attributes?.["Report ID"]).toBe("Bail conditions")
     expect(event.attributes?.["Output Format"]).toBe("Viewed in UI")
   })
 })

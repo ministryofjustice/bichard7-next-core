@@ -86,27 +86,27 @@ describe("warrants report type filter", () => {
     cy.get(".results-area table tbody tr").should("have.length", 1)
 
     const headers = [
-      "Hearing Date",
-      "Court Name",
-      "Hearing Time",
-      "Defendant Name",
+      "Hearing date",
+      "Court name",
+      "Hearing time",
+      "Defendant name",
       "Gender",
-      "Defendant Address",
-      "Date of Birth",
+      "Defendant address",
+      "Date of birth",
       "PNCID",
       "PTIURN",
       "ASN",
-      "Offence Title(s)",
-      "Offence Wording",
-      "Warrant Text",
-      "Next Court Appearance",
-      "Next Court Appearance Date",
-      "Warrant Type",
-      "Bail or No Bail",
-      "Date/Time Received by CJSE",
-      "Number of days taken to enter Portal",
-      "Trigger Status",
-      "Trigger Resolved Date"
+      "Offence title(s)",
+      "Offence wording",
+      "Warrant text",
+      "Next court appearance",
+      "Next court dppearance date",
+      "Warrant type",
+      "Bail or no bail",
+      "Date/time received by CJSE",
+      "Number of days taken to enter portal",
+      "Trigger status",
+      "Trigger resolved date"
     ]
 
     headers.forEach((text, index) => {
