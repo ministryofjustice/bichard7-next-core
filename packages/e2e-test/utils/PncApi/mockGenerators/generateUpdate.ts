@@ -4,10 +4,10 @@ import convertToXml from "../../converters/convertJsonToXml"
 const generateRandomGmtSuffix = Math.floor(Math.random() * 8999) + 1000
 
 const DEFAULT_MESSAGE = "A0031-REMAND REPORT HAS BEEN PROCESSED SUCCESSFULLY - ID: 00/263503N "
-const DEFAULT_GMT = `073GENL000001RNEWREMPNCA05A73000017300000120210415154673000001                                             09000${
+const DEFAULT_GMH = `073GENL000001RNEWREMPNCA05A73000017300000120210415154673000001                                             09000${
   generateRandomGmtSuffix
 }`
-const DEFAULT_GMH = "000003073GENL000001S"
+const DEFAULT_GMT = "000003073GENL000001S"
 
 export const generateUpdate = (code: string, options?: PncMockOptions): PartialPncMock => {
   let txt = DEFAULT_MESSAGE
