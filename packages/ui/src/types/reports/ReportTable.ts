@@ -6,7 +6,7 @@ interface ReportTable<TRow extends Record<string, unknown>> {
   tableName: string
   rows: TRow[]
   totals?: Record<string, unknown>
-  tableConfig: FlatReportConfig<Record<string, unknown>>
+  tableConfig: FlatReportConfig<TRow>
   columns: BaseReportColumn<TRow>[]
 }
 

@@ -1,54 +1,59 @@
 import type { GroupedReportConfig } from "@/types/reports/Config"
+import type ReportTable from "@/types/reports/ReportTable"
 import { groupTable } from "@/utils/tables/groupTable"
 import { getGroupReportCsvChunks } from "./getGroupReportCsvChunks"
 
 jest.mock("@/utils/tables/groupTable")
 
+type TestRow = { id: string; name: string }
+
+type TestInnerGroup = {
+  teamName: string
+  type: string
+  members: TestRow[]
+  totals?: { headcount: number }
+}
+
 describe("getGroupReportCsvChunks", () => {
-  const groupConfig = {
+  const groupConfig: GroupedReportConfig<TestInnerGroup, TestRow> = {
     endpoint: "",
     structure: "grouped",
-    groupNameKey: "",
-    dataListKey: "",
-    columns: [{}]
-  } as GroupedReportConfig<any, any>
+    groupNameKey: "teamName",
+    dataListKey: "members",
+    columns: [
+      { header: "ID", key: "id" },
+      { header: "Name", key: "name" }
+    ],
+    reportType: "user summary"
+  }
 
   it("should handle grouped data structures correctly", async () => {
-    ;(groupTable as jest.Mock).mockReturnValue([
-      {
-        formattedTableName: "Court A",
+    const table: ReportTable<TestRow> = {
+      formattedTableName: "Court A",
+      tableName: "Court A",
+      columns: [
+        { header: "ID", key: "id" },
+        { header: "Name", key: "name" }
+      ],
+      rows: [
+        { id: "10", name: "Case 1" },
+        { id: "11", name: "Case 2" }
+      ],
+      tableConfig: {
+        structure: "flat",
         columns: [
           { header: "ID", key: "id" },
           { header: "Name", key: "name" }
         ],
-        rows: [
-          { id: "10", name: "Case 1" },
-          { id: "11", name: "Case 2" }
-        ]
+        endpoint: "",
+        reportType: "user detail"
       }
-    ])
+    }
+
+    ;(groupTable as jest.Mock).mockReturnValue([table])
 
     const result = await getGroupReportCsvChunks([], groupConfig, [])
 
     expect(result).toEqual(['"","Court A"', '"ID","Name"', '"10","Case 1"', '"11","Case 2"'])
-  })
-
-  it("should skip chunk generation if rows is not an array", async () => {
-    ;(groupTable as jest.Mock).mockReturnValue([
-      {
-        formattedTableName: "Court A",
-        tableConfig: {
-          columns: [
-            { header: "ID", key: "id" },
-            { header: "Name", key: "name" }
-          ]
-        },
-        rows: null
-      }
-    ])
-
-    const result = await getGroupReportCsvChunks([], groupConfig, [])
-
-    expect(result).toEqual(['"","Court A"', '"ID","Name"'])
   })
 })

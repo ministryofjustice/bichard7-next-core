@@ -1,57 +1,92 @@
 import type { NestedGroupedReportConfig } from "@/types/reports/Config"
+import type ReportTableGroup from "@/types/reports/ReportTableGroup"
 import { nestedTable } from "@/utils/tables/nestedTable"
-import type { ReportType } from "aws-sdk/clients/codebuild"
 import { getNestedReportCsvChunks } from "./getNestedReportCsvChunks"
 
 jest.mock("@/utils/tables/nestedTable")
 
+type TestRow = { id: string; fullName: string }
+
+type TestInnerGroup = {
+  teamName: string
+  type: string
+  members: TestRow[]
+  totals?: { headcount: number }
+}
+
+type TestOuterGroup = {
+  region: string
+  allTeams: TestInnerGroup[]
+}
+
 describe("getNestedReportCsvChunks", () => {
-  const dummyConfig = {
+  const dummyConfig: NestedGroupedReportConfig<TestOuterGroup, TestInnerGroup, TestRow> = {
     structure: "nested",
     endpoint: "",
-    groupNameKey: "",
-    groupDataListKey: "",
-    tableNameKey: "",
-    tableDataListKey: "",
+    groupNameKey: "region",
+    groupDataListKey: "allTeams",
+    tableNameKey: "teamName",
+    tableDataListKey: "members",
     columns: {},
-    columnSelectorKey: "",
-    reportType: "TEST_REPORT_TYPE" as ReportType
-  } as NestedGroupedReportConfig<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>
+    columnSelectorKey: "type",
+    reportType: "user detail"
+  }
 
   it("should handle nested data structures correctly", async () => {
-    ;(nestedTable as jest.Mock).mockReturnValue([
-      {
-        formattedGroupName: "Group A",
-        tables: [
-          {
-            tableName: "Table A",
-            mappedColumns: [
+    const table: ReportTableGroup<TestRow> = {
+      formattedGroupName: "Group A",
+      groupName: "Group A",
+      tables: [
+        {
+          tableName: "Table A",
+          formattedTableName: "Table A",
+          columns: [
+            { header: "ID_A", key: "id" },
+            { header: "Name_A", key: "fullName" }
+          ],
+          rows: [
+            {
+              id: "10",
+              fullName: "Case 1"
+            }
+          ],
+          tableConfig: {
+            structure: "flat",
+            columns: [
               { header: "ID_A", key: "id" },
               { header: "Name_A", key: "fullName" }
             ],
-            rows: [
-              {
-                id: "10",
-                fullName: "Case 1"
-              }
-            ]
-          },
-          {
-            tableName: "Table B",
-            mappedColumns: [
+            endpoint: "",
+            reportType: "user detail"
+          }
+        },
+        {
+          tableName: "Table B",
+          formattedTableName: "Table B",
+          columns: [
+            { header: "ID_B", key: "id" },
+            { header: "Name_B", key: "fullName" }
+          ],
+          rows: [
+            {
+              id: "11",
+              fullName: "Case 2"
+            }
+          ],
+          tableConfig: {
+            structure: "flat",
+            columns: [
               { header: "ID_B", key: "id" },
               { header: "Name_B", key: "fullName" }
             ],
-            rows: [
-              {
-                id: "11",
-                fullName: "Case 2"
-              }
-            ]
+            endpoint: "",
+            reportType: "user detail"
           }
-        ]
-      }
-    ])
+        }
+      ]
+    }
+
+    ;(nestedTable as jest.Mock).mockReturnValue([table])
 
     const result = await getNestedReportCsvChunks([], dummyConfig, [])
 
@@ -76,27 +111,5 @@ describe("getNestedReportCsvChunks", () => {
     const result = await getNestedReportCsvChunks([], dummyConfig, [])
 
     expect(result).toEqual([])
-  })
-
-  it("should skip row chunk generation if rows within a table are not an array", async () => {
-    ;(nestedTable as jest.Mock).mockReturnValue([
-      {
-        formattedGroupName: "Group A",
-        tables: [
-          {
-            tableName: "Table A",
-            mappedColumns: [
-              { header: "ID_A", key: "id" },
-              { header: "Name_A", key: "fullName" }
-            ],
-            rows: null
-          }
-        ]
-      }
-    ])
-
-    const result = await getNestedReportCsvChunks([], dummyConfig, [])
-
-    expect(result).toEqual(['"","Group A","Table A"', '"ID_A","Name_A"'])
   })
 })
