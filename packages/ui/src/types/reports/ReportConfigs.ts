@@ -33,7 +33,11 @@ export const ReportConfigs = {
     endpoint: V1.CasesReportsDomesticViolence,
     structure: "flat",
     columns: domesticViolenceColumns,
-    reportType: "domestic violence"
+    reportType: "domestic violence",
+    totalsConfig: [{ key: "total", label: "Total court cases" }],
+    calculateTotalsCallback: (totals: Record<string, number>, rows: CaseForDomesticViolenceReportDto[]) => {
+      totals.total = new Set(rows.map((row) => row.errorId)).size
+    }
   } satisfies FlatReportConfig<CaseForDomesticViolenceReportDto>,
   exceptions: {
     endpoint: V1.CasesReportsExceptions,
@@ -52,7 +56,19 @@ export const ReportConfigs = {
     endpoint: V1.CasesReportsWarrants,
     structure: "flat",
     columns: warrantsColumns,
-    reportType: "warrants"
+    reportType: "warrants",
+    totalsConfig: [
+      { key: "total", label: "Total triggers" },
+      { key: "resolved", label: "Resolved" },
+      { key: "unresolved", label: "Unresolved" }
+    ],
+    calculateTotalsCallback: (totals: Record<string, number>, rows: CaseForWarrantsReportDto[]) => {
+      rows.forEach((row) => {
+        totals.total = totals.total + 1
+        totals.resolved = totals.resolved + (row.triggerStatus === "Resolved" ? 1 : 0)
+        totals.unresolved = totals.unresolved + (row.triggerStatus === "Unresolved" ? 1 : 0)
+      })
+    }
   } satisfies FlatReportConfig<CaseForWarrantsReportDto>,
   "user summary": {
     endpoint: V1.CasesReportsUserPerformanceSummary,
