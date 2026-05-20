@@ -1,3 +1,4 @@
+import errorResponseSchema from "@moj-bichard7/core/schemas/leds/errorResponseSchema"
 import type { ErrorResponse } from "@moj-bichard7/core/types/leds/ErrorResponse"
 import type { UpdateResponse } from "@moj-bichard7/core/types/leds/UpdateResponse"
 import { HttpStatusCode } from "axios"
@@ -11,7 +12,8 @@ const isErrorResponse = (mockUpdateResponse?: MockUpdateResponse): mockUpdateRes
 
 const convertMockUpdateResponseToLeds = (mockResponse?: MockUpdateResponse): Response => {
   if (isErrorResponse(mockResponse)) {
-    return { mockResponse, statusCode: HttpStatusCode.BadRequest }
+    const ledsErrorResponse = errorResponseSchema.parse(mockResponse)
+    return { mockResponse: ledsErrorResponse, statusCode: HttpStatusCode.BadRequest }
   }
 
   return { mockResponse: { id: randomUUID() }, statusCode: HttpStatusCode.Created }
