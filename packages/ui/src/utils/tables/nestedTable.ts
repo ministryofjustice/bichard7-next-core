@@ -4,6 +4,8 @@ import { getMappedColumns } from "@/services/reports/utils/getMappedColumns"
 import { isRecord } from "@/services/reports/utils/isRecord"
 import { isRecordArray } from "@/services/reports/utils/isRecordArray"
 import type { FlatReportConfig, ReportConfig } from "@/types/reports/Config"
+import type ReportTable from "@/types/reports/ReportTable"
+import type { default as ReportTableGroup } from "@/types/reports/ReportTableGroup"
 
 export interface NestedTableProps<TOuterGroup> {
   config: ReportConfig
@@ -13,7 +15,7 @@ export interface NestedTableProps<TOuterGroup> {
 export const nestedTable = <TOuterGroup extends Record<string, unknown>>({
   config,
   groups
-}: NestedTableProps<TOuterGroup>) => {
+}: NestedTableProps<TOuterGroup>): ReportTableGroup[] | null => {
   if (config.structure !== "nested") {
     return null
   }
@@ -46,8 +48,8 @@ export const nestedTable = <TOuterGroup extends Record<string, unknown>>({
         rows: cleanTableRows,
         totals: tableTotals,
         tableConfig,
-        mappedColumns
-      }
+        columns: mappedColumns
+      } as ReportTable
     })
 
     return {
@@ -55,6 +57,6 @@ export const nestedTable = <TOuterGroup extends Record<string, unknown>>({
       formattedGroupName: config.formatter ? formatGroupName(config, groupName) : groupName,
       totals: groupTotals,
       tables
-    }
+    } as ReportTableGroup
   })
 }

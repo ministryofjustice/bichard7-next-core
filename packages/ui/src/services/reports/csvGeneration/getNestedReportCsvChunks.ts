@@ -10,14 +10,14 @@ export const getNestedReportCsvChunks = async (
   const nestedTableData = nestedTable({ config, groups: parsedData })
 
   nestedTableData?.forEach(({ formattedGroupName, tables }) => {
-    tables?.forEach(({ rows, tableName, mappedColumns }) => {
+    tables?.forEach(({ rows, tableName, columns }) => {
       csvChunks.push(
         `"",${escapeCsvCell(formattedGroupName)},${escapeCsvCell(tableName)}`,
-        mappedColumns.map((col) => escapeCsvCell(col.header)).join(",")
+        columns.map((col) => escapeCsvCell(col.header)).join(",")
       )
 
       rows?.forEach((row) => {
-        csvChunks.push(mappedColumns.map((col) => escapeCsvCell(row[col.key])).join(","))
+        csvChunks.push(columns.map((col) => escapeCsvCell(row[col.key])).join(","))
       })
     })
   })

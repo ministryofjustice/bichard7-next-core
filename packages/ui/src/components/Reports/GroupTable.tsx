@@ -14,19 +14,19 @@ export const GroupTable = <TGroup extends Record<string, unknown>>({ config, gro
 
   return (
     <ReportContainer className="report-container">
-      {groupTableData?.map(({ groupName, formattedGroupName, rows, totals }) => {
-        const sectionId = `report-group-${formattedGroupName}`
+      {groupTableData?.map(({ tableName, formattedTableName, rows, totals }) => {
+        const sectionId = `report-group-${formattedTableName}`
 
         return (
           <section key={sectionId} aria-labelledby={sectionId}>
             <h3 id={sectionId} className="govuk-heading-m">
-              {formattedGroupName}
+              {formattedTableName}
 
               <Totals totals={totals} totalsConfig={config.totalsConfig} />
             </h3>
 
             <Table>
-              <caption className="govuk-visually-hidden">{`Report table for ${groupName}`}</caption>
+              <caption className="govuk-visually-hidden">{`Report table for ${tableName}`}</caption>
               <ReportTableHeader columns={config.columns} />
               <ReportTableBody rows={rows} columns={config.columns} />
             </Table>

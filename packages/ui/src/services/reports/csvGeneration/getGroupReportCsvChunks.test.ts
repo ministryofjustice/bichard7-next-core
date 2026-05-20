@@ -16,7 +16,7 @@ describe("getGroupReportCsvChunks", () => {
   it("should handle grouped data structures correctly", async () => {
     ;(groupTable as jest.Mock).mockReturnValue([
       {
-        formattedGroupName: "Court A",
+        formattedTableName: "Court A",
         columns: [
           { header: "ID", key: "id" },
           { header: "Name", key: "name" }
@@ -36,12 +36,14 @@ describe("getGroupReportCsvChunks", () => {
   it("should skip chunk generation if rows is not an array", async () => {
     ;(groupTable as jest.Mock).mockReturnValue([
       {
-        formattedGroupName: "Court A",
-        rows: null,
-        columns: [
-          { header: "ID", key: "id" },
-          { header: "Name", key: "name" }
-        ]
+        formattedTableName: "Court A",
+        tableConfig: {
+          columns: [
+            { header: "ID", key: "id" },
+            { header: "Name", key: "name" }
+          ]
+        },
+        rows: null
       }
     ])
 

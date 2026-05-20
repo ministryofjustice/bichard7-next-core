@@ -3,13 +3,17 @@ import { formatGroupName } from "@/services/reports/utils/formatGroupName"
 import { isRecord } from "@/services/reports/utils/isRecord"
 import { isRecordArray } from "@/services/reports/utils/isRecordArray"
 import type { ReportConfig } from "@/types/reports/Config"
+import type ReportTable from "@/types/reports/ReportTable"
 
 export interface GroupedTableProps<TGroup> {
   config: ReportConfig
   groups: TGroup[]
 }
 
-export const groupTable = <TGroup extends Record<string, unknown>>({ config, groups }: GroupedTableProps<TGroup>) => {
+export const groupTable = <TGroup extends Record<string, unknown>>({
+  config,
+  groups
+}: GroupedTableProps<TGroup>): ReportTable[] | null => {
   if (config.structure !== "grouped") {
     return null
   }
@@ -22,11 +26,11 @@ export const groupTable = <TGroup extends Record<string, unknown>>({ config, gro
     const cleanRows = dataList.filter(isRecord)
 
     return {
-      formattedGroupName: config.formatter ? formatGroupName(config, groupName) : groupName,
-      groupName,
+      formattedTableName: config.formatter ? formatGroupName(config, groupName) : groupName,
+      tableName: groupName,
       rows: cleanRows,
       totals,
       columns: config.columns
-    }
+    } as ReportTable
   })
 }
