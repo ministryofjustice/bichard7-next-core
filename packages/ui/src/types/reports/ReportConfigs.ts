@@ -27,7 +27,19 @@ export const ReportConfigs = {
     endpoint: V1.CasesReportsBails,
     structure: "flat",
     columns: bailsColumns,
-    reportType: "bails"
+    reportType: "bails",
+    totalsConfig: [
+      { key: "total", label: "Total triggers" },
+      { key: "resolved", label: "Resolved" },
+      { key: "unresolved", label: "Unresolved" }
+    ],
+    calculateTotalsCallback: (totals: Record<string, number>, rows: CaseForBailsReportDto[]) => {
+      rows.forEach((row) => {
+        totals.total = totals.total + 1
+        totals.resolved = totals.resolved + (row.triggerStatus === "Resolved" ? 1 : 0)
+        totals.unresolved = totals.unresolved + (row.triggerStatus === "Unresolved" ? 1 : 0)
+      })
+    }
   } satisfies FlatReportConfig<CaseForBailsReportDto>,
   "domestic violence": {
     endpoint: V1.CasesReportsDomesticViolence,
