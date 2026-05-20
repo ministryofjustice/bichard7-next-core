@@ -66,13 +66,7 @@ describe("groupTable", () => {
       formattedTableName: "Formatted Table A",
       rows: [{ id: "1" }, { id: "2" }],
       columns: [{ header: "ID", key: "id" }],
-      totals: { total: 2 },
-      tableConfig: {
-        structure: "flat",
-        columns: [{ header: "ID", key: "id" }],
-        endpoint: "",
-        reportType: "user summary"
-      }
+      totals: { total: 2 }
     })
 
     expect(result![1]).toEqual({
@@ -80,13 +74,7 @@ describe("groupTable", () => {
       formattedTableName: "Formatted Table B",
       rows: [{ id: "3" }],
       columns: [{ header: "ID", key: "id" }],
-      totals: { total: 1 },
-      tableConfig: {
-        structure: "flat",
-        columns: [{ header: "ID", key: "id" }],
-        endpoint: "",
-        reportType: "user summary"
-      }
+      totals: { total: 1 }
     })
   })
 
@@ -94,7 +82,7 @@ describe("groupTable", () => {
     const noFormatConfig = { ...mockConfig, formatter: undefined }
     const result = groupTable({ config: noFormatConfig, tables: mockTables })
 
-    expect(result![0].tableName).toBe("Group A")
+    expect(result![0].tableName).toBe("Table A")
     expect(mockedFormatGroupName).not.toHaveBeenCalled()
   })
 

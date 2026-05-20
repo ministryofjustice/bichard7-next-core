@@ -1,3 +1,4 @@
+import { FlatReportConfig } from "@/types/reports/Config"
 import { nestedTable, NestedTableProps } from "@/utils/tables/nestedTable"
 import { ReportContainer } from "./GroupTable.styles"
 import { SimpleTable } from "./SimpleTable"
@@ -30,8 +31,15 @@ export const NestedTable = <
             </h3>
 
             <section id={outerSectionBodyId} aria-labelledby={outerSectionBodyId} itemID={"outer-group-body"}>
-              {tables.map(({ tableName, rows, tableConfig, totals }, index) => {
+              {tables.map(({ tableName, rows, totals, columns }, index) => {
                 const innerSectionId = `inner-group-${tableName}-${index}-${outerSectionId}`
+
+                const flatTableConfig: FlatReportConfig<TRow> = {
+                  structure: "flat",
+                  columns: columns,
+                  endpoint: config.endpoint,
+                  reportType: config.reportType
+                }
 
                 return (
                   <section key={innerSectionId} aria-labelledby={innerSectionId}>
@@ -40,7 +48,7 @@ export const NestedTable = <
 
                       <Totals totals={totals} totalsConfig={config.totalsConfig} />
                     </h4>
-                    <SimpleTable config={tableConfig} rows={rows} tableName={tableName} nested={false} />
+                    <SimpleTable config={flatTableConfig} rows={rows} tableName={tableName} nested={false} />
                   </section>
                 )
               })}

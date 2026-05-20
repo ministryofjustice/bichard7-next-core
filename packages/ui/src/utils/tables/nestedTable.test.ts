@@ -118,13 +118,6 @@ describe("nestedTable", () => {
         expect(table.columns).toEqual(
           tableIndex == 0 ? [{ header: "ID_A", key: "id" }] : [{ header: "ID_B", key: "id" }]
         )
-
-        expect(table.tableConfig).toEqual({
-          structure: "flat",
-          columns: expect.any(Array),
-          endpoint: "test",
-          reportType: "user detail"
-        })
       }
     }
   })

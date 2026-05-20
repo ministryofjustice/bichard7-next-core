@@ -18,9 +18,6 @@ export const groupTable = <TTable extends Record<string, unknown>, TRow extends 
     const tableName = ensureString(table[config.tableNameKey])
     const rawDataList = table[config.tableDataListKey]
     const totals = isRecord(table.totals) ? table.totals : undefined
-    console.log("dsdsdsdsdsadsd")
-    console.log(config)
-    console.log(table)
     const dataList = isRecordArray(rawDataList) ? rawDataList : []
     const cleanRows = dataList.filter(isRecord)
 
@@ -31,13 +28,7 @@ export const groupTable = <TTable extends Record<string, unknown>, TRow extends 
       tableName: tableName,
       rows: cleanRows as TRow[],
       totals,
-      columns: config.columns,
-      tableConfig: {
-        structure: "flat",
-        columns: config.columns,
-        endpoint: config.endpoint,
-        reportType: config.reportType
-      }
+      columns: config.columns
     } as ReportTable<TRow>
   })
 }

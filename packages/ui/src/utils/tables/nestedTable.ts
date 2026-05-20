@@ -3,7 +3,7 @@ import { formatGroupName } from "@/services/reports/utils/formatGroupName"
 import { getMappedColumns } from "@/services/reports/utils/getMappedColumns"
 import { isRecord } from "@/services/reports/utils/isRecord"
 import { isRecordArray } from "@/services/reports/utils/isRecordArray"
-import type { FlatReportConfig, NestedGroupedReportConfig } from "@/types/reports/Config"
+import type { NestedGroupedReportConfig } from "@/types/reports/Config"
 import type ReportTable from "@/types/reports/ReportTable"
 import type { default as ReportTableGroup } from "@/types/reports/ReportTableGroup"
 
@@ -40,18 +40,10 @@ export const nestedTable = <
 
       const mappedColumns = getMappedColumns(config, table)
 
-      const tableConfig: FlatReportConfig<Record<string, unknown>> = {
-        structure: "flat",
-        columns: mappedColumns,
-        endpoint: config.endpoint,
-        reportType: config.reportType
-      }
-
       return {
         tableName,
         rows: cleanTableRows,
         totals: tableTotals,
-        tableConfig,
         columns: mappedColumns
       } as ReportTable<TRow>
     })
