@@ -41,7 +41,12 @@ export const ReportConfigs = {
     tableNameKey: "username",
     tableDataListKey: "cases",
     columns: exceptionsColumns,
-    reportType: "exceptions"
+    reportType: "exceptions",
+    totalsConfig: [
+      { key: "total", label: "Total exceptions and triggers" },
+      { key: "exceptions", label: "Exceptions" },
+      { key: "triggers", label: "Triggers" }
+    ]
   } satisfies GroupedReportConfig<ExceptionReportDto, CaseForExceptionReportDto>,
   warrants: {
     endpoint: V1.CasesReportsWarrants,

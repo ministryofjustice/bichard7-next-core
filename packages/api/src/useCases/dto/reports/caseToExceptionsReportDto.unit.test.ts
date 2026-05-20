@@ -2,6 +2,7 @@ import type { CaseForExceptionReportDto } from "@moj-bichard7/common/types/repor
 
 import type { CaseRowForExceptionReport } from "../../../types/reports/Exceptions"
 
+import { CASE_TYPES } from "../../../types/reports/Exceptions"
 import { caseToExceptionsReportDto } from "./caseToExceptionsReportDto"
 
 describe("caseToExceptionsReportDto", () => {
@@ -18,7 +19,7 @@ describe("caseToExceptionsReportDto", () => {
     ptiurn: "01ZD0303208",
     resolved_ts: new Date("2024-01-20T15:30:00Z"),
     resolver: "user1",
-    type: "Exceptions"
+    type: CASE_TYPES.Exception
   }
 
   it("should convert case row to report DTO and format dates as strings", () => {
@@ -72,7 +73,7 @@ describe("caseToExceptionsReportDto", () => {
 
   describe("resolutionAction logic", () => {
     it("should set resolutionAction to 'Trigger activity performed' for Trigger types", () => {
-      const caseRow = { ...baseCaseRow, type: "Trigger" }
+      const caseRow = { ...baseCaseRow, type: CASE_TYPES.Trigger }
       const result = caseToExceptionsReportDto(caseRow)
       expect(result.resolutionAction).toBe("Trigger activity performed")
       expect(result.type).toBe("Tr")
@@ -90,7 +91,7 @@ describe("caseToExceptionsReportDto", () => {
             user_id: "System"
           }
         ],
-        type: "Exceptions"
+        type: CASE_TYPES.Exception
       }
       const result = caseToExceptionsReportDto(caseRow)
       expect(result.resolutionAction).toBe("Resolved via re-submission")
@@ -108,7 +109,7 @@ describe("caseToExceptionsReportDto", () => {
             user_id: "user1"
           }
         ],
-        type: "Exceptions"
+        type: CASE_TYPES.Exception
       }
       const result = caseToExceptionsReportDto(caseRow)
       expect(result.resolutionAction).toBe("Postponed (Awaiting documents)")
