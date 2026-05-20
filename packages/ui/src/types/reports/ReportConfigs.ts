@@ -38,8 +38,8 @@ export const ReportConfigs = {
   exceptions: {
     endpoint: V1.CasesReportsExceptions,
     structure: "grouped",
-    groupNameKey: "username",
-    dataListKey: "cases",
+    tableNameKey: "username",
+    tableDataListKey: "cases",
     columns: exceptionsColumns,
     reportType: "exceptions"
   } satisfies GroupedReportConfig<ExceptionReportDto, CaseForExceptionReportDto>,
@@ -52,8 +52,8 @@ export const ReportConfigs = {
   "user summary": {
     endpoint: V1.CasesReportsUserPerformanceSummary,
     structure: "grouped",
-    groupNameKey: "date",
-    dataListKey: "users",
+    tableNameKey: "date",
+    tableDataListKey: "users",
     columns: userPerformanceSummaryColumns,
     formatter: "date",
     totalsConfig: [

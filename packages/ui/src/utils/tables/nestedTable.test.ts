@@ -20,20 +20,20 @@ const mockedFormatGroupName = formatGroupName as jest.MockedFunction<typeof form
 
 type TestRow = { id: number }
 
-type TestInnerGroup = {
+type TestTable = {
   tableName: string
   type: string
   rows: TestRow[]
   totals?: { total: number }
 }
 
-type TestOuterGroup = {
+type TestGroup = {
   group: string
-  tables: TestInnerGroup[]
+  tables: TestTable[]
 }
 
 describe("nestedTable", () => {
-  const mockConfig: NestedGroupedReportConfig<TestOuterGroup, TestInnerGroup, TestRow> = {
+  const mockConfig: NestedGroupedReportConfig<TestGroup, TestTable, TestRow> = {
     structure: "nested",
     endpoint: "test",
     groupNameKey: "group",
@@ -176,8 +176,8 @@ describe("nestedTable", () => {
 
   it("should call formatGroupName with correct arguments if formatter exists", () => {
     const configWithFormatter = { ...mockConfig, formatter: "date" } as NestedGroupedReportConfig<
-      TestOuterGroup,
-      TestInnerGroup,
+      TestGroup,
+      TestTable,
       TestRow
     >
 

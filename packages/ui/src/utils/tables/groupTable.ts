@@ -5,25 +5,30 @@ import { isRecordArray } from "@/services/reports/utils/isRecordArray"
 import type { GroupedReportConfig } from "@/types/reports/Config"
 import type ReportTable from "@/types/reports/ReportTable"
 
-export interface GroupedTableProps<TOuterGroup extends Record<string, unknown>, TRow extends Record<string, unknown>> {
-  config: GroupedReportConfig<TOuterGroup, TRow>
-  groups: TOuterGroup[]
+export interface GroupedTableProps<TTable extends Record<string, unknown>, TRow extends Record<string, unknown>> {
+  config: GroupedReportConfig<TTable, TRow>
+  tables: TTable[]
 }
 
-export const groupTable = <TOuterGroup extends Record<string, unknown>, TRow extends Record<string, unknown>>({
+export const groupTable = <TTable extends Record<string, unknown>, TRow extends Record<string, unknown>>({
   config,
-  groups
-}: GroupedTableProps<TOuterGroup, TRow>): ReportTable<TRow>[] | null => {
-  return groups.map((group) => {
-    const groupName = ensureString(group[config.groupNameKey])
-    const rawDataList = group[config.dataListKey]
-    const totals = isRecord(group.totals) ? group.totals : undefined
+  tables
+}: GroupedTableProps<TTable, TRow>): ReportTable<TRow>[] | null => {
+  return tables.map((table) => {
+    const tableName = ensureString(table[config.tableNameKey])
+    const rawDataList = table[config.tableDataListKey]
+    const totals = isRecord(table.totals) ? table.totals : undefined
+    console.log("dsdsdsdsdsadsd")
+    console.log(config)
+    console.log(table)
     const dataList = isRecordArray(rawDataList) ? rawDataList : []
     const cleanRows = dataList.filter(isRecord)
 
+    console.log(cleanRows)
+
     return {
-      formattedTableName: config.formatter ? formatGroupName(config, groupName) : groupName,
-      tableName: groupName,
+      formattedTableName: config.formatter ? formatGroupName(config, tableName) : tableName,
+      tableName: tableName,
       rows: cleanRows as TRow[],
       totals,
       columns: config.columns,

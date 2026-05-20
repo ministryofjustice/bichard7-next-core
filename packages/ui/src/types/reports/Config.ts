@@ -24,10 +24,10 @@ export interface Formatter {
   formatter?: "date" | "datetime"
 }
 
-export type GroupedReportConfig<TGroup, TRow> = {
+export type GroupedReportConfig<TTable, TRow> = {
   structure: Extract<ReportStructure, "grouped">
-  groupNameKey: Extract<keyof TGroup, string>
-  dataListKey: Extract<keyof TGroup, string>
+  tableNameKey: Extract<keyof TTable, string>
+  tableDataListKey: Extract<keyof TTable, string>
   columns: ReportColumn<TRow>[]
   formatter?: Formatter
   totalsConfig?: TotalColumnConfig[]
@@ -36,23 +36,23 @@ export type GroupedReportConfig<TGroup, TRow> = {
 
 export type ColumnResolver<T> = (data: unknown) => ReportColumn<T>[]
 
-export type NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow> = {
+export type NestedGroupedReportConfig<TGroup, TTable, TRow> = {
   structure: Extract<ReportStructure, "nested">
-  groupNameKey: Extract<keyof TOuterGroup, string>
-  groupDataListKey: Extract<keyof TOuterGroup, string>
-  tableNameKey: Extract<keyof TInnerGroup, string>
-  tableDataListKey: Extract<keyof TInnerGroup, string>
+  groupNameKey: Extract<keyof TGroup, string>
+  groupDataListKey: Extract<keyof TGroup, string>
+  tableNameKey: Extract<keyof TTable, string>
+  tableDataListKey: Extract<keyof TTable, string>
   columns: Record<string, ReportColumn<TRow>[]>
-  columnSelectorKey: keyof TInnerGroup
+  columnSelectorKey: keyof TTable
   formatter?: Formatter
   totalsConfig?: TotalColumnConfig[]
 } & BaseConfig &
   Formatter
 
-export type ReportConfig<TOuterGroup = Record<string, never>, TInnerGroup = Record<string, never>, TRow = unknown> =
+export type ReportConfig<TGroup = Record<string, never>, TTable = Record<string, never>, TRow = unknown> =
   | FlatReportConfig<TRow>
-  | GroupedReportConfig<TOuterGroup, TRow>
-  | NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow>
+  | GroupedReportConfig<TGroup, TRow>
+  | NestedGroupedReportConfig<TGroup, TTable, TRow>
 
 export type ReportData =
   | { config: FlatReportConfig<Record<string, unknown>>; rows: Record<string, unknown>[] }

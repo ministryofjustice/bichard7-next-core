@@ -5,28 +5,28 @@ import { FlatReportConfig, GroupedReportConfig, NestedGroupedReportConfig } from
 import { StyledReportTable } from "./ReportTable.styles"
 
 export type ReportTableProps<
-  TOuterGroup extends Record<string, unknown> = Record<string, unknown>,
-  TInnerGroup extends Record<string, unknown> = Record<string, unknown>,
+  TGroup extends Record<string, unknown> = Record<string, unknown>,
+  TTable extends Record<string, unknown> = Record<string, unknown>,
   TRow extends Record<string, unknown> = Record<string, unknown>
 > = {
   tableName: string
   nested?: boolean
 } & (
   | { config: FlatReportConfig<TRow>; rows: TRow[] }
-  | { config: GroupedReportConfig<TOuterGroup, TRow>; rows: TOuterGroup[] }
-  | { config: NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow>; rows: TOuterGroup[] }
+  | { config: GroupedReportConfig<TTable, TRow>; rows: TTable[] }
+  | { config: NestedGroupedReportConfig<TGroup, TTable, TRow>; rows: TGroup[] }
 )
 
 export const ReportTable = <
-  TOuterGroup extends Record<string, unknown> = Record<string, unknown>,
-  TInnerGroup extends Record<string, unknown> = Record<string, unknown>,
+  TGroup extends Record<string, unknown> = Record<string, unknown>,
+  TTable extends Record<string, unknown> = Record<string, unknown>,
   TRow extends Record<string, unknown> = Record<string, unknown>
 >({
   config,
   tableName,
   rows,
   nested = false
-}: ReportTableProps<TOuterGroup, TInnerGroup, TRow>) => {
+}: ReportTableProps<TGroup, TTable, TRow>) => {
   if (!config) {
     return null
   }
@@ -42,10 +42,10 @@ export const ReportTable = <
       table = <SimpleTable config={config} rows={rows as TRow[]} tableName={tableName} nested={nested} />
       break
     case "grouped":
-      table = <GroupTable config={config} groups={rows as TOuterGroup[]} />
+      table = <GroupTable config={config} tables={rows as TTable[]} />
       break
     case "nested":
-      table = <NestedTable config={config} groups={rows as TOuterGroup[]} />
+      table = <NestedTable config={config} groups={rows as TGroup[]} />
       break
   }
 

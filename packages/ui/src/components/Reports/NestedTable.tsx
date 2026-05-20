@@ -1,6 +1,6 @@
-import { ReportTable } from "@/features/ReportSelectionFilter/ReportTable"
 import { nestedTable, NestedTableProps } from "@/utils/tables/nestedTable"
 import { ReportContainer } from "./GroupTable.styles"
+import { SimpleTable } from "./SimpleTable"
 import { Totals } from "./Totals"
 
 export const NestedTable = <
@@ -40,7 +40,7 @@ export const NestedTable = <
 
                       <Totals totals={totals} totalsConfig={config.totalsConfig} />
                     </h4>
-                    <ReportTable key={innerSectionId} config={tableConfig} rows={rows} tableName={tableName} />
+                    <SimpleTable config={tableConfig} rows={rows} tableName={tableName} nested={false} />
                   </section>
                 )
               })}

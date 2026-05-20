@@ -3,14 +3,14 @@ import { groupTable } from "@/utils/tables/groupTable"
 import { escapeCsvCell } from "services/reports/utils/escapeCsvCell"
 
 export const getGroupReportCsvChunks = async <
-  TInnerGroup extends Record<string, unknown>,
+  TTable extends Record<string, unknown>,
   TRow extends Record<string, unknown>
 >(
-  parsedData: TInnerGroup[],
-  config: GroupedReportConfig<TInnerGroup, TRow>,
+  parsedData: TTable[],
+  config: GroupedReportConfig<TTable, TRow>,
   csvChunks: string[]
 ) => {
-  const groupTableData = groupTable({ config, groups: parsedData })
+  const groupTableData = groupTable({ config, tables: parsedData })
 
   groupTableData?.forEach(({ rows, formattedTableName, columns }) => {
     csvChunks.push(`"",${escapeCsvCell(formattedTableName)}`, columns.map((col) => escapeCsvCell(col.header)).join(","))

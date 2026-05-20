@@ -3,12 +3,12 @@ import { nestedTable } from "@/utils/tables/nestedTable"
 import { escapeCsvCell } from "../utils/escapeCsvCell"
 
 export const getNestedReportCsvChunks = async <
-  TOuterGroup extends Record<string, unknown>,
-  TInnerGroup extends Record<string, unknown>,
+  TGroup extends Record<string, unknown>,
+  TTable extends Record<string, unknown>,
   TRow extends Record<string, unknown>
 >(
-  parsedData: TOuterGroup[],
-  config: NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow>,
+  parsedData: TGroup[],
+  config: NestedGroupedReportConfig<TGroup, TTable, TRow>,
   csvChunks: string[]
 ) => {
   const nestedTableData = nestedTable({ config, groups: parsedData })

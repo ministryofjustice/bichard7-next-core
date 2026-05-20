@@ -5,15 +5,11 @@ import { ReportTableBody } from "./ReportTableBody"
 import { ReportTableHeader } from "./ReportTableHeader"
 import { Totals } from "./Totals"
 
-export const GroupTable = <TOuterGroup extends Record<string, unknown>, TRow extends Record<string, unknown>>({
+export const GroupTable = <TTable extends Record<string, unknown>, TRow extends Record<string, unknown>>({
   config,
-  groups
-}: GroupedTableProps<TOuterGroup, TRow>) => {
-  if (config.structure !== "grouped") {
-    return null
-  }
-
-  const groupTableData = groupTable({ config, groups })
+  tables
+}: GroupedTableProps<TTable, TRow>) => {
+  const groupTableData = groupTable({ config, tables })
 
   return (
     <ReportContainer className="report-container">

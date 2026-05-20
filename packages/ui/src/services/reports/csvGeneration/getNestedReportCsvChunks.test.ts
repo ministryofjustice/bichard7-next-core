@@ -7,20 +7,20 @@ jest.mock("@/utils/tables/nestedTable")
 
 type TestRow = { id: string; fullName: string }
 
-type TestInnerGroup = {
+type TestTable = {
   teamName: string
   type: string
   members: TestRow[]
   totals?: { headcount: number }
 }
 
-type TestOuterGroup = {
+type TestGroup = {
   region: string
-  allTeams: TestInnerGroup[]
+  allTeams: TestTable[]
 }
 
 describe("getNestedReportCsvChunks", () => {
-  const dummyConfig: NestedGroupedReportConfig<TestOuterGroup, TestInnerGroup, TestRow> = {
+  const dummyConfig: NestedGroupedReportConfig<TestGroup, TestTable, TestRow> = {
     structure: "nested",
     endpoint: "",
     groupNameKey: "region",
