@@ -94,8 +94,8 @@ describe("nestedTable", () => {
     mockedIsRecordArray.mockImplementation((val) => Array.isArray(val))
     mockedFormatGroupName.mockImplementation((cfg, name) => `Formatted ${name}`)
     mockedIsRecord.mockReturnValue(true)
-    mockedGetMappedColumns.mockImplementation((config, innerGroup) => {
-      const selectorValue = innerGroup[config.columnSelectorKey] as string
+    mockedGetMappedColumns.mockImplementation((config, table) => {
+      const selectorValue = table[config.columnSelectorKey] as string
       return (config.columns as any)[selectorValue] || []
     })
   })

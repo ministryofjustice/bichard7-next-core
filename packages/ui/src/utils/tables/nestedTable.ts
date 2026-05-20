@@ -8,22 +8,22 @@ import type ReportTable from "@/types/reports/ReportTable"
 import type { default as ReportTableGroup } from "@/types/reports/ReportTableGroup"
 
 export interface NestedTableProps<
-  TOuterGroup extends Record<string, unknown>,
-  TInnerGroup extends Record<string, unknown>,
+  TGroup extends Record<string, unknown>,
+  TTable extends Record<string, unknown>,
   TRow extends Record<string, unknown>
 > {
-  config: NestedGroupedReportConfig<TOuterGroup, TInnerGroup, TRow>
-  groups: TOuterGroup[]
+  config: NestedGroupedReportConfig<TGroup, TTable, TRow>
+  groups: TGroup[]
 }
 
 export const nestedTable = <
-  TOuterGroup extends Record<string, unknown>,
-  TInnerGroup extends Record<string, unknown>,
+  TGroup extends Record<string, unknown>,
+  TTable extends Record<string, unknown>,
   TRow extends Record<string, unknown>
 >({
   config,
   groups
-}: NestedTableProps<TOuterGroup, TInnerGroup, TRow>): ReportTableGroup<TRow>[] | null => {
+}: NestedTableProps<TGroup, TTable, TRow>): ReportTableGroup<TRow>[] | null => {
   return groups.filter(isRecord).map((group) => {
     const groupName = ensureString(group[config.groupNameKey])
     const rawGroupDataList = group[config.groupDataListKey]

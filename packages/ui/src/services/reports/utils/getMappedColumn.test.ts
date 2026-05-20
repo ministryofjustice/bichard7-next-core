@@ -16,9 +16,9 @@ describe("getMappedColumns", () => {
       columns: dynamicColumns
     } as unknown as NestedGroupedReportConfig<any, any, any>
 
-    const innerGroup = { reportCategory: "TypeA", data: [] }
+    const table = { reportCategory: "TypeA", data: [] }
 
-    const result = getMappedColumns(config, innerGroup)
+    const result = getMappedColumns(config, table)
 
     expect(result).toEqual(mockColumnsA)
   })
@@ -29,9 +29,9 @@ describe("getMappedColumns", () => {
       columns: dynamicColumns
     } as unknown as NestedGroupedReportConfig<any, any, any>
 
-    const innerGroup = { reportCategory: "NonExistentType" }
+    const table = { reportCategory: "NonExistentType" }
 
-    const result = getMappedColumns(config, innerGroup)
+    const result = getMappedColumns(config, table)
 
     expect(result).toEqual([])
   })
@@ -41,9 +41,9 @@ describe("getMappedColumns", () => {
       columns: dynamicColumns
     } as unknown as NestedGroupedReportConfig<any, any, any>
 
-    const innerGroup = { reportCategory: "TypeA" }
+    const table = { reportCategory: "TypeA" }
 
-    const result = getMappedColumns(config, innerGroup)
+    const result = getMappedColumns(config, table)
 
     expect(result).toEqual([])
   })
@@ -54,22 +54,22 @@ describe("getMappedColumns", () => {
       columns: null
     } as unknown as NestedGroupedReportConfig<any, any, any>
 
-    const innerGroup = { category: "TypeA" }
+    const table = { category: "TypeA" }
 
-    const result = getMappedColumns(config, innerGroup)
+    const result = getMappedColumns(config, table)
 
     expect(result).toEqual([])
   })
 
-  it("should return an empty array if the selector key points to a non-existent property in innerGroup", () => {
+  it("should return an empty array if the selector key points to a non-existent property in table", () => {
     const config = {
       columnSelectorKey: "missingKey",
       columns: dynamicColumns
     } as unknown as NestedGroupedReportConfig<any, any, any>
 
-    const innerGroup = { someOtherKey: "TypeA" }
+    const table = { someOtherKey: "TypeA" }
 
-    const result = getMappedColumns(config, innerGroup)
+    const result = getMappedColumns(config, table)
 
     expect(result).toEqual([])
   })

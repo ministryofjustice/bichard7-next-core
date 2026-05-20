@@ -4,20 +4,20 @@ import { NestedGroupedReportConfig } from "types/reports/Config"
 
 type TestRow = { devName?: string; hrName?: string }
 
-type TestInnerGroup = {
+type TestTable = {
   teamName: string
   type: string
   members: TestRow[]
   totals?: { headcount: number }
 }
 
-type TestOuterGroup = {
+type TestGroup = {
   region: string
-  allTeams: TestInnerGroup[]
+  allTeams: TestTable[]
 }
 
 describe("NestedTable", () => {
-  const mockConfig: NestedGroupedReportConfig<TestOuterGroup, TestInnerGroup, TestRow> = {
+  const mockConfig: NestedGroupedReportConfig<TestGroup, TestTable, TestRow> = {
     structure: "nested",
     endpoint: "test",
     groupNameKey: "region",
@@ -33,7 +33,7 @@ describe("NestedTable", () => {
     reportType: "TEST_REPORT_TYPE" as ReportType
   }
 
-  const mockGroups: TestOuterGroup[] = [
+  const mockGroups: TestGroup[] = [
     {
       region: "North",
       allTeams: [
@@ -96,7 +96,7 @@ describe("NestedTable", () => {
   })
 
   it("filters out invalid inner groups gracefully", () => {
-    const corruptGroups: TestOuterGroup[] = [
+    const corruptGroups: TestGroup[] = [
       {
         region: "South",
         // @ts-expect-error - Intentionally passing a string instead of an array to test the fallback

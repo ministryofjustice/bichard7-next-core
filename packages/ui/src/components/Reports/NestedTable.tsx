@@ -5,13 +5,13 @@ import { SimpleTable } from "./SimpleTable"
 import { Totals } from "./Totals"
 
 export const NestedTable = <
-  TOuterGroup extends Record<string, unknown>,
-  TInnerGroup extends Record<string, unknown>,
+  TGroup extends Record<string, unknown>,
+  TTable extends Record<string, unknown>,
   TRow extends Record<string, unknown>
 >({
   config,
   groups
-}: NestedTableProps<TOuterGroup, TInnerGroup, TRow>) => {
+}: NestedTableProps<TGroup, TTable, TRow>) => {
   if (config.structure !== "nested") {
     return null
   }
