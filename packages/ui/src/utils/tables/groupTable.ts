@@ -27,6 +27,6 @@ export const groupTable = <TTable extends Record<string, unknown>, TRow extends 
       rows: cleanRows as TRow[],
       totals,
       columns: config.columns
-    } as ReportTable<TRow>
+    }
   })
 }
