@@ -68,7 +68,7 @@ user:
     exists: true
     groups:
       - nginx
-    home: /var/lib/nginx
+    home: /var/cache/nginx
     shell: /sbin/nologin
   nobody:
     exists: true
