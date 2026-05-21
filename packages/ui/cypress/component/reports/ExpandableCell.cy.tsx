@@ -1,98 +1,58 @@
-import { ReportTableRow } from "components/Reports/ReportTableRow"
-import type { BaseReportColumn } from "types/reports/Columns"
+import ExpandableCell from "@/components/Reports/ExpandableCell"
 
 describe("<ReportTableRow />", () => {
-  const mockColumns: BaseReportColumn[] = [
-    { key: "id", header: "ID" },
-    { key: "status", header: "Status" },
-    { key: "date", header: "Date" },
-    { key: "defendantName", header: "Defendant Name" },
-    { key: "notes", header: "Notes" }
-  ]
+  const shortText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+  const longText =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 
-  const mockRow = {
-    id: "987",
-    status: "Pending",
-    defendantName: "Defendant Name",
-    errorId: 123,
-    notes:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-  }
+  it("renders abbreviated text and 'show more' button for long text", () => {
+    cy.mount(<ExpandableCell content={longText} />)
 
-  it("renders abbreviated text and 'show more' button for long text, and for long text only", () => {
-    cy.mount(
-      <table>
-        <tbody>
-          <ReportTableRow row={mockRow} columns={mockColumns} />
-        </tbody>
-      </table>
-    )
+    cy.get('[data-testid="expandable-cell"]').as("expandableCell")
+    cy.get("@expandableCell").should("exist").find("button").should("exist").and("have.text", "show more")
 
-    for (let i = 0; i < 4; i++) {
-      cy.get("td")
-        .eq(i)
-        .within(() => {
-          cy.get('[data-testid="expandable-cell"]').should("not.exist")
-        })
-    }
+    cy.get('[data-testid="expandable-cell-text"]')
+      .should("exist")
+      .should("have.text", "Lorem ipsum dolor sit amet, co...")
+  })
 
-    cy.get("td")
-      .eq(4)
-      .within(() => {
-        cy.get('[data-testid="expandable-cell"]').as("expandableCell")
-        cy.get("@expandableCell").should("exist").find("button").should("exist").and("have.text", "show more")
+  it("renders full text and doesn't render expandable cell for short text", () => {
+    cy.mount(<ExpandableCell content={shortText} />)
+    cy.get('[data-testid="expandable-cell"]').should("not.exist")
+    cy.get("div").should("have.text", shortText)
+  })
 
-        cy.get('[data-testid="expandable-cell-text"]')
-          .should("exist")
-          .should("have.text", "Lorem ipsum dolor sit amet, co...")
-      })
+  it("renders react component when one is passed in", () => {
+    const content: React.ReactNode = <div data-testid="test-div"></div>
+    cy.mount(<ExpandableCell content={content} />)
+    cy.get('[data-testid="test-div"]').should("exist")
   })
 
   it("renders full text when 'show more' button is clicked", () => {
-    cy.mount(
-      <table>
-        <tbody>
-          <ReportTableRow row={mockRow} columns={mockColumns} />
-        </tbody>
-      </table>
-    )
+    cy.mount(<ExpandableCell content={longText} />)
 
-    cy.get("td")
-      .eq(4)
-      .within(() => {
-        cy.get('[data-testid="expandable-cell"]').as("expandableCell")
-        cy.get("@expandableCell").should("exist").find("button").click()
+    cy.get('[data-testid="expandable-cell"]').as("expandableCell")
+    cy.get("@expandableCell").should("exist").find("button").click()
 
-        cy.get("@expandableCell")
-          .should("exist")
-          .should(
-            "have.text",
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.show less"
-          )
+    cy.get("@expandableCell")
+      .should("exist")
+      .should(
+        "have.text",
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.show less"
+      )
 
-        cy.get("@expandableCell").should("contain", "show less")
-      })
+    cy.get("@expandableCell").should("contain", "show less")
   })
 
   it("renders abbreviated text when 'show less' button is clicked", () => {
-    cy.mount(
-      <table>
-        <tbody>
-          <ReportTableRow row={mockRow} columns={mockColumns} />
-        </tbody>
-      </table>
-    )
+    cy.mount(<ExpandableCell content={longText} />)
 
-    cy.get("td")
-      .eq(4)
-      .within(() => {
-        cy.get('[data-testid="expandable-cell"]').as("expandableCell")
-        cy.get("@expandableCell").should("exist").find("button").click()
-        cy.get("@expandableCell").should("exist").find("button").click()
+    cy.get('[data-testid="expandable-cell"]').as("expandableCell")
+    cy.get("@expandableCell").should("exist").find("button").click()
+    cy.get("@expandableCell").should("exist").find("button").click()
 
-        cy.get('[data-testid="expandable-cell-text"]')
-          .should("exist")
-          .should("have.text", "Lorem ipsum dolor sit amet, co...")
-      })
+    cy.get('[data-testid="expandable-cell-text"]')
+      .should("exist")
+      .should("have.text", "Lorem ipsum dolor sit amet, co...")
   })
 })
