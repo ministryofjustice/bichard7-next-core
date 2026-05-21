@@ -74,7 +74,7 @@ describe("User Summary Report", () => {
       cy.get("@groupHeader").should("contain.text", expectedGroupDate)
       cy.get("@groupHeader").should("contain.text", "Exceptions resolved: 0")
       cy.get("@groupHeader").should("contain.text", "Triggers resolved: 0")
-      cy.get("@groupHeader").should("contain.text", "Exceptions or triggers Locked: 0")
+      cy.get("@groupHeader").should("contain.text", "Exceptions or triggers locked: 0")
 
       cy.get(".report-container > section").eq(index).find("tbody tr").should("have.length", 0)
     })

@@ -100,7 +100,7 @@ describe("warrants report type filter", () => {
       "Offence wording",
       "Warrant text",
       "Next court appearance",
-      "Next court dppearance date",
+      "Next court appearance date",
       "Warrant type",
       "Bail or no bail",
       "Date/time received by CJSE",

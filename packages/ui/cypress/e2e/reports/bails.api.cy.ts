@@ -51,7 +51,7 @@ describe("bails report type filter", () => {
   })
 
   it("queries bails with a date window that should not return anything", () => {
-    cy.get("#report-select").select("Bail Conditions")
+    cy.get("#report-select").select("Bail conditions")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(subDays(new Date(), 1), "yyyy-MM-dd"))
 
