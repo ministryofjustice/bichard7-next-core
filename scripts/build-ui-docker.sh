@@ -42,14 +42,12 @@ function pull_and_build_from_aws() {
   DOCKER_IMAGE_HASH="${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_REFERENCE}@${IMAGE_HASH}"
 
 
-if [ $(arch) = "arm64" ]
-then
-    echo "Building for ARM"
-    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -f packages/ui/Dockerfile --platform=linux/arm64 -t ${DOCKER_OUTPUT_TAG}:latest .
-else
-    echo "Building regular image"
-    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -f packages/ui/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest .
-fi
+  if [[ "$CIRCLECI" == "true" || "$CIRCLECI" == 1 || "$CI" == "true" || "$CI" == 1 ]]; then
+    echo "CI environment detected. Building with branch tag: ${DOCKER_TAG}"
+    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t "${DOCKER_OUTPUT_TAG}:${DOCKER_TAG}" -f packages/ui/Dockerfile  .
+  else
+    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/ui/Dockerfile .
+  fi
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
     ## Install goss
@@ -89,13 +87,8 @@ EOF
 }
 
 function build_local_image() {
-  if [[ "$CI" == "true" || "$CI" == 1 ]]; then
-    echo "CI environment detected. Building with branch tag: ${DOCKER_TAG}"
-    docker build -f packages/ui/Dockerfile -t "${DOCKER_OUTPUT_TAG}:${DOCKER_TAG}" .
-  else
-    echo "Local environment detected. Building with default tag: latest"
-    docker build -f packages/ui/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest  .
-  fi
+  echo "Local environment detected. Building with default tag: latest"
+  docker build -f packages/ui/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest  .
 }
 
 if [[ "$(has_local_image)" -gt 0 ]]; then

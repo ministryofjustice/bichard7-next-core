@@ -42,7 +42,12 @@ function pull_and_build_from_aws() {
 
   DOCKER_IMAGE_HASH="${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_BUILD_IMAGE}@${IMAGE_HASH}"
 
-  docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/api/Dockerfile .
+  if [[ "$CIRCLECI" == "true" || "$CIRCLECI" == 1 || "$CI" == "true" || "$CI" == 1 ]]; then
+    echo "CI environment detected. Building with branch tag: ${DOCKER_TAG}"
+    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t "${DOCKER_OUTPUT_TAG}:${DOCKER_TAG}" -f packages/api/Dockerfile  .
+  else
+    docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/api/Dockerfile .
+  fi
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
 
@@ -73,13 +78,8 @@ EOF
 }
 
 function build_local_image() {
-  if [[ "$CI" == "true" || "$CI" == 1 ]]; then
-    echo "CI environment detected. Building with branch tag: ${DOCKER_TAG}"
-    docker build -f packages/api/Dockerfile -t "${DOCKER_OUTPUT_TAG}:${DOCKER_TAG}" .
-  else
-    echo "Local environment detected. Building with default tag: latest"
-    docker build -f packages/api/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest  .
-  fi
+  echo "Local environment detected. Building with default tag: latest"
+  docker build -f packages/api/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest  .
 }
 
 if [[ "$(has_local_image)" -gt 0 ]]; then
