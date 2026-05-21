@@ -72,9 +72,19 @@ EOF
   fi
 }
 
+function build_local_image() {
+  if [[ "$CI" == "true" || "$CI" == 1 ]]; then
+    echo "CI environment detected. Building with branch tag: ${DOCKER_TAG}"
+    docker build -f packages/api/Dockerfile -t "${DOCKER_OUTPUT_TAG}:${DOCKER_TAG}" .
+  else
+    echo "Local environment detected. Building with default tag: latest"
+    docker build -f packages/api/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest  .
+  fi
+}
+
 if [[ "$(has_local_image)" -gt 0 ]]; then
   echo "Building local image"
-  docker build -f packages/api/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest  .
+  build_local_image
 else
   pull_and_build_from_aws
 fi

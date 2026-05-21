@@ -87,16 +87,19 @@ EOF
   fi
 }
 
+function build_local_image() {
+  if [[ "$CI" == "true" || "$CI" == 1 ]]; then
+    echo "CI environment detected. Building with branch tag: ${DOCKER_TAG}"
+    docker build -f packages/user-service/Dockerfile -t "${DOCKER_OUTPUT_TAG}:${DOCKER_TAG}" .
+  else
+    echo "Local environment detected. Building with default tag: latest"
+    docker build -f packages/user-service/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest  .
+  fi
+}
+
 if [[ "$(has_local_image)" -gt 0 ]]; then
   echo "Found local image"
-  if [ $(arch) = "arm64" ]
-  then
-      echo "Building for ARM"
-      docker build -f packages/user-service/Dockerfile --platform=linux/arm64 -t ${DOCKER_OUTPUT_TAG}:latest .
-  else
-      echo "Building regular image"
-      docker build -f packages/user-service/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest .
-  fi
+  build_local_image
 else
   pull_and_build_from_aws
 fi

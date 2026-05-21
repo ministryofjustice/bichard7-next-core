@@ -148,6 +148,14 @@ commands:
             <<parameters.ARGS>> docker compose --project-name bichard -f environment/docker-compose.yml \
             up -d <<parameters.SERVICES>> <<parameters.FLAGS>> --wait <<parameters.SERVICES>>
 
+  set_docker_tag:
+    steps:
+      - run:
+          name: Export dynamic DOCKER_TAG
+          command: |
+            SANITIZED_BRANCH=$(echo "$CIRCLE_BRANCH" | sed 's/[^a-zA-Z0-9_.-]/-/g')
+            echo "export DOCKER_TAG=${SANITIZED_BRANCH:-latest}" >> $BASH_ENV
+
 ui_params: &ui_params
   api:
     type: boolean
@@ -208,6 +216,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - node/install
       - node_install_packages
       - build_common
@@ -307,6 +316,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - node/install
       - node_install_packages
       - build_core
@@ -374,6 +384,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - run:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
@@ -421,6 +432,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - node/install
       - node_install_packages
       - build_common
@@ -457,13 +469,14 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - run: ./scripts/build-api-docker.sh
       - run:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "api:latest" | pigz > "images/api.tar.gz"
+            docker image save "api:${DOCKER_TAG}" | pigz > "images/api.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
@@ -531,6 +544,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - run: ./scripts/build-ui-docker.sh
       - run:
@@ -560,6 +574,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - node/install
       - node_install_packages
       - fetch_images:
@@ -719,6 +734,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - run: ./scripts/build-user-service-docker.sh
       - run:
@@ -755,6 +771,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - run:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "ui" "cypress/e2e/**/*.cy.ts"
@@ -847,6 +864,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - run:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"

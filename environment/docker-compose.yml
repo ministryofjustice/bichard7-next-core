@@ -131,7 +131,7 @@ services:
       start_period: 20s
 
   api:
-    image: api
+    image: api:${API_TAG:-latest}
     build:
       dockerfile: packages/api/Dockerfile
       context: ..
@@ -337,7 +337,7 @@ services:
       retries: 3
 
   user-service:
-    image: user-service
+    image: user-service:${DOCKER_TAG:-latest}
     build:
       dockerfile: packages/user-service/Dockerfile
       context: ..
@@ -369,7 +369,7 @@ services:
         condition: service_started
 
   ui:
-    image: ui
+    image: ui:${DOCKER_TAG:-latest}
     environment:
       DB_HOST: postgres
       DB_USER: ${DEFAULT_USER}
