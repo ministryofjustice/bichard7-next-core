@@ -33,12 +33,7 @@ describe("<ReportTableRow />", () => {
     cy.get('[data-testid="expandable-cell"]').as("expandableCell")
     cy.get("@expandableCell").should("exist").find("button").click()
 
-    cy.get("@expandableCell")
-      .should("exist")
-      .should(
-        "have.text",
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.show less"
-      )
+    cy.get("@expandableCell").should("exist").should("have.text", `${longText}show less`)
 
     cy.get("@expandableCell").should("contain", "show less")
   })
