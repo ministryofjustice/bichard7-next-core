@@ -9,7 +9,7 @@ describe("<ReportTableRow />", () => {
   it("renders abbreviated text and 'show more' button for long text", () => {
     cy.mount(<ExpandableCell content={longText} />)
 
-    cy.get('[data-testid="expandable-cell"]').as("expandableCell")
+    cy.get('[data-testid="expandable-cell"]').should("exist").as("expandableCell")
 
     cy.get("@expandableCell").find("button").as("actionButton")
 
