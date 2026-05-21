@@ -10,7 +10,11 @@ describe("<ReportTableRow />", () => {
     cy.mount(<ExpandableCell content={longText} />)
 
     cy.get('[data-testid="expandable-cell"]').as("expandableCell")
-    cy.get("@expandableCell").should("exist").find("button").should("exist").and("have.text", "show more")
+
+    cy.get("@expandableCell").find("button").as("actionButton")
+
+    cy.get("@actionButton").should("contain", "show more")
+    cy.get("@actionButton").should("have.id", "show-more-action")
 
     cy.get('[data-testid="expandable-cell-text"]').should("exist").should("have.text", abbreviatedText)
   })
@@ -30,21 +34,30 @@ describe("<ReportTableRow />", () => {
   it("renders full text when 'show more' button is clicked", () => {
     cy.mount(<ExpandableCell content={longText} />)
 
-    cy.get('[data-testid="expandable-cell"]').as("expandableCell")
-    cy.get("@expandableCell").should("exist").find("button").click()
+    cy.get('[data-testid="expandable-cell"]').should("exist").as("expandableCell")
 
-    cy.get("@expandableCell").should("exist").should("have.text", `${longText}show less`)
+    cy.get("@expandableCell").find("button").as("actionButton")
 
-    cy.get("@expandableCell").should("contain", "show less")
+    cy.get("@actionButton").click()
+
+    cy.get("@expandableCell").get('[data-testid="expandable-cell-text"]').should("have.text", longText)
+
+    cy.get("@actionButton").should("contain", "show less")
+    cy.get("@actionButton").should("have.id", "show-less-action")
   })
 
   it("renders abbreviated text when 'show less' button is clicked", () => {
     cy.mount(<ExpandableCell content={longText} />)
 
-    cy.get('[data-testid="expandable-cell"]').as("expandableCell")
-    cy.get("@expandableCell").should("exist").find("button").click()
-    cy.get("@expandableCell").should("exist").find("button").click()
+    cy.get('[data-testid="expandable-cell"]').should("exist").as("expandableCell")
+
+    cy.get("@expandableCell").find("button").as("actionButton")
+
+    cy.get("@actionButton").click()
+    cy.get("@actionButton").click()
 
     cy.get('[data-testid="expandable-cell-text"]').should("exist").should("have.text", abbreviatedText)
+    cy.get("@actionButton").should("contain", "show more")
+    cy.get("@actionButton").should("have.id", "show-more-action")
   })
 })

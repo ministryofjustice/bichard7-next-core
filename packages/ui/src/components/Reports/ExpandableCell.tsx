@@ -18,7 +18,7 @@ const ExpandableCell = ({ content }: { content: React.ReactNode }) => {
       <div data-testid="expandable-cell-text">
         {isExpanded ? content : `${content.slice(0, longTextAbbreviationCharCount)}...`}
       </div>
-      <ActionLink onClick={() => setIsExpanded(!isExpanded)} id={isExpanded ? "show-more-action" : "show-less-action"}>
+      <ActionLink onClick={() => setIsExpanded(!isExpanded)} id={isExpanded ? "show-less-action" : "show-more-action"}>
         {isExpanded ? "show less" : "show more"}
       </ActionLink>
     </div>
