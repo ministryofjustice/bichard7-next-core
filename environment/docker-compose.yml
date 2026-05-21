@@ -370,6 +370,9 @@ services:
 
   ui:
     image: ui:${DOCKER_TAG:-latest}
+    build:
+      dockerfile: packages/ui/Dockerfile
+      context: ..
     environment:
       DB_HOST: postgres
       DB_USER: ${DEFAULT_USER}
