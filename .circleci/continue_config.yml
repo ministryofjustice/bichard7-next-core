@@ -447,6 +447,11 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - set_docker_tag
+      - attach_workspace:
+          at: .
+      - load_ui_image
+      - load_user_service_image
+      - load_api_image
       - node/install
       - node_install_packages
       - build_common
@@ -962,7 +967,6 @@ workflows:
       - comparison_test
       - lint_and_build
       - test_postgres
-      - test_api
       - test_common
       - test_ui
       - test_ui_component
@@ -979,8 +983,13 @@ workflows:
 
       - test_message_forwarder:
           requires:
-            - build_api_image
             - build_ui_image
+            - build_user_service_image
+            - build_api_image
+
+      # Needs the API as Conductor/Worker needs the API
+      - test_api:
+          requires:
             - build_api_image
 
       - test_conductor:
