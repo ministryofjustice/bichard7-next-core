@@ -399,7 +399,9 @@ jobs:
       - build_audit_logging_images
       - attach_workspace:
           at: .
+      - load_ui_image
       - load_user_service_image
+      - load_api_image
       - run:
           name: Run the infrastructure
           command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
@@ -780,11 +782,7 @@ jobs:
           at: .
       - load_ui_image
       - load_user_service_image
-      - when:
-          condition:
-            equal: [true, << parameters.api >>]
-          steps:
-            - load_api_image
+      - load_api_image
       - node/install
       - run:
           name: Install Cypress
@@ -873,11 +871,7 @@ jobs:
           at: .
       - load_ui_image
       - load_user_service_image
-      - when:
-          condition:
-            equal: [true, << parameters.api >>]
-          steps:
-            - load_api_image
+      - load_api_image
       - node/install
       - node_install_packages
       - build_core
@@ -978,6 +972,7 @@ workflows:
           requires:
             - build_ui_image
             - build_user_service_image
+            - build_api_image
       - cypress_e2e_tests:
           name: cypress_e2e_tests_api
           api: true
@@ -995,12 +990,14 @@ workflows:
           requires:
             - build_ui_image
             - build_user_service_image
+            - build_api_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_leds
           use-leds: true
           requires:
             - build_ui_image
             - build_user_service_image
+            - build_api_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
           api: true
@@ -1016,8 +1013,11 @@ workflows:
       - cucumber_e2e_legacy_tests:
           requires:
             - build_user_service_image
+            - build_api_image
+            - build_ui_image
 
       - zap_scanner:
           requires:
             - build_ui_image
             - build_user_service_image
+            - build_api_image
