@@ -131,7 +131,7 @@ services:
       start_period: 20s
 
   api:
-    image: api:${API_TAG:-latest}
+    image: api:${DOCKER_TAG:-latest}
     build:
       dockerfile: packages/api/Dockerfile
       context: ..
