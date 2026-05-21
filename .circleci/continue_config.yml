@@ -449,8 +449,6 @@ jobs:
       - set_docker_tag
       - attach_workspace:
           at: .
-      - load_ui_image
-      - load_user_service_image
       - load_api_image
       - node/install
       - node_install_packages
