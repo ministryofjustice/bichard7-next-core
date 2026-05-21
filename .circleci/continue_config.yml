@@ -217,6 +217,9 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - set_docker_tag
+      - attach_workspace:
+          at: .
+      - load_api_image
       - node/install
       - node_install_packages
       - build_common
@@ -317,6 +320,9 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - set_docker_tag
+      - attach_workspace:
+            at: .
+      - load_api_image
       - node/install
       - node_install_packages
       - build_core
@@ -328,7 +334,7 @@ jobs:
           environment:
             PHASE_2_QUEUE_NAME: TEST_PHASE2_QUEUE
             PHASE_3_QUEUE_NAME: TEST_PHASE3_QUEUE
-          command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
+          command: .circleci/scripts/run-infrastructure.sh 'api' all-build-worker
       - run:
           name: Test the workflows
           command: nvm use && npm run -w packages/conductor test
@@ -349,6 +355,11 @@ jobs:
             - run: circleci-agent step halt
       - checkout
       - set_docker_tag
+      - attach_workspace:
+          at: .
+      - load_ui_image
+      - load_user_service_image
+      - load_api_image
       - node/install
       - node_install_packages
       - build_core
@@ -357,7 +368,7 @@ jobs:
       - build_audit_logging_images
       - run:
           name: Boot Conductor infrastructure
-          command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
+          command: .circleci/scripts/run-infrastructure.sh 'ui user-service api' all-build-worker
       - run:
           name: Test the workflows
           command: nvm use && npm run -w packages/message-forwarder test
@@ -404,7 +415,7 @@ jobs:
       - load_api_image
       - run:
           name: Run the infrastructure
-          command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
+          command: .circleci/scripts/run-infrastructure.sh "ui user-service api" all-build-worker
       - run:
           name: Install browsers for puppeteer
           working_directory: packages/e2e-test
@@ -577,7 +588,6 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - set_docker_tag
       - node/install
       - node_install_packages
       - fetch_images:
@@ -804,7 +814,7 @@ jobs:
           name: Building infrastructure
           environment:
             <<: *ui_envs
-          command: bash .circleci/scripts/run-infrastructure.sh ui ui
+          command: bash .circleci/scripts/run-infrastructure.sh "ui user-service api" ui
       - when:
           condition:
             equal: [true, << parameters.api >>]
@@ -813,7 +823,7 @@ jobs:
               name: Boot Conductor
               environment:
                 <<: *ui_envs
-              command: bash .circleci/scripts/run-infrastructure.sh api conductor
+              command: bash .circleci/scripts/run-infrastructure.sh "ui user-service api" conductor
       - run:
           name: Run UI tests
           command: bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
@@ -890,10 +900,10 @@ jobs:
           command: |
             if [ "<< parameters.api >>" = "true" ]; then
               echo "Running API-specific infrastructure build..."
-              bash .circleci/scripts/run-infrastructure.sh ui all-build-worker
+              bash .circleci/scripts/run-infrastructure.sh "ui user-service api" all-build-worker
             else
               echo "Running default infrastructure build..."
-              bash .circleci/scripts/run-infrastructure.sh ui all
+              bash .circleci/scripts/run-infrastructure.sh "ui user-service api" all
             fi
       - run:
           name: Run e2e tests against UI code
@@ -948,24 +958,34 @@ jobs:
 workflows:
   test-all:
     jobs:
+      - characterisation_test
+      - comparison_test
       - lint_and_build
+      - test_postgres
+      - test_api
+      - test_common
+      - test_ui
+      - test_ui_component
+      - test_user_service
+      - test_user_service_e2e
 
       - build_ui_image
       - build_user_service_image
       - build_api_image
 
-      - test_message_forwarder
-      - test_postgres
-      - test_api
-      - test_common
-      - test_conductor
-      - test_core
-      - test_ui
-      - test_ui_component
-      - test_user_service
-      - test_user_service_e2e
-      - characterisation_test
-      - comparison_test
+      - test_core:
+          requires:
+            - build_api_image
+
+      - test_message_forwarder:
+          requires:
+            - build_api_image
+            - build_ui_image
+            - build_api_image
+
+      - test_conductor:
+          requires:
+            - build_api_image
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
