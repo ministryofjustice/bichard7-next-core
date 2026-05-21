@@ -132,9 +132,6 @@ services:
 
   api:
     image: api:${DOCKER_TAG:-latest}
-    build:
-      dockerfile: packages/api/Dockerfile
-      context: ..
     environment:
       DB_HOST: postgres
       DB_READER_HOST: postgres
@@ -338,9 +335,6 @@ services:
 
   user-service:
     image: user-service:${DOCKER_TAG:-latest}
-    build:
-      dockerfile: packages/user-service/Dockerfile
-      context: ..
     environment:
       BASE_URL: https://localhost:4443/users
       DB_HOST: postgres
@@ -370,9 +364,6 @@ services:
 
   ui:
     image: ui:${DOCKER_TAG:-latest}
-    build:
-      dockerfile: packages/ui/Dockerfile
-      context: ..
     environment:
       DB_HOST: postgres
       DB_USER: ${DEFAULT_USER}
