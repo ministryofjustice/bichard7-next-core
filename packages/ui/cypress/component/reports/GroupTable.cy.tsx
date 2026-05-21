@@ -1,20 +1,20 @@
-import { GroupedReportConfig } from "types/reports/Config"
 import { GroupTable } from "components/Reports/GroupTable"
+import { GroupedReportConfig } from "types/reports/Config"
 
 type TestRow = { name: string; value: number }
-type TestGroup = {
+type TestTable = {
   category: string
   items: TestRow[]
   totals: { totalValue: number }
 }
 
 describe("GroupTable", () => {
-  const mockConfig: GroupedReportConfig<TestGroup, TestRow> = {
+  const mockConfig: GroupedReportConfig<TestTable, TestRow> = {
     structure: "grouped",
     endpoint: "/api/test",
     reportType: "bails",
-    groupNameKey: "category",
-    dataListKey: "items",
+    tableNameKey: "category",
+    tableDataListKey: "items",
     columns: [
       { key: "name", header: "Name" },
       { key: "value", header: "Value" }
@@ -42,30 +42,30 @@ describe("GroupTable", () => {
     const ungroupedConfig = { ...mockConfig, structure: "flat" }
 
     // @ts-expect-error - Intentionally passing an invalid config to test the runtime guard
-    cy.mount(<GroupTable config={ungroupedConfig} groups={mockGroups} />)
+    cy.mount(<GroupTable config={ungroupedConfig} tables={mockGroups} />)
     cy.get("table").should("not.exist")
   })
 
   it("renders the correct number of tables based on groups", () => {
-    cy.mount(<GroupTable config={mockConfig} groups={mockGroups} />)
+    cy.mount(<GroupTable config={mockConfig} tables={mockGroups} />)
     cy.get("table").should("have.length", 2)
   })
 
   it("renders the correct group names in headers", () => {
-    cy.mount(<GroupTable config={mockConfig} groups={mockGroups} />)
+    cy.mount(<GroupTable config={mockConfig} tables={mockGroups} />)
     cy.get("h3").eq(0).should("contain.text", "Hardware")
     cy.get("h3").eq(1).should("contain.text", "Software")
   })
 
   it("renders the totals when totalsConfig and totals data are present", () => {
-    cy.mount(<GroupTable config={mockConfig} groups={mockGroups} />)
+    cy.mount(<GroupTable config={mockConfig} tables={mockGroups} />)
 
     cy.get("h3").eq(0).should("contain.text", "Total Value: 75")
     cy.get("h3").eq(1).should("contain.text", "Total Value: 200")
   })
 
   it("renders the correct number of rows within each grouped table", () => {
-    cy.mount(<GroupTable config={mockConfig} groups={mockGroups} />)
+    cy.mount(<GroupTable config={mockConfig} tables={mockGroups} />)
 
     cy.get("table").eq(0).find("tbody tr").should("have.length", 2)
     cy.get("table").eq(1).find("tbody tr").should("have.length", 1)
@@ -78,17 +78,17 @@ describe("GroupTable", () => {
     ]
 
     // @ts-expect-error - Intentionally passing an invalid config to test the runtime guard
-    cy.mount(<GroupTable config={mockConfig} groups={corruptGroups} />)
+    cy.mount(<GroupTable config={mockConfig} tables={corruptGroups} />)
 
     cy.get("table").should("have.length", 2)
     cy.get("table").find("tbody tr").should("have.length", 0)
   })
 
-  it("falls back to empty string if groupNameKey is missing in data", () => {
+  it("falls back to empty string if tableNameKey is missing in data", () => {
     const missingNameGroups = [{ items: [{ name: "Ghost", value: 0 }] }]
 
     // @ts-expect-error - Intentionally passing an invalid config to test the runtime guard
-    cy.mount(<GroupTable config={mockConfig} groups={missingNameGroups} />)
+    cy.mount(<GroupTable config={mockConfig} tables={missingNameGroups} />)
 
     cy.get("h3").first().should("exist").and("not.contain.text", "Hardware")
   })
