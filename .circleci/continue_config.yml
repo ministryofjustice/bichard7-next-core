@@ -348,6 +348,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - node/install
       - node_install_packages
       - build_core
@@ -927,6 +928,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - attach_workspace:
           at: .
       - load_ui_image
