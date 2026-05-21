@@ -142,6 +142,23 @@ describe("ActionBar", () => {
     cy.get("body").should("not.contain", "Download CSV")
   })
 
+  it("does not show the CSV download button if fileDownloadUrl is missing", () => {
+    cy.mount(
+      <MockNextRouter>
+        <ActionBar
+          fileDownloadUrl={null}
+          reportFilename="my_report.csv"
+          hasRows={true}
+          handleRunReport={cy.stub().as("handleRunReport")}
+          clearFilters={cy.stub().as("clearFilters")}
+          reportOptions={{ ...mockReportOptions, reportType: undefined }}
+        />
+      </MockNextRouter>
+    )
+
+    cy.get("body").should("not.contain", "Download CSV")
+  })
+
   it("does not show report download button if is an automated report but reportType is not present", () => {
     cy.mount(
       <MockNextRouter>

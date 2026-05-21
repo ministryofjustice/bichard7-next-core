@@ -27,7 +27,19 @@ export const ReportConfigs = {
     endpoint: V1.CasesReportsBails,
     structure: "flat",
     columns: bailsColumns,
-    reportType: "bails"
+    reportType: "bails",
+    totalsConfig: [
+      { key: "total", label: "Total triggers" },
+      { key: "resolved", label: "Resolved" },
+      { key: "unresolved", label: "Unresolved" }
+    ],
+    calculateTotalsCallback: (totals: Record<string, number>, rows: CaseForBailsReportDto[]) => {
+      rows.forEach((row) => {
+        totals.total = totals.total + 1
+        totals.resolved = totals.resolved + (row.triggerStatus === "Resolved" ? 1 : 0)
+        totals.unresolved = totals.unresolved + (row.triggerStatus === "Unresolved" ? 1 : 0)
+      })
+    }
   } satisfies FlatReportConfig<CaseForBailsReportDto>,
   "domestic violence": {
     endpoint: V1.CasesReportsDomesticViolence,
@@ -42,8 +54,8 @@ export const ReportConfigs = {
   exceptions: {
     endpoint: V1.CasesReportsExceptions,
     structure: "grouped",
-    groupNameKey: "username",
-    dataListKey: "cases",
+    tableNameKey: "username",
+    tableDataListKey: "cases",
     columns: exceptionsColumns,
     reportType: "exceptions",
     totalsConfig: [
@@ -73,8 +85,8 @@ export const ReportConfigs = {
   "user summary": {
     endpoint: V1.CasesReportsUserPerformanceSummary,
     structure: "grouped",
-    groupNameKey: "date",
-    dataListKey: "users",
+    tableNameKey: "date",
+    tableDataListKey: "users",
     columns: userPerformanceSummaryColumns,
     formatter: "date",
     totalsConfig: [
@@ -87,10 +99,10 @@ export const ReportConfigs = {
   "user detail": {
     structure: "nested",
     endpoint: V1.CasesReportsUserPerformanceDetail,
-    outerGroupNameKey: "date",
-    outerDataListKey: "codeDetails",
-    innerGroupNameKey: "description",
-    innerDataListKey: "users",
+    groupNameKey: "date",
+    groupDataListKey: "codeDetails",
+    tableNameKey: "description",
+    tableDataListKey: "users",
     columns: codeDetailUserColumns,
     columnSelectorKey: "type",
     formatter: "date",
