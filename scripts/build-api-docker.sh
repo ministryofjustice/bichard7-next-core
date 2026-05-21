@@ -2,7 +2,7 @@
 
 set -e
 
-readonly DOCKER_BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
+readonly DOCKER_BUILD_IMAGE="nginx-nodejs-24-2023-supervisord"
 readonly DOCKER_OUTPUT_TAG="api"
 
 function has_local_image() {

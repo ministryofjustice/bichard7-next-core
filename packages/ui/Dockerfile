@@ -1,4 +1,4 @@
-ARG BUILD_IMAGE="nginx-nodejs-20-2023-supervisord"
+ARG BUILD_IMAGE="nginx-nodejs-24-2023-supervisord"
 FROM ${BUILD_IMAGE} AS base
 
 LABEL maintainer="CJSE"
@@ -52,8 +52,8 @@ WORKDIR /app
 # Set up a non-root user for supervisor and its child processes - nextjs, nginx
 RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
     usermod -a -G supervisor supervisor && \
-    chgrp supervisor -R /app /certs /run /var/log /var/lib/nginx && \
-    chmod g+r -R /certs/server.key /var/lib/nginx && \
+    chgrp supervisor -R /app /certs /run /var/log /var/lib/nginx /var/cache/nginx && \
+    chmod g+r -R /certs/server.key /var/lib/nginx /var/cache/nginx && \
     chmod g+rw -R /app /run /var/log && \
     npm config set cache /tmp/npm --global
 

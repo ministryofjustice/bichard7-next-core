@@ -2,7 +2,7 @@
 
 set -ex
 
-readonly DOCKER_REFERENCE="nginx-nodejs-20-2023-supervisord"
+readonly DOCKER_REFERENCE="nginx-nodejs-24-2023-supervisord"
 readonly DOCKER_OUTPUT_TAG="user-service"
 
 function has_local_image() {
