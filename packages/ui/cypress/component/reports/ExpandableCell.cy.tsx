@@ -4,6 +4,7 @@ describe("<ReportTableRow />", () => {
   const shortText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
   const longText =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  const abbreviatedText = "Lorem ipsum dolor sit amet, co..."
 
   it("renders abbreviated text and 'show more' button for long text", () => {
     cy.mount(<ExpandableCell content={longText} />)
@@ -11,9 +12,7 @@ describe("<ReportTableRow />", () => {
     cy.get('[data-testid="expandable-cell"]').as("expandableCell")
     cy.get("@expandableCell").should("exist").find("button").should("exist").and("have.text", "show more")
 
-    cy.get('[data-testid="expandable-cell-text"]')
-      .should("exist")
-      .should("have.text", "Lorem ipsum dolor sit amet, co...")
+    cy.get('[data-testid="expandable-cell-text"]').should("exist").should("have.text", abbreviatedText)
   })
 
   it("renders full text and doesn't render expandable cell for short text", () => {
@@ -51,8 +50,6 @@ describe("<ReportTableRow />", () => {
     cy.get("@expandableCell").should("exist").find("button").click()
     cy.get("@expandableCell").should("exist").find("button").click()
 
-    cy.get('[data-testid="expandable-cell-text"]')
-      .should("exist")
-      .should("have.text", "Lorem ipsum dolor sit amet, co...")
+    cy.get('[data-testid="expandable-cell-text"]').should("exist").should("have.text", abbreviatedText)
   })
 })
