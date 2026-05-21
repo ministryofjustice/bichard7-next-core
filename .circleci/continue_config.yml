@@ -321,7 +321,7 @@ jobs:
       - checkout
       - set_docker_tag
       - attach_workspace:
-            at: .
+          at: .
       - load_api_image
       - node/install
       - node_install_packages
