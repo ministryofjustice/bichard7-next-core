@@ -104,6 +104,8 @@ commands:
 
   build_audit_logging_images:
     steps:
+      - fetch_images:
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - run:
           name: Clone bichard7-next-audit-logging
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
