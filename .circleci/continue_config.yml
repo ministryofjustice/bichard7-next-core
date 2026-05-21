@@ -212,7 +212,7 @@ jobs:
       - node_install_packages
       - build_common
       - fetch_images:
-          images: nodejs-20-2023
+          images: nodejs-24-2023
       - run:
           name: Run PostgreSQL
           command: npm run postgres
@@ -311,7 +311,7 @@ jobs:
       - node_install_packages
       - build_core
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - build_audit_logging_images
       - run:
           name: Boot Conductor infrastructure
@@ -342,7 +342,7 @@ jobs:
       - node_install_packages
       - build_core
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - build_audit_logging_images
       - run:
           name: Boot Conductor infrastructure
@@ -380,7 +380,7 @@ jobs:
       - node_install_packages
       - build_core
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - run:
           name: Build message forwarder image
           command: .circleci/scripts/build-message-forwarder.sh
@@ -425,7 +425,7 @@ jobs:
       - node_install_packages
       - build_common
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - build_audit_logging_images
       - run:
           name: Boot Dependencies
@@ -563,7 +563,7 @@ jobs:
       - node/install
       - node_install_packages
       - fetch_images:
-          images: nodejs-20-2023
+          images: nodejs-24-2023
       - build_audit_logging_images
       - start_services:
           SERVICES: activemq localstack db-seed audit-log-api
@@ -638,7 +638,7 @@ jobs:
       - node/install
       - node_install_packages
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - build_audit_logging_images
       - start_services:
           SERVICES: db-seed audit-log-api
@@ -775,7 +775,7 @@ jobs:
       - node_install_packages
       - build_common
       - fetch_images:
-          images: nodejs-20-2023 nginx-auth-proxy nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-auth-proxy nginx-nodejs-24-2023-supervisord
       - build_audit_logging_images
       - run:
           name: Wait for cypress install to finish
@@ -863,7 +863,7 @@ jobs:
       - node_install_packages
       - build_core
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - build_core_images
       - build_audit_logging_images
       - run:
@@ -917,7 +917,7 @@ jobs:
       - node_install_packages
       - build_core
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - build_audit_logging_images
       - fetch_images:
           images: nginx-auth-proxy
