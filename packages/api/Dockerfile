@@ -44,8 +44,8 @@ WORKDIR /core
 RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
     usermod -a -G supervisor supervisor && \
     chgrp supervisor -R /certs /run /var/log /var/cache/nginx && \
-    chmod g+r -R /certs/server.key /var/cache/nginx && \
-    chmod g+rw -R /run /var/log && \
+    chmod g+r -R /certs/server.key && \
+    chmod g+rw -R /run /var/log /var/cache/nginx && \
     npm config set cache /tmp/npm --global
 
 COPY --from=builder /core/node_modules ./node_modules

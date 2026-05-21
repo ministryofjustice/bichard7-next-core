@@ -53,8 +53,8 @@ WORKDIR /app
 RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
     usermod -a -G supervisor supervisor && \
     chgrp supervisor -R /app /certs /run /var/log /var/cache/nginx && \
-    chmod g+r -R /certs/server.key /var/cache/nginx && \
-    chmod g+rw -R /app /run /var/log && \
+    chmod g+r -R /certs/server.key && \
+    chmod g+rw -R /app /run /var/log /var/cache/nginx && \
     npm config set cache /tmp/npm --global
 
 # Extract standalone build to working directory
