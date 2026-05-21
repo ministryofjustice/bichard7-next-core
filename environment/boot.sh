@@ -98,6 +98,9 @@ if [[ "$USE_LEDS" == "true" ]]; then
     source "$SCRIPT_DIR/leds-environment-variable.sh"
 fi
 
+echo "Building images"
+eval "$DOCKER_COMPOSE build $@"
+
 echo "Setting up infrastructure"
 eval "$DOCKER_COMPOSE up -d --wait $@"
 
