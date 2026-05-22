@@ -485,6 +485,8 @@ jobs:
               - << pipeline.parameters.core-changes >>
               - << pipeline.parameters.api-changes >>
               - << pipeline.parameters.env-changes >>
+              - << pipeline.parameters.conductor-changes >>
+              - << pipeline.parameters.message-forwarder-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -560,6 +562,8 @@ jobs:
               - << pipeline.parameters.core-changes >>
               - << pipeline.parameters.api-changes >>
               - << pipeline.parameters.env-changes >>
+              - << pipeline.parameters.conductor-changes >>
+              - << pipeline.parameters.message-forwarder-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
