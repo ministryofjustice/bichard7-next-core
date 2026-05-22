@@ -45,6 +45,7 @@ function pull_and_build_from_aws() {
   docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/conductor/Dockerfile .
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
+    echo "About to run Goss tests"
 
     ## Run goss tests
     GOSS_FILES_PATH=packages/conductor dgoss run \
@@ -52,13 +53,13 @@ function pull_and_build_from_aws() {
       -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
       -e AUDIT_LOG_API_KEY="xxx" \
       -e AUDIT_LOG_API_URL="http://127.0.0.1:3011" \
-      -e MQ_URL="mq" \
+      -e MQ_URL="127.0.0.1" \
       -e MQ_AUTH='{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}' \
       -e INCOMING_BUCKET_NAME="incoming-messages" \
       -e S3_REGION="eu-west-2" \
       -e CONDUCTOR_URL="http://127.0.0.1:4000/api" \
       -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
-      "${DOCKER_OUTPUT_TAG}:latest" \
+      "${DOCKER_OUTPUT_TAG}:latest"
 
     docker tag \
       ${DOCKER_OUTPUT_TAG}:latest \
