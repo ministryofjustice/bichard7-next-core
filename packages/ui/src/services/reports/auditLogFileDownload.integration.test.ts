@@ -96,7 +96,7 @@ describe("AuditLogFileDownload", () => {
     expect(log.attributes).toEqual(
       expect.objectContaining({
         auditLogVersion: 2,
-        "Report ID": "Bail Conditions",
+        "Report ID": "Bail conditions",
         "Output Format": "Download as CSV",
         "Date Range": "2026-01-01 to 2026-01-30"
       })
@@ -125,7 +125,7 @@ describe("AuditLogFileDownload", () => {
     expect(log.attributes).toEqual(
       expect.objectContaining({
         auditLogVersion: 2,
-        "Report ID": "Automation Rate",
+        "Report ID": "Automation rate",
         "Output Format": "Download as XLSX"
       })
     )

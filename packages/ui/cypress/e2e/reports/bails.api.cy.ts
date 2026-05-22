@@ -10,7 +10,7 @@ describe("bails report type filter", () => {
   })
 
   it("queries bails and successfully displays only bails", () => {
-    cy.get("#report-select").select("Bail Conditions")
+    cy.get("#report-select").select("Bail conditions")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
 
@@ -19,24 +19,24 @@ describe("bails report type filter", () => {
     cy.get(".results-area table tbody tr").should("have.length", 1)
 
     const expectedHeaders = [
-      "Hearing Date",
-      "Court Name",
-      "Hearing Time",
-      "Defendant Name",
-      "Defendant Address",
-      "Date of Birth",
+      "Hearing date",
+      "Court name",
+      "Hearing time",
+      "Defendant name",
+      "Defendant address",
+      "Date of birth",
       "PTIURN",
       "ASN",
-      "Offence Title(s)",
-      "Next Court Appearance",
-      "Next Court Appearance Date",
-      "Next Court Appearance Time",
-      "Date/Time Received by CJSE",
-      "Number of days taken to enter Portal",
-      "Bail Conditions Imposed",
+      "Offence title(s)",
+      "Next court appearance",
+      "Next court appearance date",
+      "Next court appearance time",
+      "Date/time received by CJSE",
+      "Number of days taken to enter portal",
+      "Bail conditions imposed",
       "Case successfully automated to PNC",
-      "Trigger Status",
-      "Trigger Resolved Date"
+      "Trigger status",
+      "Trigger resolved date"
     ]
 
     expectedHeaders.forEach((headerText, index) => {
@@ -51,7 +51,7 @@ describe("bails report type filter", () => {
   })
 
   it("queries bails with a date window that should not return anything", () => {
-    cy.get("#report-select").select("Bail Conditions")
+    cy.get("#report-select").select("Bail conditions")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(subDays(new Date(), 1), "yyyy-MM-dd"))
 

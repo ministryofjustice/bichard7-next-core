@@ -16,7 +16,7 @@ describe("User Summary Report", () => {
     const toDate = format(today, "yyyy-MM-dd")
     const formattedGroupDate = format(today, "dd/MM/yyyy")
 
-    cy.get("#report-select").select("User Performance Summary")
+    cy.get("#report-select").select("User performance summary")
     cy.get("#date-from").type(fromDate)
     cy.get("#date-to").type(toDate)
     cy.get("#run-report").click()
@@ -25,15 +25,15 @@ describe("User Summary Report", () => {
 
     cy.get("h3").first().as("groupHeader")
     cy.get("@groupHeader").should("contain.text", formattedGroupDate)
-    cy.get("@groupHeader").should("contain.text", "Exceptions Resolved: 1")
-    cy.get("@groupHeader").should("contain.text", "Triggers Resolved: 1")
-    cy.get("@groupHeader").should("contain.text", "Exceptions/Triggers Locked: 1")
+    cy.get("@groupHeader").should("contain.text", "Exceptions resolved: 1")
+    cy.get("@groupHeader").should("contain.text", "Triggers resolved: 1")
+    cy.get("@groupHeader").should("contain.text", "Exceptions or triggers locked: 1")
 
     cy.get("table").first().as("reportTable")
     cy.get("@reportTable").find("th").eq(0).should("have.text", "Name")
-    cy.get("@reportTable").find("th").eq(1).should("have.text", "Exceptions Resolved Today")
-    cy.get("@reportTable").find("th").eq(2).should("have.text", "Triggers Resolved Today")
-    cy.get("@reportTable").find("th").eq(3).should("have.text", "Total Exceptions/Triggers Still Locked")
+    cy.get("@reportTable").find("th").eq(1).should("have.text", "Exceptions resolved today")
+    cy.get("@reportTable").find("th").eq(2).should("have.text", "Triggers resolved today")
+    cy.get("@reportTable").find("th").eq(3).should("have.text", "Total exceptions or triggers still locked")
 
     cy.get("@reportTable").find("tbody tr").should("have.length", 2)
 
@@ -59,7 +59,7 @@ describe("User Summary Report", () => {
     const fromDate = format(subDays(today, 7), "yyyy-MM-dd")
     const toDate = format(today, "yyyy-MM-dd")
 
-    cy.get("#report-select").select("User Performance Summary")
+    cy.get("#report-select").select("User performance summary")
     cy.get("#date-from").type(fromDate)
     cy.get("#date-to").type(toDate)
     cy.get("#run-report").click()
@@ -72,9 +72,9 @@ describe("User Summary Report", () => {
       cy.get(".report-container > section").eq(index).find("h3").as("groupHeader")
 
       cy.get("@groupHeader").should("contain.text", expectedGroupDate)
-      cy.get("@groupHeader").should("contain.text", "Exceptions Resolved: 0")
-      cy.get("@groupHeader").should("contain.text", "Triggers Resolved: 0")
-      cy.get("@groupHeader").should("contain.text", "Exceptions/Triggers Locked: 0")
+      cy.get("@groupHeader").should("contain.text", "Exceptions resolved: 0")
+      cy.get("@groupHeader").should("contain.text", "Triggers resolved: 0")
+      cy.get("@groupHeader").should("contain.text", "Exceptions or triggers locked: 0")
 
       cy.get(".report-container > section").eq(index).find("tbody tr").should("have.length", 0)
     })
