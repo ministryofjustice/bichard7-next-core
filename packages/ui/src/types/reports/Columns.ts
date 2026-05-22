@@ -10,9 +10,9 @@ export type ReportColumn<TRow> = {
   key: Extract<keyof TRow, string>
 }
 
-export type BaseReportColumn = {
+export type BaseReportColumn<TRow = Record<string, unknown>> = {
   header: string
-  key: string
+  key: Extract<keyof TRow, string>
 }
 
 export const exceptionsColumns: ReportColumn<CaseForExceptionReportDto>[] = [
@@ -96,12 +96,12 @@ export const userPerformanceSummaryColumns: ReportColumn<UserForPerformanceSumma
 
 export const codeDetailUserColumns: Record<string, ReportColumn<CodeDetailUserDto>[]> = {
   exception: [
-    { header: "User ID", key: "username" },
+    { header: "Name", key: "fullName" },
     { header: "Number of exceptions resolved today", key: "resolved" },
     { header: "Total number of exceptions still locked", key: "totalLocked" }
   ],
   trigger: [
-    { header: "User ID", key: "username" },
+    { header: "Name", key: "fullName" },
     { header: "Number of triggers resolved today", key: "resolved" },
     { header: "Total number of triggers still locked", key: "totalLocked" }
   ]

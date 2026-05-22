@@ -64,3 +64,7 @@ sonar-project.properties
 npm-debug.log
 logs
 *.log
+
+# Ignore CI generated artifacts
+images/
+**/*.tar.gz

@@ -1,6 +1,6 @@
-import { BaseReportColumn } from "types/reports/Columns"
-import { ReportTableRow } from "components/Reports/ReportTableRow"
 import { StyledReportTableBody } from "components/Reports/ReportTableBody.styles"
+import { ReportTableRow } from "components/Reports/ReportTableRow"
+import { BaseReportColumn } from "types/reports/Columns"
 
 interface TableBodyProps<T> {
   rows: T[]
