@@ -29,15 +29,15 @@ describe("User Performance Detail", () => {
         cy.get("@todayGroup").within(() => {
           const expectedTables = [
             { userId: "user1", resolved: "1", locked: "0", type: "exceptions" },
-            { userId: "GeneralHandler", resolved: "1", locked: "0", type: "triggers" },
-            { userId: "GeneralHandler", resolved: "0", locked: "1", type: "triggers" }
+            { userId: "General Handler User", resolved: "1", locked: "0", type: "triggers" },
+            { userId: "General Handler User", resolved: "0", locked: "1", type: "triggers" }
           ]
 
           cy.get("section[aria-labelledby^='inner-group']").each(($section, index) => {
             const expected = expectedTables[index]
 
             cy.wrap($section).within(() => {
-              cy.get(".govuk-table__header").eq(0).should("have.text", "User ID")
+              cy.get(".govuk-table__header").eq(0).should("have.text", "Name")
               cy.get(".govuk-table__header").eq(1).should("have.text", `Number of ${expected.type} resolved today`)
               cy.get(".govuk-table__header").eq(2).should("have.text", `Total number of ${expected.type} still locked`)
 

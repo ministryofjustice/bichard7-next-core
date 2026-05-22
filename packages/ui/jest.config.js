@@ -3,6 +3,7 @@ module.exports = {
   preset: "ts-jest",
   setupFilesAfterEnv: ["<rootDir>/setupTests.ts"],
   moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
     "^defaults$": "<rootDir>/src/defaults.ts",
     "^config$": "<rootDir>/src/config.ts",
     "^types/(.*)$": "<rootDir>/src/types/$1",
