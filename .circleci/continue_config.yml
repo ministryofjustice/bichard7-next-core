@@ -495,7 +495,7 @@ jobs:
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - run:
           name: Build API Docker image
           command: docker build -f packages/api/Dockerfile -t "api:${DOCKER_TAG}" .
@@ -576,7 +576,7 @@ jobs:
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - run:
           name: Build UI Docker image
           command: docker build -f packages/ui/Dockerfile -t "ui:${DOCKER_TAG}" .
@@ -769,7 +769,7 @@ jobs:
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - run:
           name: Build User Service Docker image
           command: docker build -f packages/user-service/Dockerfile -t "user-service:${DOCKER_TAG}" .
