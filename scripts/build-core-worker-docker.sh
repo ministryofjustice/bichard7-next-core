@@ -48,6 +48,7 @@ function pull_and_build_from_aws() {
 
     ## Run goss tests
     GOSS_FILES_PATH=packages/conductor dgoss run \
+      --network host \
       -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
       -e AUDIT_LOG_API_KEY="xxx" \
       -e AUDIT_LOG_API_URL="http://localhost:3011" \
