@@ -1,9 +1,9 @@
 import { GroupedTableProps, groupTable } from "@/utils/tables/groupTable"
 import { Table } from "components/Table"
+import CollapsibleTable from "./CollapsibleTable"
 import { ReportContainer } from "./GroupTable.styles"
 import { ReportTableBody } from "./ReportTableBody"
 import { ReportTableHeader } from "./ReportTableHeader"
-import { Totals } from "./Totals"
 
 export const GroupTable = <TTable extends Record<string, unknown>, TRow extends Record<string, unknown>>({
   config,
@@ -14,22 +14,20 @@ export const GroupTable = <TTable extends Record<string, unknown>, TRow extends 
   return (
     <ReportContainer className="report-container">
       {groupTableData?.map(({ tableName, formattedTableName, rows, totals }) => {
-        const sectionId = `report-group-${formattedTableName}`
+        //const sectionId = `report-group-${formattedTableName}`
 
         return (
-          <section key={sectionId} aria-labelledby={sectionId}>
-            <h3 id={sectionId} className="govuk-heading-m">
-              {formattedTableName}
-
-              <Totals totals={totals} totalsConfig={config.totalsConfig} />
-            </h3>
-
+          <CollapsibleTable
+            tableName={formattedTableName || tableName}
+            totals={totals}
+            totalsConfig={config.totalsConfig}
+          >
             <Table>
               <caption className="govuk-visually-hidden">{`Report table for ${tableName}`}</caption>
               <ReportTableHeader columns={config.columns} />
               <ReportTableBody rows={rows} columns={config.columns} />
             </Table>
-          </section>
+          </CollapsibleTable>
         )
       })}
     </ReportContainer>
