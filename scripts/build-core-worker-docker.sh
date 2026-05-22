@@ -55,10 +55,9 @@ function pull_and_build_from_aws() {
       -e MQ_AUTH='{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}' \
       -e INCOMING_BUCKET_NAME="incoming-messages" \
       -e S3_REGION="eu-west-2" \
-      -e CONDUCTOR_URL="http://conductor:4000/api" \
+      -e CONDUCTOR_URL="http://localhost:4000/api" \
       -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
       "${DOCKER_OUTPUT_TAG}:latest" \
-      --network host
 
     docker tag \
       ${DOCKER_OUTPUT_TAG}:latest \
