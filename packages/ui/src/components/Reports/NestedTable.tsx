@@ -20,7 +20,7 @@ export const NestedTable = <
 
   return (
     <ReportContainer className="report-container">
-      {nestedTableData?.map(({ groupName, tables, formattedGroupName }) => {
+      {nestedTableData?.map(({ groupName, tables, formattedGroupName, totals }) => {
         const outerSectionId = `outer-group-${groupName}`
         const outerSectionBodyId = `outer-group-body-${groupName}`
 
@@ -28,6 +28,8 @@ export const NestedTable = <
           <section key={outerSectionId} aria-labelledby={outerSectionId}>
             <h3 id={outerSectionId} className="govuk-heading-m">
               {formattedGroupName}
+
+              <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} />
             </h3>
 
             <section id={outerSectionBodyId} aria-labelledby={outerSectionBodyId} itemID={"outer-group-body"}>
@@ -46,7 +48,7 @@ export const NestedTable = <
                     <h4 id={innerSectionId} className="govuk-heading-m">
                       {tableName}
 
-                      <Totals totals={totals} totalsConfig={config.totalsConfig} />
+                      <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} />
                     </h4>
                     <SimpleTable config={flatTableConfig} rows={rows} tableName={tableName} nested={false} />
                   </section>
