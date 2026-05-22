@@ -148,6 +148,14 @@ commands:
             <<parameters.ARGS>> docker compose --project-name bichard -f environment/docker-compose.yml \
             up -d <<parameters.SERVICES>> <<parameters.FLAGS>> --wait <<parameters.SERVICES>>
 
+  set_docker_tag:
+    steps:
+      - run:
+          name: Export dynamic DOCKER_TAG
+          command: |
+            SANITIZED_BRANCH=$(echo "$CIRCLE_BRANCH" | sed 's/[^a-zA-Z0-9_.-]/-/g')
+            echo "export DOCKER_TAG=${SANITIZED_BRANCH:-latest}" >> $BASH_ENV
+
 ui_params: &ui_params
   api:
     type: boolean
@@ -208,6 +216,10 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
+      - attach_workspace:
+          at: .
+      - load_api_image
       - node/install
       - node_install_packages
       - build_common
@@ -307,6 +319,12 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
+      - attach_workspace:
+          at: .
+      - load_ui_image
+      - load_user_service_image
+      - load_api_image
       - node/install
       - node_install_packages
       - build_core
@@ -318,7 +336,7 @@ jobs:
           environment:
             PHASE_2_QUEUE_NAME: TEST_PHASE2_QUEUE
             PHASE_3_QUEUE_NAME: TEST_PHASE3_QUEUE
-          command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
+          command: .circleci/scripts/run-infrastructure.sh 'api ui user-service' all-build-worker
       - run:
           name: Test the workflows
           command: nvm use && npm run -w packages/conductor test
@@ -338,6 +356,12 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
+      - attach_workspace:
+          at: .
+      - load_ui_image
+      - load_user_service_image
+      - load_api_image
       - node/install
       - node_install_packages
       - build_core
@@ -346,7 +370,7 @@ jobs:
       - build_audit_logging_images
       - run:
           name: Boot Conductor infrastructure
-          command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
+          command: .circleci/scripts/run-infrastructure.sh 'ui user-service api' all-build-worker
       - run:
           name: Test the workflows
           command: nvm use && npm run -w packages/message-forwarder test
@@ -374,6 +398,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - run:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
@@ -387,10 +412,12 @@ jobs:
       - build_audit_logging_images
       - attach_workspace:
           at: .
+      - load_ui_image
       - load_user_service_image
+      - load_api_image
       - run:
           name: Run the infrastructure
-          command: .circleci/scripts/run-infrastructure.sh '' all-build-worker
+          command: .circleci/scripts/run-infrastructure.sh "ui user-service api" all-build-worker
       - run:
           name: Install browsers for puppeteer
           working_directory: packages/e2e-test
@@ -421,6 +448,10 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
+      - attach_workspace:
+          at: .
+      - load_api_image
       - node/install
       - node_install_packages
       - build_common
@@ -454,16 +485,23 @@ jobs:
               - << pipeline.parameters.core-changes >>
               - << pipeline.parameters.api-changes >>
               - << pipeline.parameters.env-changes >>
+              - << pipeline.parameters.conductor-changes >>
+              - << pipeline.parameters.message-forwarder-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
-      - run: ./scripts/build-api-docker.sh
+      - fetch_images:
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+      - run:
+          name: Build API Docker image
+          command: docker build -f packages/api/Dockerfile -t "api:${DOCKER_TAG}" .
       - run:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "api:latest" | pigz > "images/api.tar.gz"
+            docker image save "api:${DOCKER_TAG}" | pigz > "images/api.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
@@ -528,16 +566,23 @@ jobs:
               - << pipeline.parameters.core-changes >>
               - << pipeline.parameters.api-changes >>
               - << pipeline.parameters.env-changes >>
+              - << pipeline.parameters.conductor-changes >>
+              - << pipeline.parameters.message-forwarder-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
-      - run: ./scripts/build-ui-docker.sh
+      - fetch_images:
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+      - run:
+          name: Build UI Docker image
+          command: docker build -f packages/ui/Dockerfile -t "ui:${DOCKER_TAG}" .
       - run:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "ui:latest" | pigz > "images/ui.tar.gz"
+            docker image save "ui:${DOCKER_TAG}" | pigz > "images/ui.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
@@ -719,13 +764,18 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
-      - run: ./scripts/build-user-service-docker.sh
+      - fetch_images:
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+      - run:
+          name: Build User Service Docker image
+          command: docker build -f packages/user-service/Dockerfile -t "user-service:${DOCKER_TAG}" .
       - run:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "user-service:latest" | pigz > "images/user-service.tar.gz"
+            docker image save "user-service:${DOCKER_TAG}" | pigz > "images/user-service.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
@@ -734,7 +784,7 @@ jobs:
   cypress_e2e_tests:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: true
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
     parameters:
@@ -755,6 +805,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - run:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "ui" "cypress/e2e/**/*.cy.ts"
@@ -762,11 +813,7 @@ jobs:
           at: .
       - load_ui_image
       - load_user_service_image
-      - when:
-          condition:
-            equal: [true, << parameters.api >>]
-          steps:
-            - load_api_image
+      - load_api_image
       - node/install
       - run:
           name: Install Cypress
@@ -788,7 +835,7 @@ jobs:
           name: Building infrastructure
           environment:
             <<: *ui_envs
-          command: bash .circleci/scripts/run-infrastructure.sh ui ui
+          command: bash .circleci/scripts/run-infrastructure.sh "ui user-service api" ui
       - when:
           condition:
             equal: [true, << parameters.api >>]
@@ -797,7 +844,7 @@ jobs:
               name: Boot Conductor
               environment:
                 <<: *ui_envs
-              command: bash .circleci/scripts/run-infrastructure.sh api conductor
+              command: bash .circleci/scripts/run-infrastructure.sh "ui user-service api" conductor
       - run:
           name: Run UI tests
           command: bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
@@ -847,6 +894,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - run:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
@@ -854,11 +902,7 @@ jobs:
           at: .
       - load_ui_image
       - load_user_service_image
-      - when:
-          condition:
-            equal: [true, << parameters.api >>]
-          steps:
-            - load_api_image
+      - load_api_image
       - node/install
       - node_install_packages
       - build_core
@@ -877,10 +921,10 @@ jobs:
           command: |
             if [ "<< parameters.api >>" = "true" ]; then
               echo "Running API-specific infrastructure build..."
-              bash .circleci/scripts/run-infrastructure.sh ui all-build-worker
+              bash .circleci/scripts/run-infrastructure.sh "ui user-service api" all-build-worker
             else
               echo "Running default infrastructure build..."
-              bash .circleci/scripts/run-infrastructure.sh ui all
+              bash .circleci/scripts/run-infrastructure.sh "ui user-service api" all
             fi
       - run:
           name: Run e2e tests against UI code
@@ -909,10 +953,12 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - attach_workspace:
           at: .
       - load_ui_image
       - load_user_service_image
+      - load_api_image
       - node/install
       - node_install_packages
       - build_core
@@ -934,30 +980,47 @@ jobs:
 workflows:
   test-all:
     jobs:
+      - characterisation_test
+      - comparison_test
       - lint_and_build
+      - test_postgres
+      - test_common
+      - test_ui
+      - test_ui_component
+      - test_user_service
+      - test_user_service_e2e
 
       - build_ui_image
       - build_user_service_image
       - build_api_image
 
-      - test_message_forwarder
-      - test_postgres
-      - test_api
-      - test_common
-      - test_conductor
-      - test_core
-      - test_ui
-      - test_ui_component
-      - test_user_service
-      - test_user_service_e2e
-      - characterisation_test
-      - comparison_test
+      - test_core:
+          requires:
+            - build_api_image
+
+      - test_message_forwarder:
+          requires:
+            - build_ui_image
+            - build_user_service_image
+            - build_api_image
+
+      # Needs the API as Conductor/Worker needs the API
+      - test_api:
+          requires:
+            - build_api_image
+
+      - test_conductor:
+          requires:
+            - build_ui_image
+            - build_user_service_image
+            - build_api_image
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
           requires:
             - build_ui_image
             - build_user_service_image
+            - build_api_image
       - cypress_e2e_tests:
           name: cypress_e2e_tests_api
           api: true
@@ -975,12 +1038,14 @@ workflows:
           requires:
             - build_ui_image
             - build_user_service_image
+            - build_api_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_leds
           use-leds: true
           requires:
             - build_ui_image
             - build_user_service_image
+            - build_api_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
           api: true
@@ -996,8 +1061,11 @@ workflows:
       - cucumber_e2e_legacy_tests:
           requires:
             - build_user_service_image
+            - build_api_image
+            - build_ui_image
 
       - zap_scanner:
           requires:
             - build_ui_image
             - build_user_service_image
+            - build_api_image

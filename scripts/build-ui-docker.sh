@@ -41,7 +41,6 @@ function pull_and_build_from_aws() {
 
   DOCKER_IMAGE_HASH="${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_REFERENCE}@${IMAGE_HASH}"
 
-
 if [ $(arch) = "arm64" ]
 then
     echo "Building for ARM"
