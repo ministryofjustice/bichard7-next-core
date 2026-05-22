@@ -1,6 +1,6 @@
 import ExpandableCell from "@/components/Reports/ExpandableCell"
 
-describe("<ReportTableRow />", () => {
+describe("ExpandableCell", () => {
   const shortText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
   const longText =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
