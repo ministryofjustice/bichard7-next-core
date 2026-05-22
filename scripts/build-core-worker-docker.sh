@@ -49,16 +49,16 @@ function pull_and_build_from_aws() {
 
     ## Run goss tests
     GOSS_FILES_PATH=packages/conductor dgoss run \
-      --network host \
+      -e LOG_LEVEL=fatal \
+      -e NODE_OPTIONS="--dns-result-order=ipv4first" \
       -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
       -e AUDIT_LOG_API_KEY="xxx" \
-      -e AUDIT_LOG_API_URL="http://127.0.0.1:3011" \
-      -e MQ_URL="127.0.0.1" \
+      -e AUDIT_LOG_API_URL="http://localhost:3011" \
+      -e MQ_URL="mq" \
       -e MQ_AUTH='{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}' \
       -e INCOMING_BUCKET_NAME="incoming-messages" \
       -e S3_REGION="eu-west-2" \
-      -e CONDUCTOR_URL="http://127.0.0.1:4000/api" \
-      -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
+      -e CONDUCTOR_URL="http://conductor:4000/api" \
       "${DOCKER_OUTPUT_TAG}:latest"
 
     docker tag \
