@@ -30,7 +30,8 @@
       "useCases": ["./src/useCases/index"],
       "useCases/*": ["./src/useCases/*"],
       "utils/*": ["./src/utils/*"]
-    }
+    },
+    "types": ["jest"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"],
