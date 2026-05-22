@@ -104,6 +104,8 @@ commands:
 
   build_audit_logging_images:
     steps:
+      - fetch_images:
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
       - run:
           name: Clone bichard7-next-audit-logging
           command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
@@ -224,7 +226,7 @@ jobs:
       - node_install_packages
       - build_common
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - run:
           name: Run PostgreSQL
           command: npm run postgres
@@ -329,7 +331,7 @@ jobs:
       - node_install_packages
       - build_core
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - build_audit_logging_images
       - run:
           name: Boot Conductor infrastructure
@@ -366,7 +368,7 @@ jobs:
       - node_install_packages
       - build_core
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - build_audit_logging_images
       - run:
           name: Boot Conductor infrastructure
@@ -405,7 +407,7 @@ jobs:
       - node_install_packages
       - build_core
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - run:
           name: Build message forwarder image
           command: .circleci/scripts/build-message-forwarder.sh
@@ -456,7 +458,7 @@ jobs:
       - node_install_packages
       - build_common
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - build_audit_logging_images
       - run:
           name: Boot Dependencies
@@ -493,7 +495,7 @@ jobs:
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - run:
           name: Build API Docker image
           command: docker build -f packages/api/Dockerfile -t "api:${DOCKER_TAG}" .
@@ -574,7 +576,7 @@ jobs:
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - run:
           name: Build UI Docker image
           command: docker build -f packages/ui/Dockerfile -t "ui:${DOCKER_TAG}" .
@@ -608,7 +610,7 @@ jobs:
       - node/install
       - node_install_packages
       - fetch_images:
-          images: nodejs-20-2023
+          images: nodejs-24-2023
       - build_audit_logging_images
       - start_services:
           SERVICES: activemq localstack db-seed audit-log-api
@@ -683,7 +685,7 @@ jobs:
       - node/install
       - node_install_packages
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - build_audit_logging_images
       - start_services:
           SERVICES: db-seed audit-log-api
@@ -767,7 +769,7 @@ jobs:
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - run:
           name: Build User Service Docker image
           command: docker build -f packages/user-service/Dockerfile -t "user-service:${DOCKER_TAG}" .
@@ -822,7 +824,7 @@ jobs:
       - node_install_packages
       - build_common
       - fetch_images:
-          images: nodejs-20-2023 nginx-auth-proxy nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-auth-proxy nginx-nodejs-24-2023-supervisord
       - build_audit_logging_images
       - run:
           name: Wait for cypress install to finish
@@ -907,7 +909,7 @@ jobs:
       - node_install_packages
       - build_core
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - build_core_images
       - build_audit_logging_images
       - run:
@@ -963,7 +965,7 @@ jobs:
       - node_install_packages
       - build_core
       - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - build_audit_logging_images
       - fetch_images:
           images: nginx-auth-proxy
