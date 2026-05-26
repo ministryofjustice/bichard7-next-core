@@ -64,7 +64,9 @@ describe("CollapsibleGroup", () => {
     cy.get("section").should("have.id", "unique-id-section").should("have.attr", "aria-labelledby", "unique-id-header")
     cy.get("h3").should("have.id", "unique-id-header")
     cy.get("[data-testid='accordion-header-wrapper']").should("have.attr", "aria-controls", "unique-id-content")
-    cy.get("[data-testid='accordion-content']").should("have.attr", "aria-labelledby", "unique-id-header")
+    cy.get("[data-testid='accordion-content']")
+      .should("have.id", "unique-id-content")
+      .should("have.attr", "aria-labelledby", "unique-id-header")
   })
 
   it("renders totals within the header if provided", () => {
