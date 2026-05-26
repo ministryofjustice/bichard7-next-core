@@ -15,7 +15,7 @@ describe("ReportSelectionFilter", () => {
 
   it("clears report selection dropdown when 'Clear filters' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
-    cy.get('select[name="select-case-type"]').select("Resolved Exceptions/Triggers")
+    cy.get('select[name="select-case-type"]').select("Resolved exceptions and triggers")
     cy.get("button#clear-filters").click()
     cy.get('select[name="select-case-type"]').should("have.value", null)
   })
@@ -33,7 +33,7 @@ describe("ReportSelectionFilter", () => {
 
   it("'Date from' and 'Date to' fields are hidden when 'Clear filters' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
-    cy.get('select[name="select-case-type"]').select("Resolved Exceptions/Triggers")
+    cy.get('select[name="select-case-type"]').select("Resolved exceptions and triggers")
     cy.get("button#clear-filters").click()
     cy.get("#report-selection-date-from").should("not.exist")
     cy.get("#report-selection-date-to").should("not.exist")
@@ -46,7 +46,7 @@ describe("ReportSelectionFilter", () => {
 
   it("exceptions/triggers checkboxes fields are hidden when 'Clear filters' is clicked", () => {
     cy.mount(<ReportSelectionFilter />)
-    cy.get('select[name="select-case-type"]').select("Resolved Exceptions/Triggers")
+    cy.get('select[name="select-case-type"]').select("Resolved exceptions and triggers")
     cy.get("button#clear-filters").click()
     cy.get("#checkboxes-container").should("not.exist")
   })

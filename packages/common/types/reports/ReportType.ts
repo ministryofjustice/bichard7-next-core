@@ -1,18 +1,18 @@
 export type PrettyReportType =
-  | "Bail Conditions"
-  | "Domestic Violence & Vulnerable Victims"
-  | "Resolved Exceptions/Triggers"
-  | "User Performance Detail"
-  | "User Performance Summary"
+  | "Bail conditions"
+  | "Domestic violence and vulnerable victims"
+  | "Resolved exceptions and triggers"
+  | "User performance detail"
+  | "User performance summary"
   | "Warrants"
 
 export type ReportType = "bails" | "domestic violence" | "exceptions" | "user detail" | "user summary" | "warrants"
 
 export const REPORT_TYPE_MAP: { [K in ReportType]?: PrettyReportType } = {
-  bails: "Bail Conditions",
-  "domestic violence": "Domestic Violence & Vulnerable Victims",
-  exceptions: "Resolved Exceptions/Triggers",
-  "user detail": "User Performance Detail",
-  "user summary": "User Performance Summary",
+  bails: "Bail conditions",
+  "domestic violence": "Domestic violence and vulnerable victims",
+  exceptions: "Resolved exceptions and triggers",
+  "user detail": "User performance detail",
+  "user summary": "User performance summary",
   warrants: "Warrants"
 } as const

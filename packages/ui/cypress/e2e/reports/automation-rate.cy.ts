@@ -6,7 +6,7 @@ describe("automation rate report type filter", () => {
   })
 
   it("should display only 'Download report' button when 'Automation Rate' is selected from dropdown", () => {
-    cy.get("#report-select").select("Automation Rate")
+    cy.get("#report-select").select("Automation rate")
     cy.get("#date-from").should("not.exist")
     cy.get("#date-to").should("not.exist")
     cy.get("#exceptions").should("not.exist")
