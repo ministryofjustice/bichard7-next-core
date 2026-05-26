@@ -12,7 +12,7 @@ interface CollapsibleTableProps {
 
 const CollapsibleTable = ({ tableName, children, totalsConfig, totals }: CollapsibleTableProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const accordion = isCollapsed
+  const accordion = !isCollapsed
     ? { chevron: "govuk-accordion-nav__chevron--up", text: "Hide" }
     : { chevron: "govuk-accordion-nav__chevron--down", text: "Show" }
 
