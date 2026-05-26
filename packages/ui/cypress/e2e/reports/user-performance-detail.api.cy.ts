@@ -33,7 +33,7 @@ describe("User Performance Detail", () => {
             { userId: "General Handler User", resolved: "0", locked: "1", type: "triggers" }
           ]
 
-          cy.get("section[data-testid='child-table']").each(($section, index) => {
+          cy.get("[data-testid='simple-table']").each(($section, index) => {
             const expected = expectedTables[index]
 
             cy.wrap($section).within(() => {

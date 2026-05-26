@@ -21,13 +21,13 @@ const CollapsibleContainer = ({
   indexedKey,
   headerType
 }: CollapsibleContainerProps) => {
-  const [isExpanded, setIsExpanded] = useState(true)
+  const childrenCount = React.Children.count(children)
+  const hasChildren = childrenCount > 0
+
+  const [isExpanded, setIsExpanded] = useState(hasChildren)
   const accordion = isExpanded
     ? { chevron: "govuk-accordion-nav__chevron--up", text: "Hide" }
     : { chevron: "govuk-accordion-nav__chevron--down", text: "Show" }
-
-  const childrenCount = React.Children.count(children)
-  const hasChildren = childrenCount > 0
 
   const sectionId = `${indexedKey}-section`
   const headerId = `${indexedKey}-header`
