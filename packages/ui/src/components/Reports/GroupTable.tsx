@@ -23,6 +23,7 @@ export const GroupTable = <TTable extends Record<string, unknown>, TRow extends 
             headerType={"h4"}
             totals={totals}
             totalsConfig={config.totalsConfig}
+            key={tableIndexedKey}
           >
             <Table>
               <caption className="govuk-visually-hidden">{`Report table for ${tableName}`}</caption>

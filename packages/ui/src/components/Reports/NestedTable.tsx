@@ -44,6 +44,7 @@ export const NestedTable = <
 
               return (
                 <CollapsibleContainer
+                  key={tableIndexedKey}
                   headingName={tableName}
                   indexedKey={tableIndexedKey}
                   headerType={"h4"}
