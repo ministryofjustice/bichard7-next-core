@@ -59,7 +59,7 @@ describe("User Performance Detail", () => {
             .parent("section")
             .within(() => {
               cy.get("table").should("not.exist")
-              cy.get("[itemid='outer-group-body']:empty").should("exist")
+              cy.get("[itemid='group-body']:empty").should("exist")
             })
         }
       })
@@ -84,7 +84,7 @@ describe("User Performance Detail", () => {
         .parent("section")
         .within(() => {
           cy.get("table").should("not.exist")
-          cy.get("[itemid='outer-group-body']:empty").should("exist")
+          cy.get("[itemid='group-body']:empty").should("exist")
         })
     }
   })

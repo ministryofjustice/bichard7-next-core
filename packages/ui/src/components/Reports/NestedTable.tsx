@@ -1,5 +1,6 @@
 import { FlatReportConfig } from "@/types/reports/Config"
 import { nestedTable, NestedTableProps } from "@/utils/tables/nestedTable"
+import CollapsibleGroup from "./CollapsibleGroup"
 import { ReportContainer } from "./GroupTable.styles"
 import { SimpleTable } from "./SimpleTable"
 import { Totals } from "./Totals"
@@ -20,42 +21,38 @@ export const NestedTable = <
 
   return (
     <ReportContainer className="report-container">
-      {nestedTableData?.map(({ groupName, tables, formattedGroupName, totals }) => {
-        const outerSectionId = `outer-group-${groupName}`
-        const outerSectionBodyId = `outer-group-body-${groupName}`
+      {nestedTableData?.map(({ groupName, tables, formattedGroupName, totals }, groupIndex) => {
+        const groupIndexedKey = `report-group-${groupName}-${groupIndex}`
 
         return (
-          <section key={outerSectionId} aria-labelledby={outerSectionId}>
-            <h3 id={outerSectionId} className="govuk-heading-m">
-              {formattedGroupName}
+          <CollapsibleGroup
+            groupName={formattedGroupName || groupName}
+            indexedKey={groupIndexedKey}
+            totals={totals}
+            totalsConfig={config.totalsConfig}
+          >
+            {tables.map(({ tableName, rows, totals, columns }, tableIndex) => {
+              const tableIndexedKey = `${tableName}-${tableIndex}`
 
-              <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} />
-            </h3>
+              const flatTableConfig: FlatReportConfig<TRow> = {
+                structure: "flat",
+                columns: columns,
+                endpoint: config.endpoint,
+                reportType: config.reportType
+              }
 
-            <section id={outerSectionBodyId} aria-labelledby={outerSectionBodyId} itemID={"outer-group-body"}>
-              {tables.map(({ tableName, rows, totals, columns }, index) => {
-                const innerSectionId = `inner-group-${tableName}-${index}-${outerSectionId}`
+              return (
+                <section key={tableIndexedKey} aria-labelledby={tableIndexedKey}>
+                  <h4 id={tableIndexedKey} className="govuk-heading-m">
+                    {tableName}
 
-                const flatTableConfig: FlatReportConfig<TRow> = {
-                  structure: "flat",
-                  columns: columns,
-                  endpoint: config.endpoint,
-                  reportType: config.reportType
-                }
-
-                return (
-                  <section key={innerSectionId} aria-labelledby={innerSectionId}>
-                    <h4 id={innerSectionId} className="govuk-heading-m">
-                      {tableName}
-
-                      <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} />
-                    </h4>
-                    <SimpleTable config={flatTableConfig} rows={rows} tableName={tableName} nested={false} />
-                  </section>
-                )
-              })}
-            </section>
-          </section>
+                    <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} />
+                  </h4>
+                  <SimpleTable config={flatTableConfig} rows={rows} tableName={tableName} nested={false} />
+                </section>
+              )
+            })}
+          </CollapsibleGroup>
         )
       })}
     </ReportContainer>
