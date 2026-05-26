@@ -21,7 +21,7 @@ export const GroupTable = <TTable extends Record<string, unknown>, TRow extends 
             <h3 id={sectionId} className="govuk-heading-m">
               {formattedTableName}
 
-              <Totals totals={totals} totalsConfig={config.totalsConfig} />
+              <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} flat={false} />
             </h3>
 
             <Table>
