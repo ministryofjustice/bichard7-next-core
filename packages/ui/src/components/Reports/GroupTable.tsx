@@ -13,17 +13,18 @@ export const GroupTable = <TTable extends Record<string, unknown>, TRow extends 
 
   return (
     <ReportContainer className="report-container">
-      {groupTableData?.map(({ tableName, formattedTableName, rows, totals }) => {
-        //const sectionId = `report-group-${formattedTableName}`
+      {groupTableData?.map(({ tableName, formattedTableName, rows, totals }, index) => {
+        const indexedKey = `report-group-${formattedTableName}-${index}`
 
         return (
           <CollapsibleTable
             tableName={formattedTableName || tableName}
             totals={totals}
             totalsConfig={config.totalsConfig}
+            indexedKey={indexedKey}
           >
             <Table>
-              <caption className="govuk-visually-hidden">{`Report table for ${tableName}`}</caption>
+              <caption className="govuk-visually-hidden">{`Report table for ${formattedTableName}`}</caption>
               <ReportTableHeader columns={config.columns} />
               <ReportTableBody rows={rows} columns={config.columns} />
             </Table>

@@ -8,24 +8,27 @@ interface CollapsibleTableProps {
   children: React.ReactNode
   totalsConfig?: TotalColumnConfig[]
   totals?: Record<string, unknown>
+  indexedKey: string
 }
 
-const CollapsibleTable = ({ tableName, children, totalsConfig, totals }: CollapsibleTableProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(false)
-  const accordion = !isCollapsed
+const CollapsibleTable = ({ tableName, children, totalsConfig, totals, indexedKey }: CollapsibleTableProps) => {
+  const [isExpanded, setIsExpanded] = useState(true)
+  const accordion = isExpanded
     ? { chevron: "govuk-accordion-nav__chevron--up", text: "Hide" }
     : { chevron: "govuk-accordion-nav__chevron--down", text: "Show" }
 
+  const contentId = `${indexedKey}-content`
+
   return (
-    <div className={`govuk-heading-m`}>
+    <>
       <HeaderWrapper
         className="govuk-summary-card__title-wrapper"
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        aria-expanded={!isCollapsed}
-        aria-controls={tableName}
+        onClick={() => setIsExpanded(!isExpanded)}
+        aria-expanded={isExpanded}
+        aria-controls={contentId}
         $clickable={true}
       >
-        <h3 id={"sectionId"} className="govuk-heading-m">
+        <h3 id={`${indexedKey}-header`} className="govuk-heading-m">
           {tableName}
           <Totals totals={totals} totalsConfig={totalsConfig} />
         </h3>
@@ -34,12 +37,12 @@ const CollapsibleTable = ({ tableName, children, totalsConfig, totals }: Collaps
           <span>{accordion.text}</span>
         </AccordionToggle>
       </HeaderWrapper>
-      {!isCollapsed && (
-        <div id={`${"indexedKey"}`} className="govuk-summary-card__content">
+      {isExpanded && (
+        <div id={contentId} className="govuk-summary-card__content">
           <dl className="govuk-summary-list">{children}</dl>
         </div>
       )}
-    </div>
+    </>
   )
 }
 
