@@ -54,7 +54,7 @@ const CollapsibleContainer = ({
         <HeaderTag id={headerId} className="govuk-heading-m">
           {headingName}
 
-          <Totals totals={totals} totalsConfig={totalsConfig ?? []} />
+          <Totals totals={totals} totalsConfig={totalsConfig ?? []} flat={false} />
         </HeaderTag>
         {hasChildren && (
           <AccordionToggle data-testid="accordion-toggle">

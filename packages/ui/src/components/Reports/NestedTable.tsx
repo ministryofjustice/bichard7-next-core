@@ -21,7 +21,7 @@ export const NestedTable = <
   return (
     <ReportContainer className="report-container">
       {nestedTableData?.map(({ groupName, tables, formattedGroupName, totals }, groupIndex) => {
-        const groupIndexedKey = `report-group-${groupName}-${groupIndex}`
+        const groupIndexedKey = `report-group-${groupName.replaceAll(" ", "-").toLowerCase()}-${groupIndex}`
 
         return (
           <CollapsibleContainer
@@ -33,7 +33,7 @@ export const NestedTable = <
             headerType="h3"
           >
             {tables.map(({ tableName, rows, totals, columns }, tableIndex) => {
-              const tableIndexedKey = `table-${tableName}-${tableIndex}`
+              const tableIndexedKey = `table-${tableName.replaceAll(" ", "-").toLowerCase()}-${tableIndex}`
 
               const flatTableConfig: FlatReportConfig<TRow> = {
                 structure: "flat",

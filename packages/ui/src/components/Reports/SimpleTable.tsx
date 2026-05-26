@@ -28,15 +28,11 @@ export const SimpleTable = <T extends Record<string, unknown>>({
   return (
     <section aria-label={`${tableName} container`} data-testid="simple-table">
       {nested ? null : (
-        <div>
-          <div className="govuk-body">
-            <strong>
-              {REPORT_TYPE_MAP[config.reportType]} {"report"}
-            </strong>
-
-            <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} />
-          </div>
-        </div>
+        <Totals
+          totals={totals}
+          totalsConfig={config.totalsConfig ?? []}
+          reportName={`${REPORT_TYPE_MAP[config.reportType]} report`}
+        />
       )}
 
       <Table>
