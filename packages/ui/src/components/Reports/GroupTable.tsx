@@ -13,8 +13,8 @@ export const GroupTable = <TTable extends Record<string, unknown>, TRow extends 
 
   return (
     <ReportContainer className="report-container">
-      {groupTableData?.map(({ tableName, formattedTableName, rows, totals }) => {
-        const tableIndexedKey = `report-group-${formattedTableName}`
+      {groupTableData?.map(({ tableName, formattedTableName, rows, totals }, index) => {
+        const tableIndexedKey = `report-group-${formattedTableName}-${index}`
 
         return (
           <CollapsibleContainer
