@@ -48,8 +48,9 @@ const CollapsibleContainer = ({
         onClick={() => toggleAccordion()}
         aria-expanded={isExpanded}
         aria-controls={contentId}
-        $clickable={hasChildren}
         data-testid="accordion-header-wrapper"
+        $clickable={hasChildren}
+        $headerType={headerType}
       >
         <HeaderTag id={headerId} className="govuk-heading-m">
           {headingName}

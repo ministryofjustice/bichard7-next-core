@@ -20,7 +20,7 @@ export const GroupTable = <TTable extends Record<string, unknown>, TRow extends 
           <CollapsibleContainer
             headingName={formattedTableName || tableName}
             indexedKey={tableIndexedKey}
-            headerType={"h4"}
+            headerType={"h3"}
             totals={totals}
             totalsConfig={config.totalsConfig}
             key={tableIndexedKey}
