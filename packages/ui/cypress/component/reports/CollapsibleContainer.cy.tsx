@@ -19,6 +19,9 @@ describe("CollapsibleContainer", () => {
     )
 
     cy.get("h3").should("exist")
+
+    // tagBlue = rgb(233, 241, 248)
+    cy.get("[data-testid='accordion-header-wrapper']").should("have.css", "background-color", "rgb(233, 241, 248)")
   })
 
   it("renders an h4 header if h4 is specified", () => {
@@ -35,6 +38,9 @@ describe("CollapsibleContainer", () => {
     )
 
     cy.get("h4").should("exist")
+
+    // gdsTagBlue = rgb(187, 212, 234)
+    cy.get("[data-testid='accordion-header-wrapper']").should("have.css", "background-color", "rgb(187, 212, 234)")
   })
 
   it("renders correctly and is expanded by default when children exist", () => {
