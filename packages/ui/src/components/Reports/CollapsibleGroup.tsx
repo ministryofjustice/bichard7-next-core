@@ -53,18 +53,14 @@ const CollapsibleGroup = ({ groupName, children, totalsConfig, totals, indexedKe
           </AccordionToggle>
         )}
       </HeaderButton>
-      {isExpanded && (
-        <div
-          id={contentId}
-          className="govuk-summary-card__content"
-          data-testid="accordion-content"
-          aria-labelledby={headerId}
-        >
-          <dl className="govuk-summary-list">{children}</dl>
-        </div>
-      )}
-
-      <br />
+      <div
+        id={contentId}
+        className="govuk-summary-card__content"
+        data-testid="accordion-content"
+        aria-labelledby={headerId}
+      >
+        {isExpanded && <dl className="govuk-summary-list">{children}</dl>}
+      </div>
     </section>
   )
 }

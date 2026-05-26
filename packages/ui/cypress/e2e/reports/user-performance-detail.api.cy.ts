@@ -60,7 +60,7 @@ describe("User Performance Detail", () => {
             .parent("section")
             .within(() => {
               cy.get("table").should("not.exist")
-              cy.get("div[data-testid='accordion-content']").should("not.exist")
+              cy.get("[data-testid='accordion-content']:empty").should("exist")
             })
         }
       })
@@ -86,7 +86,7 @@ describe("User Performance Detail", () => {
         .parent("section")
         .within(() => {
           cy.get("table").should("not.exist")
-          cy.get("div[data-testid='accordion-content']").should("not.exist")
+          cy.get("[data-testid='accordion-content']:empty").should("exist")
         })
     }
   })
