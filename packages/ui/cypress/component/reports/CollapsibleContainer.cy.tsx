@@ -1,20 +1,53 @@
-import CollapsibleGroup from "@/components/Reports/CollapsibleGroup"
+import CollapsibleContainer from "@/components/Reports/CollapsibleContainer"
 
-describe("CollapsibleGroup", () => {
+describe("CollapsibleContainer", () => {
   const mockTotalsConfig = [{ key: "amount", label: "Total" }]
   const mockTotals = { amount: 500 }
   const indexedKey = "test-group-1"
 
-  it("renders correctly and is expanded by default when children exist", () => {
+  it("renders an h3 header if h3 is specified", () => {
     cy.mount(
-      <CollapsibleGroup
-        groupName="GroupName"
+      <CollapsibleContainer
+        headingName="GroupName"
         indexedKey={indexedKey}
         totalsConfig={mockTotalsConfig}
         totals={mockTotals}
+        headerType="h3"
+      >
+        <div>{"Content"}</div>
+      </CollapsibleContainer>
+    )
+
+    cy.get("h3").should("exist")
+  })
+
+  it("renders an h4 header if h4 is specified", () => {
+    cy.mount(
+      <CollapsibleContainer
+        headingName="GroupName"
+        indexedKey={indexedKey}
+        totalsConfig={mockTotalsConfig}
+        totals={mockTotals}
+        headerType="h4"
+      >
+        <div>{"Content"}</div>
+      </CollapsibleContainer>
+    )
+
+    cy.get("h4").should("exist")
+  })
+
+  it("renders correctly and is expanded by default when children exist", () => {
+    cy.mount(
+      <CollapsibleContainer
+        headingName="GroupName"
+        indexedKey={indexedKey}
+        totalsConfig={mockTotalsConfig}
+        totals={mockTotals}
+        headerType="h3"
       >
         <div data-testid="child-item">{"Child Content"}</div>
-      </CollapsibleGroup>
+      </CollapsibleContainer>
     )
 
     cy.get("h3").should("contain.text", "GroupName")
@@ -24,9 +57,9 @@ describe("CollapsibleGroup", () => {
 
   it("collapses and expands when the header is clicked", () => {
     cy.mount(
-      <CollapsibleGroup groupName="GroupName" indexedKey={indexedKey}>
+      <CollapsibleContainer headingName="GroupName" indexedKey={indexedKey} headerType="h3">
         <div data-testid="child-item">{"Table"}</div>
-      </CollapsibleGroup>
+      </CollapsibleContainer>
     )
 
     cy.get("[data-testid='accordion-header-wrapper']").as("accordion-header-wrapper").click()
@@ -42,9 +75,9 @@ describe("CollapsibleGroup", () => {
 
   it("does not render the toggle button and does not render content when there are no children", () => {
     cy.mount(
-      <CollapsibleGroup groupName="Empty Group" indexedKey={indexedKey}>
+      <CollapsibleContainer headingName="Empty Group" indexedKey={indexedKey} headerType="h3">
         {null}
-      </CollapsibleGroup>
+      </CollapsibleContainer>
     )
 
     cy.get("[data-testid='accordion-toggle']").should("not.exist")
@@ -56,9 +89,9 @@ describe("CollapsibleGroup", () => {
 
   it("uses the indexedKey to set correct IDs for accessibility", () => {
     cy.mount(
-      <CollapsibleGroup groupName="Accessibility test" indexedKey="unique-id">
+      <CollapsibleContainer headingName="Accessibility test" indexedKey="unique-id" headerType="h3">
         <div>{"Content"}</div>
-      </CollapsibleGroup>
+      </CollapsibleContainer>
     )
 
     cy.get("section").should("have.id", "unique-id-section").should("have.attr", "aria-labelledby", "unique-id-header")
@@ -71,14 +104,15 @@ describe("CollapsibleGroup", () => {
 
   it("renders totals within the header if provided", () => {
     cy.mount(
-      <CollapsibleGroup
-        groupName="GroupName"
+      <CollapsibleContainer
+        headingName="GroupName"
         indexedKey={indexedKey}
         totalsConfig={[{ key: "val", label: "Sum" }]}
         totals={{ val: 1000 }}
+        headerType="h3"
       >
         <div>{"Content"}</div>
-      </CollapsibleGroup>
+      </CollapsibleContainer>
     )
 
     cy.get("h3").should("contain.text", "GroupName")

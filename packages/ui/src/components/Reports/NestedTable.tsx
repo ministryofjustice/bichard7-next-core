@@ -1,9 +1,8 @@
 import { FlatReportConfig } from "@/types/reports/Config"
 import { nestedTable, NestedTableProps } from "@/utils/tables/nestedTable"
-import CollapsibleGroup from "./CollapsibleGroup"
+import CollapsibleContainer from "./CollapsibleContainer"
 import { ReportContainer } from "./GroupTable.styles"
 import { SimpleTable } from "./SimpleTable"
-import { Totals } from "./Totals"
 
 export const NestedTable = <
   TGroup extends Record<string, unknown>,
@@ -25,12 +24,13 @@ export const NestedTable = <
         const groupIndexedKey = `report-group-${groupName}-${groupIndex}`
 
         return (
-          <CollapsibleGroup
+          <CollapsibleContainer
             key={groupIndexedKey}
-            groupName={formattedGroupName || groupName}
+            headingName={formattedGroupName || groupName}
             indexedKey={groupIndexedKey}
             totals={totals}
             totalsConfig={config.totalsConfig}
+            headerType="h3"
           >
             {tables.map(({ tableName, rows, totals, columns }, tableIndex) => {
               const tableIndexedKey = `table-${tableName}-${tableIndex}`
@@ -43,17 +43,18 @@ export const NestedTable = <
               }
 
               return (
-                <section key={tableIndexedKey} aria-labelledby={tableIndexedKey} data-testid="child-table">
-                  <h4 id={tableIndexedKey} className="govuk-heading-m">
-                    {tableName}
-
-                    <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} />
-                  </h4>
+                <CollapsibleContainer
+                  headingName={tableName}
+                  indexedKey={tableIndexedKey}
+                  headerType={"h4"}
+                  totals={totals}
+                  totalsConfig={config.totalsConfig}
+                >
                   <SimpleTable config={flatTableConfig} rows={rows} tableName={tableName} nested={false} />
-                </section>
+                </CollapsibleContainer>
               )
             })}
-          </CollapsibleGroup>
+          </CollapsibleContainer>
         )
       })}
     </ReportContainer>

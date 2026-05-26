@@ -1,29 +1,39 @@
 import { TotalColumnConfig } from "@/types/reports/Config"
-import React, { useState } from "react"
+import React, { JSX, useState } from "react"
 import { AccordionToggle } from "../Card/Card.styles"
-import { HeaderButton } from "./CollapsibleGroup.styles"
+import { HeaderButton } from "./CollapsibleContainer.styles"
 import { Totals } from "./Totals"
 
-interface CollapsibleGroupProps {
-  groupName: string
+interface CollapsibleContainerProps {
+  headingName: string
   children: React.ReactNode
   totalsConfig?: TotalColumnConfig[]
   totals?: Record<string, unknown>
   indexedKey: string
+  headerType: "h3" | "h4"
 }
 
-const CollapsibleGroup = ({ groupName, children, totalsConfig, totals, indexedKey }: CollapsibleGroupProps) => {
-  const childrenCount = React.Children.count(children)
-  const hasChildren = childrenCount > 0
-
-  const [isExpanded, setIsExpanded] = useState(hasChildren)
+const CollapsibleContainer = ({
+  headingName,
+  children,
+  totalsConfig,
+  totals,
+  indexedKey,
+  headerType
+}: CollapsibleContainerProps) => {
+  const [isExpanded, setIsExpanded] = useState(true)
   const accordion = isExpanded
     ? { chevron: "govuk-accordion-nav__chevron--up", text: "Hide" }
     : { chevron: "govuk-accordion-nav__chevron--down", text: "Show" }
 
+  const childrenCount = React.Children.count(children)
+  const hasChildren = childrenCount > 0
+
   const sectionId = `${indexedKey}-section`
   const headerId = `${indexedKey}-header`
   const contentId = `${indexedKey}-content`
+
+  const HeaderTag = headerType as keyof JSX.IntrinsicElements
 
   const toggleAccordion = () => {
     if (hasChildren) {
@@ -41,11 +51,11 @@ const CollapsibleGroup = ({ groupName, children, totalsConfig, totals, indexedKe
         $clickable={hasChildren}
         data-testid="accordion-header-wrapper"
       >
-        <h3 id={headerId} className="govuk-heading-m">
-          {groupName}
+        <HeaderTag id={headerId} className="govuk-heading-m">
+          {headingName}
 
           <Totals totals={totals} totalsConfig={totalsConfig ?? []} />
-        </h3>
+        </HeaderTag>
         {hasChildren && (
           <AccordionToggle data-testid="accordion-toggle">
             <span className={`govuk-accordion-nav__chevron ${accordion.chevron} chevron`}></span>
@@ -65,4 +75,4 @@ const CollapsibleGroup = ({ groupName, children, totalsConfig, totals, indexedKe
   )
 }
 
-export default CollapsibleGroup
+export default CollapsibleContainer
