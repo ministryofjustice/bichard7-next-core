@@ -29,7 +29,7 @@ export const NestedTable = <
             <h3 id={outerSectionId} className="govuk-heading-m">
               {formattedGroupName}
 
-              <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} />
+              <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} flat={false} />
             </h3>
 
             <section id={outerSectionBodyId} aria-labelledby={outerSectionBodyId} itemID={"outer-group-body"}>
@@ -48,7 +48,7 @@ export const NestedTable = <
                     <h4 id={innerSectionId} className="govuk-heading-m">
                       {tableName}
 
-                      <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} />
+                      <Totals totals={totals} totalsConfig={config.totalsConfig ?? []} flat={false} />
                     </h4>
                     <SimpleTable config={flatTableConfig} rows={rows} tableName={tableName} nested={false} />
                   </section>
