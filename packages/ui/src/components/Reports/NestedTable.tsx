@@ -34,7 +34,7 @@ export const NestedTable = <
 
             <section id={outerSectionBodyId} aria-labelledby={outerSectionBodyId} itemID={"outer-group-body"}>
               {tables.map(({ tableName, rows, totals, columns }, index) => {
-                const innerSectionId = `inner-group-${tableName}-${index}-${outerSectionId}`
+                const innerSectionId = `inner-group-${tableName.replaceAll(" ", "-").toLowerCase()}-${index}-${outerSectionId}`
 
                 const flatTableConfig: FlatReportConfig<TRow> = {
                   structure: "flat",
