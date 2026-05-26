@@ -37,6 +37,7 @@ const CollapsibleGroup = ({ groupName, children, totalsConfig, totals, indexedKe
         aria-expanded={isExpanded}
         aria-controls={contentId}
         $clickable={hasChildren}
+        data-testid="accordion-header-wrapper"
       >
         <h3 id={headerId} className="govuk-heading-m">
           {groupName}
@@ -44,14 +45,14 @@ const CollapsibleGroup = ({ groupName, children, totalsConfig, totals, indexedKe
           <Totals totals={totals} totalsConfig={totalsConfig ?? []} />
         </h3>
         {hasChildren && (
-          <AccordionToggle>
+          <AccordionToggle data-testid="accordion-toggle">
             <span className={`govuk-accordion-nav__chevron ${accordion.chevron} chevron`}></span>
             <span>{accordion.text}</span>
           </AccordionToggle>
         )}
       </HeaderWrapper>
       {isExpanded && (
-        <div id={contentId} className="govuk-summary-card__content">
+        <div id={contentId} className="govuk-summary-card__content" data-testid="accordion-content">
           <dl className="govuk-summary-list">{children}</dl>
         </div>
       )}
