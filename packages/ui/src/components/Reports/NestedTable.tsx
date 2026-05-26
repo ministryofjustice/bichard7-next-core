@@ -26,13 +26,14 @@ export const NestedTable = <
 
         return (
           <CollapsibleGroup
+            key={groupIndexedKey}
             groupName={formattedGroupName || groupName}
             indexedKey={groupIndexedKey}
             totals={totals}
             totalsConfig={config.totalsConfig}
           >
             {tables.map(({ tableName, rows, totals, columns }, tableIndex) => {
-              const tableIndexedKey = `${tableName}-${tableIndex}`
+              const tableIndexedKey = `table-${tableName}-${tableIndex}`
 
               const flatTableConfig: FlatReportConfig<TRow> = {
                 structure: "flat",

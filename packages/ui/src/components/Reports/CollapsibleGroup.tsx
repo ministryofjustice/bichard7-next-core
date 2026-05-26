@@ -1,6 +1,7 @@
 import { TotalColumnConfig } from "@/types/reports/Config"
 import React, { useState } from "react"
-import { AccordionToggle, HeaderWrapper } from "./CollapsibleGroup.styles"
+import { AccordionToggle } from "../Card/Card.styles"
+import { HeaderButton } from "./CollapsibleGroup.styles"
 import { Totals } from "./Totals"
 
 interface CollapsibleGroupProps {
@@ -20,6 +21,7 @@ const CollapsibleGroup = ({ groupName, children, totalsConfig, totals, indexedKe
     ? { chevron: "govuk-accordion-nav__chevron--up", text: "Hide" }
     : { chevron: "govuk-accordion-nav__chevron--down", text: "Show" }
 
+  const sectionId = `${indexedKey}-section`
   const headerId = `${indexedKey}-header`
   const contentId = `${indexedKey}-content`
 
@@ -30,8 +32,8 @@ const CollapsibleGroup = ({ groupName, children, totalsConfig, totals, indexedKe
   }
 
   return (
-    <section key={headerId} aria-labelledby={headerId} id={indexedKey}>
-      <HeaderWrapper
+    <section aria-labelledby={headerId} id={sectionId}>
+      <HeaderButton
         className="govuk-summary-card__title-wrapper"
         onClick={() => expandAccordion()}
         aria-expanded={isExpanded}
@@ -50,12 +52,19 @@ const CollapsibleGroup = ({ groupName, children, totalsConfig, totals, indexedKe
             <span>{accordion.text}</span>
           </AccordionToggle>
         )}
-      </HeaderWrapper>
+      </HeaderButton>
       {isExpanded && (
-        <div id={contentId} className="govuk-summary-card__content" data-testid="accordion-content">
+        <div
+          id={contentId}
+          className="govuk-summary-card__content"
+          data-testid="accordion-content"
+          aria-labelledby={headerId}
+        >
           <dl className="govuk-summary-list">{children}</dl>
         </div>
       )}
+
+      <br />
     </section>
   )
 }
