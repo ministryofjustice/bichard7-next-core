@@ -43,7 +43,7 @@ export function* caseToBailsReportDto(row: CaseRowForBailsReport): Generator<Cas
     nextAppearanceTime: aggregatedOffences.nextCourtTimes,
     offenceTitles: aggregatedOffences.offenceTitles,
     ptiurn: row.ptiurn ?? "",
-    receivedDate: formatDate(row.msg_received_ts, true)
+    receivedDate: formatDate(row.msg_received_ts, true, true)
   }
 
   for (const trigger of row.triggers) {
