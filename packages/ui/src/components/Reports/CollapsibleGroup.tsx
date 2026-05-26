@@ -25,7 +25,7 @@ const CollapsibleGroup = ({ groupName, children, totalsConfig, totals, indexedKe
   const headerId = `${indexedKey}-header`
   const contentId = `${indexedKey}-content`
 
-  const expandAccordion = () => {
+  const toggleAccordion = () => {
     if (hasChildren) {
       setIsExpanded(!isExpanded)
     }
@@ -35,7 +35,7 @@ const CollapsibleGroup = ({ groupName, children, totalsConfig, totals, indexedKe
     <section aria-labelledby={headerId} id={sectionId}>
       <HeaderButton
         className="govuk-summary-card__title-wrapper"
-        onClick={() => expandAccordion()}
+        onClick={() => toggleAccordion()}
         aria-expanded={isExpanded}
         aria-controls={contentId}
         $clickable={hasChildren}
