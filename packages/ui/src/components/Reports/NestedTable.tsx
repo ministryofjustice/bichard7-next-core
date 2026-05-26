@@ -43,7 +43,7 @@ export const NestedTable = <
               }
 
               return (
-                <section key={tableIndexedKey} aria-labelledby={tableIndexedKey}>
+                <section key={tableIndexedKey} aria-labelledby={tableIndexedKey} data-testid="child-table">
                   <h4 id={tableIndexedKey} className="govuk-heading-m">
                     {tableName}
 
