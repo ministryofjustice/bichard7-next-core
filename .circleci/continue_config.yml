@@ -205,7 +205,7 @@ jobs:
   test_core:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
     steps:
       - unless:
@@ -307,7 +307,7 @@ jobs:
   test_conductor:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     steps:
       - unless:
@@ -346,7 +346,7 @@ jobs:
   test_message_forwarder:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     steps:
       - unless:
@@ -380,7 +380,7 @@ jobs:
   cucumber_e2e_legacy_tests:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
     environment:
@@ -436,7 +436,7 @@ jobs:
   test_api:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     steps:
       - unless:
@@ -472,7 +472,7 @@ jobs:
   build_api_image:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
     steps:
       - unless:
@@ -553,7 +553,7 @@ jobs:
   build_ui_image:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
     steps:
       - unless:
@@ -592,7 +592,7 @@ jobs:
   test_ui:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     steps:
       - unless:
@@ -669,7 +669,7 @@ jobs:
   test_user_service:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
     steps:
       - unless:
@@ -698,7 +698,7 @@ jobs:
   test_user_service_e2e:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     parallelism: 4
     steps:
@@ -746,7 +746,7 @@ jobs:
   build_user_service_image:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
     steps:
       - unless:
@@ -785,7 +785,7 @@ jobs:
   cypress_e2e_tests:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
     parameters:
@@ -863,7 +863,7 @@ jobs:
   cucumber_e2e_tests:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
     parameters:
@@ -940,7 +940,7 @@ jobs:
   zap_scanner:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
     resource_class: large
     steps:
       - unless:
