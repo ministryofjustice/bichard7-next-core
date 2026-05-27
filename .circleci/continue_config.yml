@@ -454,7 +454,7 @@ jobs:
       - node_install_packages
       - build_common
       - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord conductor
       - build_audit_logging_images
       - run:
           name: Boot Dependencies
@@ -463,6 +463,7 @@ jobs:
             npm run localstack
             npm run audit-log
             docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml up -d --no-deps --wait conductor worker
+            npm run -w packages/conductor setup
       - run:
           name: Run unit and integration tests against API code
           command: nvm use && npm run -w packages/api test
