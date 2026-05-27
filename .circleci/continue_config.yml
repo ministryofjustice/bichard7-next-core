@@ -454,7 +454,7 @@ jobs:
       - node_install_packages
       - build_common
       - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord conductor
+          images: conductor
       - build_audit_logging_images
       - run:
           name: Boot Dependencies
