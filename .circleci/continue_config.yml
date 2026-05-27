@@ -459,9 +459,7 @@ jobs:
       - run:
           name: Boot Dependencies
           command: |
-            npm run postgres
-            npm run localstack
-            npm run audit-log
+            NOWORKER=true SKIP_CONDUCTOR_SETUP=true ./environment/boot.sh db-seed localstack audit-log
             docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml up -d --no-deps --wait conductor worker
             npm run -w packages/conductor setup
       - run:
