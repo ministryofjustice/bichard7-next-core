@@ -95,7 +95,7 @@ describe("caseToBailsReportDto", () => {
     expect(firstRow.nextAppearanceTime).toBe("10:00")
     expect(firstRow.offenceTitles).toBe("1× Theft.")
     expect(firstRow.ptiurn).toBe("12345")
-    expect(firstRow.receivedDate).toBe("12/05/2023 10:00")
+    expect(firstRow.receivedDate).toBe("12/05/2023 11:00")
     expect(firstRow.errorId).toBe(123)
 
     expect(results[0].triggerStatus).toBe("Unresolved")

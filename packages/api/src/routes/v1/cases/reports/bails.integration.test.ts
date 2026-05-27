@@ -9,6 +9,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import { addDays, format, subDays } from "date-fns"
+import { formatInTimeZone } from "date-fns-tz"
 import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 
 import build from "../../../../app"
@@ -235,7 +236,7 @@ describe("bails report", () => {
           "Sell a tobacco product without a license.\n\n" +
           "Use a motor vehicle on a road / public place without third party insurance.",
         ptiurn: caseObj.ptiurn,
-        receivedDate: format(caseObj.messageReceivedAt, "dd/MM/yyyy HH:mm"),
+        receivedDate: formatInTimeZone(caseObj.messageReceivedAt, "Europe/London", "dd/MM/yyyy HH:mm"),
         triggerResolvedDate: "",
         triggerStatus: "Unresolved"
       })
@@ -292,7 +293,7 @@ describe("bails report", () => {
           "Sell a tobacco product without a license.\n\n" +
           "Use a motor vehicle on a road / public place without third party insurance.",
         ptiurn: caseObj.ptiurn,
-        receivedDate: format(caseObj.messageReceivedAt, "dd/MM/yyyy HH:mm"),
+        receivedDate: formatInTimeZone(caseObj.messageReceivedAt, "Europe/London", "dd/MM/yyyy HH:mm"),
         triggerResolvedDate: format(new Date(), "dd/MM/yyyy"),
         triggerStatus: "Resolved"
       })
