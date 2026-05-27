@@ -121,7 +121,7 @@ describe("CollapsibleContainer", () => {
 
     cy.get("h3").should("contain.text", "GroupName")
     cy.get("h3").within(() => {
-      cy.root().should("contain.text", "1000")
+      cy.root().should("contain.text", "Sum: 1000")
     })
   })
 })
