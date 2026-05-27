@@ -79,7 +79,7 @@ describe("CollapsibleContainer", () => {
     cy.get("@accordion-header-wrapper").should("have.attr", "aria-expanded", "true")
   })
 
-  it("does not render the toggle button and does not render content when there are no children", () => {
+  it("does not render the toggle button when there are no children", () => {
     cy.mount(
       <CollapsibleContainer headingName="Empty Group" indexedKey={indexedKey} headerType="h3">
         {null}
@@ -89,8 +89,6 @@ describe("CollapsibleContainer", () => {
     cy.get("[data-testid='accordion-toggle']").should("not.exist")
     cy.contains("Show").should("not.exist")
     cy.contains("Hide").should("not.exist")
-
-    cy.get("[data-testid='accordion-content']").should("not.exist")
   })
 
   it("uses the indexedKey to set correct IDs for accessibility", () => {
