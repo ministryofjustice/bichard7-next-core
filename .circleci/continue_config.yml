@@ -205,8 +205,10 @@ jobs:
   test_core:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -255,7 +257,6 @@ jobs:
   comparison_test:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
     resource_class: medium
     steps:
       - unless:
@@ -285,7 +286,6 @@ jobs:
   characterisation_test:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
     resource_class: medium
     steps:
       - unless:
@@ -307,8 +307,10 @@ jobs:
   test_conductor:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -346,8 +348,10 @@ jobs:
   test_message_forwarder:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -380,11 +384,12 @@ jobs:
   cucumber_e2e_legacy_tests:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
     environment:
       NEXTUI: false
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -436,8 +441,10 @@ jobs:
   test_api:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -472,8 +479,10 @@ jobs:
   build_api_image:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -511,7 +520,6 @@ jobs:
   test_common:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
     resource_class: medium
     steps:
       - unless:
@@ -532,7 +540,6 @@ jobs:
   test_postgres:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
     resource_class: medium
     steps:
       - unless:
@@ -553,8 +560,10 @@ jobs:
   build_ui_image:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -592,8 +601,10 @@ jobs:
   test_ui:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -669,8 +680,10 @@ jobs:
   test_user_service:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -698,8 +711,10 @@ jobs:
   test_user_service_e2e:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     parallelism: 4
     steps:
       - unless:
@@ -746,8 +761,10 @@ jobs:
   build_user_service_image:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -785,9 +802,11 @@ jobs:
   cypress_e2e_tests:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     parameters:
       <<: *ui_params
     steps:
@@ -863,7 +882,7 @@ jobs:
   cucumber_e2e_tests:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
     parameters:
@@ -878,6 +897,7 @@ jobs:
       AUTH_TYPE: user-service
       TZ: "Europe/London"
       USE_LEDS: << parameters.use-leds >>
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -940,8 +960,10 @@ jobs:
   zap_scanner:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false # << pipeline.parameters.docker-layer-caching >>
+      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
