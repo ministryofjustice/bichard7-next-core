@@ -158,6 +158,42 @@ commands:
             SANITIZED_BRANCH=$(echo "$CIRCLE_BRANCH" | sed 's/[^a-zA-Z0-9_.-]/-/g')
             echo "export DOCKER_TAG=${SANITIZED_BRANCH:-latest}" >> $BASH_ENV
 
+  build_and_cache_image:
+    parameters:
+      image_name:
+        type: string
+      dockerfile:
+        type: string
+      cache_key:
+        type: string
+    steps:
+      - restore_cache:
+          name: Restore BuildKit cache for << parameters.image_name >>
+          keys:
+            - << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "package-lock.json" }}
+            - << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-
+            - << parameters.cache_key >>-
+      - run:
+          name: Build << parameters.image_name >> Docker image
+          command: |
+            docker buildx build \
+              --cache-from type=local,src=/tmp/buildx-cache-<< parameters.image_name >> \
+              --cache-to type=local,dest=/tmp/buildx-cache-<< parameters.image_name >>-new,mode=max \
+              -f << parameters.dockerfile >> \
+              -t "<< parameters.image_name >>:${DOCKER_TAG}" \
+              --load .
+      - run:
+          name: Rotate cache for << parameters.image_name >>
+          when: always
+          command: |
+            rm -rf /tmp/buildx-cache-<< parameters.image_name >>
+            mv /tmp/buildx-cache-<< parameters.image_name >>-new /tmp/buildx-cache-<< parameters.image_name >>
+      - save_cache:
+          name: Save BuildKit cache for << parameters.image_name >>
+          key: << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "package-lock.json" }}
+          paths:
+            - /tmp/buildx-cache-<< parameters.image_name >>
+
 ui_params: &ui_params
   api:
     type: boolean
@@ -481,10 +517,7 @@ jobs:
   build_api_image:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
-    environment:
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -506,9 +539,10 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
           images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - run:
-          name: Build API Docker image
-          command: docker build -f packages/api/Dockerfile -t "api:${DOCKER_TAG}" .
+      - build_and_cache_image:
+          image_name: api
+          dockerfile: packages/api/Dockerfile
+          cache_key: buildkit-api
       - run:
           name: Save Docker image
           command: |
@@ -562,10 +596,7 @@ jobs:
   build_ui_image:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
-    environment:
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -587,9 +618,10 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
           images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - run:
-          name: Build UI Docker image
-          command: docker build -f packages/ui/Dockerfile -t "ui:${DOCKER_TAG}" .
+      - build_and_cache_image:
+          image_name: ui
+          dockerfile: packages/ui/Dockerfile
+          cache_key: buildkit-ui
       - run:
           name: Save Docker image
           command: |
@@ -763,10 +795,7 @@ jobs:
   build_user_service_image:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
-    environment:
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -788,9 +817,10 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
           images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - run:
-          name: Build User Service Docker image
-          command: docker build -f packages/user-service/Dockerfile -t "user-service:${DOCKER_TAG}" .
+      - build_and_cache_image:
+          image_name: user-service
+          dockerfile: packages/user-service/Dockerfile
+          cache_key: buildkit-user-service
       - run:
           name: Save Docker image
           command: |
