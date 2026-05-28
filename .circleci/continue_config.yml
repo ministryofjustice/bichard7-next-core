@@ -231,7 +231,9 @@ jobs:
           images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - run:
           name: Run PostgreSQL
-          command: npm run postgres
+          command: |
+            docker builder prune -f
+            npm run postgres
       - run:
           name: Run ActiveMQ
           command: npm run activemq

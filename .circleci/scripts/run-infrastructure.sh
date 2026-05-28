@@ -54,6 +54,8 @@ while [ $success = false ] && [ $attempt_num -le $max_attempts ]; do
         docker rm -f bichard-beanconnect-1 bichard-pnc-1
         echo "Also removing Conductor"
         docker rm -f bichard-conductor-1
+        echo "Pruning cache"
+        docker builder prune -f
         sleep 1
         ((attempt_num++))
         echo "Retrying, attempt $attempt_num ..."
