@@ -44,8 +44,6 @@ describe("<Totals />", () => {
 
     cy.get("span").each(($el) => {
       cy.wrap($el).should("have.class", "govuk-body")
-      cy.wrap($el).should("have.class", "govuk-!-margin-left-3")
-      cy.wrap($el).should("have.class", "govuk-!-margin-right-3")
     })
   })
 })

@@ -1,23 +1,28 @@
 import React from "react"
 import type { TotalColumnConfig } from "types/reports/Config"
+import { TotalsContainer } from "./Totals.styles"
 
 interface TotalsProps {
-  totalsConfig?: TotalColumnConfig[]
+  totalsConfig: TotalColumnConfig[]
   totals?: Record<string, unknown>
+  reportName?: string
+  flat?: boolean
 }
 
-export const Totals: React.FC<TotalsProps> = ({ totalsConfig, totals }) => {
+export const Totals = ({ totalsConfig, totals, reportName, flat = true }: TotalsProps) => {
   if (!totalsConfig || !totals) {
     return null
   }
 
   return (
-    <>
+    <TotalsContainer className={"govuk-body"} $flat={flat}>
+      {reportName ? <strong>{reportName}</strong> : null}
+
       {totalsConfig.map(({ key, label }) => {
         const value = totals[key]
 
         return (
-          <span className="govuk-body govuk-!-margin-left-3 govuk-!-margin-right-3" key={key}>
+          <span className="govuk-body" key={key}>
             <strong>
               {label}
               {":"}
@@ -26,6 +31,6 @@ export const Totals: React.FC<TotalsProps> = ({ totalsConfig, totals }) => {
           </span>
         )
       })}
-    </>
+    </TotalsContainer>
   )
 }

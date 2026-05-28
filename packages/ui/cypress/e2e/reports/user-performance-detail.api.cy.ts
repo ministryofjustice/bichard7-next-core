@@ -24,7 +24,7 @@ describe("User Performance Detail", () => {
     cy.get(".report-container")
       .should("be.visible")
       .within(() => {
-        cy.contains("h3", formattedGroupDate).parent("section").as("todayGroup")
+        cy.contains("h3", formattedGroupDate).parent("button").parent("section").as("todayGroup")
 
         cy.get("@todayGroup").within(() => {
           const expectedTables = [
@@ -33,7 +33,7 @@ describe("User Performance Detail", () => {
             { userId: "General Handler User", resolved: "0", locked: "1", type: "triggers" }
           ]
 
-          cy.get("section[aria-labelledby^='inner-group']").each(($section, index) => {
+          cy.get("[data-testid='simple-table']").each(($section, index) => {
             const expected = expectedTables[index]
 
             cy.wrap($section).within(() => {
@@ -56,10 +56,11 @@ describe("User Performance Detail", () => {
           const pastDate = format(subDays(today, i), "dd/MM/yyyy")
 
           cy.contains("h3", pastDate)
+            .parent("button")
             .parent("section")
             .within(() => {
               cy.get("table").should("not.exist")
-              cy.get("[itemid='outer-group-body']:empty").should("exist")
+              cy.get("[data-testid='accordion-content']:empty").should("exist")
             })
         }
       })
@@ -81,10 +82,11 @@ describe("User Performance Detail", () => {
       const pastDate = format(subDays(today, i), "dd/MM/yyyy")
 
       cy.contains("h3", pastDate)
+        .parent("button")
         .parent("section")
         .within(() => {
           cy.get("table").should("not.exist")
-          cy.get("[itemid='outer-group-body']:empty").should("exist")
+          cy.get("[data-testid='accordion-content']:empty").should("exist")
         })
     }
   })

@@ -14,10 +14,10 @@ describe("caseToExceptionsReportDto", () => {
     court_room: "Room 1",
     defendant_name: "John Doe",
     error_id: 123,
-    msg_received_ts: new Date("2024-01-10T12:00:00Z"),
+    msg_received_ts: new Date("2024-06-10T12:00:00Z"),
     notes: [],
     ptiurn: "01ZD0303208",
-    resolved_ts: new Date("2024-01-20T15:30:00Z"),
+    resolved_ts: new Date("2024-06-20T15:30:00Z"),
     resolver: "user1",
     type: CASE_TYPES.Exception
   }
@@ -33,11 +33,11 @@ describe("caseToExceptionsReportDto", () => {
       defendantName: "John Doe",
       errorId: 123,
       hearingDate: "15/01/2024",
-      messageReceivedAt: "10/01/2024 12:00", // Matches your Received output
+      messageReceivedAt: "10/06/2024 13:00", // Matches your Received output
       notes: "",
       ptiurn: "01ZD0303208",
       resolutionAction: "",
-      resolvedAt: "20/01/2024 15:30", // Matches your Received output
+      resolvedAt: "20/06/2024 15:30", // Matches your Received output
       resolver: "user1",
       type: "Ex"
     } satisfies CaseForExceptionReportDto)
