@@ -47,6 +47,7 @@ import addQueryParams from "utils/addQueryParams"
 import createRedirectResponse from "utils/createRedirectResponse"
 import { isGet, isPost } from "utils/http"
 import logger from "utils/logger"
+import { getHostFromRequest } from "lib/getAuditLogger/getHostFromRequest"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -109,8 +110,9 @@ const handleInitialLoginStage = async (
   }
   const normalisedEmail = removeCjsmSuffix(emailAddress)
   const auditLogger = getAuditLogger(context, config)
+  const host = getHostFromRequest(context.req)
 
-  const user = await authenticate(connection, auditLogger, normalisedEmail, password, null)
+  const user = await authenticate(connection, auditLogger, host, normalisedEmail, password, null)
 
   if (isError(user)) {
     logger.error(`Error logging in user [${normalisedEmail}]: ${user.message}`)
@@ -232,7 +234,9 @@ const handleRememberedEmailStage = async (
   }
 
   const auditLogger = getAuditLogger(context, config)
-  const user = await authenticate(connection, auditLogger, emailAddress, password, null)
+  const host = getHostFromRequest(context.req)
+
+  const user = await authenticate(connection, auditLogger, host, emailAddress, password, null)
 
   if (isError(user)) {
     logger.error(`Error logging in: ${user.message}`)
