@@ -1,4 +1,7 @@
+import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
+import searchCourtOrganisationUnits from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
 
 import { formatDate } from "./formatDate"
 
@@ -11,6 +14,16 @@ export interface EnrichedOffenceData {
 }
 
 const UNAVAILABLE = "Unavailable"
+
+const getFullOrganisationName = (organisationUnit: OrganisationUnit) =>
+  [
+    organisationUnit.topLevelName,
+    organisationUnit.secondLevelName,
+    organisationUnit.thirdLevelName,
+    organisationUnit.bottomLevelName
+  ]
+    .filter((part) => !!part)
+    .join(" ")
 
 export const formatOffenceData = (aho: AnnotatedHearingOutcome): EnrichedOffenceData => {
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence ?? []
@@ -31,6 +44,10 @@ export const formatOffenceData = (aho: AnnotatedHearingOutcome): EnrichedOffence
     const results = offence.Result.filter((r) => r.NextResultSourceOrganisation?.OrganisationUnitCode)
     for (const result of results) {
       const ouCode = result.NextResultSourceOrganisation?.OrganisationUnitCode ?? ""
+
+      const organisationUnit = searchCourtOrganisationUnits(ouCode)[0]
+      const courtName = getFullOrganisationName(organisationUnit)
+
       const dateRaw = result.NextHearingDate
       const time = result.NextHearingTime ?? UNAVAILABLE
       const date = formatDate(dateRaw) || UNAVAILABLE
@@ -39,7 +56,7 @@ export const formatOffenceData = (aho: AnnotatedHearingOutcome): EnrichedOffence
 
       if (!uniqueCourts.has(uniqueKey)) {
         uniqueCourts.add(uniqueKey)
-        nextNames.push(ouCode)
+        nextNames.push(courtName)
         nextDates.push(date)
         nextTimes.push(time)
       }
