@@ -56,6 +56,8 @@ while [ $success = false ] && [ $attempt_num -le $max_attempts ]; do
         docker rm -f bichard-conductor-1
         echo "Pruning cache"
         docker builder prune -f
+        echo "Removing corrupt postgres image"
+        docker rmi bichard-postgres:latest 2>/dev/null || true
         sleep 1
         ((attempt_num++))
         echo "Retrying, attempt $attempt_num ..."
