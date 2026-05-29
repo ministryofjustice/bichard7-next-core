@@ -96,18 +96,6 @@ commands:
       - store_test_results:
           path: packages/e2e-test/test-results/results/report.xml
 
-  build_audit_logging_images:
-    steps:
-      - fetch_images:
-          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
-      - run:
-          name: Clone bichard7-next-audit-logging
-          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git ~/bichard7-next-audit-logging
-      - run:
-          name: Build audit logging images
-          working_directory: ~/bichard7-next-audit-logging
-          command: make build-api-server build-event-handler-server
-
   load_ui_image:
     steps:
       - run:
@@ -150,6 +138,15 @@ commands:
           name: Load worker image
           command: docker image load < "images/worker.tar.gz"
 
+  load_audit_logging_image:
+    steps:
+      - run:
+          name: Load audit log api image
+          command: docker image load < "images/audit-log-api.tar.gz"
+      - run:
+          name: Load event handler image
+          command: docker image load < "images/event-handler.tar.gz"
+
   start_services:
     parameters:
       ARGS:
@@ -190,11 +187,14 @@ commands:
       context:
         type: string
         default: "."
+      lockfile:
+        type: string
+        default: "package-lock.json"
     steps:
       - restore_cache:
           name: Restore BuildKit cache for << parameters.image_name >>
           keys:
-            - << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "package-lock.json" }}
+            - << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "<< parameters.lockfile >>" }}
             - << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-
             - << parameters.cache_key >>-
       - run:
@@ -219,7 +219,7 @@ commands:
             mv /tmp/buildx-cache-<< parameters.image_name >>-new /tmp/buildx-cache-<< parameters.image_name >>
       - save_cache:
           name: Save BuildKit cache for << parameters.image_name >>
-          key: << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "package-lock.json" }}
+          key: << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "<< parameters.lockfile >>" }}
           paths:
             - /tmp/buildx-cache-<< parameters.image_name >>
 
@@ -279,6 +279,48 @@ jobs:
       - run:
           name: Build Core Packages
           command: npm run build:core
+
+  build_audit_logging_images:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            <<: *any_change
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - run: sudo apt-get update && sudo apt-get install -y pigz
+      - fetch_images:
+          images: nodejs-20-2023 nginx-nodejs-20-2023-supervisord
+      - run:
+          name: Clone bichard7-next-audit-logging
+          command: git clone --depth 1 https://github.com/ministryofjustice/bichard7-next-audit-logging.git /home/circleci/bichard7-next-audit-logging
+      - build_and_cache_image:
+          image_name: "audit-log-api"
+          dockerfile: "/home/circleci/bichard7-next-audit-logging/src/audit-log-api/Dockerfile"
+          context: "/home/circleci/bichard7-next-audit-logging"
+          cache_key: "audit-log-api-cache-v1"
+          image_tag: "latest"
+          lockfile: "/home/circleci/bichard7-next-audit-logging/package-lock.json"
+      - build_and_cache_image:
+          image_name: "event-handler"
+          dockerfile: "/home/circleci/bichard7-next-audit-logging/src/event-handler/Dockerfile"
+          context: "/home/circleci/bichard7-next-audit-logging"
+          cache_key: "event-handler-cache-v1"
+          image_tag: "latest"
+          lockfile: "/home/circleci/bichard7-next-audit-logging/package-lock.json"
+      - run:
+          name: Save Docker images
+          command: |
+            mkdir -p images
+            docker image save "audit-log-api:latest" | pigz > "images/audit-log-api.tar.gz"
+            docker image save "event-handler:latest" | pigz > "images/event-handler.tar.gz"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
 
   build_postgres_image:
     machine:
@@ -501,11 +543,10 @@ jobs:
           at: .
       - load_postgres_image
       - load_api_image
+      - load_audit_logging_image
       - node/install
       - node_install_packages
       - build_common
-      - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - run:
           name: Run PostgreSQL
           command: npm run postgres
@@ -609,12 +650,10 @@ jobs:
       - load_ui_image
       - load_user_service_image
       - load_api_image
+      - load_audit_logging_image
       - node/install
       - node_install_packages
       - build_core
-      - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - build_audit_logging_images
       - run:
           name: Boot Conductor infrastructure
           environment:
@@ -651,9 +690,6 @@ jobs:
       - node/install
       - node_install_packages
       - build_core
-      - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - build_audit_logging_images
       - run:
           name: Boot Conductor infrastructure
           command: .circleci/scripts/run-infrastructure.sh 'ui user-service api' all
@@ -696,11 +732,9 @@ jobs:
       - load_user_service_image
       - load_api_image
       - load_leds_image
+      - load_audit_logging_image
       - node_install_packages
       - build_core
-      - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - build_audit_logging_images
       - run:
           name: Run the infrastructure
           command: .circleci/scripts/run-infrastructure.sh "ui user-service api" all
@@ -741,8 +775,7 @@ jobs:
       - node_install_packages
       - build_common
       - fetch_images:
-          images: nodejs-24-2023 conductor
-      - build_audit_logging_images
+          images: conductor
       - run:
           name: Boot Dependencies
           command: |
@@ -818,11 +851,11 @@ jobs:
       - attach_workspace:
           at: .
       - load_postgres_image
+      - load_audit_logging_image
       - node/install
       - node_install_packages
       - fetch_images:
           images: nodejs-24-2023
-      - build_audit_logging_images
       - start_services:
           SERVICES: activemq localstack db-seed audit-log-api
       - build_core
@@ -895,11 +928,9 @@ jobs:
       - attach_workspace:
           at: .
       - load_postgres_image
+      - load_audit_logging_image
       - node/install
       - node_install_packages
-      - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - build_audit_logging_images
       - start_services:
           SERVICES: db-seed audit-log-api
       - run:
@@ -930,6 +961,7 @@ jobs:
       - attach_workspace:
           at: .
       - load_postgres_image
+      - load_audit_logging_image
       - node/install
       - node_install_packages
       - run:
@@ -990,6 +1022,7 @@ jobs:
       - load_ui_image
       - load_user_service_image
       - load_api_image
+      - load_audit_logging_image
       - node/install
       - run:
           name: Install Cypress
@@ -997,9 +1030,6 @@ jobs:
           background: true
       - node_install_packages
       - build_common
-      - fetch_images:
-          images: nodejs-24-2023 nginx-auth-proxy nginx-nodejs-24-2023-supervisord
-      - build_audit_logging_images
       - run:
           name: Wait for cypress install to finish
           command: until [ -f cypressInstalled ]; do sleep 1; done
@@ -1082,6 +1112,7 @@ jobs:
       - load_user_service_image
       - load_api_image
       - load_leds_image
+      - load_audit_logging_image
       - when:
           condition: << parameters.use-leds >>
           steps:
@@ -1089,9 +1120,6 @@ jobs:
       - node/install
       - node_install_packages
       - build_core
-      - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - build_audit_logging_images
       - run:
           name: Install browsers for puppeteer
           working_directory: packages/e2e-test
@@ -1134,12 +1162,10 @@ jobs:
       - load_ui_image
       - load_user_service_image
       - load_api_image
+      - load_audit_logging_image
       - node/install
       - node_install_packages
       - build_core
-      - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord nginx-auth-proxy
-      - build_audit_logging_images
       - run:
           name: Boot up infra
           command: bash .circleci/scripts/run-infrastructure.sh "ui user-service" ui
@@ -1165,6 +1191,7 @@ workflows:
       - build_ui_image
       - build_user_service_image
       - build_api_image
+      - build_audit_logging_images
 
       - comparison_test:
           requires:
@@ -1175,17 +1202,21 @@ workflows:
       - test_ui:
           requires:
             - build_postgres_image
+            - build_audit_logging_images
       - test_user_service:
           requires:
             - build_postgres_image
+            - build_audit_logging_images
       - test_user_service_e2e:
           requires:
             - build_postgres_image
+            - build_audit_logging_images
 
       - test_core:
           requires:
             - build_postgres_image
             - build_api_image
+            - build_audit_logging_images
 
       - test_message_forwarder:
           requires:
@@ -1195,6 +1226,7 @@ workflows:
             - build_ui_image
             - build_user_service_image
             - build_api_image
+            - build_audit_logging_images
 
       - test_api:
           requires:
@@ -1210,6 +1242,7 @@ workflows:
             - build_ui_image
             - build_user_service_image
             - build_api_image
+            - build_audit_logging_images
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
@@ -1219,6 +1252,7 @@ workflows:
             - build_user_service_image
             - build_api_image
             - build_leds_image
+            - build_audit_logging_images
       - cypress_e2e_tests:
           name: cypress_e2e_tests_api
           api: true
@@ -1232,6 +1266,7 @@ workflows:
             - build_user_service_image
             - build_api_image
             - build_leds_image
+            - build_audit_logging_images
 
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
@@ -1243,6 +1278,7 @@ workflows:
             - build_user_service_image
             - build_api_image
             - build_leds_image
+            - build_audit_logging_images
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_leds
           use-leds: true
@@ -1254,6 +1290,7 @@ workflows:
             - build_ui_image
             - build_user_service_image
             - build_api_image
+            - build_audit_logging_images
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
           api: true
@@ -1269,6 +1306,7 @@ workflows:
             - build_user_service_image
             - build_api_image
             - build_leds_image
+            - build_audit_logging_images
 
       - cucumber_e2e_legacy_tests:
           requires:
@@ -1278,6 +1316,8 @@ workflows:
             - build_user_service_image
             - build_api_image
             - build_ui_image
+            - build_audit_logging_images
+            - build_leds_image
 
       - zap_scanner:
           requires:
@@ -1285,3 +1325,4 @@ workflows:
             - build_ui_image
             - build_user_service_image
             - build_api_image
+            - build_audit_logging_images
