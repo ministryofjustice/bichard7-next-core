@@ -9,7 +9,7 @@ describe("bails report type filter", () => {
     insertSampleCases()
   })
 
-  it.only("queries bails and successfully displays only bails", () => {
+  it("queries bails and successfully displays only bails", () => {
     cy.get("#report-select").select("Bail conditions")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
@@ -58,5 +58,18 @@ describe("bails report type filter", () => {
     cy.get("#run-report").click()
 
     cy.get(".results-area table tbody tr").should("have.length", 0)
+  })
+
+  it("queries bails and successfully displays full court name", () => {
+    cy.get("#report-select").select("Bail conditions")
+    cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
+    cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr td:nth(9)").should(
+      "contain",
+      "Magistrates' Courts Avon and Somerset Weston-super-Mare"
+    )
   })
 })

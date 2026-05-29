@@ -164,4 +164,18 @@ describe("warrants report type filter", () => {
     cy.get(".results-area table tbody tr td:nth(15)").should("contain", "FTA")
     cy.get(".results-area table tbody tr td:nth(15)").should("contain", "Withdrawn")
   })
+
+  it("queries warrants and successfully displays full court name", () => {
+    insertSampleCases()
+    cy.get("#report-select").select("Warrants")
+    cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
+    cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr td:nth(13)").should(
+      "contain",
+      "Magistrates' Courts Avon and Somerset Weston-super-Mare"
+    )
+  })
 })
