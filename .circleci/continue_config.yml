@@ -1258,6 +1258,7 @@ workflows:
             - build_api_image
             - build_leds_image
             - build_audit_logging_images
+            - build_worker_image
       - cypress_e2e_tests:
           name: cypress_e2e_tests_api
           api: true
@@ -1272,6 +1273,7 @@ workflows:
             - build_api_image
             - build_leds_image
             - build_audit_logging_images
+            - build_worker_image
 
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
