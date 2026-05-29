@@ -54,12 +54,6 @@ while [ $success = false ] && [ $attempt_num -le $max_attempts ]; do
         docker rm -f bichard-beanconnect-1 bichard-pnc-1
         echo "Also removing Conductor"
         docker rm -f bichard-conductor-1
-        echo "Pruning BuildKit cache"
-        docker builder prune --all -f
-        echo "Removing corrupt postgres image"
-        docker rmi bichard-postgres:latest 2>/dev/null || true
-        echo "Removing postgres base image to force re-pull"
-        docker rmi postgres:14 2>/dev/null || true
         sleep 1
         ((attempt_num++))
         echo "Retrying, attempt $attempt_num ..."
