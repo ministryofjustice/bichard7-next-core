@@ -1,3 +1,4 @@
-process:
-  node:
-    running: true
+file:
+  /tmp:
+    exists: true
+    filetype: directory

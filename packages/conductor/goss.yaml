@@ -22,3 +22,6 @@ command:
       - v24.14.0
     stderr: []
     timeout: 10000
+process:
+  node:
+    running: true
