@@ -45,20 +45,26 @@ function pull_and_build_from_aws() {
   docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/conductor/Dockerfile .
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
-    echo "About to run Goss tests"
-
     ## Run goss tests
+
+    docker network inspect conductor-test-net >/dev/null 2>&1 || docker network create conductor-test-net
+    docker rm -f mock-conductor || true
+    docker run -d --name mock-conductor --network conductor-test-net \
+      ${DOCKER_IMAGE_HASH} \
+      node -e "require('http').createServer((req,res) => { res.writeHead(200, {'Content-Type': 'application/json'}); res.end('[]'); }).listen(4000, '0.0.0.0');"
+
     GOSS_FILES_PATH=packages/conductor dgoss run \
-      -e LOG_LEVEL=fatal \
-      -e NODE_OPTIONS="--dns-result-order=ipv4first" \
+      --network conductor-test-net \
+      -e PINO_LOG_LEVEL=info \
+      -e NODE_OPTIONS="--dns-result-order=ipv4first --unhandled-rejections=warn" \
       -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
       -e AUDIT_LOG_API_KEY="xxx" \
-      -e AUDIT_LOG_API_URL="http://localhost:3011" \
+      -e AUDIT_LOG_API_URL="http://localhost:3000" \
       -e MQ_URL="mq" \
       -e MQ_AUTH='{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}' \
       -e INCOMING_BUCKET_NAME="incoming-messages" \
       -e S3_REGION="eu-west-2" \
-      -e CONDUCTOR_URL="http://conductor:4000/api" \
+      -e CONDUCTOR_URL="http://mock-conductor:4000" \
       "${DOCKER_OUTPUT_TAG}:latest"
 
     docker tag \
