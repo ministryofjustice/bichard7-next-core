@@ -8,3 +8,8 @@ port:
     listening: true
     ip:
       - 0.0.0.0
+command:
+  "supervisorctl status api":
+    exit-status: 0
+    stdout:
+      - RUNNING

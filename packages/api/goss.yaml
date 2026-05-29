@@ -101,5 +101,8 @@ process:
     running: true
   nginx:
     running: true
-  node:
-    running: true
+command:
+  "supervisorctl status api":
+    exit-status: 0
+    stdout:
+      - RUNNING
