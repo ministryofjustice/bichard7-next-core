@@ -45,10 +45,9 @@ function pull_and_build_from_aws() {
   docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/conductor/Dockerfile .
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
-    echo "About to run Goss tests"
+    ## Run goss tests
 
     docker network inspect conductor-test-net >/dev/null 2>&1 || docker network create conductor-test-net
-
     docker rm -f mock-conductor || true
     docker run -d --name mock-conductor --network conductor-test-net \
       ${DOCKER_IMAGE_HASH} \
@@ -67,8 +66,6 @@ function pull_and_build_from_aws() {
       -e S3_REGION="eu-west-2" \
       -e CONDUCTOR_URL="http://mock-conductor:4000" \
       "${DOCKER_OUTPUT_TAG}:latest"
-
-    echo "Goss is DONE"
 
     docker tag \
       ${DOCKER_OUTPUT_TAG}:latest \
