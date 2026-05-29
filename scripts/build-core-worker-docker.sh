@@ -56,7 +56,7 @@ function pull_and_build_from_aws() {
 
   GOSS_FILES_PATH=packages/conductor dgoss run \
     --network conductor-test-net \
-    -e PINO_LOG_LEVEL=error \
+    -e PINO_LOG_LEVEL=info \
     -e NODE_OPTIONS="--dns-result-order=ipv4first --unhandled-rejections=warn" \
     -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
     -e AUDIT_LOG_API_KEY="xxx" \
