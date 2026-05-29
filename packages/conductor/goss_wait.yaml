@@ -1,5 +1,5 @@
 file:
   /proc/1/cmdline:
     exists: true
-    contains:
+    contents:
       - node

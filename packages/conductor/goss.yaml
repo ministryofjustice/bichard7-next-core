@@ -5,10 +5,10 @@ file:
     owner: root
     group: root
     filetype: file
-    contains: []
+    contents: []
   /proc/1/cmdline:
     exists: true
-    contains:
+    contents:
       - node
 user:
   node:
