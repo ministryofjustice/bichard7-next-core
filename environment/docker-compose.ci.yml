@@ -13,8 +13,8 @@ services:
   pnc:
     healthcheck:
       test: (echo >/dev/tcp/localhost/20001) && (echo >/dev/tcp/localhost/30001)
-      interval: 5s
+      interval: 3s
       timeout: 2s
       retries: 5
-      start_period: 35s
+      start_period: 20s
     restart: "no"
