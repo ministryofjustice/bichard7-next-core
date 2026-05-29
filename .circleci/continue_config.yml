@@ -1024,6 +1024,8 @@ jobs:
       - load_user_service_image
       - load_api_image
       - load_audit_logging_image
+      - load_worker_image
+      - load_leds_image
       - fetch_images:
           images: nginx-auth-proxy
       - node/install
