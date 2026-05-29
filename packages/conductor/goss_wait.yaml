@@ -1,3 +1,6 @@
+command:
+  "node -e 'console.log(\"ready\")'":
+    exit-status: 0
 process:
   node:
     running: true
