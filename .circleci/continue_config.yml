@@ -1024,6 +1024,8 @@ jobs:
       - load_user_service_image
       - load_api_image
       - load_audit_logging_image
+      - fetch-images:
+          images: nginx-auth-proxy
       - node/install
       - run:
           name: Install Cypress
@@ -1167,6 +1169,8 @@ jobs:
       - node/install
       - node_install_packages
       - build_core
+      - fetch-images:
+          images: nginx-auth-proxy
       - run:
           name: Boot up infra
           command: bash .circleci/scripts/run-infrastructure.sh "ui user-service" ui
