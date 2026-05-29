@@ -418,6 +418,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
           images: nodejs-24-2023
@@ -425,12 +426,11 @@ jobs:
           image_name: bichard-worker
           dockerfile: packages/conductor/Dockerfile
           cache_key: buildkit-worker
-          image_tag: latest
       - run:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "bichard-worker:latest" | pigz > "images/worker.tar.gz"
+            docker image save "bichard-worker:${DOCKER_TAG}" | pigz > "images/worker.tar.gz"
       - persist_to_workspace:
           root: .
           paths:
@@ -768,6 +768,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - set_docker_tag
       - attach_workspace:
           at: .
       - load_postgres_image
