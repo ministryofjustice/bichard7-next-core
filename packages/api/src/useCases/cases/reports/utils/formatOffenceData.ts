@@ -33,12 +33,14 @@ export const formatOffenceData = (aho: AnnotatedHearingOutcome): EnrichedOffence
     wordings.push(offence.ActualOffenceWording ?? UNAVAILABLE)
 
     const results = offence.Result.filter((r) => r.NextResultSourceOrganisation?.OrganisationUnitCode)
-    console.log(results.length)
     for (const result of results) {
       const ouCode = result.NextResultSourceOrganisation?.OrganisationUnitCode ?? ""
+      const organisationUnits = searchCourtOrganisationUnits(ouCode)
 
-      const organisationUnit = searchCourtOrganisationUnits(ouCode)[0]
-      const courtName = getFullOrganisationName(organisationUnit)
+      let courtName = ""
+      if (organisationUnits.length > 0) {
+        courtName = getFullOrganisationName(organisationUnits[0])
+      }
 
       const dateRaw = result.NextHearingDate
       const time = result.NextHearingTime ?? UNAVAILABLE
