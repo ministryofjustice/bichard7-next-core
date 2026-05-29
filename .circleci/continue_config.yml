@@ -96,12 +96,6 @@ commands:
       - store_test_results:
           path: packages/e2e-test/test-results/results/report.xml
 
-  build_core_images:
-    steps:
-      - run:
-          name: Build message forwarder image
-          command: docker-compose -f environment/docker-compose.yml build phase-1-message-forwarder phase-2-message-forwarder
-
   build_audit_logging_images:
     steps:
       - fetch_images:
@@ -131,6 +125,30 @@ commands:
       - run:
           name: Load api image
           command: docker image load < "images/api.tar.gz"
+
+  load_postgres_image:
+    steps:
+      - run:
+          name: Load postgres image
+          command: docker image load < "images/postgres.tar.gz"
+
+  load_leds_image:
+    steps:
+      - run:
+          name: Load leds image
+          command: docker image load < "images/leds.tar.gz"
+
+  load_message_forwarder_image:
+    steps:
+      - run:
+          name: Load message-forwarder image
+          command: docker image load < "images/message-forwarder.tar.gz"
+
+  load_worker_image:
+    steps:
+      - run:
+          name: Load worker image
+          command: docker image load < "images/worker.tar.gz"
 
   start_services:
     parameters:
@@ -166,6 +184,12 @@ commands:
         type: string
       cache_key:
         type: string
+      image_tag:
+        type: string
+        default: ""
+      context:
+        type: string
+        default: "."
     steps:
       - restore_cache:
           name: Restore BuildKit cache for << parameters.image_name >>
@@ -176,12 +200,17 @@ commands:
       - run:
           name: Build << parameters.image_name >> Docker image
           command: |
+            IMAGE_TAG="<< parameters.image_tag >>"
+            if [ -z "$IMAGE_TAG" ]; then
+              IMAGE_TAG="${DOCKER_TAG}"
+            fi
             docker buildx build \
               --cache-from type=local,src=/tmp/buildx-cache-<< parameters.image_name >> \
               --cache-to type=local,dest=/tmp/buildx-cache-<< parameters.image_name >>-new,mode=max \
               -f << parameters.dockerfile >> \
-              -t "<< parameters.image_name >>:${DOCKER_TAG}" \
-              --load .
+              -t "<< parameters.image_name >>:${IMAGE_TAG}" \
+              --load \
+              << parameters.context >>
       - run:
           name: Rotate cache for << parameters.image_name >>
           when: always
@@ -222,6 +251,19 @@ ui_envs: &ui_envs
   USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
   USE_API_CASE_RESUBMIT_ENDPOINT: << parameters.api-case-resubmit >>
 
+any_change: &any_change
+  or:
+    - << pipeline.parameters.circleci-changes >>
+    - << pipeline.parameters.ui-changes >>
+    - << pipeline.parameters.user-service-changes >>
+    - << pipeline.parameters.e2e-test-changes >>
+    - << pipeline.parameters.common-changes >>
+    - << pipeline.parameters.core-changes >>
+    - << pipeline.parameters.api-changes >>
+    - << pipeline.parameters.env-changes >>
+    - << pipeline.parameters.conductor-changes >>
+    - << pipeline.parameters.message-forwarder-changes >>
+
 jobs:
   lint_and_build:
     machine:
@@ -238,13 +280,211 @@ jobs:
           name: Build Core Packages
           command: npm run build:core
 
+  build_postgres_image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            <<: *any_change
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - run: sudo apt-get update && sudo apt-get install -y pigz
+      - build_and_cache_image:
+          image_name: bichard-postgres
+          dockerfile: environment/postgres/Dockerfile
+          cache_key: buildkit-postgres
+          image_tag: latest
+          context: environment/postgres
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save "bichard-postgres:latest" | pigz > "images/postgres.tar.gz"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
+
+  build_leds_image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            <<: *any_change
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - run: sudo apt-get update && sudo apt-get install -y pigz
+      - build_and_cache_image:
+          image_name: bichard-leds
+          dockerfile: environment/mock-server/Dockerfile
+          cache_key: buildkit-leds
+          image_tag: latest
+          context: environment/mock-server
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save "bichard-leds:latest" | pigz > "images/leds.tar.gz"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
+
+  build_message_forwarder_image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            <<: *any_change
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - run: sudo apt-get update && sudo apt-get install -y pigz
+      - fetch_images:
+          images: nodejs-24-2023
+      - build_and_cache_image:
+          image_name: message-forwarder
+          dockerfile: packages/message-forwarder/Dockerfile
+          cache_key: buildkit-message-forwarder
+          image_tag: latest
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save "message-forwarder:latest" | pigz > "images/message-forwarder.tar.gz"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
+
+  build_worker_image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            <<: *any_change
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - run: sudo apt-get update && sudo apt-get install -y pigz
+      - fetch_images:
+          images: nodejs-24-2023
+      - build_and_cache_image:
+          image_name: bichard-worker
+          dockerfile: packages/conductor/Dockerfile
+          cache_key: buildkit-worker
+          image_tag: latest
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save "bichard-worker:latest" | pigz > "images/worker.tar.gz"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
+
+  build_api_image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            <<: *any_change
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_docker_tag
+      - run: sudo apt-get update && sudo apt-get install -y pigz
+      - fetch_images:
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
+      - build_and_cache_image:
+          image_name: api
+          dockerfile: packages/api/Dockerfile
+          cache_key: buildkit-api
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save "api:${DOCKER_TAG}" | pigz > "images/api.tar.gz"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
+
+  build_ui_image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            <<: *any_change
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_docker_tag
+      - run: sudo apt-get update && sudo apt-get install -y pigz
+      - fetch_images:
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
+      - build_and_cache_image:
+          image_name: ui
+          dockerfile: packages/ui/Dockerfile
+          cache_key: buildkit-ui
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save "ui:${DOCKER_TAG}" | pigz > "images/ui.tar.gz"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
+
+  build_user_service_image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            <<: *any_change
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - set_docker_tag
+      - run: sudo apt-get update && sudo apt-get install -y pigz
+      - fetch_images:
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
+      - build_and_cache_image:
+          image_name: user-service
+          dockerfile: packages/user-service/Dockerfile
+          cache_key: buildkit-user-service
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save "user-service:${DOCKER_TAG}" | pigz > "images/user-service.tar.gz"
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
+
   test_core:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
-    environment:
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -259,6 +499,7 @@ jobs:
       - set_docker_tag
       - attach_workspace:
           at: .
+      - load_postgres_image
       - load_api_image
       - node/install
       - node_install_packages
@@ -267,9 +508,7 @@ jobs:
           images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - run:
           name: Run PostgreSQL
-          command: |
-            docker builder prune -f
-            npm run postgres
+          command: npm run postgres
       - run:
           name: Run ActiveMQ
           command: npm run activemq
@@ -306,6 +545,9 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - attach_workspace:
+          at: .
+      - load_postgres_image
       - node_install_packages
       - build_common
       - run:
@@ -345,10 +587,7 @@ jobs:
   test_conductor:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
-    environment:
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -364,6 +603,9 @@ jobs:
       - set_docker_tag
       - attach_workspace:
           at: .
+      - load_postgres_image
+      - load_message_forwarder_image
+      - load_worker_image
       - load_ui_image
       - load_user_service_image
       - load_api_image
@@ -378,7 +620,7 @@ jobs:
           environment:
             PHASE_2_QUEUE_NAME: TEST_PHASE2_QUEUE
             PHASE_3_QUEUE_NAME: TEST_PHASE3_QUEUE
-          command: .circleci/scripts/run-infrastructure.sh 'api ui user-service' all-build-worker
+          command: .circleci/scripts/run-infrastructure.sh 'api ui user-service' all
       - run:
           name: Test the workflows
           command: nvm use && npm run -w packages/conductor test
@@ -386,10 +628,7 @@ jobs:
   test_message_forwarder:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
-    environment:
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -403,6 +642,9 @@ jobs:
       - set_docker_tag
       - attach_workspace:
           at: .
+      - load_postgres_image
+      - load_message_forwarder_image
+      - load_worker_image
       - load_ui_image
       - load_user_service_image
       - load_api_image
@@ -414,7 +656,7 @@ jobs:
       - build_audit_logging_images
       - run:
           name: Boot Conductor infrastructure
-          command: .circleci/scripts/run-infrastructure.sh 'ui user-service api' all-build-worker
+          command: .circleci/scripts/run-infrastructure.sh 'ui user-service api' all
       - run:
           name: Test the workflows
           command: nvm use && npm run -w packages/message-forwarder test
@@ -422,12 +664,10 @@ jobs:
   cucumber_e2e_legacy_tests:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
     environment:
       NEXTUI: false
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -447,22 +687,22 @@ jobs:
       - run:
           name: Check for tests
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
+      - attach_workspace:
+          at: .
+      - load_postgres_image
+      - load_message_forwarder_image
+      - load_worker_image
+      - load_ui_image
+      - load_user_service_image
+      - load_api_image
       - node_install_packages
       - build_core
       - fetch_images:
           images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - run:
-          name: Build message forwarder image
-          command: .circleci/scripts/build-message-forwarder.sh
       - build_audit_logging_images
-      - attach_workspace:
-          at: .
-      - load_ui_image
-      - load_user_service_image
-      - load_api_image
       - run:
           name: Run the infrastructure
-          command: .circleci/scripts/run-infrastructure.sh "ui user-service api" all-build-worker
+          command: .circleci/scripts/run-infrastructure.sh "ui user-service api" all
       - run:
           name: Install browsers for puppeteer
           working_directory: packages/e2e-test
@@ -479,10 +719,7 @@ jobs:
   test_api:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
-    environment:
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -495,6 +732,10 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - attach_workspace:
+          at: .
+      - load_postgres_image
+      - load_worker_image
       - node/install
       - node_install_packages
       - build_common
@@ -513,45 +754,6 @@ jobs:
       - run:
           name: Run e2e tests against API code
           command: nvm use && npm run -w packages/api test:e2e
-
-  build_api_image:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: medium
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.ui-changes >>
-              - << pipeline.parameters.user-service-changes >>
-              - << pipeline.parameters.e2e-test-changes >>
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
-              - << pipeline.parameters.api-changes >>
-              - << pipeline.parameters.env-changes >>
-              - << pipeline.parameters.conductor-changes >>
-              - << pipeline.parameters.message-forwarder-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - set_docker_tag
-      - run: sudo apt-get update && sudo apt-get install -y pigz
-      - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - build_and_cache_image:
-          image_name: api
-          dockerfile: packages/api/Dockerfile
-          cache_key: buildkit-api
-      - run:
-          name: Save Docker image
-          command: |
-            mkdir -p images
-            docker image save "api:${DOCKER_TAG}" | pigz > "images/api.tar.gz"
-      - persist_to_workspace:
-          root: .
-          paths:
-            - images
 
   test_common:
     machine:
@@ -586,6 +788,9 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - attach_workspace:
+          at: .
+      - load_postgres_image
       - run:
           name: Spin up the PostgreSQL database
           command: npm run postgres
@@ -593,52 +798,10 @@ jobs:
           command: DB_HOST=172.17.0.1 bash ./environment/postgres/tests/test-all.sh
           name: run Postgres function tests
 
-  build_ui_image:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: medium
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.ui-changes >>
-              - << pipeline.parameters.user-service-changes >>
-              - << pipeline.parameters.e2e-test-changes >>
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
-              - << pipeline.parameters.api-changes >>
-              - << pipeline.parameters.env-changes >>
-              - << pipeline.parameters.conductor-changes >>
-              - << pipeline.parameters.message-forwarder-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - set_docker_tag
-      - run: sudo apt-get update && sudo apt-get install -y pigz
-      - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - build_and_cache_image:
-          image_name: ui
-          dockerfile: packages/ui/Dockerfile
-          cache_key: buildkit-ui
-      - run:
-          name: Save Docker image
-          command: |
-            mkdir -p images
-            docker image save "ui:${DOCKER_TAG}" | pigz > "images/ui.tar.gz"
-      - persist_to_workspace:
-          root: .
-          paths:
-            - images
-
   test_ui:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
-    environment:
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -651,6 +814,9 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - attach_workspace:
+          at: .
+      - load_postgres_image
       - node/install
       - node_install_packages
       - fetch_images:
@@ -714,10 +880,7 @@ jobs:
   test_user_service:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
-    environment:
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -728,6 +891,9 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - attach_workspace:
+          at: .
+      - load_postgres_image
       - node/install
       - node_install_packages
       - fetch_images:
@@ -745,10 +911,7 @@ jobs:
   test_user_service_e2e:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
-    environment:
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     parallelism: 4
     steps:
       - unless:
@@ -765,6 +928,7 @@ jobs:
           command: bash .circleci/scripts/check-tests.sh "user-service" "cypress/e2e/**/*.cy.js"
       - attach_workspace:
           at: .
+      - load_postgres_image
       - node/install
       - node_install_packages
       - run:
@@ -792,53 +956,11 @@ jobs:
       - store_artifacts:
           path: ~/project/packages/user-service/cypress/screenshots
 
-  build_user_service_image:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: medium
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.user-service-changes >>
-              - << pipeline.parameters.ui-changes >>
-              - << pipeline.parameters.e2e-test-changes >>
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
-              - << pipeline.parameters.conductor-changes >>
-              - << pipeline.parameters.api-changes >>
-              - << pipeline.parameters.env-changes >>
-              - << pipeline.parameters.message-forwarder-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - set_docker_tag
-      - run: sudo apt-get update && sudo apt-get install -y pigz
-      - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - build_and_cache_image:
-          image_name: user-service
-          dockerfile: packages/user-service/Dockerfile
-          cache_key: buildkit-user-service
-      - run:
-          name: Save Docker image
-          command: |
-            mkdir -p images
-            docker image save "user-service:${DOCKER_TAG}" | pigz > "images/user-service.tar.gz"
-      - persist_to_workspace:
-          root: .
-          paths:
-            - images
-
   cypress_e2e_tests:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
-    environment:
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     parameters:
       <<: *ui_params
     steps:
@@ -863,6 +985,7 @@ jobs:
           command: bash .circleci/scripts/check-tests.sh "ui" "cypress/e2e/**/*.cy.ts"
       - attach_workspace:
           at: .
+      - load_postgres_image
       - load_ui_image
       - load_user_service_image
       - load_api_image
@@ -914,7 +1037,6 @@ jobs:
   cucumber_e2e_tests:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
     parameters:
@@ -929,7 +1051,6 @@ jobs:
       AUTH_TYPE: user-service
       TZ: "Europe/London"
       USE_LEDS: << parameters.use-leds >>
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -953,15 +1074,21 @@ jobs:
           command: bash .circleci/scripts/check-tests.sh "e2e-test" "features/**/*.feature"
       - attach_workspace:
           at: .
+      - load_postgres_image
+      - load_message_forwarder_image
+      - load_worker_image
       - load_ui_image
       - load_user_service_image
       - load_api_image
+      - when:
+          condition: << parameters.use-leds >>
+          steps:
+            - load_leds_image
       - node/install
       - node_install_packages
       - build_core
       - fetch_images:
           images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - build_core_images
       - build_audit_logging_images
       - run:
           name: Install browsers for puppeteer
@@ -971,14 +1098,7 @@ jobs:
           name: Building infrastructure
           environment:
             <<: *ui_envs
-          command: |
-            if [ "<< parameters.api >>" = "true" ]; then
-              echo "Running API-specific infrastructure build..."
-              bash .circleci/scripts/run-infrastructure.sh "ui user-service api" all-build-worker
-            else
-              echo "Running default infrastructure build..."
-              bash .circleci/scripts/run-infrastructure.sh "ui user-service api" all
-            fi
+          command: bash .circleci/scripts/run-infrastructure.sh "ui user-service api" all
       - run:
           name: Run e2e tests against UI code
           working_directory: packages/e2e-test
@@ -992,10 +1112,7 @@ jobs:
   zap_scanner:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
-    environment:
-      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -1011,6 +1128,7 @@ jobs:
       - set_docker_tag
       - attach_workspace:
           at: .
+      - load_postgres_image
       - load_ui_image
       - load_user_service_image
       - load_api_image
@@ -1018,10 +1136,8 @@ jobs:
       - node_install_packages
       - build_core
       - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord nginx-auth-proxy
       - build_audit_logging_images
-      - fetch_images:
-          images: nginx-auth-proxy
       - run:
           name: Boot up infra
           command: bash .circleci/scripts/run-infrastructure.sh "ui user-service" ui
@@ -1035,33 +1151,60 @@ jobs:
 workflows:
   test-all:
     jobs:
-      - characterisation_test
-      - comparison_test
       - lint_and_build
-      - test_postgres
+      - characterisation_test
       - test_common
-      - test_ui
       - test_ui_component
-      - test_user_service
-      - test_user_service_e2e
-      - test_api
 
+      - build_postgres_image
+      - build_leds_image
+      - build_message_forwarder_image
+      - build_worker_image
       - build_ui_image
       - build_user_service_image
       - build_api_image
 
+      - comparison_test:
+          requires:
+            - build_postgres_image
+      - test_postgres:
+          requires:
+            - build_postgres_image
+      - test_ui:
+          requires:
+            - build_postgres_image
+      - test_user_service:
+          requires:
+            - build_postgres_image
+      - test_user_service_e2e:
+          requires:
+            - build_postgres_image
+
       - test_core:
           requires:
+            - build_postgres_image
             - build_api_image
 
       - test_message_forwarder:
           requires:
+            - build_postgres_image
+            - build_message_forwarder_image
+            - build_worker_image
             - build_ui_image
             - build_user_service_image
             - build_api_image
 
+      - test_api:
+          requires:
+            - build_postgres_image
+            - build_worker_image
+            - build_api_image
+
       - test_conductor:
           requires:
+            - build_postgres_image
+            - build_message_forwarder_image
+            - build_worker_image
             - build_ui_image
             - build_user_service_image
             - build_api_image
@@ -1069,6 +1212,7 @@ workflows:
       - cypress_e2e_tests:
           name: cypress_e2e_tests
           requires:
+            - build_postgres_image
             - build_ui_image
             - build_user_service_image
             - build_api_image
@@ -1080,6 +1224,7 @@ workflows:
           api-case-list: true
           api-case-resubmit: true
           requires:
+            - build_postgres_image
             - build_ui_image
             - build_user_service_image
             - build_api_image
@@ -1087,6 +1232,9 @@ workflows:
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
           requires:
+            - build_postgres_image
+            - build_message_forwarder_image
+            - build_worker_image
             - build_ui_image
             - build_user_service_image
             - build_api_image
@@ -1094,6 +1242,10 @@ workflows:
           name: cucumber_e2e_tests_leds
           use-leds: true
           requires:
+            - build_postgres_image
+            - build_leds_image
+            - build_message_forwarder_image
+            - build_worker_image
             - build_ui_image
             - build_user_service_image
             - build_api_image
@@ -1105,18 +1257,25 @@ workflows:
           api-case-list: true
           api-case-resubmit: true
           requires:
+            - build_postgres_image
+            - build_message_forwarder_image
+            - build_worker_image
             - build_ui_image
             - build_user_service_image
             - build_api_image
 
       - cucumber_e2e_legacy_tests:
           requires:
+            - build_postgres_image
+            - build_message_forwarder_image
+            - build_worker_image
             - build_user_service_image
             - build_api_image
             - build_ui_image
 
       - zap_scanner:
           requires:
+            - build_postgres_image
             - build_ui_image
             - build_user_service_image
             - build_api_image
