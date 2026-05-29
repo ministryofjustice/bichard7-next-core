@@ -687,6 +687,7 @@ jobs:
       - load_ui_image
       - load_user_service_image
       - load_api_image
+      - load_audit_logging_image
       - node/install
       - node_install_packages
       - build_core
@@ -779,7 +780,7 @@ jobs:
       - run:
           name: Boot Dependencies
           command: |
-            NOWORKER=true SKIP_CONDUCTOR_SETUP=true ./environment/boot.sh db-seed localstack audit-log-api
+            NOWORKER=true SKIP_CONDUCTOR_SETUP=true ./environment/boot.sh db-seed localstack
             docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml up -d --no-deps --wait conductor worker
             npm run -w packages/conductor setup
       - run:
