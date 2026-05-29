@@ -2,7 +2,7 @@
 
 set -e
 
-readonly DOCKER_BUILD_IMAGE="nodejs-20-2023"
+readonly DOCKER_BUILD_IMAGE="nodejs-24-2023"
 readonly DOCKER_OUTPUT_TAG="core-worker"
 
 function has_local_image() {

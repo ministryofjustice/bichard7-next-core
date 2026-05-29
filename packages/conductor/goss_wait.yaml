@@ -1,4 +1,5 @@
 file:
-  /tmp:
+  /proc/1/cmdline:
     exists: true
-    filetype: directory
+    contains:
+      - node

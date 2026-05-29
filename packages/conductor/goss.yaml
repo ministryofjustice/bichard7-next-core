@@ -6,6 +6,10 @@ file:
     group: root
     filetype: file
     contains: []
+  /proc/1/cmdline:
+    exists: true
+    contains:
+      - node
 user:
   node:
     exists: true
@@ -22,6 +26,3 @@ command:
       - v24.14.0
     stderr: []
     timeout: 10000
-process:
-  node:
-    running: true
