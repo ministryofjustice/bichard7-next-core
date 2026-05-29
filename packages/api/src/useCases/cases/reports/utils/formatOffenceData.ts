@@ -1,7 +1,8 @@
-import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import searchCourtOrganisationUnits from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
+import searchCourtOrganisationUnits, {
+  getFullOrganisationName
+} from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
 
 import { formatDate } from "./formatDate"
 
@@ -14,16 +15,6 @@ export interface EnrichedOffenceData {
 }
 
 const UNAVAILABLE = "Unavailable"
-
-const getFullOrganisationName = (organisationUnit: OrganisationUnit) =>
-  [
-    organisationUnit.topLevelName,
-    organisationUnit.secondLevelName,
-    organisationUnit.thirdLevelName,
-    organisationUnit.bottomLevelName
-  ]
-    .filter((part) => !!part)
-    .join(" ")
 
 export const formatOffenceData = (aho: AnnotatedHearingOutcome): EnrichedOffenceData => {
   const offences = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence ?? []
@@ -42,6 +33,7 @@ export const formatOffenceData = (aho: AnnotatedHearingOutcome): EnrichedOffence
     wordings.push(offence.ActualOffenceWording ?? UNAVAILABLE)
 
     const results = offence.Result.filter((r) => r.NextResultSourceOrganisation?.OrganisationUnitCode)
+    console.log(results.length)
     for (const result of results) {
       const ouCode = result.NextResultSourceOrganisation?.OrganisationUnitCode ?? ""
 
