@@ -158,6 +158,42 @@ commands:
             SANITIZED_BRANCH=$(echo "$CIRCLE_BRANCH" | sed 's/[^a-zA-Z0-9_.-]/-/g')
             echo "export DOCKER_TAG=${SANITIZED_BRANCH:-latest}" >> $BASH_ENV
 
+  build_and_cache_image:
+    parameters:
+      image_name:
+        type: string
+      dockerfile:
+        type: string
+      cache_key:
+        type: string
+    steps:
+      - restore_cache:
+          name: Restore BuildKit cache for << parameters.image_name >>
+          keys:
+            - << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "package-lock.json" }}
+            - << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-
+            - << parameters.cache_key >>-
+      - run:
+          name: Build << parameters.image_name >> Docker image
+          command: |
+            docker buildx build \
+              --cache-from type=local,src=/tmp/buildx-cache-<< parameters.image_name >> \
+              --cache-to type=local,dest=/tmp/buildx-cache-<< parameters.image_name >>-new,mode=max \
+              -f << parameters.dockerfile >> \
+              -t "<< parameters.image_name >>:${DOCKER_TAG}" \
+              --load .
+      - run:
+          name: Rotate cache for << parameters.image_name >>
+          when: always
+          command: |
+            rm -rf /tmp/buildx-cache-<< parameters.image_name >>
+            mv /tmp/buildx-cache-<< parameters.image_name >>-new /tmp/buildx-cache-<< parameters.image_name >>
+      - save_cache:
+          name: Save BuildKit cache for << parameters.image_name >>
+          key: << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "package-lock.json" }}
+          paths:
+            - /tmp/buildx-cache-<< parameters.image_name >>
+
 ui_params: &ui_params
   api:
     type: boolean
@@ -207,6 +243,8 @@ jobs:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -229,7 +267,9 @@ jobs:
           images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - run:
           name: Run PostgreSQL
-          command: npm run postgres
+          command: |
+            docker builder prune -f
+            npm run postgres
       - run:
           name: Run ActiveMQ
           command: npm run activemq
@@ -255,7 +295,6 @@ jobs:
   comparison_test:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
     resource_class: medium
     steps:
       - unless:
@@ -285,7 +324,6 @@ jobs:
   characterisation_test:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
     resource_class: medium
     steps:
       - unless:
@@ -309,6 +347,8 @@ jobs:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -348,6 +388,8 @@ jobs:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -385,6 +427,7 @@ jobs:
     parallelism: 10
     environment:
       NEXTUI: false
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -438,6 +481,8 @@ jobs:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -450,19 +495,18 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - set_docker_tag
-      - attach_workspace:
-          at: .
-      - load_api_image
       - node/install
       - node_install_packages
       - build_common
       - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
+          images: nodejs-24-2023 conductor
       - build_audit_logging_images
       - run:
           name: Boot Dependencies
-          command: bash .circleci/scripts/run-infrastructure.sh '' conductor
+          command: |
+            NOWORKER=true SKIP_CONDUCTOR_SETUP=true ./environment/boot.sh db-seed localstack audit-log-api
+            docker compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml up -d --no-deps --wait conductor worker
+            npm run -w packages/conductor setup
       - run:
           name: Run unit and integration tests against API code
           command: nvm use && npm run -w packages/api test
@@ -473,7 +517,6 @@ jobs:
   build_api_image:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
     steps:
       - unless:
@@ -496,9 +539,10 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
           images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - run:
-          name: Build API Docker image
-          command: docker build -f packages/api/Dockerfile -t "api:${DOCKER_TAG}" .
+      - build_and_cache_image:
+          image_name: api
+          dockerfile: packages/api/Dockerfile
+          cache_key: buildkit-api
       - run:
           name: Save Docker image
           command: |
@@ -512,7 +556,6 @@ jobs:
   test_common:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
     resource_class: medium
     steps:
       - unless:
@@ -533,7 +576,6 @@ jobs:
   test_postgres:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: false
     resource_class: medium
     steps:
       - unless:
@@ -554,7 +596,6 @@ jobs:
   build_ui_image:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
     steps:
       - unless:
@@ -577,9 +618,10 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
           images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - run:
-          name: Build UI Docker image
-          command: docker build -f packages/ui/Dockerfile -t "ui:${DOCKER_TAG}" .
+      - build_and_cache_image:
+          image_name: ui
+          dockerfile: packages/ui/Dockerfile
+          cache_key: buildkit-ui
       - run:
           name: Save Docker image
           command: |
@@ -595,6 +637,8 @@ jobs:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -672,6 +716,8 @@ jobs:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -701,6 +747,8 @@ jobs:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     parallelism: 4
     steps:
       - unless:
@@ -747,7 +795,6 @@ jobs:
   build_user_service_image:
     machine:
       image: ubuntu-2204:current
-      docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: medium
     steps:
       - unless:
@@ -770,9 +817,10 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
           images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - run:
-          name: Build User Service Docker image
-          command: docker build -f packages/user-service/Dockerfile -t "user-service:${DOCKER_TAG}" .
+      - build_and_cache_image:
+          image_name: user-service
+          dockerfile: packages/user-service/Dockerfile
+          cache_key: buildkit-user-service
       - run:
           name: Save Docker image
           command: |
@@ -789,6 +837,8 @@ jobs:
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: xlarge
     parallelism: 10
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     parameters:
       <<: *ui_params
     steps:
@@ -879,6 +929,7 @@ jobs:
       AUTH_TYPE: user-service
       TZ: "Europe/London"
       USE_LEDS: << parameters.use-leds >>
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -943,6 +994,8 @@ jobs:
       image: ubuntu-2204:current
       docker_layer_caching: << pipeline.parameters.docker-layer-caching >>
     resource_class: large
+    environment:
+      BUILDX_NO_DEFAULT_ATTESTATIONS: "1"
     steps:
       - unless:
           condition:
@@ -991,6 +1044,7 @@ workflows:
       - test_ui_component
       - test_user_service
       - test_user_service_e2e
+      - test_api
 
       - build_ui_image
       - build_user_service_image
@@ -1004,11 +1058,6 @@ workflows:
           requires:
             - build_ui_image
             - build_user_service_image
-            - build_api_image
-
-      # Needs the API as Conductor/Worker needs the API
-      - test_api:
-          requires:
             - build_api_image
 
       - test_conductor:

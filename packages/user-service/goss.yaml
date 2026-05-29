@@ -97,3 +97,10 @@ user:
 process:
   supervisord:
     running: true
+  nginx:
+    running: true
+command:
+  "supervisorctl status userservice":
+    exit-status: 0
+    stdout:
+      - RUNNING

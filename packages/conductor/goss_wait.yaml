@@ -1,10 +1,5 @@
-process:
-  node:
-    running: true
-command:
-  node --version:
-    exit-status: 0
-    stdout:
-      - v24.14.0
-    stderr: []
-    timeout: 10000
+file:
+  /proc/1/cmdline:
+    exists: true
+    contents:
+      - node
