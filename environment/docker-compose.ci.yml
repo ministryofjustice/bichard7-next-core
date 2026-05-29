@@ -9,3 +9,12 @@ services:
   localstack:
     tmpfs:
       - /var/lib/localstack
+
+  pnc:
+    healthcheck:
+      test: (echo >/dev/tcp/localhost/20001) && (echo >/dev/tcp/localhost/30001)
+      interval: 5s
+      timeout: 2s
+      retries: 5
+      start_period: 35s
+    restart: "no"
