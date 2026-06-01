@@ -1,6 +1,4 @@
-import searchCourtOrganisationUnits, {
-  getOrganisationCodeAndName
-} from "../../src/services/searchCourtOrganisationUnits"
+import searchCourtOrganisationUnits, { getOrganisationCodeAndName } from "./searchCourtOrganisationUnits"
 
 describe("searchCourtOrganisationUnits", () => {
   it("Should return an empty array when search keyword is an empty string", () => {

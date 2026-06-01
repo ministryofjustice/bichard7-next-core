@@ -79,7 +79,7 @@ describe("ReportSelectionFilter", () => {
       selectWarrants()
       typeFromDate(subMonths(today, 2))
       dateFromInput().clear()
-      typeFromDate(subMonths(today, 1))
+      typeFromDate(today)
       dateToInput().should("have.value", fmt(today))
     })
   })
