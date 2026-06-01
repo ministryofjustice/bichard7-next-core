@@ -1,5 +1,9 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
+import searchCourtOrganisationUnits, {
+  getFullOrganisationName
+} from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
+
 import { formatDate } from "./formatDate"
 
 export interface EnrichedOffenceData {
@@ -31,6 +35,13 @@ export const formatOffenceData = (aho: AnnotatedHearingOutcome): EnrichedOffence
     const results = offence.Result.filter((r) => r.NextResultSourceOrganisation?.OrganisationUnitCode)
     for (const result of results) {
       const ouCode = result.NextResultSourceOrganisation?.OrganisationUnitCode ?? ""
+      const organisationUnits = searchCourtOrganisationUnits(ouCode)
+
+      let courtName = ouCode
+      if (organisationUnits.length > 0) {
+        courtName = getFullOrganisationName(organisationUnits[0])
+      }
+
       const dateRaw = result.NextHearingDate
       const time = result.NextHearingTime ?? UNAVAILABLE
       const date = formatDate(dateRaw) || UNAVAILABLE
@@ -39,7 +50,7 @@ export const formatOffenceData = (aho: AnnotatedHearingOutcome): EnrichedOffence
 
       if (!uniqueCourts.has(uniqueKey)) {
         uniqueCourts.add(uniqueKey)
-        nextNames.push(ouCode)
+        nextNames.push(courtName)
         nextDates.push(date)
         nextTimes.push(time)
       }

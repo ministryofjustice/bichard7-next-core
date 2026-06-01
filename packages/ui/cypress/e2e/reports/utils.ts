@@ -1,7 +1,8 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import nextHearingLocationExceptions from "../../../test/test-data/NextHearingLocationExceptions.json"
 import type { TestTrigger } from "../../../test/utils/manageTriggers"
 
-export const insertSampleCases = () => {
+export const insertSampleCases = (includeValidNextHearingLocation: boolean = true) => {
   const bailTrigger: Partial<TestTrigger>[] = [
     {
       triggerCode: TriggerCode.TRPR0010,
@@ -33,7 +34,10 @@ export const insertSampleCases = () => {
       errorStatus: "Resolved",
       messageReceivedTimestamp: new Date(),
       ptiurn: "bail",
-      defendantName: "Bail Name"
+      defendantName: "Bail Name",
+      hearingOutcome: includeValidNextHearingLocation
+        ? nextHearingLocationExceptions.hearingOutcomeWithValidNextHearingLocation
+        : nextHearingLocationExceptions.hearingOutcomeWithInvalidNextHearingLocation
     },
     {
       orgForPoliceFilter: "01",
@@ -45,7 +49,10 @@ export const insertSampleCases = () => {
       orgForPoliceFilter: "01",
       messageReceivedTimestamp: new Date(),
       ptiurn: "warrants",
-      defendantName: "Warrants Name"
+      defendantName: "Warrants Name",
+      hearingOutcome: includeValidNextHearingLocation
+        ? nextHearingLocationExceptions.hearingOutcomeWithValidNextHearingLocation
+        : nextHearingLocationExceptions.hearingOutcomeWithInvalidNextHearingLocation
     },
     {
       orgForPoliceFilter: "01",
