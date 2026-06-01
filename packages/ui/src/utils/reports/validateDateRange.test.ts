@@ -112,7 +112,10 @@ describe("validateDateRange", () => {
     })
 
     it("returns no errors for a mid-month start with dateTo exactly 1 month ahead", () => {
-      const from = subMonths(today, 1)
+      // 1. Get a past month date
+      const from = subMonths(today, 2)
+      // 2. Force the day to be exactly the 15th (making it truly mid-month)
+      from.setDate(15)
       const to = addMonths(from, 1)
 
       expect(validateDateRange(fmt(from), fmt(to))).toEqual({
