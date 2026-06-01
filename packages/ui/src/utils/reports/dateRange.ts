@@ -1,14 +1,5 @@
 import type { Result } from "@moj-bichard7/common/types/Result"
-import {
-  addMonths,
-  differenceInCalendarMonths,
-  endOfMonth,
-  getDate,
-  isBefore,
-  min,
-  startOfMonth,
-  subMonths
-} from "date-fns"
+import { addMonths, endOfMonth, getDate, isBefore, min, startOfMonth, subMonths } from "date-fns"
 
 type DateRange = {
   startDate: Date
@@ -23,9 +14,8 @@ export const dateRange = (dateFrom: Date): Result<DateRange> => {
     return new Error("Date cannot be more than 12 months ago")
   }
 
-  const isHistoricalMonthStart = getDate(dateFrom) === 1 && differenceInCalendarMonths(today, dateFrom) >= 2
-
-  const naturalEnd = isHistoricalMonthStart ? endOfMonth(dateFrom) : addMonths(dateFrom, 1)
+  const isFirstOfMonth = getDate(dateFrom) === 1
+  const naturalEnd = isFirstOfMonth ? endOfMonth(dateFrom) : addMonths(dateFrom, 1)
 
   return {
     startDate: dateFrom,

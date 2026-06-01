@@ -1,6 +1,6 @@
 import { dateRange } from "@/utils/reports/dateRange"
 import DateInput from "components/CustomDateInput/DateInput"
-import { startOfMonth, subMonths, startOfToday } from "date-fns"
+import { startOfMonth, startOfToday, subMonths } from "date-fns"
 import { useMemo } from "react"
 
 interface DateRangeProps {

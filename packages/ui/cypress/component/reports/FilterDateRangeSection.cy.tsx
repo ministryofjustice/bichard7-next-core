@@ -59,21 +59,12 @@ describe("ReportSelectionFilter", () => {
   })
 
   describe("date to auto-population", () => {
-    it("autopopulates to end of month when date from is the 1st of a historic month (2 months or more ago)", () => {
-      cy.mount(<ReportSelectionFilter />)
-      selectWarrants()
-      const firstOfLastMonth = startOfMonth(subMonths(today, 2))
-      typeFromDate(firstOfLastMonth)
-      dateToInput().should("have.value", fmt(endOfMonth(firstOfLastMonth)))
-    })
-
-    it("autopopulates to 1 month ahead when date from is the 1st of last month", () => {
+    it("autopopulates to end of month when date from is the 1st", () => {
       cy.mount(<ReportSelectionFilter />)
       selectWarrants()
       const firstOfLastMonth = startOfMonth(subMonths(today, 1))
-      const oneMonthAhead = addMonths(firstOfLastMonth, 1)
       typeFromDate(firstOfLastMonth)
-      dateToInput().should("have.value", fmt(oneMonthAhead))
+      dateToInput().should("have.value", fmt(endOfMonth(firstOfLastMonth)))
     })
 
     it("autopopulates to today when date from is in the current month", () => {
@@ -88,7 +79,7 @@ describe("ReportSelectionFilter", () => {
       selectWarrants()
       typeFromDate(subMonths(today, 2))
       dateFromInput().clear()
-      typeFromDate(subMonths(today, 1))
+      typeFromDate(today)
       dateToInput().should("have.value", fmt(today))
     })
   })
