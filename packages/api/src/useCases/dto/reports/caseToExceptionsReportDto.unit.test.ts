@@ -2,6 +2,7 @@ import type { CaseForExceptionReportDto } from "@moj-bichard7/common/types/repor
 
 import type { CaseRowForExceptionReport } from "../../../types/reports/Exceptions"
 
+import { CASE_TYPES } from "../../../types/reports/Exceptions"
 import { caseToExceptionsReportDto } from "./caseToExceptionsReportDto"
 
 describe("caseToExceptionsReportDto", () => {
@@ -13,12 +14,12 @@ describe("caseToExceptionsReportDto", () => {
     court_room: "Room 1",
     defendant_name: "John Doe",
     error_id: 123,
-    msg_received_ts: new Date("2024-01-10T12:00:00Z"),
+    msg_received_ts: new Date("2024-06-10T12:00:00Z"),
     notes: [],
     ptiurn: "01ZD0303208",
-    resolved_ts: new Date("2024-01-20T15:30:00Z"),
+    resolved_ts: new Date("2024-06-20T15:30:00Z"),
     resolver: "user1",
-    type: "Exceptions"
+    type: CASE_TYPES.Exception
   }
 
   it("should convert case row to report DTO and format dates as strings", () => {
@@ -32,11 +33,11 @@ describe("caseToExceptionsReportDto", () => {
       defendantName: "John Doe",
       errorId: 123,
       hearingDate: "15/01/2024",
-      messageReceivedAt: "10/01/2024 12:00", // Matches your Received output
+      messageReceivedAt: "10/06/2024 13:00", // Matches your Received output
       notes: "",
       ptiurn: "01ZD0303208",
       resolutionAction: "",
-      resolvedAt: "20/01/2024 15:30", // Matches your Received output
+      resolvedAt: "20/06/2024 15:30", // Matches your Received output
       resolver: "user1",
       type: "Ex"
     } satisfies CaseForExceptionReportDto)
@@ -72,7 +73,7 @@ describe("caseToExceptionsReportDto", () => {
 
   describe("resolutionAction logic", () => {
     it("should set resolutionAction to 'Trigger activity performed' for Trigger types", () => {
-      const caseRow = { ...baseCaseRow, type: "Trigger" }
+      const caseRow = { ...baseCaseRow, type: CASE_TYPES.Trigger }
       const result = caseToExceptionsReportDto(caseRow)
       expect(result.resolutionAction).toBe("Trigger activity performed")
       expect(result.type).toBe("Tr")
@@ -90,7 +91,7 @@ describe("caseToExceptionsReportDto", () => {
             user_id: "System"
           }
         ],
-        type: "Exceptions"
+        type: CASE_TYPES.Exception
       }
       const result = caseToExceptionsReportDto(caseRow)
       expect(result.resolutionAction).toBe("Resolved via re-submission")
@@ -108,7 +109,7 @@ describe("caseToExceptionsReportDto", () => {
             user_id: "user1"
           }
         ],
-        type: "Exceptions"
+        type: CASE_TYPES.Exception
       }
       const result = caseToExceptionsReportDto(caseRow)
       expect(result.resolutionAction).toBe("Postponed (Awaiting documents)")

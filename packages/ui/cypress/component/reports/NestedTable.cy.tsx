@@ -1,38 +1,39 @@
+import { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { NestedTable } from "components/Reports/NestedTable"
 import { NestedGroupedReportConfig } from "types/reports/Config"
 
 type TestRow = { devName?: string; hrName?: string }
 
-type TestInnerGroup = {
+type TestTable = {
   teamName: string
   type: string
   members: TestRow[]
   totals?: { headcount: number }
 }
 
-type TestOuterGroup = {
+type TestGroup = {
   region: string
-  allTeams: TestInnerGroup[]
+  allTeams: TestTable[]
 }
 
 describe("NestedTable", () => {
-  const mockConfig: NestedGroupedReportConfig<TestOuterGroup, TestInnerGroup, TestRow> = {
+  const mockConfig: NestedGroupedReportConfig<TestGroup, TestTable, TestRow> = {
     structure: "nested",
-    endpoint: "/api/test",
-    reportType: "user detail",
-    outerGroupNameKey: "region",
-    outerDataListKey: "allTeams",
-    innerGroupNameKey: "teamName",
-    innerDataListKey: "members",
-    columnSelectorKey: "type",
+    endpoint: "test",
+    groupNameKey: "region",
+    groupDataListKey: "allTeams",
+    tableNameKey: "teamName",
+    tableDataListKey: "members",
     columns: {
       IT: [{ key: "devName", header: "Developer" }],
       HR: [{ key: "hrName", header: "HR Rep" }]
     },
-    totalsConfig: [{ key: "headcount", label: "Count" }]
+    columnSelectorKey: "type",
+    totalsConfig: [{ key: "headcount", label: "Count" }],
+    reportType: "TEST_REPORT_TYPE" as ReportType
   }
 
-  const mockGroups: TestOuterGroup[] = [
+  const mockGroups: TestGroup[] = [
     {
       region: "North",
       allTeams: [
@@ -72,11 +73,11 @@ describe("NestedTable", () => {
   it("renders inner group headers and their respective totals", () => {
     cy.mount(<NestedTable config={mockConfig} groups={mockGroups} />)
 
-    cy.get("h3").should("contain.text", "Alpha")
-    cy.get("h3").should("contain.text", "People Ops")
+    cy.get("h4").should("contain.text", "Alpha")
+    cy.get("h4").should("contain.text", "People Ops")
 
-    cy.get("h3").should("contain.text", "Count: 2")
-    cy.get("h3").should("contain.text", "Count: 1")
+    cy.get("h4").should("contain.text", "Count: 2")
+    cy.get("h4").should("contain.text", "Count: 1")
   })
 
   it("maps the correct columns based on the columnSelectorKey value", () => {
@@ -95,7 +96,7 @@ describe("NestedTable", () => {
   })
 
   it("filters out invalid inner groups gracefully", () => {
-    const corruptGroups: TestOuterGroup[] = [
+    const corruptGroups: TestGroup[] = [
       {
         region: "South",
         // @ts-expect-error - Intentionally passing a string instead of an array to test the fallback
@@ -124,6 +125,6 @@ describe("NestedTable", () => {
 
     cy.mount(<NestedTable config={mockConfig} groups={noTotalsGroup} />)
 
-    cy.get("h3").contains("No Totals").invoke("text").should("not.contain", "Count:")
+    cy.get("h4").contains("No Totals").invoke("text").should("not.contain", "Count:")
   })
 })

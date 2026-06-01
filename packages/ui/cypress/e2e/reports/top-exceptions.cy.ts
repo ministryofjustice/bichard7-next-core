@@ -6,7 +6,7 @@ describe("top exceptions report type filter", () => {
   })
 
   it("should display only 'Download report' button when 'Top Exceptions' is selected from dropdown", () => {
-    cy.get("#report-select").select("Top Exceptions")
+    cy.get("#report-select").select("Top exceptions")
     cy.get("#date-from").should("not.exist")
     cy.get("#date-to").should("not.exist")
     cy.get("#exceptions").should("not.exist")

@@ -8,6 +8,7 @@ import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionSta
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { addDays, format, subDays } from "date-fns"
+import { formatInTimeZone } from "date-fns-tz"
 import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 
 import build from "../../../../app"
@@ -163,6 +164,9 @@ describe("exceptions report", () => {
     expect(reportItem.resolvedAt).toBe(format(caseObj.errorResolvedAt!, `${formatDateDto} ${formatTimeDto}`))
     expect(reportItem.hearingDate).toBe(format(caseObj.courtDate!, formatDateDto))
     expect(reportItem.type).toBe("Ex")
+    expect(reportItem.messageReceivedAt).toBe(
+      formatInTimeZone(caseObj.messageReceivedAt, "Europe/London", `${formatDateDto} ${formatTimeDto}`)
+    )
   })
 
   it("gets triggers that are resolved", async () => {
@@ -388,7 +392,7 @@ describe("exceptions report", () => {
     expect(event.eventSource).toBe("Bichard New UI")
     expect(event.category).toBe("information")
     expect(event.attributes?.["Number of Records Returned"]).toBe(2)
-    expect(event.attributes?.["Report ID"]).toBe("Resolved Exceptions/Triggers")
+    expect(event.attributes?.["Report ID"]).toBe("Resolved exceptions and triggers")
     expect(event.attributes?.["Output Format"]).toBe("Viewed in UI")
   })
 
@@ -424,7 +428,7 @@ describe("exceptions report", () => {
     expect(event.eventSource).toBe("Bichard New UI")
     expect(event.category).toBe("information")
     expect(event.attributes?.["Number of Records Returned"]).toBe(0)
-    expect(event.attributes?.["Report ID"]).toBe("Resolved Exceptions/Triggers")
+    expect(event.attributes?.["Report ID"]).toBe("Resolved exceptions and triggers")
     expect(event.attributes?.["Output Format"]).toBe("Viewed in UI")
   })
 })

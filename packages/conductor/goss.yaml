@@ -5,7 +5,11 @@ file:
     owner: root
     group: root
     filetype: file
-    contains: []
+    contents: []
+  /proc/1/cmdline:
+    exists: true
+    contents:
+      - node
 user:
   node:
     exists: true
@@ -15,3 +19,10 @@ user:
       - node
     home: /home/node
     shell: /bin/bash
+command:
+  node --version:
+    exit-status: 0
+    stdout:
+      - v24.14.0
+    stderr: []
+    timeout: 10000

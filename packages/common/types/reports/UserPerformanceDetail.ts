@@ -23,7 +23,11 @@ export const CodeDetailDtoSchema = z.object({
 
 export const UserPerformanceDetailDtoSchema = z.object({
   codeDetails: CodeDetailDtoSchema.array(),
-  date: dateLikeToDate
+  date: dateLikeToDate,
+  totals: z.object({
+    resolved: z.number(),
+    totalLocked: z.number()
+  })
 })
 
 export type CodeDetailDto = z.infer<typeof CodeDetailDtoSchema>

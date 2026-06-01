@@ -9,23 +9,51 @@ export const mapToUserPerformanceDetailDtoDay = (date: Date, row?: UserDetailJso
   if (!row) {
     return {
       codeDetails: [] as CodeDetailDto[],
-      date
+      date,
+      totals: { resolved: 0, totalLocked: 0 }
     }
   }
 
-  return {
-    codeDetails: [
-      ...row.exceptions.map((exc) => ({
-        ...exc,
-        description: ExceptionMap.get(exc.code) ?? "Description unavailable",
-        type: "exception" as const
-      })),
-      ...row.triggers.map((trig) => ({
-        ...trig,
-        description: TriggerMap.get(trig.code) ?? "Description unavailable",
-        type: "trigger" as const
+  const codeDetails: CodeDetailDto[] = []
+  let totalLocked = 0
+  let resolved = 0
+
+  for (const exc of row.exceptions) {
+    totalLocked += exc.totals.totalLocked
+    resolved += exc.totals.resolved
+
+    codeDetails.push({
+      ...exc,
+      description: ExceptionMap.get(exc.code) ?? `Unknown Exception (${exc.code})`,
+      type: "exception" as const,
+      users: exc.users.map((user) => ({
+        ...user,
+        fullName: user.fullName || user.username
       }))
-    ],
-    date
+    })
+  }
+
+  for (const trig of row.triggers) {
+    totalLocked += trig.totals.totalLocked
+    resolved += trig.totals.resolved
+
+    codeDetails.push({
+      ...trig,
+      description: TriggerMap.get(trig.code) ?? `Unknown Trigger (${trig.code})`,
+      type: "trigger" as const,
+      users: trig.users.map((user) => ({
+        ...user,
+        fullName: user.fullName || user.username
+      }))
+    })
+  }
+
+  return {
+    codeDetails,
+    date,
+    totals: {
+      resolved,
+      totalLocked
+    }
   }
 }

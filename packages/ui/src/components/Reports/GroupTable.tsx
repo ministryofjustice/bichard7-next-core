@@ -1,60 +1,36 @@
-import { ensureString } from "@/services/reports/utils/ensureString"
-import { formatGroupName } from "@/services/reports/utils/formatGroupName"
+import { GroupedTableProps, groupTable } from "@/utils/tables/groupTable"
 import { Table } from "components/Table"
-import { isRecord } from "services/reports/utils/isRecord"
-import { isRecordArray } from "services/reports/utils/isRecordArray"
-import { GroupedReportConfig } from "types/reports/Config"
+import CollapsibleContainer from "./CollapsibleContainer"
 import { ReportContainer } from "./GroupTable.styles"
 import { ReportTableBody } from "./ReportTableBody"
 import { ReportTableHeader } from "./ReportTableHeader"
-import { Totals } from "./Totals"
 
-interface GroupedTableProps<TOuterGroup extends Record<string, unknown>, TRow extends Record<string, unknown>> {
-  config: GroupedReportConfig<TOuterGroup, TRow>
-  groups: TOuterGroup[]
-}
-
-export const GroupTable = <TOuterGroup extends Record<string, unknown>, TRow extends Record<string, unknown>>({
+export const GroupTable = <TTable extends Record<string, unknown>, TRow extends Record<string, unknown>>({
   config,
-  groups
-}: GroupedTableProps<TOuterGroup, TRow>) => {
-  if (config.structure !== "grouped") {
-    return null
-  }
-
-  const renderableGroups = groups.map((group) => {
-    const groupName = ensureString(group[config.groupNameKey])
-    const rawDataList = group[config.dataListKey]
-    const totals = isRecord(group.totals) ? group.totals : undefined
-    const dataList = isRecordArray(rawDataList) ? rawDataList : []
-    const cleanRows = dataList.filter(isRecord)
-
-    return {
-      groupName,
-      rows: cleanRows as TRow[],
-      totals
-    }
-  })
+  tables
+}: GroupedTableProps<TTable, TRow>) => {
+  const groupTableData = groupTable({ config, tables })
 
   return (
     <ReportContainer className="report-container">
-      {renderableGroups.map(({ groupName, rows, totals }) => {
-        const sectionId = `report-group-${groupName}`
+      {groupTableData?.map(({ tableName, formattedTableName, rows, totals }, index) => {
+        const tableIndexedKey = `table-${tableName.replaceAll(" ", "-").toLowerCase()}-${index}`
 
         return (
-          <section key={sectionId} aria-labelledby={sectionId}>
-            <h3 id={sectionId} className="govuk-heading-m">
-              {formatGroupName(config, groupName)}
-
-              <Totals totals={totals} totalsConfig={config.totalsConfig} />
-            </h3>
-
+          <CollapsibleContainer
+            headingName={formattedTableName || tableName}
+            indexedKey={tableIndexedKey}
+            headerType={"h3"}
+            totals={totals}
+            totalsConfig={config.totalsConfig}
+            key={tableIndexedKey}
+          >
             <Table>
-              <caption className="govuk-visually-hidden">{`Report table for ${groupName}`}</caption>
+              <caption className="govuk-visually-hidden">{`Report table for ${tableName}`}</caption>
               <ReportTableHeader columns={config.columns} />
               <ReportTableBody rows={rows} columns={config.columns} />
             </Table>
-          </section>
+          </CollapsibleContainer>
         )
       })}
     </ReportContainer>
