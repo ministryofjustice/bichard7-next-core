@@ -9,3 +9,21 @@ services:
   localstack:
     tmpfs:
       - /var/lib/localstack
+
+  beanconnect:
+    healthcheck:
+      test: echo >/dev/tcp/localhost/31004
+      interval: 4s
+      timeout: 2s
+      retries: 4
+      start_period: 45s
+    restart: "no"
+
+  pnc:
+    healthcheck:
+      test: (echo >/dev/tcp/localhost/20001) && (echo >/dev/tcp/localhost/30001)
+      interval: 3s
+      timeout: 2s
+      retries: 5
+      start_period: 20s
+    restart: "no"

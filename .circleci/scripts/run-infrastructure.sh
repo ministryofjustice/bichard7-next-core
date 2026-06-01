@@ -40,34 +40,42 @@ success=false
 max_attempts=3
 attempt_num=1
 
-while [ $success = false ] && [ $attempt_num -le $max_attempts ]; do
+if [ "$2" = "all" ]; then
+    echo "Booting flaky emulators (PNC and Beanconnect)..."
 
-    SKIP_IMAGES=$1 npm run $2
+    while [ "$success" = false ] && [ $attempt_num -le $max_attempts ]; do
+        NOWORKER=true SKIP_CONDUCTOR_SETUP=true ./environment/boot.sh pnc beanconnect
 
-    if [ $? -eq 0 ]; then
-        success=true
-    else
+        if [ $? -eq 0 ]; then
+            success=true
+        else
+            echo ""
+            echo "Failed to boot PNC/Beanconnect, retrying..."
+            sleep 5
+            echo "Removing Beanconnect and PNC..."
+            docker rm -f bichard-beanconnect-1 bichard-pnc-1
+            sleep 1
+            ((attempt_num++))
+            if [ $attempt_num -le $max_attempts ]; then
+                echo "Retrying Phase 1, attempt $attempt_num ..."
+            fi
+        fi
+    done
+
+    if [ "$success" = false ]; then
         echo ""
-        echo "Failed, retrying..."
-        sleep 10
-        echo "Removing Beanconnect and PNC..."
-        docker rm -f bichard-beanconnect-1 bichard-pnc-1
-        echo "Also removing Conductor"
-        docker rm -f bichard-conductor-1
-        echo "Pruning BuildKit cache"
-        docker builder prune --all -f
-        echo "Removing corrupt postgres image"
-        docker rmi bichard-postgres:latest 2>/dev/null || true
-        echo "Removing postgres base image to force re-pull"
-        docker rmi postgres:14 2>/dev/null || true
-        sleep 1
-        ((attempt_num++))
-        echo "Retrying, attempt $attempt_num ..."
+        echo "Failed to start PNC and Beanconnect after $max_attempts attempts."
+        exit 1
     fi
-done
 
-if [ $attempt_num -eq 4 ]; then
-  echo ""
-  echo "Failed to start infrastructure"
-  exit 1
+    echo "Booting the remaining infrastructure..."
+    SKIP_IMAGES="$1" npm run "$2"
+
+    if [ $? -ne 0 ]; then
+        echo "Failed to start remaining infrastructure."
+        exit 1
+    fi
+else
+    echo "Booting infrastructure"
+    SKIP_IMAGES="$1" npm run "$2"
 fi
