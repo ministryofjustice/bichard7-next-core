@@ -178,4 +178,17 @@ describe("warrants report type filter", () => {
       "Magistrates' Courts Avon and Somerset Weston-super-Mare"
     )
   })
+
+  it("queries warrants and successfully displays organisation unit code when no court can be found", () => {
+    cy.task("clearCourtCases")
+    insertSampleCases(false)
+
+    cy.get("#report-select").select("Warrants")
+    cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
+    cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr td:nth(13)").should("contain", "INVALID_ORG_CODE")
+  })
 })

@@ -37,7 +37,7 @@ export const formatOffenceData = (aho: AnnotatedHearingOutcome): EnrichedOffence
       const ouCode = result.NextResultSourceOrganisation?.OrganisationUnitCode ?? ""
       const organisationUnits = searchCourtOrganisationUnits(ouCode)
 
-      let courtName = ""
+      let courtName = ouCode
       if (organisationUnits.length > 0) {
         courtName = getFullOrganisationName(organisationUnits[0])
       }
