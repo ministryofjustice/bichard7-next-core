@@ -59,6 +59,11 @@ const checkMocksForPncEmulator = async (bichard: PncBichard, pncHelper: PncHelpe
 
   let mockCount = 0
   bichard.policeApi.mocks.forEach((mock) => {
+    const reqs = mock.requests.map((req) => /<REM>(.*)<\/REM>/g.exec(req)?.[1].slice(0, 20))
+    console.log("===========", mock.id, mock.matchRegex, reqs)
+  })
+
+  bichard.policeApi.mocks.forEach((mock) => {
     if (mock.expectedRequest !== "") {
       if (mock.requests.length === 0) {
         throw new Error(`Mock not called for ${mock.matchRegex}`)
