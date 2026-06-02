@@ -33,7 +33,7 @@ const resolveTriggersInTransaction = async (
 ): Promise<UpdateResult | Error> => {
   const resolver = user.username
 
-  return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
+  return await dataSource.transaction(async (entityManager) => {
     const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
 
     if (isError(courtCase)) {
