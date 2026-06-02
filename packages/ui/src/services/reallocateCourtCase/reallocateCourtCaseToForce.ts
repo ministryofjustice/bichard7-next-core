@@ -6,7 +6,6 @@ import generateTriggers from "@moj-bichard7/core/lib/triggers/generateTriggers"
 import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import Phase from "@moj-bichard7/core/types/Phase"
 import type { Trigger } from "@moj-bichard7/core/types/Trigger"
-import { retryTransaction } from "services/retryTransaction"
 import type { DataSource, EntityManager, UpdateResult } from "typeorm"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
@@ -28,7 +27,7 @@ const reallocateCourtCaseToForceTransaction = async (
   forceCode: string,
   note?: string
 ) => {
-  await dataSource.transaction("SERIALIZABLE", async (entityManager): Promise<void> => {
+  await dataSource.transaction(async (entityManager): Promise<void> => {
     const events: AuditLogEvent[] = []
 
     const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
@@ -156,14 +155,9 @@ const reallocateCourtCaseToForce = async (
   forceCode: string,
   note?: string
 ): Promise<UpdateResult | Error> => {
-  return await retryTransaction(
-    reallocateCourtCaseToForceTransaction,
-    dataSource,
-    courtCaseId,
-    user,
-    forceCode,
-    note
-  ).catch((error) => error)
+  return await reallocateCourtCaseToForceTransaction(dataSource, courtCaseId, user, forceCode, note).catch(
+    (error) => error
+  )
 }
 
 export default reallocateCourtCaseToForce
