@@ -1,3 +1,4 @@
+import type { ApiUsersQuery } from "@moj-bichard7/common/types/ApiUsersQuery"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User, UserList } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
@@ -15,13 +16,14 @@ import { convertUserToDto } from "../dto/convertUserToDto"
 const fetchUserList = async (
   database: DatabaseConnection,
   user: User,
-  logger: FastifyBaseLogger
+  logger: FastifyBaseLogger,
+  query: ApiUsersQuery
 ): PromiseResult<UserList> => {
   if (!userAccess(user)[Permission.CanListUsers]) {
     return new NotAllowedError()
   }
 
-  const users = await fetchUsers(database, user)
+  const users = await fetchUsers(database, user, query.name)
 
   if (isError(users)) {
     logger.error(users)

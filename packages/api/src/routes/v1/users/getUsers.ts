@@ -1,8 +1,10 @@
+import type { ApiUsersQuery } from "@moj-bichard7/common/types/ApiUsersQuery"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { ApiUsersQuerySchema } from "@moj-bichard7/common/types/ApiUsersQuery"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserListSchema } from "@moj-bichard7/common/types/User"
 import { FORBIDDEN, INTERNAL_SERVER_ERROR, OK } from "http-status"
@@ -18,12 +20,14 @@ import fetchUserList from "../../../useCases/users/fetchUserList"
 type HandlerProps = {
   database: DatabaseGateway
   logger: FastifyBaseLogger
+  query: ApiUsersQuery
   reply: FastifyReply
   user: User
 }
 
 const schema = {
   ...auth,
+  querystring: ApiUsersQuerySchema,
   response: {
     [OK]: UserListSchema.meta({ description: "List of users" }),
     ...unauthorizedError(),
@@ -33,8 +37,8 @@ const schema = {
   tags: ["Users V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ database, logger, reply, user }: HandlerProps) => {
-  const userList = await fetchUserList(database.readonly, user, logger)
+const handler = async ({ database, logger, query, reply, user }: HandlerProps) => {
+  const userList = await fetchUserList(database.readonly, user, logger, query)
 
   if (isError(userList)) {
     reply.log.error(userList)
@@ -54,6 +58,7 @@ const route = async (fastify: FastifyInstance) => {
     await handler({
       database: req.database,
       logger: req.log,
+      query: req.query,
       reply,
       user: req.user
     })

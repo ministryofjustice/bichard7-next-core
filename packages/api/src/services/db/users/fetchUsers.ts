@@ -9,7 +9,7 @@ export type FetchUsersResult = {
   users: User[]
 }
 
-export default async (database: DatabaseConnection, user: User): PromiseResult<FetchUsersResult> => {
+export default async (database: DatabaseConnection, user: User, name?: string): PromiseResult<FetchUsersResult> => {
   const sql = database.connection
 
   if (user.visibleForces.length === 0) {
@@ -24,12 +24,20 @@ export default async (database: DatabaseConnection, user: User): PromiseResult<F
     return sql`u.visible_forces ~ ${visibleForce}`
   })
 
-  let where = forceClauses[0]
+  let forceWhere = forceClauses[0]
 
   if (forceClauses.length > 1) {
     for (let i = 1; i <= forceClauses.length - 1; i++) {
-      where = sql`${where} OR ${forceClauses[i]}`
+      forceWhere = sql`${forceWhere} OR ${forceClauses[i]}`
     }
+  }
+
+  let finalWhere = sql`(${forceWhere})`
+
+  if (name && name.trim() !== "") {
+    const fuzzyName = `%${name.trim()}%`
+    const nameWhere = sql`u.username ILIKE ${fuzzyName} OR u.forenames ILIKE ${fuzzyName} OR u.surname ILIKE ${fuzzyName}`
+    finalWhere = sql`${finalWhere} AND (${nameWhere})`
   }
 
   const userResult = await database.connection<UserRow[]>`
@@ -50,7 +58,7 @@ export default async (database: DatabaseConnection, user: User): PromiseResult<F
         JOIN br7own.users_groups ug ON u.id = ug.user_id
         JOIN br7own.groups g ON g.id = ug.group_id
       WHERE
-          ${where}
+          ${finalWhere}
       GROUP BY
           u.id`
 
