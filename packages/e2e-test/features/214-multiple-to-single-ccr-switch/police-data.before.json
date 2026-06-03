@@ -1,0 +1,81 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002074C",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "TH68010",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/9998/001660K",
+          "crimeReference": "MF3YEFNZCXVIHDR",
+          "forceStationChargeOrig": "01VK",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "1 Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01VK",
+          "npccOffenceCode": "5.5.8.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "TH68010",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2011-09-25"
+        }
+      ],
+      "convictionDate": "2011-10-01",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "courtCaseReference": "26/9998/001660K"
+    },
+    {
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 2,
+          "arrestSummonsReference": "26/0000/00/100002074C",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "CJ88001",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/9998/001661L",
+          "crimeReference": "4P/T7HEXJVACO1N",
+          "forceStationChargeOrig": "01VK",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "1 Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01VK",
+          "npccOffenceCode": "1.8.11.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "CJ88001",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2011-09-25"
+        }
+      ],
+      "convictionDate": "2011-10-01",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "courtCaseReference": "26/9998/001661L"
+    }
+  ],
+  "remands": []
+}

@@ -68,6 +68,7 @@ const mapNcmToCourtCases = (ncm: ParsedNcm, spi: IncomingMessageParsedXml): NonE
       (ou) => ou.topLevelCode === hearingLocation[0] && ou.secondLevelCode === hearingLocation.substring(1, 3)
     ) ??
     organisationUnit.find((ou) => ou.topLevelCode === hearingLocation[0])
+  const courtCode = courtOrganisationUnit?.thirdLevelPsaCode
   const courtName = [
     courtOrganisationUnit?.topLevelName,
     courtOrganisationUnit?.secondLevelName,
@@ -89,10 +90,15 @@ const mapNcmToCourtCases = (ncm: ParsedNcm, spi: IncomingMessageParsedXml): NonE
         dateOfHearing,
         courtHearingLocation,
         offences: offencesGroups[group],
-        court: {
-          courtIdentityType: "name",
-          courtName
-        }
+        court: courtCode
+          ? {
+              courtIdentityType: "code",
+              courtCode
+            }
+          : {
+              courtIdentityType: "name",
+              courtName
+            }
       }
 
       courtCases.push(courtCase)

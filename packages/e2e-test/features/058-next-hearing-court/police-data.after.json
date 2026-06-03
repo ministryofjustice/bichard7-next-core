@@ -1,0 +1,73 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002561G",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "TH68006",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/6922/000002X",
+          "crimeReference": "RMBSU4FBJRYXJPK",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.5.5.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "TH68006",
+          "results": [
+            {
+              "disposalCode": "4004",
+              "disposalQualifierCodes": [],
+              "effectiveDate": "2008-10-08"
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2006-11-28"
+        }
+      ],
+      "convictionDate": "2008-09-26",
+      "court": {
+        "courtCode": "6922",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/6922/000002X",
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": [
+    {
+      "appearanceResult": "remanded-on-bail",
+      "currentAppearance": {
+        "court": {
+          "courtCode": "6922",
+          "courtIdentityType": "code"
+        }
+      },
+      "nextAppearance": {
+        "court": {
+          "courtCode": "6576",
+          "courtIdentityType": "code"
+        },
+        "date": "2008-10-08"
+      },
+      "ownerCode": "01YZ",
+      "remandConditions": [],
+      "remandDate": "2008-09-26"
+    }
+  ]
+}

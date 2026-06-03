@@ -1,0 +1,210 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 2,
+          "arrestSummonsReference": "26/0000/00/100002862J",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "PC53001",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000905K",
+          "crimeReference": "IEVWQKLGDKZO4RX",
+          "forceStationChargeOrig": "01VK",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "1 Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01VK",
+          "npccOffenceCode": "11.6.4.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "PC53001",
+          "results": [
+            {
+              "disposalCode": "1002",
+              "disposalDuration": {
+                "count": 9,
+                "units": "months"
+              },
+              "disposalQualifierCodes": []
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2009-06-01"
+        }
+      ],
+      "convictionDate": "2009-11-01",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000905K",
+      "subsequentAppearances": []
+    },
+    {
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 3,
+          "arrestSummonsReference": "26/0000/00/100002862J",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "TH68001",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 2,
+          "courtCaseReferenceNumber": "26/2576/000904J",
+          "crimeReference": "QMOVS8T TMW1DSG",
+          "forceStationChargeOrig": "01VK",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "1 Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01VK",
+          "npccOffenceCode": "5.5.2.1",
+          "offenceChargeNumber": 2,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "TH68001",
+          "results": [
+            {
+              "disposalCode": "4011",
+              "disposalQualifierCodes": [],
+              "effectiveDate": "2009-11-01"
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2009-06-01"
+        },
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "N",
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002862J",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "OF61016",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000904J",
+          "crimeReference": "FABF50WJDXX8U3I",
+          "forceStationChargeOrig": "01VK",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "1 Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01VK",
+          "npccOffenceCode": "1.9.7.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "OF61016",
+          "results": [
+            {
+              "disposalCode": "2006",
+              "disposalQualifierCodes": []
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2009-06-01"
+        }
+      ],
+      "convictionDate": "2009-10-01",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000904J",
+      "subsequentAppearances": [
+        {
+          "appearanceNumber": 1,
+          "charges": [
+            {
+              "additionalMarker": false,
+              "additionalOffenceMarker": false,
+              "adjudication": "G",
+              "arrestChargeNumber": 3,
+              "arrestSummonsReference": "26/0000/00/100002862J",
+              "chargeStatusMarker": "C",
+              "cjsOffenceCode": "TH68001",
+              "committedOnBail": false,
+              "courtCaseChargeNumber": 2,
+              "courtCaseReferenceNumber": "26/2576/000904J",
+              "crimeReference": "QMOVS8T TMW1DSG",
+              "forceStationChargeOrig": "01VK",
+              "legislationQualifier": [],
+              "locationAddress": {
+                "locationText": "1 Kingston High Street",
+                "locationType": "description"
+              },
+              "locationFSCode": "01VK",
+              "npccOffenceCode": "5.5.2.1",
+              "offenceChargeNumber": 2,
+              "offenceDescription": [],
+              "offencesTakenIntoConsideration": 0,
+              "othersCharged": [],
+              "plea": "2",
+              "qualifiedCjsCode": "TH68001",
+              "results": [
+                {
+                  "disposalCode": "1002",
+                  "disposalDuration": {
+                    "count": 10,
+                    "units": "months"
+                  },
+                  "disposalQualifierCodes": []
+                }
+              ],
+              "roleQualifier": [],
+              "startDate": "2009-06-01"
+            }
+          ],
+          "court": {
+            "courtCode": "2576",
+            "courtIdentityType": "code"
+          },
+          "reasonForVariation": "S",
+          "sentenceDate": "2009-11-01"
+        }
+      ]
+    }
+  ],
+  "remands": [
+    {
+      "appearanceResult": "remanded-on-bail",
+      "currentAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        }
+      },
+      "nextAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        },
+        "date": "2009-11-01"
+      },
+      "ownerCode": "01YZ",
+      "remandConditions": [],
+      "remandDate": "2009-10-01"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 Feature: 430 - Display correct cases when filtered with reason codes in the Next UI
 
 			"""
-		When Reased-codes filter is applied then show only the unresolved cases with that reason code
+		When Reason-codes filter is applied then show only the unresolved cases with that reason code
 			"""
 
 	Background:

@@ -1,0 +1,72 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002829Y",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "TH68006",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 2,
+          "courtCaseReferenceNumber": "26/2576/000886P",
+          "crimeReference": "TQHLUZNYTPFM4YX",
+          "endDate": "2010-12-05",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.5.5.1",
+          "offenceChargeNumber": 2,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "TH68006",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2010-11-28"
+        },
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 2,
+          "arrestSummonsReference": "26/0000/00/100002829Y",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "SX03001",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000886P",
+          "crimeReference": "4SLH9PZ8YPTJPKO",
+          "endDate": "2010-12-05",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "2.1.4.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "SX03001A",
+          "results": [],
+          "roleQualifier": ["AT"],
+          "startDate": "2010-11-28"
+        }
+      ],
+      "convictionDate": "2011-09-26",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000886P"
+    }
+  ],
+  "remands": []
+}

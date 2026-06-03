@@ -1,8 +1,9 @@
+import type { AsnQueryResponse } from "@moj-bichard7/core/types/leds/AsnQueryResponse"
 import { randomUUID } from "crypto"
 import expect from "expect"
 import { promises as fs } from "fs"
 import type LedsMock from "../../types/LedsMock"
-import type { LedsBichard, LedsMockOptions } from "../../types/LedsMock"
+import type { LedsBichard, LedsMockOptions, LedsMockUpdateOptions } from "../../types/LedsMock"
 import type PoliceApi from "../../types/PoliceApi"
 import type { MockAsnQueryParams, PrepareInputMessageOptions } from "../../types/PoliceApi"
 import { addMockToLedsApi } from "./addMocksToLedsApi"
@@ -18,7 +19,7 @@ export class LedsApi implements PoliceApi {
   mocks: LedsMock[] = []
   private personId: string
   private reportId: string
-  private courtCaseId: string
+  private courtCaseIds: string[]
   readonly mockServerClient: MockServer
   readonly testApiHelper: LedsTestApiHelper
 
@@ -68,15 +69,17 @@ export class LedsApi implements PoliceApi {
     const queryOptions = options ?? {}
     this.personId = queryOptions.personId ??= randomUUID()
     this.reportId = queryOptions.reportId ??= randomUUID()
-    this.courtCaseId = queryOptions.courtCaseId ??= randomUUID()
 
-    return mockGenerators.generateAsnQueryFromNcm(this.bichard, ncmFile, queryOptions)
+    const mock = mockGenerators.generateAsnQueryFromNcm(this.bichard, ncmFile, queryOptions)
+    this.courtCaseIds = (mock.response.body as AsnQueryResponse).disposals.map((disposal) => disposal.courtCaseId)
+
+    return mock
   }
 
   mockAsnQuery(params: MockAsnQueryParams): LedsMock {
     this.personId = randomUUID()
     this.reportId = randomUUID()
-    this.courtCaseId = randomUUID()
+    this.courtCaseIds = [randomUUID()]
 
     return generateAsnQuery(
       params.response,
@@ -84,15 +87,15 @@ export class LedsApi implements PoliceApi {
       params.asn,
       this.personId,
       this.reportId,
-      this.courtCaseId
+      this.courtCaseIds[0]
     )
   }
 
-  mockUpdate(code: string, options?: LedsMockOptions): LedsMock {
+  mockUpdate(code: string, options?: LedsMockUpdateOptions): LedsMock {
     const updateOptions = options ?? {}
     updateOptions.personId ??= this.personId
     updateOptions.reportId ??= this.reportId
-    updateOptions.courtCaseId ??= this.courtCaseId
+    updateOptions.courtCaseId ??= this.courtCaseIds[0]
 
     return mockGenerators.generateUpdate(code, updateOptions)
   }

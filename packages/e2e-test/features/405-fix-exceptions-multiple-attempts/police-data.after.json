@@ -1,0 +1,89 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002824T",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "TH68151",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000881J",
+          "crimeReference": "LNWHQEFGRU1GISO",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.7.11.10",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "TH68151",
+          "results": [
+            {
+              "disposalCode": "3102",
+              "disposalQualifierCodes": [],
+              "disposalText": "10 SESSIONS"
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2010-11-28"
+        },
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 2,
+          "arrestSummonsReference": "26/0000/00/100002824T",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "RT88191",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 2,
+          "courtCaseReferenceNumber": "26/2576/000881J",
+          "crimeReference": "0IF0TMW/V1VSYKG",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "12.15.13.1",
+          "offenceChargeNumber": 2,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "RT88191",
+          "results": [
+            {
+              "disposalCode": "3110",
+              "disposalQualifierCodes": [],
+              "disposalText": "5 SESSIONS"
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2010-11-28"
+        }
+      ],
+      "convictionDate": "2011-09-26",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000881J",
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}
