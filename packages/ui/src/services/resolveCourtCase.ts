@@ -7,7 +7,6 @@ import type CourtCase from "./entities/CourtCase"
 import type User from "./entities/User"
 import insertNotes from "./insertNotes"
 import resolveError from "./resolveError"
-import { retryTransaction } from "./retryTransaction"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit" // NEW: Import this
@@ -75,7 +74,7 @@ const resolveCourtCase = async (
   resolution: ManualResolution,
   user: User
 ): Promise<UpdateResult | Error> => {
-  return await retryTransaction(resolveCourtCaseTransaction, dataSource, courtCase.errorId, resolution, user)
+  return await resolveCourtCaseTransaction(dataSource, courtCase.errorId, resolution, user)
 }
 
 export default resolveCourtCase
