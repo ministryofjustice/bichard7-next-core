@@ -1,31 +1,35 @@
+import type { ApiUserLookupQuery } from "@moj-bichard7/common/types/ApiUserLookupQuery"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { ApiUserLookupQuerySchema } from "@moj-bichard7/common/types/ApiUserLookupQuery"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { UserListSchema } from "@moj-bichard7/common/types/User"
+import { UserLookupListSchema } from "@moj-bichard7/common/types/User"
 import { FORBIDDEN, INTERNAL_SERVER_ERROR, OK } from "http-status"
 
-import type DatabaseGateway from "../../../types/DatabaseGateway"
+import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
-import auth from "../../../server/schemas/auth"
-import { forbiddenError, internalServerError, unauthorizedError } from "../../../server/schemas/errorReasons"
-import useZod from "../../../server/useZod"
-import { NotAllowedError } from "../../../types/errors/NotAllowedError"
-import fetchUserList from "../../../useCases/users/fetchUserList"
+import auth from "../../../../server/schemas/auth"
+import { forbiddenError, internalServerError, unauthorizedError } from "../../../../server/schemas/errorReasons"
+import useZod from "../../../../server/useZod"
+import { NotAllowedError } from "../../../../types/errors/NotAllowedError"
+import fetchUserLookupList from "../../../../useCases/users/fetchUserLookupList"
 
 type HandlerProps = {
   database: DatabaseGateway
   logger: FastifyBaseLogger
+  query: ApiUserLookupQuery
   reply: FastifyReply
   user: User
 }
 
 const schema = {
   ...auth,
+  querystring: ApiUserLookupQuerySchema,
   response: {
-    [OK]: UserListSchema.meta({ description: "List of users" }),
+    [OK]: UserLookupListSchema.meta({ description: "List of user lookups" }),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...internalServerError()
@@ -33,8 +37,8 @@ const schema = {
   tags: ["Users V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ database, logger, reply, user }: HandlerProps) => {
-  const userList = await fetchUserList(database.readonly, user, logger)
+const handler = async ({ database, logger, query, reply, user }: HandlerProps) => {
+  const userList = await fetchUserLookupList(database.readonly, user, logger, query)
 
   if (isError(userList)) {
     reply.log.error(userList)
@@ -50,10 +54,11 @@ const handler = async ({ database, logger, reply, user }: HandlerProps) => {
 }
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).get(V1.Users, { schema }, async (req, reply) => {
+  useZod(fastify).get(V1.UserLookups, { schema }, async (req, reply) => {
     await handler({
       database: req.database,
       logger: req.log,
+      query: req.query,
       reply,
       user: req.user
     })

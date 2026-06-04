@@ -1,5 +1,6 @@
+import type { ApiUserLookupQuery } from "@moj-bichard7/common/types/ApiUserLookupQuery"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import type { User, UserList } from "@moj-bichard7/common/types/User"
+import type { User, UserLookupList } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
 import Permission from "@moj-bichard7/common/types/Permission"
@@ -8,29 +9,30 @@ import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { DatabaseConnection } from "../../types/DatabaseGateway"
 
-import fetchUsers from "../../services/db/users/fetchUsers"
+import fetchUserLookups from "../../services/db/users/fetchUserLookups"
 import { NotAllowedError } from "../../types/errors/NotAllowedError"
-import { convertUserToDto } from "../dto/convertUserToDto"
+import { convertUserToLookupDto } from "../dto/convertUserToDto"
 
-const fetchUserList = async (
+const fetchUserLookupList = async (
   database: DatabaseConnection,
   user: User,
-  logger: FastifyBaseLogger
-): PromiseResult<UserList> => {
+  logger: FastifyBaseLogger,
+  query?: ApiUserLookupQuery
+): PromiseResult<UserLookupList> => {
   if (!userAccess(user)[Permission.CanListUsers]) {
     return new NotAllowedError()
   }
 
-  const users = await fetchUsers(database, user)
+  const users = await fetchUserLookups(database, user, query?.usernameOrName)
 
   if (isError(users)) {
     logger.error(users)
     throw users
   }
 
-  const usersDto = users.users.map((u) => convertUserToDto(u))
+  const usersDto = users.users.map((u) => convertUserToLookupDto(u))
 
   return { users: usersDto }
 }
 
-export default fetchUserList
+export default fetchUserLookupList

@@ -38,7 +38,6 @@ export const UserDtoSchema = z.object({
   fullname: z.string().optional(),
   groups: z.array(z.enum(UserGroup)),
   hasAccessTo: z.object({}).catchall(z.boolean()),
-  id: z.number(),
   surname: z.string().nullable(),
   username: z.string(),
   visibleCourts: z.string().optional(),
@@ -49,7 +48,18 @@ export const UserListSchema = z.object({
   users: z.array(UserDtoSchema)
 })
 
+export const UserLookupDtoSchema = z.object({
+  fullname: z.string().optional(),
+  id: z.number()
+})
+
+export const UserLookupListSchema = z.object({
+  users: z.array(UserLookupDtoSchema)
+})
+
 export type User = z.infer<typeof UserSchema>
 export type UserDto = z.infer<typeof UserDtoSchema>
 export type UserList = z.infer<typeof UserListSchema>
+export type UserLookupDto = z.infer<typeof UserLookupDtoSchema>
+export type UserLookupList = z.infer<typeof UserLookupListSchema>
 export type UserRow = z.infer<typeof UserRowSchema>
