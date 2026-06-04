@@ -169,7 +169,7 @@ const resolveTriggers = async (
   courtCaseId: number,
   user: User
 ): Promise<UpdateResult | Error> => {
-  return await (resolveTriggersInTransaction, dataSource, triggerIds, courtCaseId, user)
+  return await resolveTriggersInTransaction(dataSource, triggerIds, courtCaseId, user)
 }
 
 export default resolveTriggers
