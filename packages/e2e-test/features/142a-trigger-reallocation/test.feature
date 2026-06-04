@@ -15,6 +15,7 @@ Feature: {142a} Trigger Reallocation
 
   @Must
   @NextUI
+  @ExcludeOnLegacyUI
   @ExcludedOnPnc
   Scenario: Trigger reallocation when a force owner changes
     Given I am logged in as "met.police"
