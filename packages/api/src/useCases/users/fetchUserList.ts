@@ -23,7 +23,7 @@ const fetchUserList = async (
     return new NotAllowedError()
   }
 
-  const users = await fetchUsers(database, user, query.name)
+  const users = await fetchUsers(database, user, query.usernameOrName)
 
   if (isError(users)) {
     logger.error(users)

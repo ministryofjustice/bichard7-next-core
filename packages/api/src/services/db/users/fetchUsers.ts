@@ -9,7 +9,11 @@ export type FetchUsersResult = {
   users: User[]
 }
 
-export default async (database: DatabaseConnection, user: User, name?: string): PromiseResult<FetchUsersResult> => {
+export default async (
+  database: DatabaseConnection,
+  user: User,
+  usernameOrName?: string
+): PromiseResult<FetchUsersResult> => {
   const sql = database.connection
 
   if (user.visibleForces.length === 0) {
@@ -34,8 +38,8 @@ export default async (database: DatabaseConnection, user: User, name?: string): 
 
   let finalWhere = sql`(${forceWhere})`
 
-  if (name && name.trim() !== "") {
-    const fuzzyName = `%${name.trim()}%`
+  if (usernameOrName && usernameOrName.trim() !== "") {
+    const fuzzyName = `%${usernameOrName.trim()}%`
     const nameWhere = sql`u.username ILIKE ${fuzzyName} OR u.forenames ILIKE ${fuzzyName} OR u.surname ILIKE ${fuzzyName}`
     finalWhere = sql`${finalWhere} AND (${nameWhere})`
   }
