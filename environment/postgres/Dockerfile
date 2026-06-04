@@ -1,6 +1,6 @@
 FROM postgres:14
 
-RUN apt-get update && apt-get -y --no-install-recommends install git build-essential postgresql-server-dev-14 && \
+RUN apt-get update && apt-get -y install git build-essential postgresql-server-dev-14 && \
     git clone https://github.com/citusdata/pg_cron.git
 
 WORKDIR /pg_cron
