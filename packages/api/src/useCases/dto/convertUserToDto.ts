@@ -49,6 +49,7 @@ export const convertUserToDto = (user: User): UserDto => {
     fullname,
     groups: user.groups,
     hasAccessTo: userAccess(user),
+    id: user.id,
     surname: user.surname,
     username: user.username,
     visibleCourts: user.visibleCourts.join(","),

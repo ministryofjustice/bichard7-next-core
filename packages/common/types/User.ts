@@ -38,6 +38,7 @@ export const UserDtoSchema = z.object({
   fullname: z.string().optional(),
   groups: z.array(z.enum(UserGroup)),
   hasAccessTo: z.object({}).catchall(z.boolean()),
+  id: z.number(),
   surname: z.string().nullable(),
   username: z.string(),
   visibleCourts: z.string().optional(),
