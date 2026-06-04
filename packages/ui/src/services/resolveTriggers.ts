@@ -13,7 +13,6 @@ import Trigger from "./entities/Trigger"
 import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import insertNotes from "./insertNotes"
-import { retryTransaction } from "./retryTransaction"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
 
@@ -170,7 +169,7 @@ const resolveTriggers = async (
   courtCaseId: number,
   user: User
 ): Promise<UpdateResult | Error> => {
-  return await retryTransaction(resolveTriggersInTransaction, dataSource, triggerIds, courtCaseId, user)
+  return await (resolveTriggersInTransaction, dataSource, triggerIds, courtCaseId, user)
 }
 
 export default resolveTriggers

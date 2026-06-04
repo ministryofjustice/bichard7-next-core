@@ -3,7 +3,6 @@ import type { DataSource, UpdateResult } from "typeorm"
 import { isError } from "types/Result"
 import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
-import { retryTransaction } from "./retryTransaction"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToLocked from "./updateLockStatusToLocked"
 
@@ -33,6 +32,6 @@ const lockCourtCaseTransaction = async (dataSource: DataSource, courtCaseId: num
 }
 
 const lockCourtCase = async (dataSource: DataSource, courtCaseId: number, user: User): Promise<UpdateResult | Error> =>
-  await retryTransaction(lockCourtCaseTransaction, dataSource, courtCaseId, user)
+  await lockCourtCaseTransaction(dataSource, courtCaseId, user)
 
 export default lockCourtCase

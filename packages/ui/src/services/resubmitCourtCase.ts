@@ -18,7 +18,6 @@ import UnlockReason from "types/UnlockReason"
 import type CourtCase from "./entities/CourtCase"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import type MqGateway from "./mq/types/MqGateway"
-import { retryTransaction } from "./retryTransaction"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 
 const phase1ResubmissionQueue = process.env.PHASE_1_RESUBMIT_QUEUE_NAME ?? "PHASE_1_RESUBMIT_QUEUE"
@@ -126,8 +125,7 @@ const resubmitCourtCase = async (
   courtCaseId: number,
   user: User
 ): PromiseResult<void> => {
-  const updatedCourtCase = await retryTransaction(
-    resubmitCourtCaseTransaction,
+  const updatedCourtCase = await resubmitCourtCaseTransaction(
     dataSource,
     mqGateway,
     amendments,
