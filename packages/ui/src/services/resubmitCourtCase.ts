@@ -31,7 +31,7 @@ const resubmitCourtCaseTransaction = async (
   courtCaseId: number,
   user: User
 ) => {
-  return await dataSource.transaction("SERIALIZABLE", async (entityManager): PromiseResult<CourtCase> => {
+  return await dataSource.transaction(async (entityManager): PromiseResult<CourtCase> => {
     const events: AuditLogEvent[] = []
 
     const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
