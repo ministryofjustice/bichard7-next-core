@@ -5,6 +5,7 @@ import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToLocked from "./updateLockStatusToLocked"
+import { retryTransaction } from "./retryTransaction"
 
 const lockCourtCaseTransaction = async (dataSource: DataSource, courtCaseId: number, user: User) => {
   return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
@@ -32,6 +33,6 @@ const lockCourtCaseTransaction = async (dataSource: DataSource, courtCaseId: num
 }
 
 const lockCourtCase = async (dataSource: DataSource, courtCaseId: number, user: User): Promise<UpdateResult | Error> =>
-  await lockCourtCaseTransaction(dataSource, courtCaseId, user)
+  await retryTransaction(lockCourtCaseTransaction, dataSource, courtCaseId, user)
 
 export default lockCourtCase
