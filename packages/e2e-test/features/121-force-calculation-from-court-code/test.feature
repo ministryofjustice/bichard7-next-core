@@ -19,7 +19,7 @@ Feature: {121} BR7 R5.1-RCD399-Force calculation-FF code in CourtHearingLocation
 	@NextUI
 	Scenario: Deriving the force owner from the court hearing location
 		When I am logged in as "met.police"
-			And "input-message" is received
+			And "input-message" is received with an invalid ASN
 			And I view the list of exceptions
 		Then there are no exceptions or triggers
 		When I am logged in as "west.yorkshire"

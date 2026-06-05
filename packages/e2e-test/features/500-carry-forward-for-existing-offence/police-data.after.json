@@ -7,13 +7,13 @@
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 2,
-          "arrestSummonsReference": "26/0000/00/100001439M",
+          "arrestSummonsReference": "26/0000/00/100002683P",
           "chargeStatusMarker": "A",
           "cjsOffenceCode": "TH68151",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/2576/000318X",
-          "crimeReference": "DS0ZNE1NYAUO4US",
+          "courtCaseReferenceNumber": "26/2576/000741G",
+          "crimeReference": "OFZDJFBHIXA-3J5",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -37,7 +37,7 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/000318X"
+      "courtCaseReference": "26/2576/000741G"
     },
     {
       "caseStatusMarker": "C",
@@ -47,13 +47,13 @@
           "additionalOffenceMarker": false,
           "adjudication": "G",
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100001439M",
+          "arrestSummonsReference": "26/0000/00/100002683P",
           "chargeStatusMarker": "C",
           "cjsOffenceCode": "TH68006",
           "committedOnBail": false,
           "courtCaseChargeNumber": 2,
-          "courtCaseReferenceNumber": "26/9998/001066P",
-          "crimeReference": "LVMQ7ZPVUQ1IDBU",
+          "courtCaseReferenceNumber": "26/2576/000740F",
+          "crimeReference": "5PYPBGJCMBYOPGU",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -86,12 +86,12 @@
           "additionalOffenceMarker": true,
           "adjudication": "G",
           "arrestChargeNumber": 3,
-          "arrestSummonsReference": "26/0000/00/100001439M",
+          "arrestSummonsReference": "26/0000/00/100002683P",
           "chargeStatusMarker": "C",
           "cjsOffenceCode": "TH68072",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/9998/001066P",
+          "courtCaseReferenceNumber": "26/2576/000740F",
           "forceStationChargeOrig": "01YZ",
           "legislationQualifier": [],
           "locationAddress": {
@@ -119,10 +119,10 @@
       ],
       "convictionDate": "2011-09-26",
       "court": {
-        "courtIdentityType": "name",
-        "courtName": "Magistrates' Courts London Croydon"
+        "courtCode": "2576",
+        "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/9998/001066P",
+      "courtCaseReference": "26/2576/000740F",
       "subsequentAppearances": []
     }
   ],

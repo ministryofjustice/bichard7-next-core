@@ -1,0 +1,68 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002783Y",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "CD71039",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000849Z",
+          "crimeReference": "2Q/KIBGKLUYMGRK",
+          "forceStationChargeOrig": "01VK",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01VK",
+          "npccOffenceCode": "3.2.37.2",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "CD71039",
+          "results": [
+            {
+              "disposalCode": "1015",
+              "disposalQualifierCodes": [],
+              "fineAmount": 50
+            },
+            {
+              "disposalCode": "3011",
+              "disposalQualifierCodes": [],
+              "fineAmount": 15
+            },
+            {
+              "disposalCode": "3011",
+              "disposalQualifierCodes": [],
+              "fineAmount": 50
+            },
+            {
+              "disposalCode": "3117",
+              "disposalQualifierCodes": [],
+              "fineAmount": 40
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2008-11-28"
+        }
+      ],
+      "convictionDate": "2009-01-25",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000849Z",
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}

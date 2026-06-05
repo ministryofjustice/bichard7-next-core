@@ -1,0 +1,58 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002729P",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "RT88191",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000770N",
+          "crimeReference": "MKH6ZJM108RYZNK",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "12.15.13.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "RT88191",
+          "results": [
+            {
+              "disposalCode": "1015",
+              "disposalQualifierCodes": [],
+              "fineAmount": 45
+            },
+            {
+              "disposalCode": "3008",
+              "disposalQualifierCodes": [],
+              "disposalText": "7 PENALTY POINTS"
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2010-11-28"
+        }
+      ],
+      "convictionDate": "2011-09-25",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000770N",
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}

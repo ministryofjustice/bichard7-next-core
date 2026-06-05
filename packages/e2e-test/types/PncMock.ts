@@ -3,9 +3,9 @@ import type Bichard from "../utils/world"
 import type { MockAddDisposalRequest } from "./MockAddDisposalRequest"
 import type { MockRemandRequest } from "./MockRemandRequest"
 import type { MockSubsequentDisposalResultsRequest } from "./MockSubsequentDisposalResultsRequest"
-import type { PartialPoliceApiRequestMock, PoliceApiRequestMock, PoliceApiRequestMockOptions } from "./PoliceApi"
+import type { PartialPoliceApiRequestMock, PoliceApiRequestMock, PoliceApiRequestMockQueryOptions } from "./PoliceApi"
 
-export type PncMockOptions = PoliceApiRequestMockOptions
+export type PncMockOptions = PoliceApiRequestMockQueryOptions
 
 export type PartialPncMock = PartialPoliceApiRequestMock & {
   matchRegex: string

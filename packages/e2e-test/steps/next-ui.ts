@@ -85,7 +85,10 @@ export const setupNextSteps = () => {
   When("I resolve the selected triggers", ui.resolveSelectedTriggers)
   When("I select trigger {string} for offence {string} to resolve", ui.markTriggerComplete)
   When("I see trigger {string} for offence {string} is Marked as Complete", ui.checkTriggerHasCompleted)
-  When("I correct {string} to {string}", ui.correctOffenceException)
+  When("I correct {string} to {string}", function (this: Bichard, field: string, value: string) {
+    return ui.correctOffenceException.apply(this, [field, value, false])
+  })
+  When("I amend {string} to {string}", ui.amendOffenceException)
   When("I wait for {string} in the list of records", ui.waitForRecordStep)
   When("I see {int} record for {string}", ui.nRecordsForPerson)
   When("I see {string} record for {string}", function (this: Bichard, count: string, name: string) {

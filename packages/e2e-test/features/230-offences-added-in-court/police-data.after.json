@@ -1,0 +1,92 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002610K",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "TH68010",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000662W",
+          "crimeReference": "QRHO9FUIWMVSVKJ",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "1 Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.5.8.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "TH68010",
+          "results": [
+            {
+              "disposalCode": "4004",
+              "disposalQualifierCodes": [],
+              "effectiveDate": "2012-01-01"
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2010-09-25"
+        }
+      ],
+      "convictionDate": "2011-10-01",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000662W",
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": [
+    {
+      "appearanceResult": "remanded-on-bail",
+      "currentAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        }
+      },
+      "nextAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        },
+        "date": "2012-01-01"
+      },
+      "ownerCode": "01YZ",
+      "remandConditions": [],
+      "remandDate": "2011-10-01"
+    },
+    {
+      "appearanceResult": "remanded-on-bail",
+      "currentAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        }
+      },
+      "nextAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        },
+        "date": "2012-02-01"
+      },
+      "ownerCode": "01YZ",
+      "remandConditions": [],
+      "remandDate": "2012-01-01"
+    }
+  ]
+}

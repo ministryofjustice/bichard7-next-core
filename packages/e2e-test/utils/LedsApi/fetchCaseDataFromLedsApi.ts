@@ -30,7 +30,6 @@ const offenceKeys = [
 ]
 const disposalKeys = ["court", "convictionDate", "courtCaseReference", "caseStatusMarker", "userReference"]
 const subsequentAppearanceKeys = ["appearanceNumber", "court", "sentenceDate", "reasonForVariation"]
-const disposalResultKeys = ["disposalCode", "disposalQualifierCodes", "fineAmount", "disposalDuration"]
 const remandKeys = [
   "appearanceResult",
   "ownerCode",
@@ -57,7 +56,11 @@ const convertCharge = (ledsCharge: Charge, ledsOffence: OffenceResponse) => ({
   ...mapKeys(ledsCharge, chargeKeys),
   ...mapKeys(ledsOffence, offenceKeys),
   othersCharged: ledsOffence.othersCharged?.map((otherCharged) => mapKeys(otherCharged, otherChargedKeys)),
-  results: ledsCharge.disposals.map((ledsDisposal) => mapKeys(ledsDisposal, disposalResultKeys))
+  results: ledsCharge.disposals.map((ledsDisposal) => {
+    const disposal = structuredClone(ledsDisposal) as Record<string, unknown>
+    delete disposal.id
+    return disposal
+  })
 })
 
 const convertDisposal = (ledsDisposal: DisposalEntry, ledsOffences: OffenceResponse[]) => {
