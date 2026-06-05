@@ -51,12 +51,8 @@ export default async (
         u.surname
       FROM
         br7own.users u
-        JOIN br7own.users_groups ug ON u.id = ug.user_id
-        JOIN br7own.groups g ON g.id = ug.group_id
       WHERE
-          ${finalWhere}
-      GROUP BY
-          u.id`
+          ${finalWhere}`
 
   const users = userResult.map((u) => mapUserRowToUser(u))
 
