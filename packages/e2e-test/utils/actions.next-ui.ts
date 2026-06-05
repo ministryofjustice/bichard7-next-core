@@ -532,11 +532,20 @@ const correctOffence = async (page: Page, fieldHtml: string, newValue: string) =
   await page.keyboard.type(newValue, { delay: 100 })
 }
 
-export const correctOffenceException = async function (this: Bichard, field: string, newValue: string) {
+export const amendOffenceException = async function (this: Bichard, field: string, newValue: string) {
+  await correctOffenceException.apply(this, [field, newValue, true])
+}
+
+export const correctOffenceException = async function (
+  this: Bichard,
+  field: string,
+  newValue: string,
+  useExactValue = false
+) {
   const { page } = this.browser
 
   let newValueToSet = newValue
-  if (field.toUpperCase() === "ASN") {
+  if (!useExactValue && field.toUpperCase() === "ASN") {
     newValueToSet = this.policeApi.getAsn() ?? newValue
   }
 

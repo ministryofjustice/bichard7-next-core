@@ -1,0 +1,158 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "C",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100002712W",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "TH68006",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 3,
+          "courtCaseReferenceNumber": "26/2576/000755X",
+          "crimeReference": "P3/XWBVSLKUQLAN",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.5.5.1",
+          "offenceChargeNumber": 3,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "TH68006",
+          "results": [
+            {
+              "disposalCode": "1141",
+              "disposalQualifierCodes": [],
+              "effectiveDate": "2012-07-15"
+            },
+            {
+              "disposalCode": "3105",
+              "disposalDuration": {
+                "count": 2,
+                "units": "months"
+              },
+              "disposalQualifierCodes": []
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2010-11-01"
+        },
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 2,
+          "arrestSummonsReference": "26/0000/00/100002712W",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "TH68010",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 2,
+          "courtCaseReferenceNumber": "26/2576/000755X",
+          "crimeReference": "J6OEUEVJRHIEDRO",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.5.8.1",
+          "offenceChargeNumber": 2,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "TH68010",
+          "results": [
+            {
+              "disposalCode": "1141",
+              "disposalQualifierCodes": [],
+              "effectiveDate": "2012-07-15"
+            },
+            {
+              "disposalCode": "3102",
+              "disposalDuration": {
+                "count": 6,
+                "units": "days"
+              },
+              "disposalQualifierCodes": []
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2010-11-02"
+        },
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 3,
+          "arrestSummonsReference": "26/0000/00/100002712W",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "CJ88001",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/000755X",
+          "crimeReference": "-RDGXIC C8JI87D",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "1.8.11.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "CJ88001",
+          "results": [
+            {
+              "disposalCode": "1141",
+              "disposalQualifierCodes": [],
+              "effectiveDate": "2012-07-15"
+            },
+            {
+              "disposalCode": "3105",
+              "disposalDuration": {
+                "count": 2,
+                "units": "months"
+              },
+              "disposalQualifierCodes": []
+            },
+            {
+              "disposalCode": "3106",
+              "disposalDuration": {
+                "count": 3,
+                "units": "months"
+              },
+              "disposalQualifierCodes": [],
+              "disposalText": "EXCLUDED FROM NW4 POSTAL AREA."
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2010-11-03"
+        }
+      ],
+      "convictionDate": "2011-09-26",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/000755X",
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}

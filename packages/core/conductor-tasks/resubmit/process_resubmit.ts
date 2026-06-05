@@ -116,7 +116,7 @@ const processResubmit: ConductorWorker = {
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CoreResubmit)
 
     const result = await db
-      .begin("read write", async (sql): PromiseResult<ResubmitResult> => {
+      .begin(async (sql): PromiseResult<ResubmitResult> => {
         return await handleCaseResubmission(
           sql,
           s3TaskData,

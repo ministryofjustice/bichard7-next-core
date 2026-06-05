@@ -1,12 +1,22 @@
 import type { HttpRequest, HttpResponse } from "mockserver-client/mockServer"
 import type { LedsApi } from "../utils/LedsApi"
 import type Bichard from "../utils/world"
-import type { PartialPoliceApiRequestMock, PoliceApiRequestMock, PoliceApiRequestMockOptions } from "./PoliceApi"
+import type {
+  PartialPoliceApiRequestMock,
+  PoliceApiRequestMock,
+  PoliceApiRequestMockQueryOptions,
+  PoliceApiRequestMockUpdateOptions
+} from "./PoliceApi"
 
-export type LedsMockOptions = PoliceApiRequestMockOptions & {
+export type LedsMockOptions = PoliceApiRequestMockQueryOptions & {
   personId?: string
   reportId?: string
-  courtCaseId?: string
+  courtCaseIds?: string[]
+}
+
+export type LedsMockUpdateOptions = PoliceApiRequestMockUpdateOptions & {
+  personId?: string
+  reportId?: string
 }
 
 export type LedsMock = PartialPoliceApiRequestMock &

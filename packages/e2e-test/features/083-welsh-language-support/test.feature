@@ -20,7 +20,7 @@ Feature: {083} R4.1_BR7_Welsh Language Handling
     Given the data for this test is in the PNC
       And "input-message" is received
 
-  @Should
+  @Should @NextUI
   Scenario: Using characters from the Welsh Language raises an exception
     Given I am logged in as "generalhandler"
       And I view the list of exceptions
@@ -29,7 +29,7 @@ Feature: {083} R4.1_BR7_Welsh Language Handling
       And I open the record for "language welsh"
       And I click the "Offences" tab
       And I view offence "1"
-    Then I see "ÄáÈéÌìÓóÛùtuxÿ" in the "Wording" row of the results table
+    Then I see "ÄáÈéÌìÓóÛùtuxÿ" in the "Offence description" row of the results table
     When I click the "Triggers" tab
     Then I see trigger "TRPR0021" for offence "1"
       And I see trigger "TRPR0021" for offence "4"

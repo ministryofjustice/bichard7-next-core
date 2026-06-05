@@ -25,6 +25,7 @@ Feature: {263} BR7 R5.7-RCD601-Result Code 2065 received after Defendant found G
 			And I view the list of exceptions
 			And "input-message-1" is received
 		Then there are no exceptions or triggers
+			And I wait "3" seconds
 		When "input-message-2" is received
 		Then there are no exceptions raised for "POSTADJUDICATION Passaway"
 			And I see exception "PR07 - Defendant dead" in the exception list table

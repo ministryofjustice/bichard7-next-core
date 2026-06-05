@@ -15,7 +15,7 @@ Feature: {122} BR7 R5.1-RCD399-Force calculation-FF in ASN
 
 	Background:
 		Given the data for this test is not in the PNC
-			And "input-message" is received
+			And "input-message" is received with an invalid ASN
 
 	@Should
 	@PreProdTest
