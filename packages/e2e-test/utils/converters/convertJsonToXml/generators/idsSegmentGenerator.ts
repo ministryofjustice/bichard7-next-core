@@ -8,7 +8,7 @@ import generateRow from "../helpers/generateRow"
 type MockJson = MockAsnQueryResponse | MockRemandRequest | MockAddDisposalRequest | MockSubsequentDisposalResultsRequest
 
 const idsSegmentGenerator = (mockJson: MockJson): string => {
-  const pncIdentifier = mockJson.personUrn.slice(2)
+  const pncIdentifier = mockJson.longPersonUrn.slice(2)
   const pncCheckName = mockJson.pncCheckName
   const croNumber = mockJson.croNumber
 

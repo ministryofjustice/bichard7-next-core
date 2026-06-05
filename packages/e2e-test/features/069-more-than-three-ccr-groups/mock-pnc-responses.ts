@@ -9,7 +9,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
       croNumber: "",
       crimeOffenceReferenceNumber: "",
       ownerCode: "01YZ",
-      personUrn: "2000/410769X",
+      longPersonUrn: "2000/410769X",
       courtCaseReference: "97/1626/018395Q",
       court: {
         courtIdentityType: "code",

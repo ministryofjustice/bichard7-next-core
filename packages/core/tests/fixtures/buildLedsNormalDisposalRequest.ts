@@ -3,7 +3,7 @@ import type { AddDisposalRequest } from "../../types/leds/AddDisposalRequest"
 export const buildLedsNormalDisposalRequest = (overrides: Partial<AddDisposalRequest> = {}): AddDisposalRequest => {
   const base: AddDisposalRequest = {
     ownerCode: "07A1",
-    personUrn: "2022/858J",
+    longPersonUrn: "2022/858J",
     courtCaseReference: "98/2048/633Y",
     court: {
       courtIdentityType: "name",

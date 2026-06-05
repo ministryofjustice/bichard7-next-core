@@ -17,7 +17,7 @@ const mapToAddDisposalRequest = (
   pncRequest: NormalDisposalPncUpdateRequest["request"],
   pncUpdateDataset: PncUpdateDataset
 ): AddDisposalRequest => {
-  const personUrn =
+  const longPersonUrn =
     preProcessPersonUrn(pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier) ??
     ""
   const carryForward: CarryForward | undefined =
@@ -50,7 +50,7 @@ const mapToAddDisposalRequest = (
 
   return {
     ownerCode: pncRequest.forceStationCode,
-    personUrn,
+    longPersonUrn,
     courtCaseReference: pncRequest.courtCaseReferenceNumber,
     court: mapCourt(pncRequest.psaCourtCode, pncRequest.courtHouseName),
     dateOfConviction: convertDate(pncRequest.dateOfHearing),
