@@ -14,6 +14,8 @@ Feature: {069} Bichard can handle more than 3 disposal groups
 	@Should
 	@PreProdTest
 	@ExcludedOnPnc
+	@ExcludeOnLegacyUI
+	@NextUI
 	Scenario: Handles 5 CCR groups
 		Given I am logged in as "generalhandler"
 			And I view the list of exceptions
