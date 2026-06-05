@@ -61,7 +61,7 @@ const generateResponseBody = (ncm: ParsedNcm, options: LedsMockOptions): AsnQuer
 
   return {
     personId: options.personId ?? randomUUID(),
-    personUrn: "2000/0410769X",
+    longPersonUrn: "2000/0410769X",
     reportId: options.reportId ?? randomUUID(),
     asn,
     ownerCode: forceStationCode,

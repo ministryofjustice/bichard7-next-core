@@ -134,7 +134,7 @@ export const convertPncJsonToLedsAsnQueryResponse = (
 
   return {
     personId,
-    personUrn: pncJson.pncIdentifier.replace(/^(\d{2})\//, (_, year) => (year < 50 ? `20${year}/` : `19${year}/`)),
+    longPersonUrn: pncJson.pncIdentifier.replace(/^(\d{2})\//, (_, year) => (year < 50 ? `20${year}/` : `19${year}/`)),
     reportId,
     asn: convertAsnToLedsFormat(asn),
     ownerCode: pncJson.forceStationCode,

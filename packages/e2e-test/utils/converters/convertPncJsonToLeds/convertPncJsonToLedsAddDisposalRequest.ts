@@ -158,7 +158,7 @@ export const convertPncJsonToLedsAddDisposalRequest = (pncJson: PncNormalDisposa
 
   return {
     ownerCode: pncJson.forceStationCode,
-    personUrn: pncJson.pncIdentifier,
+    longPersonUrn: pncJson.pncIdentifier,
     courtCaseReference: pncJson.offences[0].courtCaseReference,
     court: mapCourt(pncJson.courtCode, pncJson.courtName),
     dateOfConviction: convertDate(pncJson.dateOfHearing),

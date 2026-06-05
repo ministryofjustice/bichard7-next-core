@@ -37,7 +37,7 @@ describe("remand", () => {
         date: "2024-12-11"
       },
       ownerCode: "02YZ",
-      personUrn: "2022/858J",
+      longPersonUrn: "2022/858J",
       remandDate: "2024-12-05"
     }
     const expectedResult = { endpoint, requestBody }

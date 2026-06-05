@@ -21,7 +21,7 @@ const mapToSubsequentDisposalRequest = (
   pncUpdateDataset: PncUpdateDataset
 ): SubsequentDisposalResultsRequest => ({
   ownerCode: pncRequest.forceStationCode,
-  personUrn:
+  longPersonUrn:
     preProcessPersonUrn(pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier) ??
     "",
   courtCaseReference: pncRequest.courtCaseReferenceNumber,
