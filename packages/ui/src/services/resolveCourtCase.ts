@@ -11,27 +11,27 @@ import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit" // NEW: Import this
 
-const resolveCourtCaseTransaction = async (
+const resolveCourtCase = async (
   dataSource: DataSource | EntityManager,
-  courtCaseId: number,
+  courtCase: CourtCase,
   resolution: ManualResolution,
   user: User
-) => {
-  return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
+): Promise<UpdateResult | Error> => {
+  return await dataSource.transaction(async (entityManager) => {
     const events: AuditLogEvent[] = []
 
-    const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
+    const fetchCourtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCase.errorId, user)
 
-    if (isError(courtCase)) {
-      throw courtCase
+    if (isError(fetchCourtCase)) {
+      throw fetchCourtCase
     }
 
-    if (!courtCase) {
+    if (!fetchCourtCase) {
       throw new Error("Failed to resolve: Case not found")
     }
 
     // resolve case
-    const resolveErrorResult = await resolveError(entityManager, courtCase, user, resolution, events)
+    const resolveErrorResult = await resolveError(entityManager, fetchCourtCase, user, resolution, events)
     if (isError(resolveErrorResult)) {
       throw resolveErrorResult
     }
@@ -39,7 +39,7 @@ const resolveCourtCaseTransaction = async (
     // unlock case
     const unlockResult = await updateLockStatusToUnlocked(
       entityManager,
-      courtCase,
+      fetchCourtCase,
       user,
       UnlockReason.TriggerAndException,
       events
@@ -62,19 +62,10 @@ const resolveCourtCaseTransaction = async (
       throw addNoteResult
     }
 
-    await storeMessageAuditLogEvents(courtCase.messageId, events)
+    await storeMessageAuditLogEvents(fetchCourtCase.messageId, events)
 
     return resolveErrorResult
   })
-}
-
-const resolveCourtCase = async (
-  dataSource: DataSource | EntityManager,
-  courtCase: CourtCase,
-  resolution: ManualResolution,
-  user: User
-): Promise<UpdateResult | Error> => {
-  return await resolveCourtCaseTransaction(dataSource, courtCase.errorId, resolution, user)
 }
 
 export default resolveCourtCase
