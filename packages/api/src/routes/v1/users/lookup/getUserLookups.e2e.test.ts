@@ -16,7 +16,7 @@ const defaultRequest = (jwt: string) => {
 }
 
 describe("GET /v1/users/lookup", () => {
-  const endpoint = V1.UserLookups
+  const endpoint = V1.UsersLookup
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 

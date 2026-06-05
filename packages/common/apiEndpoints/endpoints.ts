@@ -19,6 +19,6 @@ export const Endpoints = {
   Connectivity: "/connectivity",
   Health: "/health",
   Me: "/me",
-  UserLookups: "/users/lookup",
-  Users: "/users"
+  Users: "/users",
+  UsersLookup: "/users/lookup"
 } as const

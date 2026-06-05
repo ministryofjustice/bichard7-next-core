@@ -54,7 +54,7 @@ const handler = async ({ database, logger, query, reply, user }: HandlerProps) =
 }
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).get(V1.UserLookups, { schema }, async (req, reply) => {
+  useZod(fastify).get(V1.UsersLookup, { schema }, async (req, reply) => {
     await handler({
       database: req.database,
       logger: req.log,

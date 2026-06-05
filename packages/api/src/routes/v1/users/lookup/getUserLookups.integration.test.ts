@@ -39,7 +39,7 @@ describe("GET /v1/audit/users/lookup", () => {
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "GET",
-      url: V1.UserLookups
+      url: V1.UsersLookup
     })
 
     expect(response.statusCode).toBe(OK)
@@ -56,7 +56,7 @@ describe("GET /v1/audit/users/lookup", () => {
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}` },
       method: "GET",
-      url: V1.UserLookups
+      url: V1.UsersLookup
     })
 
     expect(response.statusCode).toBe(FORBIDDEN)
