@@ -7,13 +7,13 @@ import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
 
-const unlockCourtCaseTransaction = async (
+const unlockCourtCase = async (
   dataSource: DataSource,
   courtCaseId: number,
   user: User,
   unlockReason: UnlockReason,
   usingApiResubmit?: boolean
-) => {
+): Promise<UpdateResult | Error | undefined> => {
   return await dataSource.transaction(async (entityManager) => {
     const events: AuditLogEvent[] = []
 
@@ -44,16 +44,6 @@ const unlockCourtCaseTransaction = async (
 
     return unlockResult
   })
-}
-
-const unlockCourtCase = async (
-  dataSource: DataSource,
-  courtCaseId: number,
-  user: User,
-  unlockReason: UnlockReason,
-  usingApiResubmit?: boolean
-): Promise<UpdateResult | Error | undefined> => {
-  return await unlockCourtCaseTransaction(dataSource, courtCaseId, user, unlockReason, usingApiResubmit)
 }
 
 export default unlockCourtCase
