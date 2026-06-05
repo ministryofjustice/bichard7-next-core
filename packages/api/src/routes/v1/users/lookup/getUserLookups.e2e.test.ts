@@ -103,7 +103,7 @@ describe("GET /v1/users/lookup", () => {
     const response = await fetch(`${helper.address}${endpoint}?usernameOrName=Lastname`, defaultRequest(encodedJwt))
     expect(response.status).toBe(OK)
     const body = (await response.json()) as unknown as UserLookupList
-    expect(body.users.sort((a, b) => b.id - a.id)).toEqual([expectedLookupOutput[0]])
+    expect(body.users).toEqual([expectedLookupOutput[0]])
   })
 
   it("returns list of user lookups when username matches", async () => {
