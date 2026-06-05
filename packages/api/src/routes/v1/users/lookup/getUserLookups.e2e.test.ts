@@ -36,71 +36,101 @@ describe("GET /v1/users/lookup", () => {
 
   const createDummyUsers = async () => {
     await createUsers(helper.postgres, 3, {
-      0: { forenames: "Forename10", id: 10, surname: "Surname10" },
-      1: { forenames: "Forename20", id: 20, surname: "Surname20" },
-      2: { forenames: "Forename30", id: 30, surname: "Surname30" }
+      0: { forenames: "John", id: 10, surname: "Smith", visibleForces: ["01"] },
+      1: { forenames: "Jane", id: 20, surname: "Doe", visibleForces: ["01"] },
+      2: { forenames: "Bob", id: 30, surname: "Jones", visibleForces: ["01"] },
+      3: { forenames: "Bill", id: 40, surname: "Surname40", visibleForces: ["02"] },
+      4: { forenames: "Charlie", id: 50, surname: "Surname50", visibleForces: ["02"] },
+      5: { forenames: "Diana", id: 60, surname: "Surname60", visibleForces: ["02"] }
     })
   }
 
   const expectedLookupOutput = [
-    { fullname: "Forename30 Surname30", id: 30 },
-    { fullname: "Forename10 Surname10", id: 10 },
-    { fullname: "Forename40 Surname40", id: 40 },
-    { fullname: "Forename20 Surname20", id: 20 }
+    { fullname: "Alice Lastname", id: 40 },
+    { fullname: "Bob Jones", id: 30 },
+    { fullname: "Jane Doe", id: 20 },
+    { fullname: "John Smith", id: 10 }
   ]
+
+  it("returns full list of user lookups when no search criteria provided, and only returns users in the same force", async () => {
+    createDummyUsers()
+
+    const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor], {
+      forenames: "Alice",
+      id: 40,
+      surname: "Lastname",
+      username: "supervisor3",
+      visibleForces: ["01"]
+    })
+
+    const response = await fetch(`${helper.address}${endpoint}`, defaultRequest(encodedJwt))
+
+    expect(response.status).toBe(OK)
+    const body = (await response.json()) as unknown as UserLookupList
+
+    expect(body.users.sort((a, b) => b.id - a.id)).toEqual(expectedLookupOutput)
+  })
 
   it("returns list of user lookups when forename matches", async () => {
     createDummyUsers()
 
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor], {
+      forenames: "Alice",
       id: 40,
-      username: "supervisor3"
+      surname: "Lastname",
+      username: "supervisor3",
+      visibleForces: ["01"]
     })
 
-    const response = await fetch(`${helper.address}${endpoint}?usernameOrName=Forename`, defaultRequest(encodedJwt))
+    const response = await fetch(`${helper.address}${endpoint}?usernameOrName=John`, defaultRequest(encodedJwt))
 
     expect(response.status).toBe(OK)
     const body = (await response.json()) as unknown as UserLookupList
-    expect(body.users).toEqual(expectedLookupOutput)
+    expect(body.users).toEqual([expectedLookupOutput[3]])
   })
 
   it("returns list of user lookups when surname matches", async () => {
     createDummyUsers()
 
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor], {
+      forenames: "Alice",
       id: 40,
-      username: "supervisor3"
+      surname: "Lastname",
+      username: "supervisor3",
+      visibleForces: ["01"]
     })
 
-    const response = await fetch(`${helper.address}${endpoint}?usernameOrName=Surname`, defaultRequest(encodedJwt))
+    const response = await fetch(`${helper.address}${endpoint}?usernameOrName=Lastname`, defaultRequest(encodedJwt))
     expect(response.status).toBe(OK)
     const body = (await response.json()) as unknown as UserLookupList
-    expect(body.users).toEqual(expectedLookupOutput)
+    expect(body.users.sort((a, b) => b.id - a.id)).toEqual([expectedLookupOutput[0]])
   })
 
   it("returns list of user lookups when username matches", async () => {
     createDummyUsers()
 
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor], {
+      forenames: "Alice",
       id: 40,
-      username: "supervisor3"
+      surname: "Lastname",
+      username: "supervisor3",
+      visibleForces: ["01"]
     })
 
-    const response = await fetch(`${helper.address}${endpoint}?usernameOrName=User`, defaultRequest(encodedJwt))
+    const response = await fetch(`${helper.address}${endpoint}?usernameOrName=supervisor3`, defaultRequest(encodedJwt))
 
     expect(response.status).toBe(OK)
     const body = (await response.json()) as unknown as UserLookupList
 
-    expect(body.users).toEqual([
-      { fullname: "Forename30 Surname30", id: 30 },
-      { fullname: "Forename10 Surname10", id: 10 },
-      { fullname: "Forename20 Surname20", id: 20 }
-    ])
+    expect(body.users).toEqual([expectedLookupOutput[0]])
   })
 
   it("returns an empty list of user lookups when no matches found", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor], {
-      username: "supervisor3"
+      forenames: "Alice",
+      surname: "Lastname",
+      username: "supervisor3",
+      visibleForces: ["01"]
     })
 
     const response = await fetch(
