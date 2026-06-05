@@ -70,11 +70,11 @@ const mapToRemandRequest = (
 ): RemandRequest => {
   const { forceStationCode, hearingDate, pncRemandStatus, bailConditions } = request
   const pncIdentifier = pncUpdateDataset.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier
-  const personUrn = preProcessPersonUrn(pncIdentifier) ?? ""
+  const longPersonUrn = preProcessPersonUrn(pncIdentifier) ?? ""
 
   return {
     ownerCode: forceStationCode,
-    personUrn,
+    longPersonUrn,
     remandDate: convertDate(hearingDate),
     appearanceResult: remandStatusByPncCode[pncRemandStatus],
     bailConditions: bailConditions.flatMap(mapBailConditions),

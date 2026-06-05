@@ -12,7 +12,7 @@ export const reasonForAppearanceSchema = z.enum(["Sentence Deferred", "Subsequen
 
 export const subsequentDisposalResultsRequestSchema = z.object({
   ownerCode: forceStationCodeSchema,
-  personUrn: z.string().nonempty(),
+  longPersonUrn: z.string().nonempty(),
   courtCaseReference: courtCaseReferenceSchema,
   court: courtSchema.optional(),
   appearanceDate: dateStringSchema,

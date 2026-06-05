@@ -68,7 +68,7 @@ const mapToAddDisposalResult = (
 
   return {
     ownerCode: asnQueryResponse.ownerCode,
-    personUrn: asnQueryResponse.personUrn,
+    longPersonUrn: asnQueryResponse.longPersonUrn,
     courtCaseReference: disposal.courtCaseReference,
     court: {
       courtIdentityType: "name",
