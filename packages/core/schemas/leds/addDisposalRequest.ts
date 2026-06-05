@@ -95,7 +95,7 @@ const referToCourtCaseSchema = z.object({
 
 export const addDisposalRequestSchema = z.object({
   ownerCode: forceStationCodeSchema,
-  personUrn: z.string().nonempty(),
+  longPersonUrn: z.string().nonempty(),
   courtCaseReference: courtCaseReferenceSchema,
   court: courtSchema.optional(),
   dateOfConviction: dateStringSchema,

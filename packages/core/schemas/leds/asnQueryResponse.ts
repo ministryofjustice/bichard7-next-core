@@ -63,7 +63,7 @@ export const disposalSchema = z.object({
 
 export const asnQueryResponseSchema = z.object({
   personId: z.string(),
-  personUrn: z.string(),
+  longPersonUrn: z.string(),
   reportId: z.string(),
   asn: z.string(),
   ownerCode: z.string(),

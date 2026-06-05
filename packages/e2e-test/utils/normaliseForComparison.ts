@@ -53,7 +53,7 @@ const normaliseForComparison = (data: Record<string, unknown> | undefined): Reco
   }
 
   // TODO: To be removed once ptiurn mapping is fixed
-  result.personUrn = "__STRIPPED_PERSON_URN__"
+  result.longPersonUrn = "__STRIPPED_PERSON_URN__"
 
   return dropUndefinedFields(result)
 }

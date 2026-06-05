@@ -15,7 +15,7 @@ export const convertPncJsonToLedsSubsequentDisposalRequest = (
   pncJson: PncSubsequentDisposalJson
 ): SubsequentDisposalResultsRequest => ({
   ownerCode: pncJson.forceStationCode,
-  personUrn: pncJson.pncIdentifier,
+  longPersonUrn: pncJson.pncIdentifier,
   courtCaseReference: pncJson.offences[0].courtCaseReference,
   court: {
     courtIdentityType: "code",

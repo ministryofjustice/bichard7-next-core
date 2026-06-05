@@ -110,7 +110,7 @@ const mapToPoliceQueryResult = (ledsQueryResponse: LedsAsnQueryResponse, checkNa
     checkName,
     personId: ledsQueryResponse.personId,
     reportId: ledsQueryResponse.reportId,
-    pncId: formatPersonUrn(ledsQueryResponse.personUrn),
+    pncId: formatPersonUrn(ledsQueryResponse.longPersonUrn),
     courtCases: mapToPoliceCourtCases(ledsQueryResponse.disposals),
     croNumber: undefined,
     penaltyCases: undefined
