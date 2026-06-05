@@ -20,20 +20,6 @@ describe("GET /v1/users/lookup", () => {
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 
-  beforeAll(async () => {
-    helper = await SetupAppEnd2EndHelper.setup()
-    app = helper.app
-  })
-
-  beforeEach(async () => {
-    await helper.postgres.clearDb()
-  })
-
-  afterAll(async () => {
-    await app.close()
-    await helper.postgres.close()
-  })
-
   const createDummyUsers = async () => {
     await createUsers(helper.postgres, 3, {
       0: { forenames: "John", id: 10, surname: "Smith", visibleForces: ["01"] },
@@ -52,9 +38,22 @@ describe("GET /v1/users/lookup", () => {
     { fullname: "John Smith", id: 10 }
   ]
 
-  it("returns full list of user lookups when no search criteria provided, and only returns users in the same force", async () => {
-    createDummyUsers()
+  beforeAll(async () => {
+    helper = await SetupAppEnd2EndHelper.setup()
+    app = helper.app
+  })
 
+  beforeEach(async () => {
+    await helper.postgres.clearDb()
+    await createDummyUsers()
+  })
+
+  afterAll(async () => {
+    await app.close()
+    await helper.postgres.close()
+  })
+
+  it("returns full list of user lookups when no search criteria provided, and only returns users in the same force", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor], {
       forenames: "Alice",
       id: 40,
@@ -72,8 +71,6 @@ describe("GET /v1/users/lookup", () => {
   })
 
   it("returns list of user lookups when forename matches", async () => {
-    createDummyUsers()
-
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor], {
       forenames: "Alice",
       id: 40,
@@ -90,8 +87,6 @@ describe("GET /v1/users/lookup", () => {
   })
 
   it("returns list of user lookups when surname matches", async () => {
-    createDummyUsers()
-
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor], {
       forenames: "Alice",
       id: 40,
@@ -107,8 +102,6 @@ describe("GET /v1/users/lookup", () => {
   })
 
   it("returns list of user lookups when username matches", async () => {
-    createDummyUsers()
-
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor], {
       forenames: "Alice",
       id: 40,
@@ -141,5 +134,45 @@ describe("GET /v1/users/lookup", () => {
     expect(response.status).toBe(OK)
     const body = (await response.json()) as unknown as UserLookupList
     expect(body.users).toHaveLength(0)
+  })
+
+  it("returns list of user lookups when search fuzzy matches", async () => {
+    const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor], {
+      forenames: "Alice",
+      id: 40,
+      surname: "Lastname",
+      username: "supervisor3",
+      visibleForces: ["01"]
+    })
+
+    const userNameMatchResponse = await fetch(
+      `${helper.address}${endpoint}?usernameOrName=erviso`,
+      defaultRequest(encodedJwt)
+    )
+
+    expect(userNameMatchResponse.status).toBe(OK)
+    const userNameMatchBody = (await userNameMatchResponse.json()) as unknown as UserLookupList
+
+    expect(userNameMatchBody.users).toEqual([expectedLookupOutput[0]])
+
+    const surnameMatchResponse = await fetch(
+      `${helper.address}${endpoint}?usernameOrName=astname`,
+      defaultRequest(encodedJwt)
+    )
+
+    expect(surnameMatchResponse.status).toBe(OK)
+    const surnameMatchBody = (await surnameMatchResponse.json()) as unknown as UserLookupList
+
+    expect(surnameMatchBody.users).toEqual([expectedLookupOutput[0]])
+
+    const firstNameMatchResponse = await fetch(
+      `${helper.address}${endpoint}?usernameOrName=ice`,
+      defaultRequest(encodedJwt)
+    )
+
+    expect(firstNameMatchResponse.status).toBe(OK)
+    const firstNameMatchBody = (await firstNameMatchResponse.json()) as unknown as UserLookupList
+
+    expect(firstNameMatchBody.users).toEqual([expectedLookupOutput[0]])
   })
 })
