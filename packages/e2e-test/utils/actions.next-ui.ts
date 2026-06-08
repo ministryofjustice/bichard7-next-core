@@ -32,7 +32,7 @@ export const clearFilters = async function (this: Bichard) {
 const filterByRecordName = async function (world: Bichard) {
   const name = world.getRecordName()
   const searchField = "input[name='defendantName']"
-  await world.browser.page.click(searchField, { clickCount: 3 })
+  await world.browser.page.click(searchField, { count: 3 })
   await world.browser.page.type(searchField, name)
   await Promise.all([world.browser.page.click("button#search"), world.browser.page.waitForNavigation()])
 }
