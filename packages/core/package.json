@@ -88,7 +88,7 @@
     "axios": "^1.17.0",
     "diff": "^9.0.0",
     "dynalite": "^4.0.0",
-    "fast-xml-parser": "^5.8.0",
+    "fast-xml-parser": "5.7.2",
     "jsonwebtoken": "^9.0.3",
     "lodash.differencewith": "^4.5.0",
     "lodash.isequal": "^4.5.0",
