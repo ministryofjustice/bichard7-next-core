@@ -1,21 +1,30 @@
 @startuml
-set separator none
-title Bichard - Event Handler Step Function - Components
+title <size:24>Component View: Bichard - Event Handler Step Function</size>
 
+set separator none
 left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
 
 !include <C4/C4>
 !include <C4/C4_Context>
 !include <C4/C4_Container>
 !include <C4/C4_Component>
 
-ContainerQueue(Bichard.ActiveMQ, "Active MQ", $techn="Active MQ", $descr="", $tags="", $link="")
-Container(Bichard.AuditLogAPI, "Audit Log API", $techn="Typescript", $descr="", $tags="", $link="")
+System_Boundary("Bichard_boundary", "Bichard", $tags="") {
+  Container_Boundary("Bichard.EventHandlerStepFunction_boundary", "Event Handler Step Function", $tags="") {
+    Component(Bichard.EventHandlerStepFunction.MQPoller, "MQ Poller", $techn="", $descr="Typescript", $tags="", $link="")
+    ComponentQueue(Bichard.EventHandlerStepFunction.EventS3bucket, "Event S3 bucket", $techn="", $descr="", $tags="", $link="")
+    Component(Bichard.EventHandlerStepFunction.WritetoAuditLog, "Write to Audit Log", $techn="Typescript", $descr="", $tags="", $link="")
+  }
 
-Container_Boundary("Bichard.EventHandlerStepFunction_boundary", "Event Handler Step Function", $tags="") {
-  Component(Bichard.EventHandlerStepFunction.MQPoller, "MQ Poller", $techn="", $descr="Typescript", $tags="", $link="")
-  ComponentQueue(Bichard.EventHandlerStepFunction.EventS3bucket, "Event S3 bucket", $techn="", $descr="", $tags="", $link="")
-  Component(Bichard.EventHandlerStepFunction.WritetoAuditLog, "Write to Audit Log", $techn="Typescript", $descr="", $tags="", $link="")
+  ContainerQueue(Bichard.ActiveMQ, "Active MQ", $techn="Active MQ", $descr="", $tags="", $link="")
+  Container(Bichard.AuditLogAPI, "Audit Log API", $techn="Typescript", $descr="", $tags="", $link="")
 }
 
 Rel(Bichard.ActiveMQ, Bichard.EventHandlerStepFunction.MQPoller, "", $techn="", $tags="", $link="")
@@ -24,4 +33,5 @@ Rel(Bichard.EventHandlerStepFunction.EventS3bucket, Bichard.EventHandlerStepFunc
 Rel(Bichard.EventHandlerStepFunction.WritetoAuditLog, Bichard.AuditLogAPI, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
+hide stereotypes
 @enduml

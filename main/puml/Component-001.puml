@@ -1,29 +1,38 @@
 @startuml
-set separator none
-title Bichard - Conductor - Components
+title <size:24>Component View: Bichard - Conductor</size>
 
+set separator none
 top to bottom direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
 
 !include <C4/C4>
 !include <C4/C4_Context>
 !include <C4/C4_Container>
 !include <C4/C4_Component>
 
-Container(Bichard.MessageTransferLambda, "Message Transfer Lambda", $techn="Typescript", $descr="", $tags="", $link="")
-ContainerDb(Bichard.BichardDatabase, "Bichard Database", $techn="PostgreSQL", $descr="", $tags="", $link="")
-Container(Bichard.EmailSystem, "Email System", $techn="Postfix", $descr="", $tags="", $link="")
-Container(Bichard.PNCAPI, "PNC API", $techn="Java EE", $descr="", $tags="", $link="")
-Container(Bichard.BichardAPI, "Bichard API", $techn="TypeScript, Fastify & Zod", $descr="An API to remove DB actions from UI and to be Audit Logs", $tags="", $link="")
+System_Boundary("Bichard_boundary", "Bichard", $tags="") {
+  Container_Boundary("Bichard.Conductor_boundary", "Conductor", $tags="") {
+    AddBoundaryTag("Core Worker", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
+    Boundary(group_1, "Core Worker", $tags="Core Worker") {
+      Component(Bichard.Conductor.IncomingMessageHandler, "Incoming Message Handler", $techn="Typescript", $descr="", $tags="", $link="")
+      Component(Bichard.Conductor.Phase1, "Phase 1", $techn="TypeScript", $descr="", $tags="", $link="")
+      Component(Bichard.Conductor.Phase2, "Phase 2", $techn="TypeScript", $descr="", $tags="", $link="")
+      Component(Bichard.Conductor.Phase3, "Phase 3", $techn="TypeScript", $descr="", $tags="", $link="")
+    }
 
-Container_Boundary("Bichard.Conductor_boundary", "Conductor", $tags="") {
-  AddBoundaryTag("Core Worker", $borderColor="#cccccc", $fontColor="#cccccc", $borderStyle="dashed")
-  Boundary(group_1, "Core Worker", $tags="Core Worker") {
-    Component(Bichard.Conductor.IncomingMessageHandler, "Incoming Message Handler", $techn="Typescript", $descr="", $tags="", $link="")
-    Component(Bichard.Conductor.Phase1, "Phase 1", $techn="TypeScript", $descr="", $tags="", $link="")
-    Component(Bichard.Conductor.Phase2, "Phase 2", $techn="TypeScript", $descr="", $tags="", $link="")
-    Component(Bichard.Conductor.Phase3, "Phase 3", $techn="TypeScript", $descr="", $tags="", $link="")
   }
 
+  Container(Bichard.MessageTransferLambda, "Message Transfer Lambda", $techn="Typescript", $descr="", $tags="", $link="")
+  ContainerDb(Bichard.BichardDatabase, "Bichard Database", $techn="PostgreSQL", $descr="", $tags="", $link="")
+  Container(Bichard.EmailSystem, "Email System", $techn="Postfix", $descr="", $tags="", $link="")
+  Container(Bichard.PNCAPI, "PNC API", $techn="Java EE", $descr="", $tags="", $link="")
+  Container(Bichard.BichardAPI, "Bichard API", $techn="TypeScript, Fastify & Zod", $descr="An API to remove DB actions from UI and to be Audit Logs", $tags="", $link="")
 }
 
 Rel(Bichard.MessageTransferLambda, Bichard.Conductor.IncomingMessageHandler, "", $techn="", $tags="", $link="")
@@ -41,4 +50,5 @@ Rel(Bichard.BichardAPI, Bichard.Conductor.Phase2, "Resubmits court case", $techn
 Rel(Bichard.BichardAPI, Bichard.BichardDatabase, "Reads from / Writes to", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
+hide stereotypes
 @enduml

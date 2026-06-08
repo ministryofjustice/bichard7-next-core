@@ -1,8 +1,15 @@
 @startuml
-set separator none
-title Bichard - LEDS Proxy - Components
+title <size:24>Component View: Bichard - LEDS Proxy</size>
 
+set separator none
 left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
 
 !include <C4/C4>
 !include <C4/C4_Context>
@@ -11,11 +18,14 @@ left to right direction
 
 System(LEDS, "LEDS", $descr="Law Enforcement Data System", $tags="", $link="")
 System(NIAM, "NIAM", $descr="National Identity Access Management service", $tags="", $link="")
-Container(Bichard.BichardAPI, "Bichard API", $techn="TypeScript, Fastify & Zod", $descr="An API to remove DB actions from UI and to be Audit Logs", $tags="", $link="")
 
-Container_Boundary("Bichard.LEDSProxy_boundary", "LEDS Proxy", $tags="") {
-  Component(Bichard.LEDSProxy.ProxyLambda, "Proxy Lambda", $techn="", $descr="", $tags="", $link="")
-  Component(Bichard.LEDSProxy.LEDSTransitGateway, "LEDS Transit Gateway", $techn="", $descr="Access to LEDS environment is via a Transit Gateway managed by the LEDS team", $tags="", $link="")
+System_Boundary("Bichard_boundary", "Bichard", $tags="") {
+  Container_Boundary("Bichard.LEDSProxy_boundary", "LEDS Proxy", $tags="") {
+    Component(Bichard.LEDSProxy.ProxyLambda, "Proxy Lambda", $techn="", $descr="", $tags="", $link="")
+    Component(Bichard.LEDSProxy.LEDSTransitGateway, "LEDS Transit Gateway", $techn="", $descr="Access to LEDS environment is via a Transit Gateway managed by the LEDS team", $tags="", $link="")
+  }
+
+  Container(Bichard.BichardAPI, "Bichard API", $techn="TypeScript, Fastify & Zod", $descr="An API to remove DB actions from UI and to be Audit Logs", $tags="", $link="")
 }
 
 Rel(Bichard.BichardAPI, Bichard.LEDSProxy.ProxyLambda, "Encrypted via HTTPS", $techn="", $tags="", $link="")
@@ -24,4 +34,5 @@ Rel(Bichard.LEDSProxy.ProxyLambda, Bichard.LEDSProxy.LEDSTransitGateway, "", $te
 Rel(Bichard.LEDSProxy.LEDSTransitGateway, LEDS, "", $techn="Encrypted via mTLS", $tags="", $link="")
 
 SHOW_LEGEND(true)
+hide stereotypes
 @enduml

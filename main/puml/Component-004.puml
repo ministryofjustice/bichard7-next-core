@@ -1,23 +1,32 @@
 @startuml
-set separator none
-title Bichard - Reporting - Components
+title <size:24>Component View: Bichard - Reporting</size>
 
+set separator none
 left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
 
 !include <C4/C4>
 !include <C4/C4_Context>
 !include <C4/C4_Container>
 !include <C4/C4_Component>
 
-ContainerDb(Bichard.BichardDatabase, "Bichard Database", $techn="PostgreSQL", $descr="", $tags="", $link="")
-Container(Bichard.StaticFileService, "Static File Service", $techn="", $descr="", $tags="", $link="")
-Container(Bichard.BichardAPI, "Bichard API", $techn="TypeScript, Fastify & Zod", $descr="An API to remove DB actions from UI and to be Audit Logs", $tags="", $link="")
+System_Boundary("Bichard_boundary", "Bichard", $tags="") {
+  Container_Boundary("Bichard.Reporting_boundary", "Reporting", $tags="") {
+    Component(Bichard.Reporting.AutomationReport, "Automation Report", $techn="", $descr="", $tags="", $link="")
+    Component(Bichard.Reporting.CommonPlatformReport, "Common Platform Report", $techn="", $descr="", $tags="", $link="")
+    Component(Bichard.Reporting.MPSReport, "MPS Report", $techn="", $descr="", $tags="", $link="")
+    Component(Bichard.Reporting.TopExceptionsReport, "Top Exceptions Report", $techn="", $descr="", $tags="", $link="")
+  }
 
-Container_Boundary("Bichard.Reporting_boundary", "Reporting", $tags="") {
-  Component(Bichard.Reporting.AutomationReport, "Automation Report", $techn="", $descr="", $tags="", $link="")
-  Component(Bichard.Reporting.CommonPlatformReport, "Common Platform Report", $techn="", $descr="", $tags="", $link="")
-  Component(Bichard.Reporting.MPSReport, "MPS Report", $techn="", $descr="", $tags="", $link="")
-  Component(Bichard.Reporting.TopExceptionsReport, "Top Exceptions Report", $techn="", $descr="", $tags="", $link="")
+  ContainerDb(Bichard.BichardDatabase, "Bichard Database", $techn="PostgreSQL", $descr="", $tags="", $link="")
+  Container(Bichard.StaticFileService, "Static File Service", $techn="", $descr="", $tags="", $link="")
+  Container(Bichard.BichardAPI, "Bichard API", $techn="TypeScript, Fastify & Zod", $descr="An API to remove DB actions from UI and to be Audit Logs", $tags="", $link="")
 }
 
 Rel(Bichard.Reporting.AutomationReport, Bichard.BichardAPI, "", $techn="", $tags="", $link="")
@@ -28,4 +37,5 @@ Rel(Bichard.Reporting.TopExceptionsReport, Bichard.StaticFileService, "", $techn
 Rel(Bichard.BichardAPI, Bichard.BichardDatabase, "Reads from / Writes to", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
+hide stereotypes
 @enduml

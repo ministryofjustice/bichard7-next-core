@@ -1,8 +1,15 @@
 @startuml
-set separator none
-title Hybrid Bichard
+title <size:24>Hybrid Bichard</size>
 
-top to bottom direction
+set separator none
+left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
 
 !include <C4/C4>
 !include <C4/C4_Context>
@@ -84,4 +91,5 @@ Rel(Bichard.AuditLogAPI, Bichard.DynamoDB, "", $techn="", $tags="", $link="")
 Rel(Bichard.AuditLogAPI, Bichard.BichardDatabase, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
+hide stereotypes
 @enduml

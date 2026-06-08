@@ -1,8 +1,15 @@
 @startuml
-set separator none
-title Bichard - Monitoring - Components
+title <size:24>Component View: Bichard - Monitoring</size>
 
+set separator none
 left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
 
 !include <C4/C4>
 !include <C4/C4_Context>
@@ -11,11 +18,14 @@ left to right direction
 System(Slack, "Slack", $descr="An instant messaging service used by Made Tech", $tags="", $link="")
 System(PagerDuty, "PagerDuty", $descr="An alert tool for instances when the systems trigger an alarm", $tags="", $link="")
 
-Container_Boundary("Bichard.Monitoring_boundary", "Monitoring", $tags="") {
-  Component(Bichard.Monitoring.CloudWatchLogs, "CloudWatch Logs", $techn="", $descr="Logs gathered from all AWS services", $tags="", $link="")
-  Component(Bichard.Monitoring.CloudWatchMetrics, "CloudWatch Metrics", $techn="", $descr="", $tags="", $link="")
-  Component(Bichard.Monitoring.Slackmessagehandler, "Slack message handler", $techn="", $descr="", $tags="", $link="")
-  ComponentQueue(Bichard.Monitoring.SNS, "SNS", $techn="", $descr="", $tags="", $link="")
+System_Boundary("Bichard_boundary", "Bichard", $tags="") {
+  Container_Boundary("Bichard.Monitoring_boundary", "Monitoring", $tags="") {
+    Component(Bichard.Monitoring.CloudWatchLogs, "CloudWatch Logs", $techn="", $descr="Logs gathered from all AWS services", $tags="", $link="")
+    Component(Bichard.Monitoring.CloudWatchMetrics, "CloudWatch Metrics", $techn="", $descr="", $tags="", $link="")
+    Component(Bichard.Monitoring.Slackmessagehandler, "Slack message handler", $techn="", $descr="", $tags="", $link="")
+    ComponentQueue(Bichard.Monitoring.SNS, "SNS", $techn="", $descr="", $tags="", $link="")
+  }
+
 }
 
 Rel(Bichard.Monitoring.CloudWatchMetrics, Bichard.Monitoring.SNS, "", $techn="", $tags="", $link="")
@@ -24,4 +34,5 @@ Rel(Bichard.Monitoring.SNS, Bichard.Monitoring.Slackmessagehandler, "Sends messa
 Rel(Bichard.Monitoring.Slackmessagehandler, Slack, "Sends message", $techn="via TLS Webhook", $tags="", $link="")
 
 SHOW_LEGEND(true)
+hide stereotypes
 @enduml

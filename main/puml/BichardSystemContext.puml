@@ -1,8 +1,15 @@
 @startuml
-set separator none
-title Bichard - System Context
+title <size:24>System Context View: Bichard</size>
 
+set separator none
 left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
 
 !include <C4/C4>
 !include <C4/C4_Context>
@@ -40,4 +47,5 @@ Rel(Bichard, CJSM, "via Internet", $techn="Sends verification code / Notifies th
 Rel(ExISS, Bichard, "", $techn="", $tags="", $link="")
 
 SHOW_LEGEND(true)
+hide stereotypes
 @enduml

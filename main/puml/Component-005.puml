@@ -1,20 +1,29 @@
 @startuml
-set separator none
-title Bichard - Static File Service - Components
+title <size:24>Component View: Bichard - Static File Service</size>
 
+set separator none
 left to right direction
+
+<style>
+  root {
+    BackgroundColor: #ffffff
+    FontColor: #444444
+  }
+</style>
 
 !include <C4/C4>
 !include <C4/C4_Context>
 !include <C4/C4_Container>
 !include <C4/C4_Component>
 
-Container(Bichard.NginxAuthProxy, "Nginx Auth Proxy", $techn="Nginx", $descr="", $tags="", $link="")
-Container(Bichard.Reporting, "Reporting", $techn="", $descr="", $tags="", $link="")
+System_Boundary("Bichard_boundary", "Bichard", $tags="") {
+  Container_Boundary("Bichard.StaticFileService_boundary", "Static File Service", $tags="") {
+    Component(Bichard.StaticFileService.S3WebProxy, "S3 Web Proxy", $techn="", $descr="Web server for serving files stored in an S3 bucket", $tags="", $link="")
+    Component(Bichard.StaticFileService.StaticFilesS3Bucket, "Static Files S3 Bucket", $techn="", $descr="", $tags="", $link="")
+  }
 
-Container_Boundary("Bichard.StaticFileService_boundary", "Static File Service", $tags="") {
-  Component(Bichard.StaticFileService.S3WebProxy, "S3 Web Proxy", $techn="", $descr="Web server for serving files stored in an S3 bucket", $tags="", $link="")
-  Component(Bichard.StaticFileService.StaticFilesS3Bucket, "Static Files S3 Bucket", $techn="", $descr="", $tags="", $link="")
+  Container(Bichard.NginxAuthProxy, "Nginx Auth Proxy", $techn="Nginx", $descr="", $tags="", $link="")
+  Container(Bichard.Reporting, "Reporting", $techn="", $descr="", $tags="", $link="")
 }
 
 Rel(Bichard.Reporting, Bichard.StaticFileService.StaticFilesS3Bucket, "", $techn="Stores generated reports in the S3 bucket", $tags="", $link="")
@@ -22,4 +31,5 @@ Rel(Bichard.StaticFileService.S3WebProxy, Bichard.StaticFileService.StaticFilesS
 Rel(Bichard.NginxAuthProxy, Bichard.StaticFileService.S3WebProxy, "", $techn="Fetches reports and help pages", $tags="", $link="")
 
 SHOW_LEGEND(true)
+hide stereotypes
 @enduml
