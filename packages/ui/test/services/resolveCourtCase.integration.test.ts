@@ -97,7 +97,7 @@ describe("resolveCourtCase", () => {
       user
     ).catch((error) => error)
 
-    expect(courtCasesByOrganisationUnitQuery).toHaveBeenCalledTimes(2)
+    expect(courtCasesByOrganisationUnitQuery).toHaveBeenCalledTimes(1)
     expect(courtCasesByOrganisationUnitQuery).toHaveBeenCalledWith(expect.any(Object), user)
   })
 
@@ -262,7 +262,7 @@ describe("resolveCourtCase", () => {
       }
 
       const result = await resolveCourtCase(dataSource, courtCase, resolution, user).catch((error) => error)
-      expect((result as Error).message).toBe("Failed to resolve: Case not found")
+      expect((result as Error).message).toBe("Failed to resolve case")
 
       const records = await dataSource
         .getRepository(CourtCase)
