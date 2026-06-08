@@ -51,7 +51,7 @@
     "postgres": "3.4.9",
     "promise-poller": "^1.9.1",
     "stompit": "^1.0.0",
-    "undici": "^6.26.0",
+    "undici": "^8.4.1",
     "ws": "^8.21.0",
     "zod": "^4.4.3",
     "zod-validation-error": "^5.0.0"
