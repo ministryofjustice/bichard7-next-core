@@ -30,6 +30,7 @@ Feature: {183} BR7 R5.3-RCD496 - Multiple CCR group offence added in court_2nd J
 			And "input-message-1" is received
 		When I view the list of exceptions
 		Then there are no triggers raised for "Liverpool Martin"
+			And I wait "4" seconds
 		When "input-message-2" is received
 		Then the PNC updates the record
 			And I see trigger "PR06 - Imprisoned" in the exception list table

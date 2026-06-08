@@ -8,13 +8,13 @@
           "additionalOffenceMarker": false,
           "adjudication": "O",
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100002615Q",
+          "arrestSummonsReference": "26/0000/00/100003511P",
           "chargeStatusMarker": "C",
           "cjsOffenceCode": "TH68006",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/2576/000668C",
-          "crimeReference": "U9YRSRXNOHWRA2Y",
+          "courtCaseReferenceNumber": "26/2576/001124Y",
+          "crimeReference": "FIJCPGWUM9EUA 0",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -31,11 +31,6 @@
           "qualifiedCjsCode": "TH68006",
           "results": [
             {
-              "disposalCode": "1028",
-              "disposalQualifierCodes": [],
-              "effectiveDate": "2011-10-26"
-            },
-            {
               "disposalCode": "2007",
               "disposalQualifierCodes": []
             }
@@ -48,13 +43,13 @@
           "additionalOffenceMarker": false,
           "adjudication": "O",
           "arrestChargeNumber": 2,
-          "arrestSummonsReference": "26/0000/00/100002615Q",
+          "arrestSummonsReference": "26/0000/00/100003511P",
           "chargeStatusMarker": "C",
           "cjsOffenceCode": "TH68151",
           "committedOnBail": false,
           "courtCaseChargeNumber": 2,
-          "courtCaseReferenceNumber": "26/2576/000668C",
-          "crimeReference": "1WY9HTPWTLZ3IBE",
+          "courtCaseReferenceNumber": "26/2576/001124Y",
+          "crimeReference": "WEDBT7OH6UH0COH",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -71,11 +66,6 @@
           "qualifiedCjsCode": "TH68151",
           "results": [
             {
-              "disposalCode": "1028",
-              "disposalQualifierCodes": [],
-              "effectiveDate": "2011-10-26"
-            },
-            {
               "disposalCode": "2007",
               "disposalQualifierCodes": []
             }
@@ -89,7 +79,7 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/000668C",
+      "courtCaseReference": "26/2576/001124Y",
       "subsequentAppearances": [
         {
           "appearanceNumber": 1,
@@ -99,13 +89,13 @@
               "additionalOffenceMarker": false,
               "adjudication": "O",
               "arrestChargeNumber": 1,
-              "arrestSummonsReference": "26/0000/00/100002615Q",
+              "arrestSummonsReference": "26/0000/00/100003511P",
               "chargeStatusMarker": "C",
               "cjsOffenceCode": "TH68006",
               "committedOnBail": false,
               "courtCaseChargeNumber": 1,
-              "courtCaseReferenceNumber": "26/2576/000668C",
-              "crimeReference": "U9YRSRXNOHWRA2Y",
+              "courtCaseReferenceNumber": "26/2576/001124Y",
+              "crimeReference": "FIJCPGWUM9EUA 0",
               "forceStationChargeOrig": "01ZD",
               "legislationQualifier": [],
               "locationAddress": {
@@ -121,6 +111,11 @@
               "plea": "3",
               "qualifiedCjsCode": "TH68006",
               "results": [
+                {
+                  "disposalCode": "1028",
+                  "disposalQualifierCodes": [],
+                  "effectiveDate": "2011-10-26"
+                },
                 {
                   "disposalCode": "2063",
                   "disposalQualifierCodes": []
@@ -139,13 +134,13 @@
               "additionalOffenceMarker": false,
               "adjudication": "O",
               "arrestChargeNumber": 2,
-              "arrestSummonsReference": "26/0000/00/100002615Q",
+              "arrestSummonsReference": "26/0000/00/100003511P",
               "chargeStatusMarker": "C",
               "cjsOffenceCode": "TH68151",
               "committedOnBail": false,
               "courtCaseChargeNumber": 2,
-              "courtCaseReferenceNumber": "26/2576/000668C",
-              "crimeReference": "1WY9HTPWTLZ3IBE",
+              "courtCaseReferenceNumber": "26/2576/001124Y",
+              "crimeReference": "WEDBT7OH6UH0COH",
               "forceStationChargeOrig": "01ZD",
               "legislationQualifier": [],
               "locationAddress": {
@@ -161,6 +156,11 @@
               "plea": "3",
               "qualifiedCjsCode": "TH68151",
               "results": [
+                {
+                  "disposalCode": "1028",
+                  "disposalQualifierCodes": [],
+                  "effectiveDate": "2011-10-26"
+                },
                 {
                   "disposalCode": "2063",
                   "disposalQualifierCodes": []
