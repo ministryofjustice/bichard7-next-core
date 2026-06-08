@@ -28,7 +28,6 @@ const reallocateCourtCaseToForce = async (
   note?: string
 ): Promise<UpdateResult | Error> => {
   return await dataSource
-    //put the entire func from line 30-149 here
     .transaction(async (entityManager): Promise<void> => {
       const events: AuditLogEvent[] = []
 
