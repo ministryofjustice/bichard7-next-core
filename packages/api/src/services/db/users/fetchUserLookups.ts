@@ -4,6 +4,7 @@ import type { User, UserRow } from "@moj-bichard7/common/types/User"
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import mapUserRowToUser from "../mapUserRowToUser"
+import filterUsersByVisibleForces from "./filterUsersByVisibleForces"
 
 export type FetchUsersResult = {
   users: User[]
@@ -20,28 +21,14 @@ export default async (
     return { users: [] }
   }
 
-  const forceClauses = user.visibleForces.map((f) => {
-    const trimmedForceCode = f.replace(/^0+(\d+)/, "$1")
+  const visibleForcesFilter = filterUsersByVisibleForces(database, user.visibleForces)
 
-    const visibleForce = String.raw`\y0+${trimmedForceCode}\y`
-
-    return sql`u.visible_forces ~ ${visibleForce}`
-  })
-
-  let forceWhere = forceClauses[0]
-
-  if (forceClauses.length > 1) {
-    for (let i = 1; i <= forceClauses.length - 1; i++) {
-      forceWhere = sql`${forceWhere} OR ${forceClauses[i]}`
-    }
-  }
-
-  let finalWhere = sql`(${forceWhere})`
+  let where = sql`(${visibleForcesFilter})`
 
   if (usernameOrName && usernameOrName.trim() !== "") {
     const fuzzyName = `%${usernameOrName.trim()}%`
     const nameWhere = sql`u.username ILIKE ${fuzzyName} OR u.forenames ILIKE ${fuzzyName} OR u.surname ILIKE ${fuzzyName}`
-    finalWhere = sql`${finalWhere} AND (${nameWhere})`
+    where = sql`${where} AND (${nameWhere})`
   }
 
   const userResult = await database.connection<UserRow[]>`
@@ -52,7 +39,7 @@ export default async (
       FROM
         br7own.users u
       WHERE
-          ${finalWhere}`
+          ${where}`
 
   const users = userResult.map((u) => mapUserRowToUser(u))
 

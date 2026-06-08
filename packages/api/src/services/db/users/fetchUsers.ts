@@ -4,6 +4,7 @@ import type { User, UserRow } from "@moj-bichard7/common/types/User"
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import mapUserRowToUser from "../mapUserRowToUser"
+import filterUsersByVisibleForces from "./filterUsersByVisibleForces"
 
 export type FetchUsersResult = {
   users: User[]
@@ -16,21 +17,9 @@ export default async (database: DatabaseConnection, user: User): PromiseResult<F
     return { users: [] }
   }
 
-  const forceClauses = user.visibleForces.map((f) => {
-    const trimmedForceCode = f.replace(/^0+(\d+)/, "$1")
+  const visibleForcesFilter = filterUsersByVisibleForces(database, user.visibleForces)
 
-    const visibleForce = String.raw`\y0+${trimmedForceCode}\y`
-
-    return sql`u.visible_forces ~ ${visibleForce}`
-  })
-
-  let where = forceClauses[0]
-
-  if (forceClauses.length > 1) {
-    for (let i = 1; i <= forceClauses.length - 1; i++) {
-      where = sql`${where} OR ${forceClauses[i]}`
-    }
-  }
+  const where = sql`(${visibleForcesFilter})`
 
   const userResult = await database.connection<UserRow[]>`
       SELECT

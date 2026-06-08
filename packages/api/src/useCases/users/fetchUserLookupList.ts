@@ -27,7 +27,7 @@ const fetchUserLookupList = async (
 
   if (isError(users)) {
     logger.error(users)
-    throw users
+    return users
   }
 
   const usersDto = users.users.map((u) => convertUserToLookupDto(u))
