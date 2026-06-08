@@ -15,6 +15,7 @@ import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import insertNotes from "./insertNotes"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
+import { retryTransaction } from "./retryTransaction"
 
 const generateTriggersAttributes = (triggers: Trigger[]) =>
   triggers.reduce((acc: Record<string, unknown>, trigger, index) => {
@@ -32,135 +33,137 @@ const resolveTriggers = async (
 ): Promise<UpdateResult | Error> => {
   const resolver = user.username
 
-  return await dataSource.transaction(async (entityManager) => {
-    const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
+  return await retryTransaction(() =>
+    dataSource.transaction(async (entityManager) => {
+      const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
 
-    if (isError(courtCase)) {
-      throw courtCase
-    }
-
-    if (!courtCase) {
-      throw Error("Court case not found")
-    }
-
-    const triggersToResolve = courtCase.triggers.filter(
-      (trigger) => triggerIds.includes(trigger.triggerId) && !trigger.resolvedAt
-    )
-
-    if (triggersToResolve.length === 0) {
-      return { raw: [], affected: 0, generatedMaps: [] } as UpdateResult
-    }
-
-    const unresolvedTriggerIds = triggersToResolve.map((trigger) => trigger.triggerId)
-
-    if (!courtCase.triggersAreLockedByCurrentUser(resolver)) {
-      throw Error(`Triggers are not locked by the user - ${courtCaseId}`)
-    }
-
-    const updateTriggersResult = await entityManager.getRepository(Trigger).update(
-      {
-        triggerId: In(unresolvedTriggerIds),
-        resolvedAt: IsNull(),
-        resolvedBy: IsNull()
-      },
-      {
-        resolvedAt: new Date(),
-        resolvedBy: resolver,
-        status: "Resolved"
-      }
-    )
-
-    if (updateTriggersResult.affected && updateTriggersResult.affected !== unresolvedTriggerIds.length) {
-      throw Error(`Failed to resolve triggers - ${courtCaseId}`)
-    }
-
-    const addNoteResult = await insertNotes(
-      entityManager,
-      getSystemNotesForTriggers(triggersToResolve, resolver, courtCase.errorId)
-    )
-
-    if (isError(addNoteResult)) {
-      throw addNoteResult
-    }
-
-    const events: AuditLogEvent[] = []
-
-    events.push(
-      getAuditLogEvent(EventCode.TriggersResolved, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
-        user: user.username,
-        auditLogVersion: 2,
-        "Number Of Triggers": unresolvedTriggerIds.length,
-        ...generateTriggersAttributes(triggersToResolve)
-      })
-    )
-
-    const allTriggers = await entityManager.getRepository(Trigger).find({ where: { errorId: courtCaseId } })
-    if (isError(allTriggers)) {
-      throw allTriggers
-    }
-
-    const triggersVisibleToUser = user.excludedTriggers
-      ? allTriggers.filter((trigger) => !user.excludedTriggers.includes(trigger.triggerCode))
-      : allTriggers
-
-    const areAllTriggersResolved = allTriggers.filter((trigger) => trigger.resolvedAt).length === allTriggers.length
-
-    const allTriggersVisibleToUserResolved =
-      triggersVisibleToUser.filter((trigger) => trigger.resolvedAt).length === triggersVisibleToUser.length
-
-    if (areAllTriggersResolved) {
-      const hasUnresolvedExceptions = courtCase.errorCount > 0 && courtCase.errorResolvedTimestamp === null
-      const updateCaseResult = await entityManager
-        .getRepository(CourtCase)
-        .update(
-          {
-            errorId: courtCaseId,
-            triggerResolvedBy: IsNull(),
-            triggerResolvedTimestamp: IsNull()
-          },
-          {
-            triggerResolvedBy: resolver,
-            triggerResolvedTimestamp: new Date(),
-            resolutionTimestamp: hasUnresolvedExceptions ? null : new Date(),
-            triggerStatus: "Resolved"
-          }
-        )
-        .catch((error) => error)
-
-      if (isError(updateCaseResult)) {
-        throw updateCaseResult
+      if (isError(courtCase)) {
+        throw courtCase
       }
 
-      if (updateCaseResult.affected && updateCaseResult.affected > 0) {
-        events.push(
-          getAuditLogEvent(EventCode.AllTriggersResolved, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
-            user: user.username,
-            auditLogVersion: 2,
-            "Number Of Triggers": allTriggers.length,
-            ...generateTriggersAttributes(allTriggers)
-          })
-        )
+      if (!courtCase) {
+        throw Error("Court case not found")
       }
-    }
 
-    if (allTriggersVisibleToUserResolved) {
-      const unlockResult = await updateLockStatusToUnlocked(
-        entityManager,
-        courtCase,
-        user,
-        UnlockReason.Trigger,
-        events
+      const triggersToResolve = courtCase.triggers.filter(
+        (trigger) => triggerIds.includes(trigger.triggerId) && !trigger.resolvedAt
       )
 
-      if (isError(unlockResult)) {
-        throw unlockResult
+      if (triggersToResolve.length === 0) {
+        return { raw: [], affected: 0, generatedMaps: [] } as UpdateResult
       }
-    }
 
-    await storeMessageAuditLogEvents(courtCase.messageId, events)
+      const unresolvedTriggerIds = triggersToResolve.map((trigger) => trigger.triggerId)
 
-    return updateTriggersResult
-  })
+      if (!courtCase.triggersAreLockedByCurrentUser(resolver)) {
+        throw Error(`Triggers are not locked by the user - ${courtCaseId}`)
+      }
+
+      const updateTriggersResult = await entityManager.getRepository(Trigger).update(
+        {
+          triggerId: In(unresolvedTriggerIds),
+          resolvedAt: IsNull(),
+          resolvedBy: IsNull()
+        },
+        {
+          resolvedAt: new Date(),
+          resolvedBy: resolver,
+          status: "Resolved"
+        }
+      )
+
+      if (updateTriggersResult.affected && updateTriggersResult.affected !== unresolvedTriggerIds.length) {
+        throw Error(`Failed to resolve triggers - ${courtCaseId}`)
+      }
+
+      const addNoteResult = await insertNotes(
+        entityManager,
+        getSystemNotesForTriggers(triggersToResolve, resolver, courtCase.errorId)
+      )
+
+      if (isError(addNoteResult)) {
+        throw addNoteResult
+      }
+
+      const events: AuditLogEvent[] = []
+
+      events.push(
+        getAuditLogEvent(EventCode.TriggersResolved, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
+          user: user.username,
+          auditLogVersion: 2,
+          "Number Of Triggers": unresolvedTriggerIds.length,
+          ...generateTriggersAttributes(triggersToResolve)
+        })
+      )
+
+      const allTriggers = await entityManager.getRepository(Trigger).find({ where: { errorId: courtCaseId } })
+      if (isError(allTriggers)) {
+        throw allTriggers
+      }
+
+      const triggersVisibleToUser = user.excludedTriggers
+        ? allTriggers.filter((trigger) => !user.excludedTriggers.includes(trigger.triggerCode))
+        : allTriggers
+
+      const areAllTriggersResolved = allTriggers.filter((trigger) => trigger.resolvedAt).length === allTriggers.length
+
+      const allTriggersVisibleToUserResolved =
+        triggersVisibleToUser.filter((trigger) => trigger.resolvedAt).length === triggersVisibleToUser.length
+
+      if (areAllTriggersResolved) {
+        const hasUnresolvedExceptions = courtCase.errorCount > 0 && courtCase.errorResolvedTimestamp === null
+        const updateCaseResult = await entityManager
+          .getRepository(CourtCase)
+          .update(
+            {
+              errorId: courtCaseId,
+              triggerResolvedBy: IsNull(),
+              triggerResolvedTimestamp: IsNull()
+            },
+            {
+              triggerResolvedBy: resolver,
+              triggerResolvedTimestamp: new Date(),
+              resolutionTimestamp: hasUnresolvedExceptions ? null : new Date(),
+              triggerStatus: "Resolved"
+            }
+          )
+          .catch((error) => error)
+
+        if (isError(updateCaseResult)) {
+          throw updateCaseResult
+        }
+
+        if (updateCaseResult.affected && updateCaseResult.affected > 0) {
+          events.push(
+            getAuditLogEvent(EventCode.AllTriggersResolved, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
+              user: user.username,
+              auditLogVersion: 2,
+              "Number Of Triggers": allTriggers.length,
+              ...generateTriggersAttributes(allTriggers)
+            })
+          )
+        }
+      }
+
+      if (allTriggersVisibleToUserResolved) {
+        const unlockResult = await updateLockStatusToUnlocked(
+          entityManager,
+          courtCase,
+          user,
+          UnlockReason.Trigger,
+          events
+        )
+
+        if (isError(unlockResult)) {
+          throw unlockResult
+        }
+      }
+
+      await storeMessageAuditLogEvents(courtCase.messageId, events)
+
+      return updateTriggersResult
+    })
+  )
 }
 
 export default resolveTriggers
