@@ -16,7 +16,7 @@ const filterByRecordName = async function (world: Bichard) {
   const searchField = "input[name='defendantSearch']"
 
   // Triple click selects any existing text so we type over it
-  await world.browser.page.click(searchField, { clickCount: 3 })
+  await world.browser.page.click(searchField, { count: 3 })
   await world.browser.page.type(searchField, name)
   await Promise.all([world.browser.page.keyboard.press("Enter"), world.browser.page.waitForNavigation()])
 }

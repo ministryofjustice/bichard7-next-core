@@ -10,7 +10,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
       crimeOffenceReferenceNo: "",
       remandLocationFfss: "",
       ownerCode: "01YZ",
-      personUrn: "2000/445738F",
+      longPersonUrn: "2000/445738F",
       remandDate: "2011-09-26",
       appearanceResult: "remanded-in-custody",
       bailConditions: [],

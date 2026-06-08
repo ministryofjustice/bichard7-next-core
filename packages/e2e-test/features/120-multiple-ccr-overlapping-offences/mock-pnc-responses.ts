@@ -11,7 +11,7 @@ export default (_: string, { policeApi }: Bichard) => [
       gmh: "073ENQR000020SENQASIPNCA05A73000017300000120210316152773000001                                             050001772",
       gmt: "000008073ENQR004540S",
       personId: SET_BY_PROCESSOR,
-      personUrn: "2012/14X",
+      longPersonUrn: "2012/14X",
       reportId: SET_BY_PROCESSOR,
       asn: "1200000000000000006T",
       ownerCode: "04CA",

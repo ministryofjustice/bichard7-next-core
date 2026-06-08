@@ -38,6 +38,6 @@ export const convertPncJsonToLedsRemandRequest = (pncJson: PncRemandJson): Reman
 
   return {
     ...mappedData,
-    personUrn: pncJson.pncIdentifier
+    longPersonUrn: pncJson.pncIdentifier
   }
 }
