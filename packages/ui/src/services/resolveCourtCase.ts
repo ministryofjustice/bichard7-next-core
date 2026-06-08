@@ -9,7 +9,6 @@ import insertNotes from "./insertNotes"
 import resolveError from "./resolveError"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
-import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit" // NEW: Import this
 
 const resolveCourtCase = async (
   dataSource: DataSource | EntityManager,
@@ -20,26 +19,14 @@ const resolveCourtCase = async (
   return await dataSource.transaction(async (entityManager) => {
     const events: AuditLogEvent[] = []
 
-    const fetchCourtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCase.errorId, user)
-
-    if (isError(fetchCourtCase)) {
-      throw fetchCourtCase
-    }
-
-    if (!fetchCourtCase) {
-      throw new Error("Failed to resolve: Case not found")
-    }
-
-    // resolve case
-    const resolveErrorResult = await resolveError(entityManager, fetchCourtCase, user, resolution, events)
+    const resolveErrorResult = await resolveError(entityManager, courtCase, user, resolution, events)
     if (isError(resolveErrorResult)) {
       throw resolveErrorResult
     }
 
-    // unlock case
     const unlockResult = await updateLockStatusToUnlocked(
       entityManager,
-      fetchCourtCase,
+      courtCase,
       user,
       UnlockReason.TriggerAndException,
       events
@@ -62,7 +49,7 @@ const resolveCourtCase = async (
       throw addNoteResult
     }
 
-    await storeMessageAuditLogEvents(fetchCourtCase.messageId, events)
+    await storeMessageAuditLogEvents(courtCase.messageId, events)
 
     return resolveErrorResult
   })
