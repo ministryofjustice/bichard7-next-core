@@ -356,7 +356,7 @@ workspace "Bichard" {
       autoLayout lr
     }
 
-    theme default
+    theme ./default-theme.json
 
     styles {
       element "Web Browser" {

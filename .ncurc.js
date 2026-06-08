@@ -27,6 +27,8 @@ const semver = new RegExp(
     - Breaks dependency tree for eslint-config-next
   - cypress-circleci-reporter
       - 0.4.0 changed to module type
+  - fast-xml-parser
+    - Breaks above 5.7.2 due to encoding issues. Does not follow semver
 */
 const pinned = ["chalk", "@types/diff", "@faker-js/faker", "eslint", "eslint-plugin-perfectionist", "undici"]
 const ignored = [
@@ -38,7 +40,8 @@ const ignored = [
   "http-status",
   "@io-orkes/conductor-javascript",
   "@typescript-eslint/eslint-plugin",
-  "cypress-circleci-reporter"
+  "cypress-circleci-reporter",
+  "fast-xml-parser"
 ]
 
 module.exports = {
