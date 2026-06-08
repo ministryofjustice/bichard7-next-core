@@ -50,7 +50,7 @@ it("should use the host header if the forwarded header does not contain host", (
 
 it.each(["x-forwarded-host", "X-Forwarded-Host"])("should use host from '%s' if set", (forwardedHostHeader) => {
   const request = {
-    headers: { host: "localhost", [forwardedHostHeader]: "example.com" }
+    headers: { host: "localhost", [forwardedHostHeader]: "example.com:8080" }
   } as unknown as IncomingMessage
 
   const host = getHostFromRequest(request)
