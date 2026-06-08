@@ -24,7 +24,7 @@ const generateTriggersAttributes = (triggers: Trigger[]) =>
     return acc
   }, {})
 
-const resolveTriggersInTransaction = async (
+const resolveTriggers = async (
   dataSource: DataSource,
   triggerIds: number[],
   courtCaseId: number,
@@ -161,15 +161,6 @@ const resolveTriggersInTransaction = async (
 
     return updateTriggersResult
   })
-}
-
-const resolveTriggers = async (
-  dataSource: DataSource,
-  triggerIds: number[],
-  courtCaseId: number,
-  user: User
-): Promise<UpdateResult | Error> => {
-  return await resolveTriggersInTransaction(dataSource, triggerIds, courtCaseId, user)
 }
 
 export default resolveTriggers
