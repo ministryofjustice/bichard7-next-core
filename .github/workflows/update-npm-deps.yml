@@ -75,7 +75,7 @@ jobs:
           fi
 
           git commit -m "Update npm dependencies"
-          git push -force-with-lease origin "$BRANCH"
+          git push --force-with-lease origin "$BRANCH"
 
           gh pr create \
             --base main \
