@@ -1,54 +1,69 @@
 import { useCombobox } from "downshift"
 import { useCallback, useEffect, useState } from "react"
 import { ListWrapper } from "./Typeahead.styles"
+import { AllocateUser } from "@/features/CourtCaseList/tags/Allocate/AllocateUser"
 
 interface Props {
-  onSelect?: (item: AllocateUser | null) => void
+  onSelect: (item: AllocateUser | null) => void
 }
 
-type AllocateUser = {
-  id: number
-  name: string
-}
-
-export const AllocateUserTypeahead: React.FC<Props> = ({}: Props) => {
+const AllocateUserTypeahead: React.FC<Props> = ({ onSelect }: Props) => {
   const [inputItems, setInputItems] = useState<AllocateUser[]>([])
 
-  const fetchItems = useCallback(() => {
-    const items = [
-      { id: 1, name: "Bob User" },
-      { id: 2, name: "Alice User" },
-      { id: 4, name: "Alex User" },
-      { id: 3, name: "Dave User" }
-    ]
+  const fetchItems = useCallback(async (searchStringParam?: string, config?: { signal?: AbortSignal }) => {
+    try {
+      const params = new URLSearchParams()
 
-    setInputItems(items)
+      if (searchStringParam) {
+        params.append("usernameOrName", searchStringParam)
+      }
+
+      const queryString = params.toString()
+      const url = queryString ? `/bichard/api/users?${queryString}` : `/bichard/api/users`
+
+      const response = await fetch(url, {
+        method: "GET",
+        signal: config?.signal
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`)
+      }
+
+      const data = (await response.json()) as AllocateUser[]
+      setInputItems(data)
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        return
+      }
+      console.error("Error fetching users:", error)
+    }
   }, [])
 
   const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue } = useCombobox({
     defaultHighlightedIndex: 0,
     items: inputItems,
-    itemToString: (item) => (item ? `${item.name}` : ""),
-    // onSelectedItemChange: ({ selectedItem }) => {
-    //   onSelect(selectedItem || null)
-    // },
-    // onInputValueChange: ({ inputValue: newVal }) => {
-    //   if (!newVal) {
-    //     onSelect(null)
-    //   }
-    // },
+    itemToString: (item) => (item ? item.fullname : ""),
+    onSelectedItemChange: ({ selectedItem }) => {
+      onSelect(selectedItem || null)
+    },
+    onInputValueChange: ({ inputValue: newVal }) => {
+      if (!newVal) {
+        onSelect(null)
+      }
+    },
     stateReducer: (state, actionAndChanges) => {
       const { type, changes } = actionAndChanges
       if (type === useCombobox.stateChangeTypes.InputBlur) {
-        const typedValue = state.inputValue.trim() // TRIM added to handle accidental spaces/event quirks
+        const typedValue = state.inputValue.trim()
         const exactMatch =
-          inputItems.find((item) => item.name === typedValue) || (inputItems.length === 1 ? inputItems[0] : null)
+          inputItems.find((item) => item.fullname === typedValue) || (inputItems.length === 1 ? inputItems[0] : null)
 
         if (exactMatch) {
           return {
             ...changes,
             selectedItem: exactMatch,
-            inputValue: exactMatch.name
+            inputValue: exactMatch.fullname
           }
         }
       }
@@ -60,7 +75,7 @@ export const AllocateUserTypeahead: React.FC<Props> = ({}: Props) => {
     const abortController = new AbortController()
 
     const delayDebounceFn = setTimeout(() => {
-      fetchItems()
+      fetchItems(inputValue, { signal: abortController.signal })
     }, 250)
 
     return () => {
@@ -74,7 +89,7 @@ export const AllocateUserTypeahead: React.FC<Props> = ({}: Props) => {
       <input
         {...getInputProps({
           className: "govuk-input",
-          id: "force",
+          id: "allocate-user",
           placeholder: "Type a name to allocate..."
         })}
       />
@@ -88,7 +103,7 @@ export const AllocateUserTypeahead: React.FC<Props> = ({}: Props) => {
                   key={`${item.id}-${index}`}
                   {...getItemProps({ item, index })}
                 >
-                  {item.name}
+                  {item.fullname}
                 </li>
               ))
             : null}
@@ -97,3 +112,5 @@ export const AllocateUserTypeahead: React.FC<Props> = ({}: Props) => {
     </div>
   )
 }
+
+export default AllocateUserTypeahead
