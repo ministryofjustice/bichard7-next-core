@@ -19,6 +19,7 @@ const waitForResponse = async (
   await wait(100)
 
   let counter = 0
+  let errorAttempts = 0
   while (true) {
     const statusRequestHeaders = generateHeaders(endpointHeaders, requestOptions.authToken)
     const response = await axios
@@ -33,6 +34,15 @@ const waitForResponse = async (
     if (isError(response)) {
       if (response.response?.status === HttpStatusCode.NotFound) {
         await wait()
+        continue
+      }
+
+      if (response.status === HttpStatusCode.BadGateway) {
+        if (++errorAttempts > 5) {
+          throw new ApiError(response)
+        }
+
+        await wait(10_000)
         continue
       }
 

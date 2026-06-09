@@ -5,6 +5,7 @@ import path from "path"
 import type RequestOptions from "../../../../../types/LedsTestApiHelper/RequestOptions"
 import type { PendingRequest } from "../../../../../types/LedsTestApiHelper/Requests/LedsAsyncRequest"
 import { isError } from "../../../../isError"
+import { delay } from "../../../../puppeteer-utils"
 import ApiError from "../ApiError"
 import type { EndpointHeaders } from "../generateHeaders"
 import generateHeaders from "../generateHeaders"
@@ -18,28 +19,40 @@ const initiateRequest = async (
   const pendingRequestHeaders = generateHeaders(endpointHeaders, requestOptions.authToken)
   const url = `${requestOptions.baseUrl}/${urlPath}`
 
-  const pendingRequestResponse = await axios
-    .post<PendingRequest>(url, body, {
-      headers: pendingRequestHeaders,
-      httpsAgent: new https.Agent({
-        rejectUnauthorized: false
+  let attempts = 0
+  while (true) {
+    const pendingRequestResponse = await axios
+      .post<PendingRequest>(url, body, {
+        headers: pendingRequestHeaders,
+        httpsAgent: new https.Agent({
+          rejectUnauthorized: false
+        })
       })
-    })
-    .catch((error: AxiosError) => error)
+      .catch((error: AxiosError) => error)
 
-  if (isError(pendingRequestResponse)) {
-    throw new ApiError(pendingRequestResponse)
+    if (isError(pendingRequestResponse)) {
+      if (pendingRequestResponse.status === HttpStatusCode.BadGateway) {
+        if (++attempts > 5) {
+          throw new ApiError(pendingRequestResponse)
+        }
+
+        await delay(10)
+        continue
+      }
+
+      throw new ApiError(pendingRequestResponse)
+    }
+
+    if (pendingRequestResponse.status !== HttpStatusCode.Accepted) {
+      throw new Error(
+        `Failed to send request to POST ${path.join(requestOptions.baseUrl, urlPath)}: ${pendingRequestResponse.status}, ${pendingRequestResponse.data}`
+      )
+    }
+
+    const { requestId } = pendingRequestResponse.data
+
+    return requestId
   }
-
-  if (pendingRequestResponse.status !== HttpStatusCode.Accepted) {
-    throw new Error(
-      `Failed to send request to POST ${path.join(requestOptions.baseUrl, urlPath)}: ${pendingRequestResponse.status}, ${pendingRequestResponse.data}`
-    )
-  }
-
-  const { requestId } = pendingRequestResponse.data
-
-  return requestId
 }
 
 export default initiateRequest
