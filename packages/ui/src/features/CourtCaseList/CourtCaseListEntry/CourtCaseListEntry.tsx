@@ -9,6 +9,7 @@ import { CaseDetailsRow } from "./CaseDetailsRow/CaseDetailsRow"
 import { generateExceptionComponents } from "./CourtCaseListEntryCells/generateExceptionComponents"
 import { generateTriggerComponents } from "./CourtCaseListEntryCells/generateTriggerComponents"
 import { ExtraReasonRow } from "./ExtraReasonRow"
+import { AllocateUser } from "../tags/Allocate/AllocateUser"
 
 interface Props {
   courtCase: DisplayPartialCourtCase
@@ -38,7 +39,8 @@ const CourtCaseListEntry: React.FC<Props> = ({
     query,
     basePath,
     exceptionHasBeenRecentlyUnlocked,
-    formattedReasonCodes
+    formattedReasonCodes,
+    <AllocateUser type={"exceptions"} />
   )
 
   const triggerCells = generateTriggerComponents(
@@ -47,7 +49,8 @@ const CourtCaseListEntry: React.FC<Props> = ({
     query,
     basePath,
     triggerHasBeenRecentlyUnlocked,
-    formattedReasonCodes
+    formattedReasonCodes,
+    <AllocateUser type={"triggers"} />
   )
 
   const reasonCell = exceptionsCells?.ReasonCell ?? triggerCells?.ReasonCell

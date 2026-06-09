@@ -14,6 +14,7 @@ export const ExceptionsReasonCell = ({ exceptionCounts }: { exceptionCounts: Rec
 
 export const ExceptionsLockTag = ({
   errorLockedByFullName,
+  errorLockedByUsername,
   canUnlockCase,
   unlockPath,
   exceptionsHaveBeenRecentlyUnlocked
@@ -26,7 +27,10 @@ export const ExceptionsLockTag = ({
 }) => {
   return (
     <>
-      <LockedByTag lockedBy={errorLockedByFullName} unlockPath={canUnlockCase ? unlockPath : undefined} />
+      <LockedByTag
+        lockedBy={errorLockedByFullName ?? errorLockedByUsername}
+        unlockPath={canUnlockCase ? unlockPath : undefined}
+      />
       <CaseUnlockedTag isCaseUnlocked={exceptionsHaveBeenRecentlyUnlocked && !errorLockedByFullName} />
     </>
   )

@@ -54,7 +54,10 @@ export const TriggersLockTag = ({
 }) => {
   return (
     <>
-      <LockedByTag lockedBy={triggersLockedByFullName} unlockPath={canUnlockCase ? unlockPath : undefined} />
+      <LockedByTag
+        lockedBy={triggersLockedByFullName ?? triggersLockedByUsername}
+        unlockPath={canUnlockCase ? unlockPath : undefined}
+      />
       <CaseUnlockedTag isCaseUnlocked={triggersHaveBeenRecentlyUnlocked && !triggersLockedByUsername} />
     </>
   )

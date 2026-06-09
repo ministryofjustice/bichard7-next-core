@@ -7,6 +7,8 @@ import { ReasonCodes, ReasonCodeTitle } from "utils/formatReasons/reasonCodes"
 import { displayTriggerReasonCell } from "utils/formatReasons/triggers/displayTriggerReasonCell"
 import { unlockCaseWithReasonPath } from "utils/formatReasons/unlockCaseWithReasonPath"
 import { TriggersLockTag, TriggersReasonCell } from "../TriggersColumns"
+import { ReactNode } from "react"
+import Permission from "@moj-bichard7/common/types/Permission"
 
 export const generateTriggerComponents = (
   user: DisplayFullUser,
@@ -14,7 +16,8 @@ export const generateTriggerComponents = (
   query: ParsedUrlQuery,
   basePath: string,
   triggerHasBeenRecentlyUnlocked: boolean,
-  formattedReasonCodes: ReasonCodes
+  formattedReasonCodes: ReasonCodes,
+  allocateTag: ReactNode
 ): CourtCaseListEntryRowCells | undefined => {
   const { triggers } = courtCase
 
@@ -31,9 +34,10 @@ export const generateTriggerComponents = (
   const { hasTriggerReasonCodes, filteredTriggers } = displayTriggerReasonResult
   const { errorId, triggerLockedByUserFullName, triggerLockedByUsername } = courtCase
 
-  return {
-    ReasonCell: <TriggersReasonCell triggers={hasTriggerReasonCodes ? filteredTriggers : triggers} />,
-    LockTag: (
+  let tagToDisplay: ReactNode | undefined
+
+  if (triggerLockedByUserFullName || triggerLockedByUsername) {
+    tagToDisplay = (
       <TriggersLockTag
         triggersLockedByUsername={triggerLockedByUsername}
         triggersLockedByFullName={triggerLockedByUserFullName}
@@ -42,5 +46,12 @@ export const generateTriggerComponents = (
         unlockPath={unlockCaseWithReasonPath(ReasonCodeTitle.Triggers, errorId, query, basePath)}
       />
     )
+  } else if (user.hasAccessTo[Permission.CanAllocate]) {
+    tagToDisplay = allocateTag
+  }
+
+  return {
+    ReasonCell: <TriggersReasonCell triggers={hasTriggerReasonCodes ? filteredTriggers : triggers} />,
+    LockTag: tagToDisplay
   }
 }

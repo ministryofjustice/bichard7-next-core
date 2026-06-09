@@ -28,8 +28,11 @@ const isUserManager = (user: User): boolean =>
 
 const isServiceUser = (user: User): boolean => user.groups?.includes(UserGroup.Service)
 
+const hasAccessToAllocation = (user: User): boolean => isSupervisor(user) && user.groups.includes(UserGroup.Allocator)
+
 const userAccess = (user: User): { [key in Permission]: boolean } => {
   return {
+    [Permission.CanAllocate]: hasAccessToAllocation(user),
     [Permission.CanAuditCases]: isSupervisor(user),
     [Permission.CanListUsers]: isSupervisor(user),
     [Permission.CanResubmit]: hasAccessToExceptions(user) || isServiceUser(user),
