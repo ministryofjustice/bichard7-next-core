@@ -1,6 +1,5 @@
 import ConditionalRender from "components/ConditionalRender"
 import { DisplayTrigger } from "types/display/Triggers"
-import CaseUnlockedTag from "../tags/CaseUnlockedTag"
 import LockedByTag from "../tags/LockedByTag/LockedByTag"
 
 type TriggerWithCount = Partial<DisplayTrigger> & { count: number }
@@ -42,7 +41,6 @@ export const TriggersReasonCell = ({ triggers }: { triggers: DisplayTrigger[] })
 export const TriggersLockTag = ({
   triggersLockedByUsername,
   triggersLockedByFullName,
-  triggersHaveBeenRecentlyUnlocked,
   canUnlockCase,
   unlockPath
 }: {
@@ -53,12 +51,9 @@ export const TriggersLockTag = ({
   unlockPath: string
 }) => {
   return (
-    <>
-      <LockedByTag
-        lockedBy={triggersLockedByFullName ?? triggersLockedByUsername}
-        unlockPath={canUnlockCase ? unlockPath : undefined}
-      />
-      <CaseUnlockedTag isCaseUnlocked={triggersHaveBeenRecentlyUnlocked && !triggersLockedByUsername} />
-    </>
+    <LockedByTag
+      lockedBy={triggersLockedByFullName ?? triggersLockedByUsername}
+      unlockPath={canUnlockCase ? unlockPath : undefined}
+    />
   )
 }

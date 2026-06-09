@@ -1,4 +1,3 @@
-import CaseUnlockedTag from "../tags/CaseUnlockedTag"
 import LockedByTag from "../tags/LockedByTag/LockedByTag"
 import { SingleException } from "./CaseDetailsRow/SingleException"
 
@@ -16,22 +15,17 @@ export const ExceptionsLockTag = ({
   errorLockedByFullName,
   errorLockedByUsername,
   canUnlockCase,
-  unlockPath,
-  exceptionsHaveBeenRecentlyUnlocked
+  unlockPath
 }: {
   errorLockedByUsername: string | null | undefined
   errorLockedByFullName: string | null | undefined
   canUnlockCase: boolean
   unlockPath: string
-  exceptionsHaveBeenRecentlyUnlocked: boolean
 }) => {
   return (
-    <>
-      <LockedByTag
-        lockedBy={errorLockedByFullName ?? errorLockedByUsername}
-        unlockPath={canUnlockCase ? unlockPath : undefined}
-      />
-      <CaseUnlockedTag isCaseUnlocked={exceptionsHaveBeenRecentlyUnlocked && !errorLockedByFullName} />
-    </>
+    <LockedByTag
+      lockedBy={errorLockedByFullName ?? errorLockedByUsername}
+      unlockPath={canUnlockCase ? unlockPath : undefined}
+    />
   )
 }

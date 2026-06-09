@@ -9,6 +9,7 @@ import { unlockCaseWithReasonPath } from "utils/formatReasons/unlockCaseWithReas
 import { TriggersLockTag, TriggersReasonCell } from "../TriggersColumns"
 import { ReactNode } from "react"
 import Permission from "@moj-bichard7/common/types/Permission"
+import CaseUnlockedTag from "../../tags/CaseUnlockedTag"
 
 export const generateTriggerComponents = (
   user: DisplayFullUser,
@@ -48,6 +49,8 @@ export const generateTriggerComponents = (
     )
   } else if (user.hasAccessTo[Permission.CanAllocate]) {
     tagToDisplay = allocateTag
+  } else if (triggerHasBeenRecentlyUnlocked) {
+    tagToDisplay = <CaseUnlockedTag isCaseUnlocked={triggerHasBeenRecentlyUnlocked && !triggerLockedByUsername} />
   }
 
   return {

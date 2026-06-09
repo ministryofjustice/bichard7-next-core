@@ -9,6 +9,7 @@ import { unlockCaseWithReasonPath } from "utils/formatReasons/unlockCaseWithReas
 import { ExceptionsLockTag, ExceptionsReasonCell } from "../ExceptionsColumns"
 import { ReactNode } from "react"
 import Permission from "@moj-bichard7/common/types/Permission"
+import CaseUnlockedTag from "../../tags/CaseUnlockedTag"
 
 export const generateExceptionComponents = (
   user: DisplayFullUser,
@@ -37,11 +38,12 @@ export const generateExceptionComponents = (
         errorLockedByFullName={errorLockedByUserFullName}
         canUnlockCase={canUserUnlockCase(user, errorLockedByUsername)}
         unlockPath={unlockCaseWithReasonPath(ReasonCodeTitle.Exceptions, errorId, query, basePath)}
-        exceptionsHaveBeenRecentlyUnlocked={exceptionHasBeenRecentlyUnlocked}
       />
     )
   } else if (user.hasAccessTo[Permission.CanAllocate]) {
     tagToDisplay = allocateTag
+  } else if (exceptionHasBeenRecentlyUnlocked) {
+    tagToDisplay = <CaseUnlockedTag isCaseUnlocked={exceptionHasBeenRecentlyUnlocked && !errorLockedByUsername} />
   }
 
   return {
