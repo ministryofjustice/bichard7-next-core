@@ -89,6 +89,7 @@ jobs:
 
             echo "pull-request-number=$PR_NUMBER" >> "$GITHUB_OUTPUT"
             echo "pull-request-url=$PR_URL" >> "$GITHUB_OUTPUT"
+            
       - name: Check PR information
         run: |
           echo "PR #${{ steps.cpr.outputs.pull-request-number}}"
