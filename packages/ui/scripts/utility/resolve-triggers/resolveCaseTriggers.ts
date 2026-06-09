@@ -18,7 +18,7 @@ export default function resolveCaseTriggers(
   triggerCodesToResolve: string[]
 ): PromiseResult<void> {
   return pgDataSource
-    .transaction("SERIALIZABLE", async (entityManager) => {
+    .transaction(async (entityManager) => {
       // Get court case
       logAction(courtCaseId, "Invoking getCourtCase")
       const courtCase = await getCourtCase(entityManager, courtCaseId)
