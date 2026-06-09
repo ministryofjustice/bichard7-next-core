@@ -46,7 +46,6 @@ export const TriggersLockTag = ({
 }: {
   triggersLockedByUsername: string | null | undefined
   triggersLockedByFullName: string | null | undefined
-  triggersHaveBeenRecentlyUnlocked: boolean
   canUnlockCase: boolean
   unlockPath: string
 }) => {

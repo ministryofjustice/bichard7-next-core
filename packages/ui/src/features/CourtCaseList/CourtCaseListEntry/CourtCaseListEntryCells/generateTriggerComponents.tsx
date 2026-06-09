@@ -42,14 +42,13 @@ export const generateTriggerComponents = (
       <TriggersLockTag
         triggersLockedByUsername={triggerLockedByUsername}
         triggersLockedByFullName={triggerLockedByUserFullName}
-        triggersHaveBeenRecentlyUnlocked={triggerHasBeenRecentlyUnlocked}
         canUnlockCase={canUserUnlockCase(user, triggerLockedByUsername)}
         unlockPath={unlockCaseWithReasonPath(ReasonCodeTitle.Triggers, errorId, query, basePath)}
       />
     )
   } else if (user.hasAccessTo[Permission.CanAllocate]) {
     tagToDisplay = allocateTag
-  } else if (triggerHasBeenRecentlyUnlocked) {
+  } else {
     tagToDisplay = <CaseUnlockedTag isCaseUnlocked={triggerHasBeenRecentlyUnlocked && !triggerLockedByUsername} />
   }
 
