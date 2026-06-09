@@ -23,7 +23,8 @@ export const VersionedEndpoints: Record<string, Record<string, string>> = {
     Connectivity: Versions.V1 + Endpoints.Connectivity,
     Health: Versions.V1 + Endpoints.Health,
     Me: Versions.V1 + Endpoints.Me,
-    Users: Versions.V1 + Endpoints.Users
+    Users: Versions.V1 + Endpoints.Users,
+    UsersLookup: Versions.V1 + Endpoints.UsersLookup
   } as const
 } as const
 

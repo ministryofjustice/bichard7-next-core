@@ -10,7 +10,11 @@ export type FetchUsersResult = {
   users: User[]
 }
 
-export default async (database: DatabaseConnection, user: User): PromiseResult<FetchUsersResult> => {
+export default async (
+  database: DatabaseConnection,
+  user: User,
+  usernameOrName?: string
+): PromiseResult<FetchUsersResult> => {
   const sql = database.connection
 
   if (user.visibleForces.length === 0) {
@@ -19,29 +23,23 @@ export default async (database: DatabaseConnection, user: User): PromiseResult<F
 
   const visibleForcesFilter = filterUsersByVisibleForces(database, user.visibleForces)
 
-  const where = sql`(${visibleForcesFilter})`
+  let where = sql`(${visibleForcesFilter})`
+
+  if (usernameOrName && usernameOrName.trim() !== "") {
+    const fuzzyName = `%${usernameOrName.trim()}%`
+    const nameWhere = sql`u.username ILIKE ${fuzzyName} OR u.forenames ILIKE ${fuzzyName} OR u.surname ILIKE ${fuzzyName}`
+    where = sql`${where} AND (${nameWhere})`
+  }
 
   const userResult = await database.connection<UserRow[]>`
       SELECT
         u.id,
-        u.username,
-        u.jwt_id,
-        ARRAY_AGG(g.friendly_name) AS groups,
-        u.visible_forces,
-        u.email,
-        u.feature_flags,
-        u.excluded_triggers,
-        u.visible_courts,
         u.forenames,
         u.surname
       FROM
         br7own.users u
-        JOIN br7own.users_groups ug ON u.id = ug.user_id
-        JOIN br7own.groups g ON g.id = ug.group_id
       WHERE
-          ${where}
-      GROUP BY
-          u.id`
+          ${where} AND u.deleted_at IS NULL`
 
   const users = userResult.map((u) => mapUserRowToUser(u))
 
