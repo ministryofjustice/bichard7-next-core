@@ -123,5 +123,37 @@ describe("fetchUserLookups", () => {
       expect(ids).not.toContain(rightNameWrongForce.id)
       expect(ids).not.toContain(wrongNameRightForce.id)
     })
+
+    it("should filter out deleted users when no search term is provided", async () => {
+      const currentUser = await createUser(testDatabaseGateway, { visibleForces: ["01"] })
+      const targetUser = await createUser(testDatabaseGateway, { username: "username", visibleForces: ["01"] })
+      const deletedUser = await createUser(testDatabaseGateway, {
+        deletedAt: new Date(),
+        username: "otheruser",
+        visibleForces: ["01"]
+      })
+
+      const result = (await fetchUserLookups(testDatabaseGateway.readonly, currentUser)) as FetchUsersResult
+
+      const ids = result.users.map((u) => u.id)
+      expect(ids).toContain(targetUser.id)
+      expect(ids).not.toContain(deletedUser.id)
+    })
+
+    it("should filter out deleted users when search term is provided", async () => {
+      const currentUser = await createUser(testDatabaseGateway, { visibleForces: ["01"] })
+      const targetUser = await createUser(testDatabaseGateway, { username: "username1", visibleForces: ["01"] })
+      const deletedUser = await createUser(testDatabaseGateway, {
+        deletedAt: new Date(),
+        username: "username2",
+        visibleForces: ["01"]
+      })
+
+      const result = (await fetchUserLookups(testDatabaseGateway.readonly, currentUser, "username")) as FetchUsersResult
+
+      const ids = result.users.map((u) => u.id)
+      expect(ids).toContain(targetUser.id)
+      expect(ids).not.toContain(deletedUser.id)
+    })
   })
 })

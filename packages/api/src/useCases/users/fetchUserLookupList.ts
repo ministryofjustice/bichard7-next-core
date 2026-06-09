@@ -1,4 +1,4 @@
-import type { ApiUserLookupQuery } from "@moj-bichard7/common/types/ApiUserLookupQuery"
+import type { ApiUserLookupQuery } from "@moj-bichard7/common/contracts/ApiUserLookupQuery"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User, UserLookupList } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"

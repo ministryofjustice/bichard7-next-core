@@ -39,7 +39,7 @@ export default async (
       FROM
         br7own.users u
       WHERE
-          ${where}`
+          ${where} AND u.deleted_at IS NULL`
 
   const users = userResult.map((u) => mapUserRowToUser(u))
 

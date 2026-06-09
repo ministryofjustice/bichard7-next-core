@@ -1,10 +1,10 @@
-import type { ApiUserLookupQuery } from "@moj-bichard7/common/types/ApiUserLookupQuery"
+import type { ApiUserLookupQuery } from "@moj-bichard7/common/contracts/ApiUserLookupQuery"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { ApiUserLookupQuerySchema } from "@moj-bichard7/common/types/ApiUserLookupQuery"
+import { ApiUserLookupQuerySchema } from "@moj-bichard7/common/contracts/ApiUserLookupQuery"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserLookupListSchema } from "@moj-bichard7/common/types/User"
 import { FORBIDDEN, INTERNAL_SERVER_ERROR, OK } from "http-status"

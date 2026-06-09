@@ -3,6 +3,7 @@ import { z } from "zod"
 import { UserGroup } from "./UserGroup"
 
 export const UserRowSchema = z.object({
+  deleted_at: z.date().nullable(),
   email: z.string(),
   excluded_triggers: z.string().nullable(),
   feature_flags: z.record(z.string(), z.boolean()),
@@ -17,6 +18,7 @@ export const UserRowSchema = z.object({
 })
 
 export const UserSchema = z.object({
+  deletedAt: z.date().nullable(),
   email: z.string(),
   excludedTriggers: z.array(z.string()).min(0),
   featureFlags: z.record(z.string(), z.boolean()),
