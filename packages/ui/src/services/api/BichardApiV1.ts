@@ -12,10 +12,11 @@ import { generateUrlSearchParams } from "services/api/utils/generateUrlSearchPar
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
 import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
-import type { UserList } from "@moj-bichard7/common/types/User"
+import type { UserList, UserLookupList } from "@moj-bichard7/common/types/User"
 import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
 import { ApiConnectivityDtoSchema } from "@moj-bichard7/common/types/ApiConnectivity"
+import type { ApiUserLookupQuery } from "@moj-bichard7/common/contracts/ApiUserLookupQuery"
 
 export default class BichardApiV1 implements BichardApiGateway {
   readonly apiClient: ApiClient
@@ -53,6 +54,10 @@ export default class BichardApiV1 implements BichardApiGateway {
 
   async fetchUsers(): Promise<UserList | Error> {
     return await this.apiClient.get<UserList>(V1.Users)
+  }
+
+  async fetchUserLookup(query: ApiUserLookupQuery): Promise<UserLookupList | Error> {
+    return await this.apiClient.get<UserLookupList>(`${V1.UsersLookup}?${generateUrlSearchParams(query)}`)
   }
 
   async fetchAuditById(auditId: number): PromiseResult<AuditWithProgressDto> {
