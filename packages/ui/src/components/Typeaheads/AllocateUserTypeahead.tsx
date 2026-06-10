@@ -1,14 +1,14 @@
 import { useCombobox } from "downshift"
 import { useCallback, useEffect, useState } from "react"
 import { ListWrapper } from "./Typeahead.styles"
-import { AllocateUser } from "@/features/CourtCaseList/tags/Allocate/AllocateUser"
+import { UserLookupDto } from "@moj-bichard7/common/types/User"
 
 interface Props {
-  onSelect: (item: AllocateUser | null) => void
+  onSelect: (item: UserLookupDto | null) => void
 }
 
 const AllocateUserTypeahead: React.FC<Props> = ({ onSelect }: Props) => {
-  const [inputItems, setInputItems] = useState<AllocateUser[]>([])
+  const [inputItems, setInputItems] = useState<UserLookupDto[]>([])
 
   const fetchItems = useCallback(async (searchStringParam?: string, config?: { signal?: AbortSignal }) => {
     try {
@@ -19,7 +19,9 @@ const AllocateUserTypeahead: React.FC<Props> = ({ onSelect }: Props) => {
       }
 
       const queryString = params.toString()
-      const url = queryString ? `/bichard/api/users?${queryString}` : `/bichard/api/users`
+      const url = queryString
+        ? `/bichard/api/court-cases/allocation/users?${queryString}`
+        : `/bichard/api/court-cases/allocation/users`
 
       const response = await fetch(url, {
         method: "GET",
@@ -30,7 +32,7 @@ const AllocateUserTypeahead: React.FC<Props> = ({ onSelect }: Props) => {
         throw new Error(`HTTP Error: ${response.status}`)
       }
 
-      const data = (await response.json()) as AllocateUser[]
+      const data = (await response.json()) as UserLookupDto[]
       setInputItems(data)
     } catch (error) {
       if (error instanceof Error && error.name === "AbortError") {
@@ -43,7 +45,7 @@ const AllocateUserTypeahead: React.FC<Props> = ({ onSelect }: Props) => {
   const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue } = useCombobox({
     defaultHighlightedIndex: 0,
     items: inputItems,
-    itemToString: (item) => (item ? item.fullname : ""),
+    itemToString: (item) => (item ? (item.fullname ?? "Unknown User") : ""),
     onSelectedItemChange: ({ selectedItem }) => {
       onSelect(selectedItem || null)
     },

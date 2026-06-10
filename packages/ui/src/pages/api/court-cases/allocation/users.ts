@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
+import withApiAuthentication from "@/middleware/withApiAuthentication/withApiAuthentication"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import Permission from "@moj-bichard7/common/types/Permission"
 import ApiClient from "@/services/api/ApiClient"
