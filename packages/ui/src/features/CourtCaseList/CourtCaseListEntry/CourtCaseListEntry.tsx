@@ -40,7 +40,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
     basePath,
     exceptionHasBeenRecentlyUnlocked,
     formattedReasonCodes,
-    <AllocateUser type={"exceptions"} />
+    <AllocateUser type={"exceptions"} caseId={courtCase.errorId} />
   )
 
   const triggerCells = generateTriggerComponents(
@@ -50,7 +50,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
     basePath,
     triggerHasBeenRecentlyUnlocked,
     formattedReasonCodes,
-    <AllocateUser type={"triggers"} />
+    <AllocateUser type={"triggers"} caseId={courtCase.errorId} />
   )
 
   const reasonCell = exceptionsCells?.ReasonCell ?? triggerCells?.ReasonCell

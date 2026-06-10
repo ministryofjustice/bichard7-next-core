@@ -1,22 +1,58 @@
-import AllocateUserTypeahead from "@/components/Typeaheads/AllocateUserTypeahead"
+import AutoSaveBase from "components/EditableFields/AutoSaveBase"
 import { Button } from "@/components/Buttons/Button"
-import { useState } from "react"
-
-export type AllocateUser = {
-  id: number
-  fullname: string
-}
+import AllocateUserTypeahead from "@/components/Typeaheads/AllocateUserTypeahead"
+import { useCallback, useRef, useState } from "react"
+import { UserLookupDto } from "@moj-bichard7/common/types/User"
 
 interface AllocateUserProps {
   type: "exceptions" | "triggers"
+  caseId: number
 }
 
-export const AllocateUser = ({ type }: AllocateUserProps) => {
+export const AllocateUser = ({ type, caseId }: AllocateUserProps) => {
   const [show, setShow] = useState(false)
-  const [_, setSelectedUser] = useState<AllocateUser | null>(null)
+  const [selectedUser, setSelectedUser] = useState<UserLookupDto | null>(null)
+  const [isSaved, setIsSaved] = useState(false)
+  const [isChanged, setIsChanged] = useState(false)
+  const selectedUserRef = useRef<UserLookupDto | null>(null)
+
+  const handleSelect = (user: UserLookupDto | null) => {
+    selectedUserRef.current = user
+    setSelectedUser(user)
+    setIsChanged(!!user)
+    setIsSaved(false)
+  }
+
+  const onSave = useCallback(async () => {
+    const user = selectedUserRef.current
+    if (!user) {
+      return
+    }
+
+    const response = await fetch(`/bichard/api/court-cases/${caseId}/allocate?caseType=${type}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: user.id, fullname: user.fullname } satisfies UserLookupDto)
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP Error: ${response.status}`)
+    }
+  }, [caseId])
 
   if (show) {
-    return <AllocateUserTypeahead onSelect={setSelectedUser} />
+    return (
+      <AutoSaveBase
+        isValid={!!selectedUser}
+        isSaved={isSaved}
+        isChanged={isChanged}
+        setSaved={setIsSaved}
+        setChanged={setIsChanged}
+        onSave={onSave}
+      >
+        <AllocateUserTypeahead onSelect={handleSelect} />
+      </AutoSaveBase>
+    )
   }
 
   return <Button onClick={() => setShow(true)}>{"Allocate " + type}</Button>
