@@ -6,12 +6,16 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import { type PromiseResult } from "@moj-bichard7/common/types/Result"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
-import type { DatabaseConnection } from "../../../types/DatabaseGateway"
+import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
+import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
+import fetchUserById from "../../../services/db/users/fetchUserById"
 import { NotAllowedError } from "../../../types/errors/NotAllowedError"
+import { lockAndAuditLog } from "./lockAndAuditLog"
 
 const allocate = async (
-  database: DatabaseConnection,
+  auditLogGateway: AuditLogDynamoGateway,
+  database: WritableDatabaseConnection,
   user: User,
   logger: FastifyBaseLogger,
   query: AllocationQuery,
@@ -21,12 +25,16 @@ const allocate = async (
     return new NotAllowedError()
   }
 
-  if (query.caseType === "triggers") {
-  }
+  const userBeingAllocated = await fetchUserById(database, user, query.allocatedToUserId)
 
-  if (query.caseType === "exceptions") {
-    //await lockExceptions(database.connection, user, caseId, [], "Bichard New UI - Allocation")
-  }
+  const lockAndFetchCaseResult = await lockAndAuditLog(
+    database,
+    auditLogGateway,
+    userBeingAllocated as User,
+    caseId,
+    logger,
+    "both"
+  )
 
   /* if (isError(result)) {
     logger.error(result)

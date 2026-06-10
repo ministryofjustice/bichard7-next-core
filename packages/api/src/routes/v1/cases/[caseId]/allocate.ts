@@ -9,6 +9,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, INTERNAL_SERVER_ERROR, OK } from "http-status"
 import z from "zod"
 
+import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
 import auth from "../../../../server/schemas/auth"
@@ -18,6 +19,7 @@ import { NotAllowedError } from "../../../../types/errors/NotAllowedError"
 import allocate from "../../../../useCases/cases/getCase/allocate"
 
 type HandlerProps = {
+  auditLogGateway: AuditLogDynamoGateway
   caseId: number
   database: DatabaseGateway
   logger: FastifyBaseLogger
@@ -38,8 +40,8 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ caseId, database, logger, query, reply, user }: HandlerProps) => {
-  const result = await allocate(database.readonly, user, logger, query, caseId)
+const handler = async ({ auditLogGateway, caseId, database, logger, query, reply, user }: HandlerProps) => {
+  const result = await allocate(auditLogGateway, database.writable, user, logger, query, caseId)
 
   if (isError(result)) {
     reply.log.error(result)
@@ -57,6 +59,7 @@ const handler = async ({ caseId, database, logger, query, reply, user }: Handler
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).get(V1.CasesAllocate, { schema }, async (req, reply) => {
     await handler({
+      auditLogGateway: req.auditLogGateway,
       caseId: Number(req.params.caseId),
       database: req.database,
       logger: req.log,
