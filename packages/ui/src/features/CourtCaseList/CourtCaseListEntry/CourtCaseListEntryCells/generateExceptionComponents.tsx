@@ -7,6 +7,9 @@ import { displayExceptionReasons } from "utils/formatReasons/exceptions/displayE
 import { ReasonCodes, ReasonCodeTitle } from "utils/formatReasons/reasonCodes"
 import { unlockCaseWithReasonPath } from "utils/formatReasons/unlockCaseWithReasonPath"
 import { ExceptionsLockTag, ExceptionsReasonCell } from "../ExceptionsColumns"
+import { ReactNode } from "react"
+import Permission from "@moj-bichard7/common/types/Permission"
+import CaseUnlockedTag from "../../tags/CaseUnlockedTag"
 
 export const generateExceptionComponents = (
   user: DisplayFullUser,
@@ -14,7 +17,8 @@ export const generateExceptionComponents = (
   query: ParsedUrlQuery,
   basePath: string,
   exceptionHasBeenRecentlyUnlocked: boolean,
-  formattedReasonCodes: ReasonCodes
+  formattedReasonCodes: ReasonCodes,
+  allocateTag: ReactNode
 ): CourtCaseListEntryRowCells | undefined => {
   const displayExceptionReasonsResult = displayExceptionReasons(user, courtCase, formattedReasonCodes, query.state)
 
@@ -25,16 +29,25 @@ export const generateExceptionComponents = (
   const { hasExceptionReasonCodes, filteredExceptions, exceptions } = displayExceptionReasonsResult
   const { errorId, errorLockedByUsername, errorLockedByUserFullName } = courtCase
 
-  return {
-    ReasonCell: <ExceptionsReasonCell exceptionCounts={hasExceptionReasonCodes ? filteredExceptions : exceptions} />,
-    LockTag: (
+  let tagToDisplay: ReactNode | undefined
+
+  if (errorLockedByUsername || errorLockedByUserFullName) {
+    tagToDisplay = (
       <ExceptionsLockTag
         errorLockedByUsername={errorLockedByUsername}
         errorLockedByFullName={errorLockedByUserFullName}
         canUnlockCase={canUserUnlockCase(user, errorLockedByUsername)}
         unlockPath={unlockCaseWithReasonPath(ReasonCodeTitle.Exceptions, errorId, query, basePath)}
-        exceptionsHaveBeenRecentlyUnlocked={exceptionHasBeenRecentlyUnlocked}
       />
     )
+  } else if (user.hasAccessTo[Permission.CanAllocate]) {
+    tagToDisplay = allocateTag
+  } else {
+    tagToDisplay = <CaseUnlockedTag isCaseUnlocked={exceptionHasBeenRecentlyUnlocked && !errorLockedByUsername} />
+  }
+
+  return {
+    ReasonCell: <ExceptionsReasonCell exceptionCounts={hasExceptionReasonCodes ? filteredExceptions : exceptions} />,
+    LockTag: tagToDisplay
   }
 }

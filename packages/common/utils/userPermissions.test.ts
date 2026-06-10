@@ -94,4 +94,16 @@ describe("user permissions", () => {
     expect(userAccess[Permission.Exceptions]).toBe(false)
     expect(userAccess[Permission.Triggers]).toBe(false)
   })
+
+  it("user can allocate", () => {
+    const userAccess = userHasAccessTo(UserGroup.Supervisor, UserGroup.Allocator)
+
+    expect(userAccess[Permission.CanAllocate]).toBe(true)
+  })
+
+  it("user supervisors can not allocate", () => {
+    const userAccess = userHasAccessTo(UserGroup.Supervisor)
+
+    expect(userAccess[Permission.CanAllocate]).toBe(false)
+  })
 })
