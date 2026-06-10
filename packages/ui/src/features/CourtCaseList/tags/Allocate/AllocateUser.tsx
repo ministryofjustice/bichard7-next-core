@@ -3,13 +3,14 @@ import { Button } from "@/components/Buttons/Button"
 import AllocateUserTypeahead from "@/components/Typeaheads/AllocateUserTypeahead"
 import { useCallback, useRef, useState } from "react"
 import { UserLookupDto } from "@moj-bichard7/common/types/User"
+import { ColumnType } from "../../CourtCaseListEntry/CourtCaseListEntryCells/generateAllocationComponent"
 
 interface AllocateUserProps {
-  type: "exceptions" | "triggers"
+  columnType: ColumnType
   caseId: number
 }
 
-export const AllocateUser = ({ type, caseId }: AllocateUserProps) => {
+export const AllocateUser = ({ columnType, caseId }: AllocateUserProps) => {
   const [show, setShow] = useState(false)
   const [selectedUser, setSelectedUser] = useState<UserLookupDto | null>(null)
   const [isSaved, setIsSaved] = useState(false)
@@ -29,7 +30,7 @@ export const AllocateUser = ({ type, caseId }: AllocateUserProps) => {
       return
     }
 
-    const response = await fetch(`/bichard/api/court-cases/${caseId}/allocate?caseType=${type}`, {
+    const response = await fetch(`/bichard/api/court-cases/${caseId}/allocate?caseType=${columnType}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: user.id, fullname: user.fullname } satisfies UserLookupDto)
@@ -55,5 +56,5 @@ export const AllocateUser = ({ type, caseId }: AllocateUserProps) => {
     )
   }
 
-  return <Button onClick={() => setShow(true)}>{"Allocate " + type}</Button>
+  return <Button onClick={() => setShow(true)}>{"Allocate " + columnType}</Button>
 }
