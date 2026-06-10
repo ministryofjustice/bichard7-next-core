@@ -7,13 +7,13 @@
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100004210Z",
+          "arrestSummonsReference": "26/0000/00/100004392X",
           "chargeStatusMarker": "A",
           "cjsOffenceCode": "TH68006",
           "committedOnBail": false,
-          "courtCaseChargeNumber": 3,
-          "courtCaseReferenceNumber": "26/2576/001937G",
-          "crimeReference": "-6I1YZC/ADJTGL0",
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/002160Z",
+          "crimeReference": "GU9KD BFFDRE4ZY",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -22,25 +22,25 @@
           },
           "locationFSCode": "01ZD",
           "npccOffenceCode": "5.5.5.1",
-          "offenceChargeNumber": 3,
+          "offenceChargeNumber": 1,
           "offenceDescription": [],
           "othersCharged": [],
           "qualifiedCjsCode": "TH68006",
           "results": [],
           "roleQualifier": [],
-          "startDate": "2010-11-01"
+          "startDate": "2010-11-28"
         },
         {
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 2,
-          "arrestSummonsReference": "26/0000/00/100004210Z",
+          "arrestSummonsReference": "26/0000/00/100004392X",
           "chargeStatusMarker": "A",
-          "cjsOffenceCode": "CJ88001",
+          "cjsOffenceCode": "RT88191",
           "committedOnBail": false,
-          "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/2576/001937G",
-          "crimeReference": "K3UZT86GS-SOFMR",
+          "courtCaseChargeNumber": 2,
+          "courtCaseReferenceNumber": "26/2576/002160Z",
+          "crimeReference": "C5B-OZRXB0RAPJU",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -48,26 +48,26 @@
             "locationType": "description"
           },
           "locationFSCode": "01ZD",
-          "npccOffenceCode": "1.8.11.1",
-          "offenceChargeNumber": 1,
+          "npccOffenceCode": "12.15.13.1",
+          "offenceChargeNumber": 2,
           "offenceDescription": [],
           "othersCharged": [],
-          "qualifiedCjsCode": "CJ88001",
+          "qualifiedCjsCode": "RT88191",
           "results": [],
           "roleQualifier": [],
-          "startDate": "2010-11-03"
+          "startDate": "2010-11-28"
         },
         {
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 3,
-          "arrestSummonsReference": "26/0000/00/100004210Z",
+          "arrestSummonsReference": "26/0000/00/100004392X",
           "chargeStatusMarker": "A",
-          "cjsOffenceCode": "TH68010",
+          "cjsOffenceCode": "TH68151",
           "committedOnBail": false,
-          "courtCaseChargeNumber": 2,
-          "courtCaseReferenceNumber": "26/2576/001937G",
-          "crimeReference": "8YNAAX62TB-Q5KN",
+          "courtCaseChargeNumber": 3,
+          "courtCaseReferenceNumber": "26/2576/002160Z",
+          "crimeReference": "4BVAGQ-ZMVJ1ECK",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -75,22 +75,22 @@
             "locationType": "description"
           },
           "locationFSCode": "01ZD",
-          "npccOffenceCode": "5.5.8.1",
-          "offenceChargeNumber": 2,
+          "npccOffenceCode": "5.7.11.10",
+          "offenceChargeNumber": 3,
           "offenceDescription": [],
           "othersCharged": [],
-          "qualifiedCjsCode": "TH68010",
+          "qualifiedCjsCode": "TH68151",
           "results": [],
           "roleQualifier": [],
-          "startDate": "2010-11-02"
+          "startDate": "2010-11-28"
         }
       ],
-      "convictionDate": "2011-09-26",
+      "convictionDate": "2011-01-25",
       "court": {
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/001937G"
+      "courtCaseReference": "26/2576/002160Z"
     }
   ],
   "remands": []

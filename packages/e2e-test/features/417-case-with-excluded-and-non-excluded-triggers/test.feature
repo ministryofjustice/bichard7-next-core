@@ -8,7 +8,7 @@ Feature: {417} Do not display excluded triggers on cases for the currently signe
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@NextUI @ExcludeOnLegacyUI
+	@NextUI @ExcludeOnLegacyUI @ExcludedOnRealLeds
 	Scenario: Display correct cases according to permissions and excluded triggers.
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
@@ -18,6 +18,7 @@ Feature: {417} Do not display excluded triggers on cases for the currently signe
 			And I see trigger "PR10 - Conditional bail" in the exception list table
 		When I am logged in as "TriggerHandlerWithExcludedTRPR0008"
 			And I reload the page
-			And there should only be "1" records
+		Then there should only be "1" records
 			And I cannot see trigger "PR08" in the exception list table
 			And I see trigger "PR10 - Conditional bail" in the exception list table
+			And the PNC updates the record

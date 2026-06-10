@@ -1,19 +1,21 @@
 {
   "disposals": [
     {
-      "caseStatusMarker": "A",
+      "caseStatusMarker": "C",
       "charges": [
         {
           "additionalMarker": false,
           "additionalOffenceMarker": false,
+          "adjudication": "G",
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100004210Z",
-          "chargeStatusMarker": "A",
+          "arrestSummonsReference": "26/0000/00/100004385P",
+          "chargeStatusMarker": "C",
           "cjsOffenceCode": "TH68006",
           "committedOnBail": false,
           "courtCaseChargeNumber": 3,
-          "courtCaseReferenceNumber": "26/2576/001937G",
-          "crimeReference": "-6I1YZC/ADJTGL0",
+          "courtCaseReferenceNumber": "26/2576/002154T",
+          "crimeReference": "QDGC4VTNXWMFU75",
+          "endDate": "2010-12-08",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -24,23 +26,32 @@
           "npccOffenceCode": "5.5.5.1",
           "offenceChargeNumber": 3,
           "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
           "othersCharged": [],
+          "plea": "2",
           "qualifiedCjsCode": "TH68006",
-          "results": [],
+          "results": [
+            {
+              "disposalCode": "1016",
+              "disposalQualifierCodes": []
+            }
+          ],
           "roleQualifier": [],
-          "startDate": "2010-11-01"
+          "startDate": "2010-11-28"
         },
         {
           "additionalMarker": false,
           "additionalOffenceMarker": false,
+          "adjudication": "G",
           "arrestChargeNumber": 2,
-          "arrestSummonsReference": "26/0000/00/100004210Z",
-          "chargeStatusMarker": "A",
-          "cjsOffenceCode": "CJ88001",
+          "arrestSummonsReference": "26/0000/00/100004385P",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "TH68151",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/2576/001937G",
-          "crimeReference": "K3UZT86GS-SOFMR",
+          "courtCaseReferenceNumber": "26/2576/002154T",
+          "crimeReference": "KQEUFHDWFVWGZAS",
+          "endDate": "2010-12-08",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -48,26 +59,36 @@
             "locationType": "description"
           },
           "locationFSCode": "01ZD",
-          "npccOffenceCode": "1.8.11.1",
+          "npccOffenceCode": "5.7.11.10",
           "offenceChargeNumber": 1,
           "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
           "othersCharged": [],
-          "qualifiedCjsCode": "CJ88001",
-          "results": [],
+          "plea": "2",
+          "qualifiedCjsCode": "TH68151",
+          "results": [
+            {
+              "disposalCode": "1015",
+              "disposalQualifierCodes": [],
+              "fineAmount": 100
+            }
+          ],
           "roleQualifier": [],
-          "startDate": "2010-11-03"
+          "startDate": "2010-11-28"
         },
         {
           "additionalMarker": false,
           "additionalOffenceMarker": false,
+          "adjudication": "G",
           "arrestChargeNumber": 3,
-          "arrestSummonsReference": "26/0000/00/100004210Z",
-          "chargeStatusMarker": "A",
-          "cjsOffenceCode": "TH68010",
+          "arrestSummonsReference": "26/0000/00/100004385P",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "RT88191",
           "committedOnBail": false,
           "courtCaseChargeNumber": 2,
-          "courtCaseReferenceNumber": "26/2576/001937G",
-          "crimeReference": "8YNAAX62TB-Q5KN",
+          "courtCaseReferenceNumber": "26/2576/002154T",
+          "crimeReference": "PY5UPLUKQKLO6H4",
+          "endDate": "2010-12-08",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -75,14 +96,22 @@
             "locationType": "description"
           },
           "locationFSCode": "01ZD",
-          "npccOffenceCode": "5.5.8.1",
+          "npccOffenceCode": "12.15.13.1",
           "offenceChargeNumber": 2,
           "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
           "othersCharged": [],
-          "qualifiedCjsCode": "TH68010",
-          "results": [],
+          "plea": "2",
+          "qualifiedCjsCode": "RT88191",
+          "results": [
+            {
+              "disposalCode": "1015",
+              "disposalQualifierCodes": [],
+              "fineAmount": 200
+            }
+          ],
           "roleQualifier": [],
-          "startDate": "2010-11-02"
+          "startDate": "2010-11-28"
         }
       ],
       "convictionDate": "2011-09-26",
@@ -90,7 +119,8 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/001937G"
+      "courtCaseReference": "26/2576/002154T",
+      "subsequentAppearances": []
     }
   ],
   "remands": []
