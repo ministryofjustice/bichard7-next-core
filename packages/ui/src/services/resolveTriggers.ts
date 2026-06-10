@@ -13,7 +13,6 @@ import Trigger from "./entities/Trigger"
 import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import insertNotes from "./insertNotes"
-import { retryTransaction } from "./retryTransaction"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
 
@@ -25,7 +24,7 @@ const generateTriggersAttributes = (triggers: Trigger[]) =>
     return acc
   }, {})
 
-const resolveTriggersInTransaction = async (
+const resolveTriggers = async (
   dataSource: DataSource,
   triggerIds: number[],
   courtCaseId: number,
@@ -33,7 +32,7 @@ const resolveTriggersInTransaction = async (
 ): Promise<UpdateResult | Error> => {
   const resolver = user.username
 
-  return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
+  return await dataSource.transaction(async (entityManager) => {
     const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
 
     if (isError(courtCase)) {
@@ -162,15 +161,6 @@ const resolveTriggersInTransaction = async (
 
     return updateTriggersResult
   })
-}
-
-const resolveTriggers = async (
-  dataSource: DataSource,
-  triggerIds: number[],
-  courtCaseId: number,
-  user: User
-): Promise<UpdateResult | Error> => {
-  return await retryTransaction(resolveTriggersInTransaction, dataSource, triggerIds, courtCaseId, user)
 }
 
 export default resolveTriggers

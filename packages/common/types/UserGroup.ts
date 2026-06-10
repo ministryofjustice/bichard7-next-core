@@ -4,6 +4,7 @@ export enum UserGroup {
   AuditLoggingManager = "Audit Logging Manager",
   ExceptionHandler = "Exception Handler",
   GeneralHandler = "General Handler",
+  NewBichardUI = "New Bichard UI",
   Service = "Service",
   SuperUserManager = "Super User Manager",
   Supervisor = "Supervisor",

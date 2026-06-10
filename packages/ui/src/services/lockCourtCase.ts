@@ -3,9 +3,9 @@ import type { DataSource, UpdateResult } from "typeorm"
 import { isError } from "types/Result"
 import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
-import { retryTransaction } from "./retryTransaction"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToLocked from "./updateLockStatusToLocked"
+import { retryTransaction } from "./retryTransaction"
 
 const lockCourtCaseTransaction = async (dataSource: DataSource, courtCaseId: number, user: User) => {
   return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {

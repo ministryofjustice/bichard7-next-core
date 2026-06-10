@@ -20,7 +20,7 @@ const serializationError = () => {
   return error
 }
 
-describe("retryTransaction using resolveTriggers as an example", () => {
+describe("resolveTriggers error handling", () => {
   let dataSource: DataSource
   const resolverUsername = "TriggerHandler"
   const visibleForce = "36"
@@ -51,9 +51,9 @@ describe("retryTransaction using resolveTriggers as an example", () => {
     await dataSource.destroy()
   })
 
-  it("retries and throws if serialization error persists", async () => {
+  it("throws a serialization error immediately", async () => {
     const error = serializationError()
-    jest.spyOn(dataSource, "transaction").mockRejectedValue(error)
+    jest.spyOn(dataSource, "transaction").mockRejectedValueOnce(error)
     jest.spyOn(logger, "warn")
     jest.spyOn(logger, "error")
 
@@ -71,37 +71,9 @@ describe("retryTransaction using resolveTriggers as an example", () => {
     }
     await insertTriggers(0, [trigger])
 
-    await expect(resolveTriggers(dataSource, [trigger.triggerId], courtCase.errorId, user)).rejects.toEqual(error)
+    await expect(resolveTriggers(dataSource, [trigger.triggerId], courtCase.errorId, user)).rejects.toBe(error)
 
-    expect(dataSource.transaction).toHaveBeenCalledTimes(3)
-    expect(logger.warn).toHaveBeenCalledTimes(2)
-    expect(logger.error).toHaveBeenCalledTimes(1)
-  })
-
-  it("retries and succeeds if first transaction throws a serialization error", async () => {
-    const error = serializationError()
-    jest.spyOn(dataSource, "transaction").mockRejectedValueOnce(error).mockResolvedValueOnce(true)
-    jest.spyOn(logger, "warn")
-    jest.spyOn(logger, "error")
-
-    const [courtCase] = await insertCourtCasesWithFields([
-      {
-        triggerLockedByUsername: resolverUsername,
-        orgForPoliceFilter: visibleForce
-      }
-    ])
-    const trigger: TestTrigger = {
-      triggerId: 0,
-      triggerCode: TriggerCode.TRPR0001,
-      status: "Unresolved",
-      createdAt: new Date("2022-07-12T10:22:34.000Z")
-    }
-    await insertTriggers(0, [trigger])
-
-    await expect(resolveTriggers(dataSource, [trigger.triggerId], courtCase.errorId, user)).resolves.toBe(true)
-
-    expect(dataSource.transaction).toHaveBeenCalledTimes(2)
-    expect(logger.warn).toHaveBeenCalledTimes(1)
+    expect(dataSource.transaction).toHaveBeenCalledTimes(1)
     expect(logger.error).not.toHaveBeenCalled()
   })
 
@@ -129,7 +101,6 @@ describe("retryTransaction using resolveTriggers as an example", () => {
 
     expect(dataSource.transaction).toHaveBeenCalledTimes(1)
     expect(logger.warn).not.toHaveBeenCalled()
-    expect(logger.error).toHaveBeenCalledTimes(1)
   })
 
   it("throws immediately if QueryFailedError is not a serialization error", async () => {
@@ -157,6 +128,5 @@ describe("retryTransaction using resolveTriggers as an example", () => {
 
     expect(dataSource.transaction).toHaveBeenCalledTimes(1)
     expect(logger.warn).not.toHaveBeenCalled()
-    expect(logger.error).toHaveBeenCalledTimes(1)
   })
 })
