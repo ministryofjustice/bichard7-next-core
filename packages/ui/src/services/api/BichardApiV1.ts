@@ -1,22 +1,23 @@
+import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
+import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { AuditDto, AuditWithProgressDto } from "@moj-bichard7/common/types/Audit"
 import { type AuditCasesMetadata, AuditCasesMetadataSchema } from "@moj-bichard7/common/types/AuditCase"
-import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
-import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
 import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 
-import type ApiClient from "./ApiClient"
-import { generateUrlSearchParams } from "services/api/utils/generateUrlSearchParams"
-import type BichardApiGateway from "./interfaces/BichardApiGateway"
-import type PromiseResult from "types/PromiseResult"
-import { isError } from "types/Result"
-import type { UserList, UserLookupList } from "@moj-bichard7/common/types/User"
+import type { AllocationQuery } from "@moj-bichard7/common/contracts/AllocationQuery"
+import type { ApiUserLookupQuery } from "@moj-bichard7/common/contracts/ApiUserLookupQuery"
 import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
 import { ApiConnectivityDtoSchema } from "@moj-bichard7/common/types/ApiConnectivity"
-import type { ApiUserLookupQuery } from "@moj-bichard7/common/contracts/ApiUserLookupQuery"
+import type { UserList, UserLookupList } from "@moj-bichard7/common/types/User"
+import { generateUrlSearchParams } from "services/api/utils/generateUrlSearchParams"
+import type PromiseResult from "types/PromiseResult"
+import { isError } from "types/Result"
+import type ApiClient from "./ApiClient"
+import type BichardApiGateway from "./interfaces/BichardApiGateway"
 
 export default class BichardApiV1 implements BichardApiGateway {
   readonly apiClient: ApiClient
@@ -58,6 +59,12 @@ export default class BichardApiV1 implements BichardApiGateway {
 
   async fetchUserLookup(query: ApiUserLookupQuery): Promise<UserLookupList | Error> {
     return await this.apiClient.get<UserLookupList>(`${V1.UsersLookup}?${generateUrlSearchParams(query)}`)
+  }
+
+  async updateAllocation(caseId: number, query: AllocationQuery): Promise<UserLookupList | Error> {
+    return await this.apiClient.put<UserLookupList>(
+      `${V1.CasesAllocate.replace(":caseId", String(caseId))}?${generateUrlSearchParams(query)}`
+    )
   }
 
   async fetchAuditById(auditId: number): PromiseResult<AuditWithProgressDto> {
