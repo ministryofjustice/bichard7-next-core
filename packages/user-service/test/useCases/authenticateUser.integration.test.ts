@@ -60,6 +60,7 @@ describe("Authenticator", () => {
     const result = await authenticate(
       connection,
       fakeAuditLogger,
+      "bichard.example.com",
       "bichard01@example.com",
       correctPassword,
       verificationCode
@@ -74,7 +75,14 @@ describe("Authenticator", () => {
     const expectedError = new Error("Invalid credentials or invalid verification")
     await storeVerificationCode(connection, emailAddress, verificationCode)
 
-    const result = await authenticate(connection, fakeAuditLogger, emailAddress, invalidPassword, verificationCode)
+    const result = await authenticate(
+      connection,
+      fakeAuditLogger,
+      "bichard.example.com",
+      emailAddress,
+      invalidPassword,
+      verificationCode
+    )
     expect(isError(result)).toBe(true)
 
     const actualError = <Error>result
@@ -90,7 +98,14 @@ describe("Authenticator", () => {
     let attemptsSoFar = await getFailedPasswordAttempts(connection, emailAddress)
     expect(attemptsSoFar).toBe(0)
 
-    const result = await authenticate(connection, fakeAuditLogger, emailAddress, invalidPassword, verificationCode)
+    const result = await authenticate(
+      connection,
+      fakeAuditLogger,
+      "bichard.example.com",
+      emailAddress,
+      invalidPassword,
+      verificationCode
+    )
     expect(isError(result)).toBe(true)
     attemptsSoFar = await getFailedPasswordAttempts(connection, emailAddress)
     expect(attemptsSoFar).toBe(1)
@@ -99,7 +114,14 @@ describe("Authenticator", () => {
     expect(actualError.message).toBe(expectedError.message)
 
     // 2 second wait between checks
-    let isAuth = await authenticate(connection, fakeAuditLogger, emailAddress, correctPassword, verificationCode)
+    let isAuth = await authenticate(
+      connection,
+      fakeAuditLogger,
+      "bichard.example.com",
+      emailAddress,
+      correctPassword,
+      verificationCode
+    )
     expect(isError(isAuth)).toBe(true)
     attemptsSoFar = await getFailedPasswordAttempts(connection, emailAddress)
     expect(attemptsSoFar).toBe(1)
@@ -113,7 +135,14 @@ describe("Authenticator", () => {
       { interval: config.incorrectDelay, email: emailAddress }
     )
 
-    isAuth = await authenticate(connection, fakeAuditLogger, emailAddress, correctPassword, verificationCode)
+    isAuth = await authenticate(
+      connection,
+      fakeAuditLogger,
+      "bichard.example.com",
+      emailAddress,
+      correctPassword,
+      verificationCode
+    )
     expect(isError(isAuth)).toBe(false)
     attemptsSoFar = await getFailedPasswordAttempts(connection, emailAddress)
     expect(attemptsSoFar).toBe(0)
@@ -126,7 +155,14 @@ describe("Authenticator", () => {
     const expectedError = new Error("Invalid credentials or invalid verification")
     await storeVerificationCode(connection, emailAddress, verificationCode)
 
-    const isAuth = await authenticate(connection, fakeAuditLogger, emailAddress, correctPassword, "SoElSe")
+    const isAuth = await authenticate(
+      connection,
+      fakeAuditLogger,
+      "bichard.example.com",
+      emailAddress,
+      correctPassword,
+      "SoElSe"
+    )
     expect(isError(isAuth)).toBe(true)
 
     const actualError = <Error>isAuth
@@ -140,7 +176,14 @@ describe("Authenticator", () => {
     const expectedError = new Error("Invalid credentials or invalid verification")
     await storeVerificationCode(connection, emailAddress, verificationCode)
 
-    let isAuth = await authenticate(connection, fakeAuditLogger, emailAddress, correctPassword, verificationCode)
+    let isAuth = await authenticate(
+      connection,
+      fakeAuditLogger,
+      "bichard.example.com",
+      emailAddress,
+      correctPassword,
+      verificationCode
+    )
     expect(isError(isAuth)).toBe(false)
 
     // wait until config.incorrectDelay seconds have passed
@@ -153,7 +196,14 @@ describe("Authenticator", () => {
     )
 
     // login a second time with same values
-    isAuth = await authenticate(connection, fakeAuditLogger, emailAddress, correctPassword, verificationCode)
+    isAuth = await authenticate(
+      connection,
+      fakeAuditLogger,
+      "bichard.example.com",
+      emailAddress,
+      correctPassword,
+      verificationCode
+    )
     expect(isError(isAuth)).toBe(true)
 
     const actualError = <Error>isAuth
@@ -171,7 +221,14 @@ describe("Authenticator", () => {
     expect(attemptsSoFar).toBe(0)
 
     // first password attempt
-    let isAuth = await authenticate(connection, fakeAuditLogger, emailAddress, invalidPassword, verificationCode)
+    let isAuth = await authenticate(
+      connection,
+      fakeAuditLogger,
+      "bichard.example.com",
+      emailAddress,
+      invalidPassword,
+      verificationCode
+    )
     expect(isError(isAuth)).toBe(true)
     let actualError = <Error>isAuth
     expect(actualError.message).toBe(expectedError.message)
@@ -188,7 +245,14 @@ describe("Authenticator", () => {
     )
 
     // second password attempt
-    isAuth = await authenticate(connection, fakeAuditLogger, emailAddress, invalidPassword, verificationCode)
+    isAuth = await authenticate(
+      connection,
+      fakeAuditLogger,
+      "bichard.example.com",
+      emailAddress,
+      invalidPassword,
+      verificationCode
+    )
     expect(isError(isAuth)).toBe(true)
     actualError = <Error>isAuth
     expect(actualError.message).toBe(expectedError.message)
@@ -205,7 +269,14 @@ describe("Authenticator", () => {
     )
 
     // third password attempt
-    isAuth = await authenticate(connection, fakeAuditLogger, emailAddress, invalidPassword, verificationCode)
+    isAuth = await authenticate(
+      connection,
+      fakeAuditLogger,
+      "bichard.example.com",
+      emailAddress,
+      invalidPassword,
+      verificationCode
+    )
     expect(isError(isAuth)).toBe(true)
     actualError = <Error>isAuth
     expect(actualError.message).toBe(expectedError.message)
@@ -222,7 +293,14 @@ describe("Authenticator", () => {
     )
 
     // attempt to use correct password
-    isAuth = await authenticate(connection, fakeAuditLogger, emailAddress, correctPassword, verificationCode)
+    isAuth = await authenticate(
+      connection,
+      fakeAuditLogger,
+      "bichard.example.com",
+      emailAddress,
+      correctPassword,
+      verificationCode
+    )
     expect(isError(isAuth)).toBe(true)
     actualError = <Error>isAuth
     expect(actualError.message).toBe(expectedError.message)
@@ -234,7 +312,14 @@ describe("Authenticator", () => {
     const emailAddress = "deleted@example.com"
     const expectedError = new Error("User not found")
 
-    const isAuth = await authenticate(connection, fakeAuditLogger, emailAddress, correctPassword, "")
+    const isAuth = await authenticate(
+      connection,
+      fakeAuditLogger,
+      "bichard.example.com",
+      emailAddress,
+      correctPassword,
+      ""
+    )
     expect(isError(isAuth)).toBe(true)
 
     const actualError = <Error>isAuth
@@ -249,6 +334,7 @@ describe("Authenticator", () => {
     const result = await authenticate(
       connection,
       fakeAuditLogger,
+      "bichard.example.com",
       "bichard01@example.com",
       correctPassword,
       verificationCode
@@ -263,7 +349,14 @@ describe("Authenticator", () => {
   })
 
   it("should return an error if the user doesn't exist", async () => {
-    const result = await authenticate(connection, fakeAuditLogger, "baduser@example.com", correctPassword, "123456")
+    const result = await authenticate(
+      connection,
+      fakeAuditLogger,
+      "bichard.example.com",
+      "baduser@example.com",
+      correctPassword,
+      "123456"
+    )
 
     expect(isError(result)).toBe(true)
     expect(result).toEqual(new Error("User not found"))
