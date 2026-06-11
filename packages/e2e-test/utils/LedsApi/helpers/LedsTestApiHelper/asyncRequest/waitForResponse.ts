@@ -7,6 +7,7 @@ import { isError } from "../../../../isError"
 import ApiError from "../ApiError"
 import type { EndpointHeaders } from "../generateHeaders"
 import generateHeaders from "../generateHeaders"
+import retryRequest from "../retryRequest"
 
 const wait = (delayInMs = 500) => new Promise((resolve) => setTimeout(resolve, delayInMs))
 
@@ -19,30 +20,20 @@ const waitForResponse = async (
   await wait(100)
 
   let counter = 0
-  let errorAttempts = 0
   while (true) {
     const statusRequestHeaders = generateHeaders(endpointHeaders, requestOptions.authToken)
-    const response = await axios
-      .get<PendingRequestResponse>(`${requestOptions.baseUrl}/person-services/v1/status/${requestId}`, {
+    const response = await retryRequest(() =>
+      axios.get<PendingRequestResponse>(`${requestOptions.baseUrl}/person-services/v1/status/${requestId}`, {
         headers: statusRequestHeaders,
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         })
       })
-      .catch((error: AxiosError) => error)
+    ).catch((error: AxiosError) => error)
 
     if (isError(response)) {
       if (response.response?.status === HttpStatusCode.NotFound) {
         await wait()
-        continue
-      }
-
-      if (response.status === HttpStatusCode.BadGateway) {
-        if (++errorAttempts > 5) {
-          throw new ApiError(response)
-        }
-
-        await wait(10_000)
         continue
       }
 

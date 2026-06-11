@@ -7,6 +7,7 @@ import type RequestOptions from "../../../../types/LedsTestApiHelper/RequestOpti
 import { isError } from "../../../isError"
 import ApiError from "./ApiError"
 import generateHeaders, { ENDPOINT_HEADERS } from "./generateHeaders"
+import retryRequest from "./retryRequest"
 
 const fetchRemand = async (
   requestOptions: RequestOptions,
@@ -19,8 +20,8 @@ const fetchRemand = async (
   }
 
   const headers = generateHeaders(ENDPOINT_HEADERS.remandDetails, requestOptions.authToken)
-  const response = await axios
-    .get<RemandResponse>(
+  const response = await retryRequest(() =>
+    axios.get<RemandResponse>(
       `${requestOptions.baseUrl}/person-services/v1/people/${person.personId}/arrest-reports/${arrestSummonsId}/remands/${remandId}`,
       {
         headers,
@@ -29,7 +30,7 @@ const fetchRemand = async (
         })
       }
     )
-    .catch((error: AxiosError) => error)
+  ).catch((error: AxiosError) => error)
 
   if (isError(response)) {
     throw new ApiError(response)

@@ -5,10 +5,10 @@ import path from "path"
 import type RequestOptions from "../../../../../types/LedsTestApiHelper/RequestOptions"
 import type { PendingRequest } from "../../../../../types/LedsTestApiHelper/Requests/LedsAsyncRequest"
 import { isError } from "../../../../isError"
-import { delay } from "../../../../puppeteer-utils"
 import ApiError from "../ApiError"
 import type { EndpointHeaders } from "../generateHeaders"
 import generateHeaders from "../generateHeaders"
+import retryRequest from "../retryRequest"
 
 const initiateRequest = async (
   requestOptions: RequestOptions,
@@ -19,27 +19,17 @@ const initiateRequest = async (
   const pendingRequestHeaders = generateHeaders(endpointHeaders, requestOptions.authToken)
   const url = `${requestOptions.baseUrl}/${urlPath}`
 
-  let attempts = 0
   while (true) {
-    const pendingRequestResponse = await axios
-      .post<PendingRequest>(url, body, {
+    const pendingRequestResponse = await retryRequest(() =>
+      axios.post<PendingRequest>(url, body, {
         headers: pendingRequestHeaders,
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         })
       })
-      .catch((error: AxiosError) => error)
+    ).catch((error: AxiosError) => error)
 
     if (isError(pendingRequestResponse)) {
-      if (pendingRequestResponse.status === HttpStatusCode.BadGateway) {
-        if (++attempts > 5) {
-          throw new ApiError(pendingRequestResponse)
-        }
-
-        await delay(10)
-        continue
-      }
-
       throw new ApiError(pendingRequestResponse)
     }
 
