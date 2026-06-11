@@ -1,9 +1,9 @@
 import type { AllocationQuery } from "@moj-bichard7/common/contracts/AllocationQuery"
-import type { User, UserList } from "@moj-bichard7/common/types/User"
+import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
 import Permission from "@moj-bichard7/common/types/Permission"
-import { type PromiseResult } from "@moj-bichard7/common/types/Result"
+import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
@@ -20,30 +20,33 @@ const allocate = async (
   logger: FastifyBaseLogger,
   query: AllocationQuery,
   caseId: number
-): PromiseResult<UserList> => {
-  if (!userAccess(user)[Permission.CanAllocate]) {
+): PromiseResult<boolean> => {
+  if (!userAccess(user)[Permission.CanAllocate] || !userAccess(user)[Permission.CanListUsers]) {
     return new NotAllowedError()
   }
 
   const userBeingAllocated = await fetchUserById(database, user, query.allocatedToUserId)
 
-  const lockAndFetchCaseResult = await lockAndAuditLog(
+  if (isError(userBeingAllocated)) {
+    logger.error(userBeingAllocated)
+    return userBeingAllocated
+  }
+
+  const lockResult = await lockAndAuditLog(
     database,
     auditLogGateway,
     userBeingAllocated as User,
     caseId,
     logger,
-    "both"
+    query.caseType
   )
 
-  /* if (isError(result)) {
-    logger.error(result)
-    return result
-  } */
+  if (isError(lockResult)) {
+    logger.error(lockResult)
+    return lockResult
+  }
 
-  /*   const usersDto = users.users.map((u) => convertUserToDto(u))
-   */
-  return { users: [] }
+  return true
 }
 
 export default allocate
