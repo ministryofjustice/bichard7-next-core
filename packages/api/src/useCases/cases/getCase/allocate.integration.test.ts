@@ -1,0 +1,233 @@
+import type { AllocationQuery } from "@moj-bichard7/common/contracts/AllocationQuery"
+import type { FastifyBaseLogger } from "fastify"
+
+import { isError } from "@moj-bichard7/common/types/Result"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+
+import { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
+import { createCase } from "../../../tests/helpers/caseHelper"
+import auditLogDynamoConfig from "../../../tests/helpers/dynamoDbConfig"
+import { createUser } from "../../../tests/helpers/userHelper"
+import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
+import TestDynamoGateway from "../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
+import { NotAllowedError } from "../../../types/errors/NotAllowedError"
+import allocate from "./allocate"
+
+const mockLogger = {
+  debug: jest.fn(),
+  error: jest.fn(),
+  info: jest.fn(),
+  warn: jest.fn()
+} as unknown as FastifyBaseLogger
+
+describe("allocate integration", () => {
+  const testDatabaseGateway = new End2EndPostgres()
+  const testDynamoGateway = new TestDynamoGateway(auditLogDynamoConfig)
+  const auditLogGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
+
+  beforeEach(async () => {
+    await testDatabaseGateway.clearDb()
+    await testDynamoGateway.clearDynamo()
+    jest.clearAllMocks()
+  })
+
+  afterAll(async () => {
+    await testDatabaseGateway.close()
+  })
+
+  it("returns NotAllowedError if the executing user lacks permissions", async () => {
+    const executingUser = await createUser(testDatabaseGateway, {
+      groups: [UserGroup.Audit],
+      visibleForces: ["01"]
+    })
+    const caseObj = await createCase(testDatabaseGateway, { errorLockedById: null })
+
+    const query: AllocationQuery = {
+      allocatedToUserId: 999,
+      caseType: "exceptions"
+    }
+
+    const result = await allocate(
+      auditLogGateway,
+      testDatabaseGateway.writable,
+      executingUser,
+      mockLogger,
+      query,
+      caseObj.errorId
+    )
+
+    expect(isError(result)).toBe(true)
+    expect(result).toBeInstanceOf(NotAllowedError)
+  })
+
+  it("returns an error if the user being allocated to does not exist in the database", async () => {
+    const supervisorUser = await createUser(testDatabaseGateway, {
+      groups: [UserGroup.Supervisor],
+      visibleForces: ["01"]
+    })
+    const caseObj = await createCase(testDatabaseGateway, { errorLockedById: null })
+
+    const query: AllocationQuery = {
+      allocatedToUserId: 99999,
+      caseType: "exceptions"
+    }
+
+    const result = await allocate(
+      auditLogGateway,
+      testDatabaseGateway.writable,
+      supervisorUser,
+      mockLogger,
+      query,
+      caseObj.errorId
+    )
+
+    expect(isError(result)).toBe(true)
+    expect((result as Error).message).toContain("does not exist")
+    expect(mockLogger.error).toHaveBeenCalledWith(expect.any(Error))
+  })
+
+  it("returns an error if the target user exists but is out of the executing user's visible forces boundary", async () => {
+    const supervisorUser = await createUser(testDatabaseGateway, {
+      groups: [UserGroup.Supervisor],
+      visibleForces: ["01"]
+    })
+
+    const targetUser = await createUser(testDatabaseGateway, {
+      groups: [UserGroup.GeneralHandler],
+      visibleForces: ["02"]
+    })
+
+    const caseObj = await createCase(testDatabaseGateway, { errorLockedById: null })
+
+    const query: AllocationQuery = {
+      allocatedToUserId: targetUser.id,
+      caseType: "exceptions"
+    }
+
+    const result = await allocate(
+      auditLogGateway,
+      testDatabaseGateway.writable,
+      supervisorUser,
+      mockLogger,
+      query,
+      caseObj.errorId
+    )
+
+    expect(isError(result)).toBe(true)
+    expect((result as Error).message).toContain("does not exist")
+    expect(mockLogger.error).toHaveBeenCalled()
+  })
+
+  it("successfully allocates exceptions to target user", async () => {
+    const supervisorUser = await createUser(testDatabaseGateway, {
+      groups: [UserGroup.Supervisor],
+      username: "allocating_supervisor",
+      visibleForces: ["01"]
+    })
+
+    const targetUser = await createUser(testDatabaseGateway, {
+      groups: [UserGroup.GeneralHandler],
+      username: "allocated_handler",
+      visibleForces: ["01"]
+    })
+
+    const caseObj = await createCase(testDatabaseGateway, {
+      errorLockedById: null,
+      triggerLockedById: null
+    })
+
+    const query: AllocationQuery = {
+      allocatedToUserId: targetUser.id,
+      caseType: "exceptions"
+    }
+
+    const result = await allocate(
+      auditLogGateway,
+      testDatabaseGateway.writable,
+      supervisorUser,
+      mockLogger,
+      query,
+      caseObj.errorId
+    )
+
+    expect(isError(result)).toBe(false)
+    expect(result).toBe(true)
+
+    const updatedCase = await testDatabaseGateway.writable
+      .connection`SELECT * FROM br7own.error_list WHERE error_id = ${caseObj.errorId}`
+
+    expect(updatedCase[0].error_locked_by_id).toBe(targetUser.username)
+    expect(updatedCase[0].trigger_locked_by_id).toBeNull()
+  })
+
+  it("successfully allocates triggers to target user", async () => {
+    const supervisorUser = await createUser(testDatabaseGateway, {
+      groups: [UserGroup.Supervisor],
+      username: "allocating_supervisor",
+      visibleForces: ["01"]
+    })
+
+    const targetUser = await createUser(testDatabaseGateway, {
+      groups: [UserGroup.GeneralHandler],
+      username: "allocated_handler",
+      visibleForces: ["01"]
+    })
+
+    const caseObj = await createCase(testDatabaseGateway, {
+      errorLockedById: null,
+      triggerLockedById: null
+    })
+
+    const query: AllocationQuery = {
+      allocatedToUserId: targetUser.id,
+      caseType: "triggers"
+    }
+
+    const result = await allocate(
+      auditLogGateway,
+      testDatabaseGateway.writable,
+      supervisorUser,
+      mockLogger,
+      query,
+      caseObj.errorId
+    )
+
+    expect(isError(result)).toBe(false)
+    expect(result).toBe(true)
+
+    const updatedCase = await testDatabaseGateway.writable
+      .connection`SELECT * FROM br7own.error_list WHERE error_id = ${caseObj.errorId}`
+
+    expect(updatedCase[0].trigger_locked_by_id).toBe(targetUser.username)
+    expect(updatedCase[0].error_locked_by_id).toBeNull()
+  })
+
+  it("returns an error and logs it if lockAndAuditLog execution fails", async () => {
+    const supervisorUser = await createUser(testDatabaseGateway, {
+      groups: [UserGroup.Supervisor],
+      visibleForces: ["01"]
+    })
+
+    const targetUser = await createUser(testDatabaseGateway, {
+      groups: [UserGroup.GeneralHandler],
+      visibleForces: ["01"]
+    })
+
+    const query: AllocationQuery = {
+      allocatedToUserId: targetUser.id,
+      caseType: "exceptions"
+    }
+
+    const result = await allocate(
+      auditLogGateway,
+      testDatabaseGateway.writable,
+      supervisorUser,
+      mockLogger,
+      query,
+      99999
+    )
+
+    expect(isError(result)).toBe(true)
+    expect(mockLogger.error).toHaveBeenCalled()
+  })
+})
