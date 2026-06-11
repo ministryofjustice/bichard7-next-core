@@ -57,7 +57,7 @@ const handler = async ({ auditLogGateway, caseId, database, logger, query, reply
 }
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).get(V1.CasesAllocate, { schema }, async (req, reply) => {
+  useZod(fastify).put(V1.CasesAllocate, { schema }, async (req, reply) => {
     await handler({
       auditLogGateway: req.auditLogGateway,
       caseId: Number(req.params.caseId),

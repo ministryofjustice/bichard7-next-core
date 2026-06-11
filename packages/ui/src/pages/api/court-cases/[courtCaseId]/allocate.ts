@@ -32,11 +32,10 @@ export default async function users(request: NextApiRequest, response: NextApiRe
   const apiClient = new ApiClient(jwt)
   const apiGateway = new BichardApiV1(apiClient)
 
-  const query = {
-    courtCaseId: courtCaseId as string,
-    caseType: caseType as string,
+  const query: AllocationQuery = {
+    caseType: caseType as "triggers" | "exceptions",
     allocatedToUserId: body.id
-  } as AllocationQuery
+  }
 
   const result = await apiGateway.updateAllocation(Number(courtCaseId), query)
 
