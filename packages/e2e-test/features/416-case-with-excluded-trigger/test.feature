@@ -19,4 +19,3 @@ Feature: {416} Do not display any cases that have only excluded triggers for the
 			And I reload the page
 		Then there should only be "0" records
 			And I cannot see trigger "PR06" in the exception list table
-			And the PNC updates the record

@@ -21,4 +21,3 @@ Feature: {417} Do not display excluded triggers on cases for the currently signe
 		Then there should only be "1" records
 			And I cannot see trigger "PR08" in the exception list table
 			And I see trigger "PR10 - Conditional bail" in the exception list table
-			And the PNC updates the record

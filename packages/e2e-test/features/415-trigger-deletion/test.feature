@@ -27,4 +27,3 @@ Feature: {415} Remove trigger codes from a case if triggers are deleted after re
 			And I reload until I don't see "(Submitted)"
 		Then I cannot see exception "HO100300" in the exception list table
 			And I cannot see trigger "PR18" in the exception list table
-			And the PNC updates the record
