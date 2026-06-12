@@ -57,6 +57,7 @@ describe("/v1/me", () => {
       fullname: `${user.forenames} ${user.surname}`,
       groups: user.groups,
       hasAccessTo: {
+        [Permission.CanAllocate]: false,
         [Permission.CanAuditCases]: false,
         [Permission.CanListUsers]: false,
         [Permission.CanResubmit]: true,
@@ -99,6 +100,7 @@ describe("/v1/me", () => {
       fullname: `${user.forenames} ${user.surname}`,
       groups: user.groups,
       hasAccessTo: {
+        [Permission.CanAllocate]: false,
         [Permission.CanAuditCases]: true,
         [Permission.CanListUsers]: true,
         [Permission.CanResubmit]: true,
