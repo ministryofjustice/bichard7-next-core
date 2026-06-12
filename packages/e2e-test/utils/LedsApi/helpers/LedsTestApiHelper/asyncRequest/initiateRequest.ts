@@ -19,30 +19,28 @@ const initiateRequest = async (
   const pendingRequestHeaders = generateHeaders(endpointHeaders, requestOptions.authToken)
   const url = `${requestOptions.baseUrl}/${urlPath}`
 
-  while (true) {
-    const pendingRequestResponse = await retryRequest(() =>
-      axios.post<PendingRequest>(url, body, {
-        headers: pendingRequestHeaders,
-        httpsAgent: new https.Agent({
-          rejectUnauthorized: false
-        })
+  const pendingRequestResponse = await retryRequest(() =>
+    axios.post<PendingRequest>(url, body, {
+      headers: pendingRequestHeaders,
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: false
       })
-    ).catch((error: AxiosError) => error)
+    })
+  ).catch((error: AxiosError) => error)
 
-    if (isError(pendingRequestResponse)) {
-      throw new ApiError(pendingRequestResponse)
-    }
-
-    if (pendingRequestResponse.status !== HttpStatusCode.Accepted) {
-      throw new Error(
-        `Failed to send request to POST ${path.join(requestOptions.baseUrl, urlPath)}: ${pendingRequestResponse.status}, ${pendingRequestResponse.data}`
-      )
-    }
-
-    const { requestId } = pendingRequestResponse.data
-
-    return requestId
+  if (isError(pendingRequestResponse)) {
+    throw new ApiError(pendingRequestResponse)
   }
+
+  if (pendingRequestResponse.status !== HttpStatusCode.Accepted) {
+    throw new Error(
+      `Failed to send request to POST ${path.join(requestOptions.baseUrl, urlPath)}: ${pendingRequestResponse.status}, ${pendingRequestResponse.data}`
+    )
+  }
+
+  const { requestId } = pendingRequestResponse.data
+
+  return requestId
 }
 
 export default initiateRequest
