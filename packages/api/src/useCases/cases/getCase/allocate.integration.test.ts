@@ -62,7 +62,7 @@ describe("allocate integration", () => {
 
   it("returns an error if the user being allocated to does not exist in the database", async () => {
     const supervisorUser = await createUser(testDatabaseGateway, {
-      groups: [UserGroup.Supervisor],
+      groups: [UserGroup.Supervisor, UserGroup.Allocator],
       visibleForces: ["01"]
     })
     const caseObj = await createCase(testDatabaseGateway, { errorLockedById: null })
@@ -86,9 +86,9 @@ describe("allocate integration", () => {
     expect(mockLogger.error).toHaveBeenCalledWith(expect.any(Error))
   })
 
-  it("returns an error if the target user exists but is out of the executing user's visible forces boundary", async () => {
+  it("returns an error if the target user exists but is has no visible forces in common with the executing user", async () => {
     const supervisorUser = await createUser(testDatabaseGateway, {
-      groups: [UserGroup.Supervisor],
+      groups: [UserGroup.Supervisor, UserGroup.Allocator],
       visibleForces: ["01"]
     })
 
@@ -120,7 +120,7 @@ describe("allocate integration", () => {
 
   it("successfully allocates exceptions to target user", async () => {
     const supervisorUser = await createUser(testDatabaseGateway, {
-      groups: [UserGroup.Supervisor],
+      groups: [UserGroup.Supervisor, UserGroup.Allocator],
       username: "allocating_supervisor",
       visibleForces: ["01"]
     })
@@ -162,7 +162,7 @@ describe("allocate integration", () => {
 
   it("successfully allocates triggers to target user", async () => {
     const supervisorUser = await createUser(testDatabaseGateway, {
-      groups: [UserGroup.Supervisor],
+      groups: [UserGroup.Supervisor, UserGroup.Allocator],
       username: "allocating_supervisor",
       visibleForces: ["01"]
     })
@@ -204,7 +204,7 @@ describe("allocate integration", () => {
 
   it("returns an error and logs it if lockAndAuditLog execution fails", async () => {
     const supervisorUser = await createUser(testDatabaseGateway, {
-      groups: [UserGroup.Supervisor],
+      groups: [UserGroup.Supervisor, UserGroup.Allocator],
       visibleForces: ["01"]
     })
 
