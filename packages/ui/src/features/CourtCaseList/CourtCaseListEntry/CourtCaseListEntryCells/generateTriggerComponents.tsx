@@ -49,7 +49,7 @@ export const generateTriggerComponents = (
   } else if (user.hasAccessTo[Permission.CanAllocate]) {
     tagToDisplay = allocateTag
   } else {
-    tagToDisplay = <CaseUnlockedTag isCaseUnlocked={triggerHasBeenRecentlyUnlocked && !triggerLockedByUsername} />
+    tagToDisplay = <CaseUnlockedTag isCaseUnlocked={triggerHasBeenRecentlyUnlocked} />
   }
 
   return {
