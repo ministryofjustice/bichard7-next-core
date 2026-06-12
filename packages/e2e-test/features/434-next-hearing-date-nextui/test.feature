@@ -11,6 +11,7 @@ Feature: 434 - Next Hearing Date Not Found Next UI
 
   @NextUI
   @ExcludeOnLegacyUI
+  @ExcludedOnRealLeds
   Scenario: No next hearing date
     Given I am logged in as "supervisor"
       And I view the list of exceptions
@@ -27,6 +28,7 @@ Feature: 434 - Next Hearing Date Not Found Next UI
 
   @NextUI
   @ExcludeOnLegacyUI
+  @ExcludedOnRealLeds
   Scenario: No next hearing date testing the calendar component
     Given I am logged in as "supervisor"
       And I view the list of exceptions
@@ -45,6 +47,7 @@ Feature: 434 - Next Hearing Date Not Found Next UI
 
   @NextUI
   @ExcludeOnLegacyUI
+  @ExcludedOnRealLeds
   Scenario: Save next hearing date
     Given I am logged in as "supervisor"
       And I view the list of exceptions
@@ -56,6 +59,7 @@ Feature: 434 - Next Hearing Date Not Found Next UI
 
   @NextUI
   @ExcludeOnLegacyUI
+  @ExcludedOnRealLeds
   Scenario: No next hearing date testing the calendar component
     Given I am logged in as "supervisor"
       And I view the list of exceptions

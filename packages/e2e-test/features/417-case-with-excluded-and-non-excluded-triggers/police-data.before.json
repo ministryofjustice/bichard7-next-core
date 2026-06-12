@@ -1,20 +1,19 @@
 {
   "disposals": [
     {
-      "caseStatusMarker": "C",
+      "caseStatusMarker": "A",
       "charges": [
         {
           "additionalMarker": false,
           "additionalOffenceMarker": false,
-          "adjudication": "G",
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100004193F",
-          "chargeStatusMarker": "C",
-          "cjsOffenceCode": "TH68006",
+          "arrestSummonsReference": "26/0000/00/100004395A",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "CJ88116",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/2576/001923R",
-          "crimeReference": "KS0GU47BDPIWBV-",
+          "courtCaseReferenceNumber": "26/2576/002162B",
+          "crimeReference": "MWSW3G4MEFTJINN",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -22,22 +21,14 @@
             "locationType": "description"
           },
           "locationFSCode": "01ZD",
-          "npccOffenceCode": "5.5.5.1",
+          "npccOffenceCode": "1.8.11.2",
           "offenceChargeNumber": 1,
           "offenceDescription": [],
-          "offencesTakenIntoConsideration": 0,
           "othersCharged": [],
-          "plea": "2",
-          "qualifiedCjsCode": "TH68006",
-          "results": [
-            {
-              "disposalCode": "3047",
-              "disposalQualifierCodes": ["FA"],
-              "disposalText": "UNTIL FURTHER ORDER"
-            }
-          ],
+          "qualifiedCjsCode": "CJ88116",
+          "results": [],
           "roleQualifier": [],
-          "startDate": "2010-11-04"
+          "startDate": "2010-11-28"
         }
       ],
       "convictionDate": "2011-09-26",
@@ -45,8 +36,7 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/001923R",
-      "subsequentAppearances": []
+      "courtCaseReference": "26/2576/002162B"
     }
   ],
   "remands": []

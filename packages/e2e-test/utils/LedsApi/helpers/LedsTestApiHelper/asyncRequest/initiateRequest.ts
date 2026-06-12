@@ -8,6 +8,7 @@ import { isError } from "../../../../isError"
 import ApiError from "../ApiError"
 import type { EndpointHeaders } from "../generateHeaders"
 import generateHeaders from "../generateHeaders"
+import retryRequest from "../retryRequest"
 
 const initiateRequest = async (
   requestOptions: RequestOptions,
@@ -18,14 +19,14 @@ const initiateRequest = async (
   const pendingRequestHeaders = generateHeaders(endpointHeaders, requestOptions.authToken)
   const url = `${requestOptions.baseUrl}/${urlPath}`
 
-  const pendingRequestResponse = await axios
-    .post<PendingRequest>(url, body, {
+  const pendingRequestResponse = await retryRequest(() =>
+    axios.post<PendingRequest>(url, body, {
       headers: pendingRequestHeaders,
       httpsAgent: new https.Agent({
         rejectUnauthorized: false
       })
     })
-    .catch((error: AxiosError) => error)
+  ).catch((error: AxiosError) => error)
 
   if (isError(pendingRequestResponse)) {
     throw new ApiError(pendingRequestResponse)

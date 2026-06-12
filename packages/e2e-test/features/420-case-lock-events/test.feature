@@ -3,7 +3,7 @@ Feature: {420} Lock and unlock events
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@NextUI
+	@NextUI @ExcludedOnRealLeds
 	Scenario: Generates audit logs for locking and unlocking the case
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions

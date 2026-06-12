@@ -4,7 +4,7 @@ Feature: {423} Trigger TRPR0028
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@Should
+	@Should @ExcludedOnRealLeds
 	Scenario: Should generate trigger TRPR0028 when reallocating a case that only has TRPR0027 unresolved trigger
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
