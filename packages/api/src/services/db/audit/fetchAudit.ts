@@ -1,7 +1,8 @@
-import type { Audit, AuditDto } from "@moj-bichard7/common/types/Audit"
 import type { User } from "@moj-bichard7/common/types/User"
 
+import { type Audit, type AuditDto, AuditSchema } from "@moj-bichard7/common/types/Audit"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+import z from "zod"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
@@ -41,5 +42,10 @@ export const fetchAudit = async (
     return null
   }
 
-  return convertAuditToDto(results[0])
+  const parsedResults = z.array(AuditSchema).safeParse(results)
+  if (!parsedResults.success) {
+    return parsedResults.error
+  }
+
+  return convertAuditToDto(parsedResults.data[0])
 }
