@@ -18,7 +18,8 @@ export const lockAndAuditLog = async (
   auditLogGateway: AuditLogDynamoGateway,
   user: User,
   caseId: number,
-  logger?: FastifyBaseLogger
+  logger?: FastifyBaseLogger,
+  lockType: "both" | "exceptions" | "triggers" = "both"
 ): PromiseResult<void> => {
   const auditLogEvents: ApiAuditLogEvent[] = []
 
@@ -29,14 +30,18 @@ export const lockAndAuditLog = async (
         throw caseMessageId
       }
 
-      const lockExceptionsResult = await lockExceptions(db, user, caseId, auditLogEvents)
-      if (isError(lockExceptionsResult)) {
-        throw lockExceptionsResult
+      if (lockType === "both" || lockType === "exceptions") {
+        const lockExceptionsResult = await lockExceptions(db, user, caseId, auditLogEvents)
+        if (isError(lockExceptionsResult)) {
+          throw lockExceptionsResult
+        }
       }
 
-      const lockTriggersResult = await lockTriggers(db, user, caseId, auditLogEvents)
-      if (isError(lockTriggersResult)) {
-        throw lockTriggersResult
+      if (lockType === "both" || lockType === "triggers") {
+        const lockTriggersResult = await lockTriggers(db, user, caseId, auditLogEvents)
+        if (isError(lockTriggersResult)) {
+          throw lockTriggersResult
+        }
       }
 
       if (auditLogEvents.length > 0) {
