@@ -12,7 +12,7 @@ export default async (database: DatabaseConnection, user: User, id: number): Pro
   const sql = database.connection
 
   if (user.visibleForces.length === 0) {
-    return Error(`User with ID "${id}" has no visible forces`)
+    return new Error(`User with ID "${id}" has no visible forces`)
   }
 
   const visibleForcesFilter = filterUsersByVisibleForces(database, user.visibleForces)
@@ -44,11 +44,11 @@ export default async (database: DatabaseConnection, user: User, id: number): Pro
     `.catch((error: Error) => error)
 
   if (isError(userResult)) {
-    return Error(`Error while fetching user by ID for "${id}": ${userResult.message}`)
+    return new Error(`Error while fetching user by ID for "${id}": ${userResult.message}`)
   }
 
   if (!userResult || userResult.length === 0) {
-    return Error(`User with ID "${id}" does not exist`)
+    return new Error(`User with ID "${id}" does not exist`)
   }
 
   return mapUserRowToUser(userResult[0])
