@@ -8,6 +8,7 @@ import type RequestOptions from "../../../../types/LedsTestApiHelper/RequestOpti
 import { isError } from "../../../isError"
 import ApiError from "./ApiError"
 import generateHeaders, { ENDPOINT_HEADERS } from "./generateHeaders"
+import retryRequest from "./retryRequest"
 
 const findDisposalsByAsn = async (
   requestOptions: RequestOptions,
@@ -18,14 +19,14 @@ const findDisposalsByAsn = async (
     caseStatusMarkers: ["impending-prosecution-detail", "penalty-notice", "court-case"]
   }
   const headers = generateHeaders(ENDPOINT_HEADERS.arrestSummaries, requestOptions.authToken)
-  const response = await axios
-    .post<AsnQueryResponse>(`${requestOptions.baseUrl}/${endpoints.asnQuery}`, request, {
+  const response = await retryRequest(() =>
+    axios.post<AsnQueryResponse>(`${requestOptions.baseUrl}/${endpoints.asnQuery}`, request, {
       headers,
       httpsAgent: new https.Agent({
         rejectUnauthorized: false
       })
     })
-    .catch((error: AxiosError) => error)
+  ).catch((error: AxiosError) => error)
 
   if (isError(response)) {
     throw new ApiError(response)

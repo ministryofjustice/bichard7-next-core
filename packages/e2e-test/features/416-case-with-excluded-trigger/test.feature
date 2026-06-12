@@ -17,5 +17,5 @@ Feature: {416} Do not display any cases that have only excluded triggers for the
 			And I see trigger "PR06 - Imprisoned" in the exception list table
 		When I am logged in as "TriggerHandlerWithExcludedTRPR0006"
 			And I reload the page
-			And there should only be "0" records
+		Then there should only be "0" records
 			And I cannot see trigger "PR06" in the exception list table

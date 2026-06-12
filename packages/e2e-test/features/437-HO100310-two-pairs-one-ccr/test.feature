@@ -12,6 +12,7 @@ Feature: {437} HO100310 - two pairs of exceptions in one PNC court case
       And "input-message" is received
 
   @NextUI
+  @ExcludedOnRealLeds
   Scenario: Resolving two pairs of HO100310 exceptions in once PNC court case
     Given I am logged in as "generalhandler"
       And I view the list of exceptions

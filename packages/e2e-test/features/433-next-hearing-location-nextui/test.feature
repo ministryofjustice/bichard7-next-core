@@ -11,6 +11,7 @@ Feature: 433 - Next Hearing location Next UI
 
 	@ExcludeOnLegacyUI
 	@NextUI
+	@ExcludedOnRealLeds
 	Scenario: No next hearing location
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
@@ -26,6 +27,7 @@ Feature: 433 - Next Hearing location Next UI
 
 	@ExcludeOnLegacyUI
 	@NextUI
+	@ExcludedOnRealLeds
 	Scenario: No next hearing location testing the typeahead with a court name
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
@@ -42,6 +44,7 @@ Feature: 433 - Next Hearing location Next UI
 
 	@ExcludeOnLegacyUI
 	@NextUI
+	@ExcludedOnRealLeds
 	Scenario: No next hearing location testing the typeahead with a court code
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
@@ -58,6 +61,7 @@ Feature: 433 - Next Hearing location Next UI
 
 	@ExcludeOnLegacyUI
 	@NextUI
+	@ExcludedOnRealLeds
 	Scenario: Save next hearing location with save button
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions

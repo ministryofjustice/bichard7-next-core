@@ -9,7 +9,7 @@ Feature: {424} Note generation
     Given the data for this test is in the PNC
       And "input-message" is received
 
-  @NextUI
+  @NextUI @ExcludedOnRealLeds
   Scenario: PNC is updated when there are multiple identical results NextUI
     Given I am logged in as "generalhandler"
       And I view the list of exceptions
