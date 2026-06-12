@@ -9,6 +9,7 @@ Feature: {443} Returning to relevant case list from error page
 
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: Clicking "Return to case list" button on error page will take user to the case list (new ui)
 		Given I am logged in as "generalhandler"
 			And I view the list of exceptions
@@ -19,6 +20,7 @@ Feature: {443} Returning to relevant case list from error page
 		Then I see button "Switch to old Bichard" with class "govuk-button"
 
 	@Should
+	@ExcludedOnRealLeds
 	Scenario: Clicking "Return to case list" button on error page will take user to the case list (old ui)
 		Given I am logged in as "generalhandler"
 			And I view the list of exceptions
@@ -30,6 +32,7 @@ Feature: {443} Returning to relevant case list from error page
 
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: Return to case list navigates to legacy Bichard when error occurs after switching from new Bichard
 		Given I am logged in as "generalhandler"
 			And I view the list of exceptions
@@ -43,6 +46,7 @@ Feature: {443} Returning to relevant case list from error page
 	@Should
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: Return to case list navigates to new Bichard when error occurs after switching from legacy Bichard
 		Given I am logged in as "generalhandler"
 			And I view the list of exceptions

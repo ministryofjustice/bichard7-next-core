@@ -9,7 +9,7 @@ Feature: {414} Persist Reason codes on a case list after the case is resolved.
 
 	Background:
 		Given the data for this test is in the PNC
-			And "input-message" is received
+			And "input-message" is received with an invalid ASN
 
 	Scenario: Reason codes are displayed correctly once the case is resubmitted on Legacy Bichard
 		Given I am logged in as "supervisor"
@@ -33,7 +33,7 @@ Feature: {414} Persist Reason codes on a case list after the case is resolved.
 
 	@NextUI
 	@ExcludeOnLegacyUI
-		Scenario: Reason codes are displayed correctly once the case is resubmitted on New Bichard
+	Scenario: Reason codes are displayed correctly once the case is resubmitted on New Bichard
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
 		Then I see exception "HO100206" in the exception list table

@@ -8,6 +8,7 @@ import type RequestOptions from "../../../../types/LedsTestApiHelper/RequestOpti
 import { isError } from "../../../isError"
 import ApiError from "./ApiError"
 import generateHeaders, { ENDPOINT_HEADERS } from "./generateHeaders"
+import retryRequest from "./retryRequest"
 
 const fetchArrestSummaries = async (
   requestOptions: RequestOptions,
@@ -18,8 +19,8 @@ const fetchArrestSummaries = async (
   }
 
   const headers = generateHeaders(ENDPOINT_HEADERS.arrestSummaries, requestOptions.authToken)
-  const response = await axios
-    .get<ArrestSummariesResponse>(
+  const response = await retryRequest(() =>
+    axios.get<ArrestSummariesResponse>(
       `${requestOptions.baseUrl}/person-services/v1/people/${person.personId}/arrest-reports?offset=0&limit=999`,
       {
         headers,
@@ -28,7 +29,7 @@ const fetchArrestSummaries = async (
         })
       }
     )
-    .catch((error: AxiosError) => error)
+  ).catch((error: AxiosError) => error)
 
   if (isError(response)) {
     throw new ApiError(response)

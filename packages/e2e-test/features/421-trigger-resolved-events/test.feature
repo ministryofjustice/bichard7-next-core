@@ -4,7 +4,7 @@ Feature: {421} Trigger resolved events
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@NextUI
+	@NextUI @ExcludedOnRealLeds
 	Scenario: Generates audit logs for resolving triggers
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
