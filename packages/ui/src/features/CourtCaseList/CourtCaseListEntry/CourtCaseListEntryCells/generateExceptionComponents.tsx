@@ -43,7 +43,7 @@ export const generateExceptionComponents = (
   } else if (user.hasAccessTo[Permission.CanAllocate]) {
     tagToDisplay = allocateTag
   } else {
-    tagToDisplay = <CaseUnlockedTag isCaseUnlocked={exceptionHasBeenRecentlyUnlocked && !errorLockedByUsername} />
+    tagToDisplay = <CaseUnlockedTag isCaseUnlocked={exceptionHasBeenRecentlyUnlocked} />
   }
 
   return {

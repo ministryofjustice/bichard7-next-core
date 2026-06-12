@@ -1,10 +1,10 @@
-import AutoSave from "components/EditableFields/AutoSave"
-import { CourtCaseContext } from "context/CourtCaseContext"
-import { CsrfTokenContext } from "context/CsrfTokenContext"
+import AutoSave from "@/components/EditableFields/AutoSave"
+import { CourtCaseContext } from "@/context/CourtCaseContext"
+import { CsrfTokenContext } from "@/context/CsrfTokenContext"
 import React, { useState } from "react"
-import { AmendmentKeys } from "types/Amendments"
-import { DisplayFullCourtCase } from "types/display/CourtCases"
-import HO100200 from "../fixtures/HO100200.json"
+import { AmendmentKeys } from "@/types/Amendments"
+import { DisplayFullCourtCase } from "@/types/display/CourtCases"
+import HO100200 from "../../fixtures/HO100200.json"
 
 describe("AutoSave", () => {
   const courtCase = HO100200 as unknown as DisplayFullCourtCase
