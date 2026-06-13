@@ -49,7 +49,7 @@
     "@aws-sdk/client-sqs": "^3.1062.0",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.369",
     "@stomp/stompjs": "^7.3.0",
-    "esbuild": "~0.25.0",
+    "esbuild": "~0.28.1",
     "jest": "^30.4.2",
     "mailhog": "^4.16.0",
     "postgres": "3.4.9",
