@@ -41,7 +41,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ auditLogGateway, caseId, database, logger, query, reply, user }: HandlerProps) => {
-  if (isNaN(caseId)) {
+  if (Number.isNaN(caseId)) {
     return reply.code(BAD_REQUEST).send()
   }
 
