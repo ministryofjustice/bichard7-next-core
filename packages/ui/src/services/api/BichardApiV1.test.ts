@@ -326,7 +326,7 @@ describe("BichardApiV1", () => {
     it("calls apiClient#put with a route", async () => {
       const endpoint = V1.CasesAllocate.replace(":caseId", String(caseId))
 
-      jest.spyOn(client, "put").mockResolvedValue(true)
+      jest.spyOn(client, "put")
 
       await gateway.updateAllocation(caseId, allocationQuery)
 
@@ -336,12 +336,13 @@ describe("BichardApiV1", () => {
     })
 
     it("can handle errors", async () => {
-      jest.spyOn(client, "get").mockResolvedValue(new Error())
+      const expectedError = new Error("Error")
+      jest.spyOn(client, "put").mockResolvedValue(expectedError)
 
       const result = await gateway.updateAllocation(caseId, allocationQuery)
 
       expect(isError(result)).toBe(true)
-      expect(result).toEqual(new Error())
+      expect(result).toEqual(expectedError)
     })
   })
 })
