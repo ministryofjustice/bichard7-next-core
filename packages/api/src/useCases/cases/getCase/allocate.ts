@@ -20,7 +20,7 @@ const allocate = async (
   logger: FastifyBaseLogger,
   query: AllocationQuery,
   caseId: number
-): PromiseResult<boolean> => {
+): PromiseResult<void> => {
   if (!userAccess(user)[Permission.CanAllocate] || !userAccess(user)[Permission.CanListUsers]) {
     return new NotAllowedError()
   }
@@ -45,8 +45,6 @@ const allocate = async (
     logger.error(lockResult)
     return lockResult
   }
-
-  return true
 }
 
 export default allocate
