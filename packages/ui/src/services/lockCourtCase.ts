@@ -5,12 +5,14 @@ import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToLocked from "./updateLockStatusToLocked"
-import { retryTransaction } from "./retryTransaction"
 
-const lockCourtCaseTransaction = async (dataSource: DataSource, courtCaseId: number, user: User) => {
-  return await dataSource.transaction("SERIALIZABLE", async (entityManager) => {
+const lockCourtCase = async (
+  dataSource: DataSource,
+  courtCaseId: number,
+  user: User
+): Promise<UpdateResult | Error> => {
+  return await dataSource.transaction(async (entityManager) => {
     const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
-
     if (!courtCase) {
       throw new Error("Failed to lock: Case not found")
     }
@@ -31,8 +33,5 @@ const lockCourtCaseTransaction = async (dataSource: DataSource, courtCaseId: num
     return lockResult
   })
 }
-
-const lockCourtCase = async (dataSource: DataSource, courtCaseId: number, user: User): Promise<UpdateResult | Error> =>
-  await retryTransaction(lockCourtCaseTransaction, dataSource, courtCaseId, user)
 
 export default lockCourtCase
