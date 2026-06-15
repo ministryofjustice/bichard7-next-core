@@ -62,14 +62,14 @@ const handler = async ({ auditLogGateway, body, caseId, database, logger, reply,
     return reply.code(INTERNAL_SERVER_ERROR).send(result)
   }
 
-  return reply.code(OK).send(result)
+  return reply.code(OK).send({ success: true })
 }
 
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).put(V1.CasesAllocate, { schema }, async (req, reply) => {
     await handler({
       auditLogGateway: req.auditLogGateway,
-      body: req.body as AllocationQuery,
+      body: req.body,
       caseId: Number(req.params.caseId),
       database: req.database,
       logger: req.log,
