@@ -55,10 +55,11 @@ COPY --from=builder /core/packages/common/dist ./packages/common/dist
 COPY --from=builder /core/packages/common/node_modules ./packages/common/node_modules
 
 COPY --from=builder /core/packages/api/dist ./packages/api/dist
+COPY --from=builder /core/packages/api/node_modules ./packages/api/node_modules
 
 WORKDIR /core/packages/api
 
-COPY --from=builder /core/node_modules/@fastify/swagger-ui/static ./static
+COPY --from=builder /core/packages/api/node_modules/@fastify/swagger-ui/static ./static
 
 RUN chgrp supervisor -R /core && \
     chmod g+rw -R /core
