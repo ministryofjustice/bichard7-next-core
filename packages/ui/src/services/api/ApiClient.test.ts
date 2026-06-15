@@ -135,9 +135,9 @@ describe("ApiClient", () => {
   })
 
   it("should perform a successful PUT request with an object body", async () => {
-    const payload = { name: "New User" }
+    const payload = { name: "TestData" }
     const expectedData = { success: true }
-    mockFetch.mockResolvedValueOnce(mockResponse(true, 201, expectedData) as any)
+    mockFetch.mockResolvedValueOnce(mockResponse(true, 200, expectedData) as any)
 
     const result = await client.put("/cases/1/allocate", payload)
 
