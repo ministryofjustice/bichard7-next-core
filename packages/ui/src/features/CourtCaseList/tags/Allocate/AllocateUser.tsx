@@ -3,7 +3,8 @@ import { Button } from "@/components/Buttons/Button"
 import AllocateUserTypeahead from "@/components/Typeaheads/AllocateUserTypeahead"
 import { useCallback, useRef, useState } from "react"
 import { UserLookupDto } from "@moj-bichard7/common/types/User"
-import { ColumnType } from "../../CourtCaseListEntry/CourtCaseListEntryCells/generateAllocationComponent"
+
+export type ColumnType = "exceptions" | "triggers"
 
 interface AllocateUserProps {
   columnType: ColumnType
