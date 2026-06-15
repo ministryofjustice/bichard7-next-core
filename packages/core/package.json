@@ -54,7 +54,7 @@
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.9.3",
     "@types/nunjucks": "^3.2.6",
     "@types/pretty-data": "^0.40.3",
     "@types/promise-poller": "^1.7.4",
@@ -79,10 +79,10 @@
     "tsconfig-paths": "^4.2.0"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.1062.0",
-    "@aws-sdk/client-s3": "^3.1062.0",
+    "@aws-sdk/client-dynamodb": "^3.1067.0",
+    "@aws-sdk/client-s3": "^3.1067.0",
     "@io-orkes/conductor-javascript": "~2.1.5",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.369",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.373",
     "@types/lodash.ismatch": "^4.4.9",
     "aws-sdk": "^2.1693.0",
     "axios": "^1.17.0",
@@ -101,7 +101,7 @@
     "zod-validation-error": "^5.0.0"
   },
   "optionalDependencies": {
-    "@esbuild/linux-arm64": "^0.28.0",
-    "@esbuild/linux-x64": "^0.28.0"
+    "@esbuild/linux-arm64": "^0.28.1",
+    "@esbuild/linux-x64": "^0.28.1"
   }
 }
