@@ -61,7 +61,7 @@ export default class BichardApiV1 implements BichardApiGateway {
     return await this.apiClient.get<UserLookupList>(`${V1.UsersLookup}?${generateUrlSearchParams(query)}`)
   }
 
-  async updateAllocation(caseId: number, query: AllocationQuery): Promise<boolean | Error> {
+  async updateAllocation(caseId: number, query: AllocationQuery): PromiseResult<boolean> {
     return await this.apiClient.put<boolean>(
       `${V1.CasesAllocate.replace(":caseId", String(caseId))}?${generateUrlSearchParams(query)}`
     )
