@@ -35,7 +35,7 @@ const allocate = async (
   const lockResult = await lockAndAuditLog(
     database,
     auditLogGateway,
-    userBeingAllocated as User,
+    userBeingAllocated as unknown as User,
     caseId,
     logger,
     query.caseType

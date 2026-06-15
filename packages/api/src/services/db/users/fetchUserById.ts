@@ -1,14 +1,15 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import type { User, UserRow } from "@moj-bichard7/common/types/User"
+import type { User, UserMinimal, UserMinimalRow } from "@moj-bichard7/common/types/User"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
-import mapUserRowToUser from "../mapUserRowToUser"
+import { NotFoundError } from "../../../types/errors/NotFoundError"
+import mapUserMinimalRowToMinimalUser from "../mapUserMinimalRowToMinimalUser"
 import filterUsersByVisibleForces from "./filterUsersByVisibleForces"
 
-export default async (database: DatabaseConnection, user: User, id: number): PromiseResult<User> => {
+export default async (database: DatabaseConnection, user: User, id: number): PromiseResult<UserMinimal> => {
   const sql = database.connection
 
   if (user.visibleForces.length === 0) {
@@ -19,25 +20,20 @@ export default async (database: DatabaseConnection, user: User, id: number): Pro
 
   const visibleForcesWhere = sql`(${visibleForcesFilter})`
 
-  const userResult = await database.connection<UserRow[]>`
+  const userResult = await database.connection<UserMinimalRow[]>`
       SELECT
         u.id,
         u.username,
-        u.jwt_id,
         ARRAY_AGG(g.friendly_name) AS groups,
         u.visible_forces,
-        u.email,
-        u.feature_flags,
-        u.excluded_triggers,
         u.visible_courts,
-        u.forenames,
-        u.surname
+        u.deleted_at
       FROM
         br7own.users u
         LEFT JOIN br7own.users_groups ug ON u.id = ug.user_id
         LEFT JOIN br7own.groups g ON g.id = ug.group_id
       WHERE
-        ${visibleForcesWhere} AND u.id = ${id}
+        ${visibleForcesWhere} AND u.id = ${id} AND u.deleted_at IS NULL
       GROUP BY
         u.id,
         u.username
@@ -48,8 +44,8 @@ export default async (database: DatabaseConnection, user: User, id: number): Pro
   }
 
   if (!userResult || userResult.length === 0) {
-    return new Error(`User with ID "${id}" does not exist`)
+    return new NotFoundError()
   }
 
-  return mapUserRowToUser(userResult[0])
+  return mapUserMinimalRowToMinimalUser(userResult[0])
 }

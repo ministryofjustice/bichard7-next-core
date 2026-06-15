@@ -3,7 +3,7 @@ import type { User, UserRow } from "@moj-bichard7/common/types/User"
 import formatForceNumbers from "../formatForceNumbers"
 
 const mapUserRowToUser = (userRow: UserRow): User => ({
-  deletedAt: userRow.deleted_at,
+  deletedAt: userRow.deleted_at ?? null,
   email: userRow.email,
   excludedTriggers: userRow.excluded_triggers?.split(",").filter(Boolean) ?? [],
   featureFlags: userRow.feature_flags,

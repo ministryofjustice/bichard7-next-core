@@ -1,7 +1,8 @@
-import type { User } from "@moj-bichard7/common/types/User"
+import { isError } from "@moj-bichard7/common/types/Result"
 
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
+import { NotFoundError } from "../../../types/errors/NotFoundError"
 import fetchUserById from "./fetchUserById"
 
 const testDatabaseGateway = new End2EndPostgres()
@@ -19,9 +20,17 @@ describe("fetchUserById", () => {
     const currentUser = await createUser(testDatabaseGateway, { visibleForces: ["01"] })
     const requestedUser = await createUser(testDatabaseGateway, { visibleForces: ["01"] })
 
-    const result = (await fetchUserById(testDatabaseGateway.readonly, currentUser, requestedUser.id)) as User
+    const result = await fetchUserById(testDatabaseGateway.readonly, currentUser, requestedUser.id)
 
-    expect(result.id).toBe(requestedUser.id)
+    expect(isError(result)).toBe(false)
+    expect(result).toEqual({
+      deletedAt: null,
+      groups: ["General Handler"],
+      id: 2,
+      username: "User2",
+      visibleCourts: ["AB"],
+      visibleForces: ["01"]
+    })
   })
 
   it("should return error if current user has no visible forces", async () => {
@@ -39,7 +48,7 @@ describe("fetchUserById", () => {
 
     const result = await fetchUserById(testDatabaseGateway.readonly, currentUser, requestedUser.id)
 
-    expect(result).toStrictEqual(new Error(`User with ID "${requestedUser.id}" does not exist`))
+    expect(result).toStrictEqual(new NotFoundError())
   })
 
   it("should return error if requested user id does not exist", async () => {
@@ -47,6 +56,6 @@ describe("fetchUserById", () => {
 
     const result = await fetchUserById(testDatabaseGateway.readonly, currentUser, 123)
 
-    expect(result).toStrictEqual(new Error('User with ID "123" does not exist'))
+    expect(result).toStrictEqual(new NotFoundError())
   })
 })

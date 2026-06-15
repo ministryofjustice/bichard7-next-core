@@ -6,7 +6,7 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { AllocationQuerySchema } from "@moj-bichard7/common/contracts/AllocationQuery"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { BAD_REQUEST, FORBIDDEN, INTERNAL_SERVER_ERROR, OK } from "http-status"
+import { BAD_REQUEST, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from "http-status"
 import z from "zod"
 
 import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
@@ -16,6 +16,7 @@ import auth from "../../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
 import { NotAllowedError } from "../../../../types/errors/NotAllowedError"
+import { NotFoundError } from "../../../../types/errors/NotFoundError"
 import allocate from "../../../../useCases/cases/getCase/allocate"
 
 type HandlerProps = {
@@ -54,7 +55,11 @@ const handler = async ({ auditLogGateway, caseId, database, logger, query, reply
       return reply.code(FORBIDDEN).send()
     }
 
-    return reply.code(INTERNAL_SERVER_ERROR).send()
+    if (result instanceof NotFoundError) {
+      return reply.code(NOT_FOUND).send()
+    }
+
+    return reply.code(INTERNAL_SERVER_ERROR).send(result)
   }
 
   return reply.code(OK).send(result)

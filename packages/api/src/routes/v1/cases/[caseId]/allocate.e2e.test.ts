@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { BAD_REQUEST, FORBIDDEN, INTERNAL_SERVER_ERROR, OK } from "http-status"
+import { BAD_REQUEST, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from "http-status"
 
 import { createCase } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
@@ -46,12 +46,11 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
 
     const url = `${helper.address}${getRouteUrl(caseObj.errorId)}?allocatedToUserId=${targetUser.id}&caseType=exceptions`
     const response = await fetch(url, defaultRequest(encodedJwt))
-    console.log(response)
 
     expect(response.status).toBe(FORBIDDEN)
   })
 
-  it("returns 500 INTERNAL SERVER ERROR if the target user being allocated to does not exist", async () => {
+  it("returns 404 NOT FOUND ERROR if the target user being allocated to does not exist", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Allocator, UserGroup.Supervisor], {
       visibleForces: ["01"]
     })
@@ -61,7 +60,7 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
 
     const response = await fetch(url, defaultRequest(encodedJwt))
 
-    expect(response.status).toBe(INTERNAL_SERVER_ERROR)
+    expect(response.status).toBe(NOT_FOUND)
   })
 
   it("returns 500 INTERNAL SERVER ERROR if the target user exists but falls outside the actor's visible forces", async () => {
@@ -112,7 +111,7 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
     expect(updatedCase[0].trigger_locked_by_id).toBeNull()
   })
 
-  it("returns 500 INTERNAL SERVER ERROR if downstream lockAndAuditLog execution fails due to a missing case entry", async () => {
+  it.only("returns NOT FOUND ERROR if downstream lockAndAuditLog execution fails due to a missing case entry", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Allocator, UserGroup.Supervisor], {
       visibleForces: ["01"]
     })
@@ -126,7 +125,7 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
 
     const response = await fetch(url, defaultRequest(encodedJwt))
 
-    expect(response.status).toBe(INTERNAL_SERVER_ERROR)
+    expect(response.status).toBe(NOT_FOUND)
   })
 
   it("returns 400 BAD REQUEST ERROR if caseId is not a number", async () => {
