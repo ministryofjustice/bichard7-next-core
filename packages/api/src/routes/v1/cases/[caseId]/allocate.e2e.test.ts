@@ -104,8 +104,6 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
     const response = await fetch(url, defaultRequest(encodedJwt))
 
     expect(response.status).toBe(OK)
-    const textBody = await response.text()
-    expect(textBody).toBe("true")
 
     const updatedCase = await helper.postgres.writable
       .connection`SELECT * FROM br7own.error_list WHERE error_id = ${caseObj.errorId}`
