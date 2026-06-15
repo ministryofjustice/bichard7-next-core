@@ -7,11 +7,11 @@ const mapCourt = (courtCase: CourtCase): Court =>
   courtCase.court.courtIdentityType === "code"
     ? {
         courtIdentityType: "code",
-        courtCode: courtCase.court.courtCode
+        courtCode: String(Number(courtCase.court.courtCode))
       }
     : {
         courtIdentityType: "name",
-        courtName: courtCase.court.courtName
+        courtName: courtCase.court.courtName.substring(0, 71)
       }
 
 const mapToCreateDisposalRequest = (

@@ -68,7 +68,7 @@ user:
     exists: true
     groups:
       - nginx
-    home: /var/lib/nginx
+    home: /var/cache/nginx
     shell: /sbin/nologin
   nobody:
     exists: true
@@ -97,3 +97,10 @@ user:
 process:
   supervisord:
     running: true
+  nginx:
+    running: true
+command:
+  "supervisorctl status userservice":
+    exit-status: 0
+    stdout:
+      - RUNNING

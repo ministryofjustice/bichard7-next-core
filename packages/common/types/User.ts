@@ -3,6 +3,7 @@ import { z } from "zod"
 import { UserGroup } from "./UserGroup"
 
 export const UserRowSchema = z.object({
+  deleted_at: z.date().nullable(),
   email: z.string(),
   excluded_triggers: z.string().nullable(),
   feature_flags: z.record(z.string(), z.boolean()),
@@ -17,6 +18,7 @@ export const UserRowSchema = z.object({
 })
 
 export const UserSchema = z.object({
+  deletedAt: z.date().nullable(),
   email: z.string(),
   excludedTriggers: z.array(z.string()).min(0),
   featureFlags: z.record(z.string(), z.boolean()),
@@ -48,7 +50,18 @@ export const UserListSchema = z.object({
   users: z.array(UserDtoSchema)
 })
 
+export const UserLookupDtoSchema = z.object({
+  fullname: z.string().optional(),
+  id: z.number()
+})
+
+export const UserLookupListSchema = z.object({
+  users: z.array(UserLookupDtoSchema)
+})
+
 export type User = z.infer<typeof UserSchema>
 export type UserDto = z.infer<typeof UserDtoSchema>
 export type UserList = z.infer<typeof UserListSchema>
+export type UserLookupDto = z.infer<typeof UserLookupDtoSchema>
+export type UserLookupList = z.infer<typeof UserLookupListSchema>
 export type UserRow = z.infer<typeof UserRowSchema>

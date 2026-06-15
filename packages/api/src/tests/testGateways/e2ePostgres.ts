@@ -1,6 +1,7 @@
 import type { Case } from "@moj-bichard7/common/types/Case"
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
-import type { User } from "@moj-bichard7/common/types/User"
+import type { User, UserRow } from "@moj-bichard7/common/types/User"
+import type { PendingQuery, Row } from "postgres"
 
 import type DataStoreGateway from "../../types/DatabaseGateway"
 
@@ -58,6 +59,13 @@ class End2EndPostgres extends Postgres implements DataStoreGateway {
     const caseRow = await fetchCase(this.readonly, errorId)
 
     return mapCaseRowToCase(caseRow)
+  }
+
+  async filterUsers(whereCondition: PendingQuery<Row[]>): Promise<UserRow[]> {
+    return this.readonly.connection<UserRow[]>`
+            SELECT u.id, u.username, u.visible_forces
+      FROM br7own.users u
+      WHERE ${whereCondition}`
   }
 
   async getAuditCases(auditId: number) {

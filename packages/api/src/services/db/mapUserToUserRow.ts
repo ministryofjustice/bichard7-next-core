@@ -1,6 +1,7 @@
 import type { User, UserRow } from "@moj-bichard7/common/types/User"
 
 const mapUserToUserRow = (user: User): UserRow => ({
+  deleted_at: user.deletedAt,
   email: user.email,
   excluded_triggers: user.excludedTriggers.join(","),
   feature_flags: user.featureFlags,

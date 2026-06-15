@@ -57,7 +57,7 @@ describe("domestic violence report type filter", () => {
 
   it("queries domestic violence and successfully displays only domestic violence", () => {
     insertSampleCases()
-    cy.get("#report-select").select("Domestic Violence & Vulnerable Victims")
+    cy.get("#report-select").select("Domestic violence and vulnerable victims")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
 
@@ -67,13 +67,13 @@ describe("domestic violence report type filter", () => {
 
     const expectedHeaders = [
       "Type",
-      "Hearing Date",
-      "Court Name",
-      "Defendant Name",
-      "Date of Birth",
+      "Hearing date",
+      "Court name",
+      "Defendant name",
+      "Date of birth",
       "PTIURN",
       "ASN",
-      "Offence Title",
+      "Offence title",
       "Outcome"
     ]
 
@@ -90,7 +90,7 @@ describe("domestic violence report type filter", () => {
 
   it("queries domestic violence with a date window that should not return anything", () => {
     insertSampleCases()
-    cy.get("#report-select").select("Domestic Violence & Vulnerable Victims")
+    cy.get("#report-select").select("Domestic violence and vulnerable victims")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(subDays(new Date(), 1), "yyyy-MM-dd"))
 
@@ -101,7 +101,7 @@ describe("domestic violence report type filter", () => {
 
   it("queries a case with a vulnerable victim trigger only", () => {
     insertCaseWithVulnerableVictimTrigger()
-    cy.get("#report-select").select("Domestic Violence & Vulnerable Victims")
+    cy.get("#report-select").select("Domestic violence and vulnerable victims")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
 
@@ -112,7 +112,7 @@ describe("domestic violence report type filter", () => {
 
   it("queries a case with both a vulnerable victim trigger and a domestic violence trigger", () => {
     insertCaseWithVulnerableVictimAndDomViTrigger()
-    cy.get("#report-select").select("Domestic Violence & Vulnerable Victims")
+    cy.get("#report-select").select("Domestic violence and vulnerable victims")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
 

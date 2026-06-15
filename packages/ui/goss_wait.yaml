@@ -8,6 +8,8 @@ port:
     listening: true
     ip:
       - 0.0.0.0
-process:
-  nginx:
-    running: true
+command:
+  "supervisorctl status nextui":
+    exit-status: 0
+    stdout:
+      - RUNNING

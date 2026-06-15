@@ -86,27 +86,27 @@ describe("warrants report type filter", () => {
     cy.get(".results-area table tbody tr").should("have.length", 1)
 
     const headers = [
-      "Hearing Date",
-      "Court Name",
-      "Hearing Time",
-      "Defendant Name",
+      "Hearing date",
+      "Court name",
+      "Hearing time",
+      "Defendant name",
       "Gender",
-      "Defendant Address",
-      "Date of Birth",
+      "Defendant address",
+      "Date of birth",
       "PNCID",
       "PTIURN",
       "ASN",
-      "Offence Title(s)",
-      "Offence Wording",
-      "Warrant Text",
-      "Next Court Appearance",
-      "Next Court Appearance Date",
-      "Warrant Type",
-      "Bail or No Bail",
-      "Date/Time Received by CJSE",
-      "Number of days taken to enter Portal",
-      "Trigger Status",
-      "Trigger Resolved Date"
+      "Offence title(s)",
+      "Offence wording",
+      "Warrant text",
+      "Next court appearance",
+      "Next court appearance date",
+      "Warrant type",
+      "Bail or no bail",
+      "Date/time received by CJSE",
+      "Number of days taken to enter portal",
+      "Trigger status",
+      "Trigger resolved date"
     ]
 
     headers.forEach((text, index) => {
@@ -163,5 +163,32 @@ describe("warrants report type filter", () => {
 
     cy.get(".results-area table tbody tr td:nth(15)").should("contain", "FTA")
     cy.get(".results-area table tbody tr td:nth(15)").should("contain", "Withdrawn")
+  })
+
+  it("queries warrants and successfully displays full court name", () => {
+    insertSampleCases()
+    cy.get("#report-select").select("Warrants")
+    cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
+    cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr td:nth(13)").should(
+      "contain",
+      "Magistrates' Courts Avon and Somerset Weston-super-Mare"
+    )
+  })
+
+  it("queries warrants and successfully displays organisation unit code when no court can be found", () => {
+    cy.task("clearCourtCases")
+    insertSampleCases(false)
+
+    cy.get("#report-select").select("Warrants")
+    cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
+    cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr td:nth(13)").should("contain", "INVALID_ORG_CODE")
   })
 })

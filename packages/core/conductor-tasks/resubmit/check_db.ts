@@ -70,7 +70,7 @@ const checkDb: ConductorWorker = {
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CoreResubmit)
 
     const result = await db
-      .begin("read write", async (dbTransaction): PromiseResult<string> => {
+      .begin(async (dbTransaction): PromiseResult<string> => {
         const [caseRow] = await dbTransaction<CaseRow[]>`
           SELECT *
           FROM br7own.error_list el

@@ -16,7 +16,7 @@ describe("User Performance Detail", () => {
     const toDate = format(today, "yyyy-MM-dd")
     const formattedGroupDate = format(today, "dd/MM/yyyy")
 
-    cy.get("#report-select").select("User Performance Detail")
+    cy.get("#report-select").select("User performance detail")
     cy.get("#date-from").type(fromDate)
     cy.get("#date-to").type(toDate)
     cy.get("#run-report").click()
@@ -24,20 +24,20 @@ describe("User Performance Detail", () => {
     cy.get(".report-container")
       .should("be.visible")
       .within(() => {
-        cy.contains("h3", formattedGroupDate).parent("section").as("todayGroup")
+        cy.contains("h3", formattedGroupDate).parent("button").parent("section").as("todayGroup")
 
         cy.get("@todayGroup").within(() => {
           const expectedTables = [
             { userId: "user1", resolved: "1", locked: "0", type: "exceptions" },
-            { userId: "GeneralHandler", resolved: "1", locked: "0", type: "triggers" },
-            { userId: "GeneralHandler", resolved: "0", locked: "1", type: "triggers" }
+            { userId: "General Handler User", resolved: "1", locked: "0", type: "triggers" },
+            { userId: "General Handler User", resolved: "0", locked: "1", type: "triggers" }
           ]
 
-          cy.get("section[aria-labelledby^='inner-group']").each(($section, index) => {
+          cy.get("[data-testid='simple-table']").each(($section, index) => {
             const expected = expectedTables[index]
 
             cy.wrap($section).within(() => {
-              cy.get(".govuk-table__header").eq(0).should("have.text", "User ID")
+              cy.get(".govuk-table__header").eq(0).should("have.text", "Name")
               cy.get(".govuk-table__header").eq(1).should("have.text", `Number of ${expected.type} resolved today`)
               cy.get(".govuk-table__header").eq(2).should("have.text", `Total number of ${expected.type} still locked`)
 
@@ -56,10 +56,11 @@ describe("User Performance Detail", () => {
           const pastDate = format(subDays(today, i), "dd/MM/yyyy")
 
           cy.contains("h3", pastDate)
+            .parent("button")
             .parent("section")
             .within(() => {
               cy.get("table").should("not.exist")
-              cy.get("[itemid='outer-group-body']:empty").should("exist")
+              cy.get("[data-testid='accordion-content']:empty").should("exist")
             })
         }
       })
@@ -70,7 +71,7 @@ describe("User Performance Detail", () => {
     const fromDate = format(subDays(today, 7), "yyyy-MM-dd")
     const toDate = format(today, "yyyy-MM-dd")
 
-    cy.get("#report-select").select("User Performance Detail")
+    cy.get("#report-select").select("User performance detail")
     cy.get("#date-from").type(fromDate)
     cy.get("#date-to").type(toDate)
     cy.get("#run-report").click()
@@ -81,10 +82,11 @@ describe("User Performance Detail", () => {
       const pastDate = format(subDays(today, i), "dd/MM/yyyy")
 
       cy.contains("h3", pastDate)
+        .parent("button")
         .parent("section")
         .within(() => {
           cy.get("table").should("not.exist")
-          cy.get("[itemid='outer-group-body']:empty").should("exist")
+          cy.get("[data-testid='accordion-content']:empty").should("exist")
         })
     }
   })

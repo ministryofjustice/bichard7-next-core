@@ -1,4 +1,4 @@
-ARG BUILD_IMAGE="nodejs-20-2023"
+ARG BUILD_IMAGE="nodejs-24-2023"
 FROM ${BUILD_IMAGE} AS base
 
 LABEL maintainer="CJSE"

@@ -8,10 +8,12 @@ port:
     listening: true
     ip:
       - 0.0.0.0
-process:
-  nginx:
-    running: true
 http:
   https://localhost:9443/users/login:
     status: 200
     allow-insecure: true
+command:
+  "supervisorctl status userservice":
+    exit-status: 0
+    stdout:
+      - RUNNING

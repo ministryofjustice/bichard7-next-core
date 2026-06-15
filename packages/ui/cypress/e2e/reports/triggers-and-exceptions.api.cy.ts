@@ -10,7 +10,7 @@ describe("exceptions/triggers report type filter", () => {
   })
 
   it("queries exceptions/triggers and successfully displays only exceptions/triggers", () => {
-    cy.get("#report-select").select("Resolved Exceptions/Triggers")
+    cy.get("#report-select").select("Resolved exceptions and triggers")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
 
@@ -20,19 +20,19 @@ describe("exceptions/triggers report type filter", () => {
       "Type",
       "ASN",
       "PTIURN",
-      "Defendant Name",
-      "Court Name",
+      "Defendant name",
+      "Court name",
       "Courtroom",
-      "Hearing Date",
-      "Case Reference",
-      "Date/Time Received By CJSE",
-      "Date/Time Resolved",
+      "Hearing date",
+      "Case reference",
+      "Date/time received by CJSE",
+      "Date/time resolved",
       "Notes",
-      "Resolution Action"
+      "Resolution action"
     ]
 
-    cy.get('section[aria-labelledby="report-group-user1"]').within(() => {
-      cy.get("h3#report-group-user1").should("exist")
+    cy.get("section#table-user1-1-section").within(() => {
+      cy.get("h3#table-user1-1-header").should("exist")
 
       headers.forEach((text, index) => {
         cy.get("table thead tr th").eq(index).should("have.text", text)
@@ -44,8 +44,8 @@ describe("exceptions/triggers report type filter", () => {
       cy.get("table tbody tr td:nth(2)").should("have.text", "Case00003")
     })
 
-    cy.get('section[aria-labelledby="report-group-GeneralHandler"]').within(() => {
-      cy.get("h3#report-group-GeneralHandler").should("exist")
+    cy.get("section#table-generalhandler-0-section").within(() => {
+      cy.get("h3#table-generalhandler-0-header").should("exist")
 
       cy.get("table tbody tr").should("have.length", 1)
 
@@ -62,7 +62,7 @@ describe("exceptions/triggers report type filter", () => {
   })
 
   it("queries exceptions/triggers with a date window that should not return anything", () => {
-    cy.get("#report-select").select("Resolved Exceptions/Triggers")
+    cy.get("#report-select").select("Resolved exceptions and triggers")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(subDays(new Date(), 1), "yyyy-MM-dd"))
 
@@ -72,7 +72,7 @@ describe("exceptions/triggers report type filter", () => {
   })
 
   it("queries exceptions/triggers with triggers unchecked and successfully returns only exceptions", () => {
-    cy.get("#report-select").select("Resolved Exceptions/Triggers")
+    cy.get("#report-select").select("Resolved exceptions and triggers")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
     cy.get("#triggers").click()
@@ -86,7 +86,7 @@ describe("exceptions/triggers report type filter", () => {
   })
 
   it("queries exceptions/triggers with exceptions unchecked and successfully returns only triggers", () => {
-    cy.get("#report-select").select("Resolved Exceptions/Triggers")
+    cy.get("#report-select").select("Resolved exceptions and triggers")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
     cy.get("#exceptions").click()

@@ -17,7 +17,7 @@ Feature: {075} R4.0_BR7_Personal Details Trigger
 
 	Background:
 		Given the data for this test is in the PNC
-			And "input-message" is received
+			And "input-message" is received with an invalid ASN
 
 	@Could
 	@NextUI

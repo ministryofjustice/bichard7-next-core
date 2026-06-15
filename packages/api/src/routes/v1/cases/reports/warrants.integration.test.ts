@@ -8,6 +8,7 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { addDays, format, set, subDays } from "date-fns"
+import { formatInTimeZone } from "date-fns-tz"
 import { BAD_REQUEST, FORBIDDEN } from "http-status"
 
 import build from "../../../../app"
@@ -300,7 +301,7 @@ describe("warrants report", () => {
     expect(reportItem.bailOrNoBail).toBe("No Bail")
     expect(reportItem.courtName).toBe("Kingston Crown Court")
     expect(reportItem.dateOfBirth).toBe("11/11/1948")
-    expect(reportItem.dateTimeReceivedByCJSE).toBe(format(stubDate, "dd/MM/yyyy HH:mm"))
+    expect(reportItem.dateTimeReceivedByCJSE).toBe(formatInTimeZone(stubDate, "Europe/London", "dd/MM/yyyy HH:mm"))
     expect(reportItem.defendantAddress).toBe(
       "Scenario1 Address Line 1, Scenario1 Address Line 2, Scenario1 Address Line 3"
     )

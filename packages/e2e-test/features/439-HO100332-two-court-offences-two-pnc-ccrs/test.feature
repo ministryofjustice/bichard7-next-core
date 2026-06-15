@@ -11,6 +11,7 @@ Feature: {439} HO100332 - Two court offences matched to two PNC CCRs
       And "input-message" is received
 
   @NextUI
+  @ExcludedOnRealLeds
   Scenario: Resolving one pair of HO100332 exceptions
     Given I am logged in as "generalhandler"
       And I view the list of exceptions

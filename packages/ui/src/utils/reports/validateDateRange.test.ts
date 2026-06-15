@@ -1,4 +1,4 @@
-import { format, startOfToday, subDays, addDays, addMonths, endOfMonth, startOfMonth, subMonths } from "date-fns"
+import { addDays, addMonths, endOfMonth, format, startOfMonth, startOfToday, subDays, subMonths } from "date-fns"
 import { validateDateRange } from "./validateDateRange"
 import {
   DATE_CANNOT_BE_AFTER_DATE_TO,
@@ -112,10 +112,10 @@ describe("validateDateRange", () => {
     })
 
     it("returns no errors for a mid-month start with dateTo exactly 1 month ahead", () => {
-      const from = subMonths(today, 1)
-      const to = addMonths(from, 1)
+      const midMonth = new Date(today.getFullYear(), subMonths(today, 2).getMonth(), 15)
+      const to = addMonths(midMonth, 1)
 
-      expect(validateDateRange(fmt(from), fmt(to))).toEqual({
+      expect(validateDateRange(fmt(midMonth), fmt(to))).toEqual({
         fromError: null,
         toError: null
       })

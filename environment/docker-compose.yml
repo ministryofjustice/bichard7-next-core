@@ -75,6 +75,7 @@ services:
         condition: service_healthy
 
   postgres:
+    image: bichard-postgres:latest
     build:
       context: ./postgres
       dockerfile: Dockerfile
@@ -131,10 +132,7 @@ services:
       start_period: 20s
 
   api:
-    image: api
-    build:
-      dockerfile: packages/api/Dockerfile
-      context: ..
+    image: api:${DOCKER_TAG:-latest}
     environment:
       DB_HOST: postgres
       DB_READER_HOST: postgres
@@ -319,6 +317,7 @@ services:
     restart: on-failure
 
   leds:
+    image: bichard-leds:latest
     build:
       dockerfile: ./Dockerfile
       context: mock-server
@@ -337,10 +336,7 @@ services:
       retries: 3
 
   user-service:
-    image: user-service
-    build:
-      dockerfile: packages/user-service/Dockerfile
-      context: ..
+    image: user-service:${DOCKER_TAG:-latest}
     environment:
       BASE_URL: https://localhost:4443/users
       DB_HOST: postgres
@@ -369,7 +365,7 @@ services:
         condition: service_started
 
   ui:
-    image: ui
+    image: ui:${DOCKER_TAG:-latest}
     environment:
       DB_HOST: postgres
       DB_USER: ${DEFAULT_USER}
@@ -384,6 +380,7 @@ services:
       USE_API: ${USE_API:-false}
       FORCES_WITH_API_ENABLED: ${FORCES_WITH_API_ENABLED:-''}
       FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: ${FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED:-''}
+      FORCES_WITH_ALLOCATION_ENABLED: ${FORCES_WITH_ALLOCATION_ENABLED:-''}
       USE_API_CASE_ENDPOINT: ${USE_API_CASE_ENDPOINT:-false}
       USE_API_CASES_INDEX_ENDPOINT: ${USE_API_CASES_INDEX_ENDPOINT:-false}
       USE_API_CASE_RESUBMIT_ENDPOINT: ${USE_API_CASE_RESUBMIT_ENDPOINT:-false}

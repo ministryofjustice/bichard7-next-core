@@ -20,7 +20,7 @@ Feature: {149} R5.1.3_BR7_CRQ453_Change of ReportOwner on PNC
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@Should @NextUI
+	@Should @NextUI @ExcludedOnLeds
 	Scenario: Force owner is derived from the PNC response
 		Given I am logged in as "br7.btp"
 			And I view the list of exceptions

@@ -1,12 +1,21 @@
 import { format } from "date-fns"
+import { formatInTimeZone } from "date-fns-tz"
 
-export const formatDate = (date: Date | null | string | undefined, includeTime: boolean = false): string => {
+export const formatDate = (
+  date: Date | null | string | undefined,
+  includeTime: boolean = false,
+  includeTimezone: boolean = false
+): string => {
   if (!date) {
     return ""
   }
 
   try {
-    return includeTime ? format(new Date(date), "dd/MM/yyyy HH:mm") : format(new Date(date), "dd/MM/yyyy")
+    const dateObj = new Date(date)
+
+    const formatStr = includeTime ? "dd/MM/yyyy HH:mm" : "dd/MM/yyyy"
+
+    return includeTimezone ? formatInTimeZone(dateObj, "Europe/London", formatStr) : format(dateObj, formatStr)
   } catch {
     return ""
   }

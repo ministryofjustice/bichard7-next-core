@@ -18,6 +18,7 @@ Feature: {041} R3.3_BR7_Operational Trigger Report
 	@Could
 	@ExcludeOnPreProd
 	@ExcludedOnConductor
+	@ExcludedOnLedsPreProd
 	Scenario: Generating the operational trigger report
 		Given "input-message-1" is received
 			And "input-message-2" is received

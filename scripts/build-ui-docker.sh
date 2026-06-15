@@ -2,7 +2,7 @@
 
 set -ex
 
-readonly DOCKER_REFERENCE="nginx-nodejs-20-2023-supervisord"
+readonly DOCKER_REFERENCE="nginx-nodejs-24-2023-supervisord"
 readonly DOCKER_OUTPUT_TAG="ui"
 
 function has_local_image() {
@@ -40,7 +40,6 @@ function pull_and_build_from_aws() {
   IMAGE_HASH=$(aws ecr describe-images --repository-name "${DOCKER_REFERENCE}" | jq '.imageDetails|sort_by(.imagePushedAt)[-1].imageDigest' | tr -d '"')
 
   DOCKER_IMAGE_HASH="${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_REFERENCE}@${IMAGE_HASH}"
-
 
 if [ $(arch) = "arm64" ]
 then

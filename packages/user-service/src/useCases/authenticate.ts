@@ -91,6 +91,7 @@ export const updateUserLoginTimestamp = async (task: ITask<unknown>, emailAddres
 const authenticate = async (
   connection: Database,
   auditLogger: AuditLogger,
+  host: string,
   emailAddress: string,
   password: string,
   verificationCode: string | null
@@ -140,7 +141,7 @@ const authenticate = async (
 
     if (isAuthenticated && (verificationCode === null || isVerified)) {
       await resetUserVerificationCode(connection, emailAddress)
-      await auditLogger.logEvent(AuditLogEvent.loggedIn, { user })
+      await auditLogger.logEvent(AuditLogEvent.loggedIn, { user, host })
       return user
     }
 

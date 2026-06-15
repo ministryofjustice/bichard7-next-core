@@ -1,5 +1,6 @@
 services:
   worker:
+    image: bichard-worker:${DOCKER_TAG:-latest}
     build:
       context: ..
       dockerfile: ./packages/conductor/Dockerfile

@@ -32,7 +32,7 @@ export const clearFilters = async function (this: Bichard) {
 const filterByRecordName = async function (world: Bichard) {
   const name = world.getRecordName()
   const searchField = "input[name='defendantName']"
-  await world.browser.page.click(searchField, { clickCount: 3 })
+  await world.browser.page.click(searchField, { count: 3 })
   await world.browser.page.type(searchField, name)
   await Promise.all([world.browser.page.click("button#search"), world.browser.page.waitForNavigation()])
 }
@@ -532,11 +532,20 @@ const correctOffence = async (page: Page, fieldHtml: string, newValue: string) =
   await page.keyboard.type(newValue, { delay: 100 })
 }
 
-export const correctOffenceException = async function (this: Bichard, field: string, newValue: string) {
+export const amendOffenceException = async function (this: Bichard, field: string, newValue: string) {
+  await correctOffenceException.apply(this, [field, newValue, true])
+}
+
+export const correctOffenceException = async function (
+  this: Bichard,
+  field: string,
+  newValue: string,
+  useExactValue = false
+) {
   const { page } = this.browser
 
   let newValueToSet = newValue
-  if (field.toUpperCase() === "ASN") {
+  if (!useExactValue && field.toUpperCase() === "ASN") {
     newValueToSet = this.policeApi.getAsn() ?? newValue
   }
 

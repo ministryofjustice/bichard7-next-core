@@ -8,6 +8,7 @@ Feature: 428 - ASN Update / Correction in the Old Bichard7 UI
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
+	@ExcludedOnRealLeds
 	Scenario: Updates the ASN in Bichard
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions

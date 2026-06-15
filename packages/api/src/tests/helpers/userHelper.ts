@@ -31,6 +31,7 @@ export const generateJwtForStaticUser = (userGroups: UserGroup[] = [UserGroup.Ge
 export const createUser = async (databaseGateway: End2EndPostgres, overrides: Partial<User> = {}): Promise<User> => {
   const id = overrides.id ?? userId++
   return databaseGateway.createTestUser({
+    deletedAt: null,
     email: `user${id}@example.com`,
     excludedTriggers: [],
     featureFlags: {},
@@ -57,6 +58,7 @@ export const createUsers = async (
       .map(async (_, index) => {
         const id = userId++
         return databaseGateway.createTestUser({
+          deletedAt: null,
           email: `user${id}@example.com`,
           excludedTriggers: [],
           featureFlags: {},
