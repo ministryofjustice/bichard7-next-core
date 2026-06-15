@@ -323,16 +323,14 @@ describe("BichardApiV1", () => {
       caseType: "triggers"
     }
 
-    it("calls apiClient#put with a route", async () => {
+    it("calls apiClient#put with a route and a body payload", async () => {
       const endpoint = V1.CasesAllocate.replace(":caseId", String(caseId))
 
-      jest.spyOn(client, "put")
+      jest.spyOn(client, "put").mockResolvedValue("works")
 
       await gateway.updateAllocation(caseId, allocationQuery)
 
-      expect(client.put).toHaveBeenCalledWith(
-        `${endpoint}?allocatedToUserId=${allocationQuery.allocatedToUserId}&caseType=${allocationQuery.caseType}`
-      )
+      expect(client.put).toHaveBeenCalledWith(endpoint, allocationQuery)
     })
 
     it("can handle errors", async () => {
