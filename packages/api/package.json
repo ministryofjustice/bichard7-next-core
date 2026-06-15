@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --forceExit --maxWorkers=80% --detectOpenHandles --testRegex '\\.(?:unit|integration)\\.test.ts$'",
-    "start": "node dist/src/index.js",
+    "start": "node dist/index.js",
     "start:dev": "DYNAMO_AWS_ACCESS_KEY_ID=SECRET DYNAMO_AWS_SECRET_ACCESS_KEY=SECRET nodemon --config nodemon.json src/index.ts",
     "test:unit": "jest --maxWorkers=80% --testRegex '\\.(?:unit)\\.test.ts$'",
     "test:integration": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand --workerThreads=true --detectOpenHandles --testRegex '\\.(?:integration)\\.test.ts$'",
