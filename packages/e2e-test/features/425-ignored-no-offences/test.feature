@@ -9,6 +9,7 @@ Feature: {425} Ignored - no recordable offences
 		Given "input-message" is received
 			And the data for this test is in the PNC
 
+	@ExcludedOnRealLeds
 	Scenario: Ignored - no recordable offences
 		Then the audit log contains "Hearing Outcome ignored as it contains no offences"
 		When I am logged in as "supervisor"

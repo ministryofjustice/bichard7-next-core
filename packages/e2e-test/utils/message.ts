@@ -5,6 +5,7 @@ import { areAllWorkflowsCompleted } from "../helpers/ConductorHelper"
 import { checkAuditLogRecordExists } from "./auditLogging"
 import convertMessageToNewFormat from "./convertMessageToNewFormat"
 import { isError } from "./isError"
+import { delay } from "./puppeteer-utils"
 import { replaceAllTags } from "./tagProcessing"
 import type Bichard from "./world"
 
@@ -17,6 +18,10 @@ const uploadToS3 = async (context: Bichard, message: string, correlationId: stri
 }
 
 const sendMsg = async function (world: Bichard, messagePath: string, useOriginalAsn = true) {
+  if (world.config.realPNC && !/input-message(-1)?\.xml/i.test(messagePath)) {
+    await delay(4)
+  }
+
   const rawMessage = await fs.promises.readFile(messagePath)
   const correlationId = `CID-${randomUUID()}`
   let messageData = rawMessage.toString().replace("EXTERNAL_CORRELATION_ID", correlationId)

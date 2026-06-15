@@ -8,7 +8,8 @@ enum Permission {
   ViewUserManagement,
   CanResubmit,
   CanAuditCases,
-  CanListUsers
+  CanListUsers,
+  CanAllocate
 }
 
 export default Permission

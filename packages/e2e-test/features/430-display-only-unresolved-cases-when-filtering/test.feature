@@ -10,6 +10,7 @@ Feature: 430 - Display correct cases when filtered with reason codes in the Next
 
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: Displays only unresolved cases when filtered with reason-codes
 		Given I am logged in as "supervisor"
 			And I apply filter "reasonCodes" to be "HO100206"

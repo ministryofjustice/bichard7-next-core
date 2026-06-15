@@ -7,6 +7,7 @@ import type RequestOptions from "../../../../types/LedsTestApiHelper/RequestOpti
 import { isError } from "../../../isError"
 import ApiError from "./ApiError"
 import generateHeaders, { ENDPOINT_HEADERS } from "./generateHeaders"
+import retryRequest from "./retryRequest"
 
 const fetchDisposalHistory = async (
   requestOptions: RequestOptions,
@@ -17,8 +18,8 @@ const fetchDisposalHistory = async (
   }
 
   const headers = generateHeaders(ENDPOINT_HEADERS.disposalHistory, requestOptions.authToken)
-  const response = await axios
-    .get<DisposalHistoryResponse>(
+  const response = await retryRequest(() =>
+    axios.get<DisposalHistoryResponse>(
       `${requestOptions.baseUrl}/person-services/v1/people/${person.personId}/disposal-history`,
       {
         headers,
@@ -27,7 +28,7 @@ const fetchDisposalHistory = async (
         })
       }
     )
-    .catch((error: AxiosError) => error)
+  ).catch((error: AxiosError) => error)
 
   if (isError(response)) {
     throw new ApiError(response)

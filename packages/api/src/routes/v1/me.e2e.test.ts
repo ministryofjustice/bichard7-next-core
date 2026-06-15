@@ -44,6 +44,7 @@ describe("/v1/me e2e", () => {
       fullname: `${user.forenames} ${user.surname}`,
       groups: [UserGroup.GeneralHandler],
       hasAccessTo: {
+        [Permission.CanAllocate]: false,
         [Permission.CanAuditCases]: false,
         [Permission.CanListUsers]: false,
         [Permission.CanResubmit]: true,
@@ -81,6 +82,7 @@ describe("/v1/me e2e", () => {
       fullname: `${user.forenames} ${user.surname}`,
       groups: user.groups,
       hasAccessTo: {
+        [Permission.CanAllocate]: false,
         [Permission.CanAuditCases]: true,
         [Permission.CanListUsers]: true,
         [Permission.CanResubmit]: true,

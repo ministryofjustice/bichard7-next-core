@@ -10,6 +10,7 @@ Feature: 429 - ASN Update / Correction in the Next UI when HO100301 raised
 
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: Updates the ASN in Bichard when HO100301 is raised
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions

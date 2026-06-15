@@ -9,6 +9,7 @@ import { isError } from "../../../../isError"
 import ApiError from "../ApiError"
 import findDisposalsByAsn from "../findDisposalsByAsn"
 import generateHeaders, { ENDPOINT_HEADERS } from "../generateHeaders"
+import retryRequest from "../retryRequest"
 import mapToAddDisposalResult from "./mapToAddDisposalResult"
 
 const addDisposalResults = async (
@@ -26,14 +27,14 @@ const addDisposalResults = async (
 
   const headers = generateHeaders(ENDPOINT_HEADERS.addDisposalResults, requestOptions.authToken)
   const url = `${requestOptions.baseUrl}/${endpoints.addDisposal(person.personId, courtCase.courtCaseId)}`
-  const response = await axios
-    .post(url, request, {
+  const response = await retryRequest(() =>
+    axios.post(url, request, {
       headers,
       httpsAgent: new https.Agent({
         rejectUnauthorized: false
       })
     })
-    .catch((error: AxiosError) => error)
+  ).catch((error: AxiosError) => error)
 
   if (isError(response)) {
     throw new ApiError(response)

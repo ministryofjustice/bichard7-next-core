@@ -10,6 +10,7 @@ Feature: 427 - ASN Update / Correction in the Next UI
 
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: Updates the ASN in Next UI and submit the exception
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
@@ -23,6 +24,7 @@ Feature: 427 - ASN Update / Correction in the Next UI
 
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: Updates the ASN in Next UI and reload the case details page
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
@@ -37,6 +39,7 @@ Feature: 427 - ASN Update / Correction in the Next UI
 
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: Updates the ASN in Next UI and reload the case details page
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
@@ -51,6 +54,7 @@ Feature: 427 - ASN Update / Correction in the Next UI
 
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: Updates the ASN in Next UI and edit the saved ASN
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
@@ -68,6 +72,7 @@ Feature: 427 - ASN Update / Correction in the Next UI
 
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: Displays relevant resolution status when exception resolved manually
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
@@ -78,6 +83,7 @@ Feature: 427 - ASN Update / Correction in the Next UI
 
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: Displays relevant resolution status when exception resolved manually and then come back into case details page from case list
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
@@ -91,6 +97,7 @@ Feature: 427 - ASN Update / Correction in the Next UI
 
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: Displays relevant resolution status when case resubmitted and stayed on case details page
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
@@ -105,6 +112,7 @@ Feature: 427 - ASN Update / Correction in the Next UI
 
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: Displays relevant resolution status when case resubmitted and then come back into case details page from case list
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
