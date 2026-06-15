@@ -5,6 +5,7 @@ import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToLocked from "./updateLockStatusToLocked"
+import { lockErrorListRow } from "./lockErrorListRow"
 
 const lockCourtCase = async (
   dataSource: DataSource,
@@ -12,7 +13,9 @@ const lockCourtCase = async (
   user: User
 ): Promise<UpdateResult | Error> => {
   return await dataSource.transaction(async (entityManager) => {
+    await lockErrorListRow(entityManager, courtCaseId)
     const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
+
     if (!courtCase) {
       throw new Error("Failed to lock: Case not found")
     }
