@@ -6,7 +6,7 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { AllocationQuerySchema } from "@moj-bichard7/common/contracts/AllocationQuery"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { FORBIDDEN, INTERNAL_SERVER_ERROR, OK } from "http-status"
+import { BAD_REQUEST, FORBIDDEN, INTERNAL_SERVER_ERROR, OK } from "http-status"
 import z from "zod"
 
 import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
@@ -41,6 +41,10 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ auditLogGateway, caseId, database, logger, query, reply, user }: HandlerProps) => {
+  if (isNaN(caseId)) {
+    return reply.code(BAD_REQUEST).send()
+  }
+
   const result = await allocate(auditLogGateway, database.writable, user, logger, query, caseId)
 
   if (isError(result)) {

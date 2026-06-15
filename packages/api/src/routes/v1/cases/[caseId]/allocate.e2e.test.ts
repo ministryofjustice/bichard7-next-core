@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { FORBIDDEN, INTERNAL_SERVER_ERROR, OK } from "http-status"
+import { BAD_REQUEST, FORBIDDEN, INTERNAL_SERVER_ERROR, OK } from "http-status"
 
 import { createCase } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
@@ -129,5 +129,18 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
     const response = await fetch(url, defaultRequest(encodedJwt))
 
     expect(response.status).toBe(INTERNAL_SERVER_ERROR)
+  })
+
+  it("returns 400 BAD REQUEST ERROR if caseId is not a number", async () => {
+    const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Allocator, UserGroup.Supervisor], {
+      visibleForces: ["01"]
+    })
+
+    const caseObj = await createCase(helper.postgres, { errorLockedById: null })
+    const url = `${helper.address}${getRouteUrl(caseObj.errorId)}?allocatedToUserId=invalidId&caseType=exceptions`
+
+    const response = await fetch(url, defaultRequest(encodedJwt))
+
+    expect(response.status).toBe(BAD_REQUEST)
   })
 })
