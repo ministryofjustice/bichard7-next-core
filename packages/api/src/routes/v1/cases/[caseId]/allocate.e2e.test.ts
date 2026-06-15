@@ -2,15 +2,15 @@ import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { BAD_REQUEST, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from "http-status"
+import { BAD_REQUEST, FORBIDDEN, NOT_FOUND, OK } from "http-status"
 
 import { createCase } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUser, createUserAndJwtToken } from "../../../../tests/helpers/userHelper"
 
-const defaultRequest = (jwt: string) => {
+const defaultRequest = (jwt: string, body: Record<string, unknown> = {}) => {
   return {
-    body: JSON.stringify({}),
+    body: JSON.stringify(body),
     headers: { Authorization: `Bearer ${jwt}`, "Content-Type": "application/json" },
     method: "PUT"
   }
@@ -34,18 +34,20 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
     await helper.postgres.close()
   })
 
-  const getRouteUrl = (caseId: number) => V1.CasesAllocate.replace(":caseId", String(caseId))
+  const getRouteUrl = (caseId: number | string) => V1.CasesAllocate.replace(":caseId", String(caseId))
 
   it("returns 403 FORBIDDEN if the authenticated user lacks allocate or user listing permissions", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Audit], {
       visibleForces: ["01"]
     })
     const caseObj = await createCase(helper.postgres, { errorLockedById: null })
-
     const targetUser = await createUser(helper.postgres)
 
-    const url = `${helper.address}${getRouteUrl(caseObj.errorId)}?allocatedToUserId=${targetUser.id}&caseType=exceptions`
-    const response = await fetch(url, defaultRequest(encodedJwt))
+    const url = `${helper.address}${getRouteUrl(caseObj.errorId)}`
+    const response = await fetch(
+      url,
+      defaultRequest(encodedJwt, { allocatedToUserId: targetUser.id, caseType: "exceptions" })
+    )
 
     expect(response.status).toBe(FORBIDDEN)
   })
@@ -56,14 +58,14 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
     })
 
     const caseObj = await createCase(helper.postgres, { errorLockedById: null })
-    const url = `${helper.address}${getRouteUrl(caseObj.errorId)}?allocatedToUserId=99999&caseType=exceptions`
+    const url = `${helper.address}${getRouteUrl(caseObj.errorId)}`
 
-    const response = await fetch(url, defaultRequest(encodedJwt))
+    const response = await fetch(url, defaultRequest(encodedJwt, { allocatedToUserId: 99999, caseType: "exceptions" }))
 
     expect(response.status).toBe(NOT_FOUND)
   })
 
-  it("returns 500 INTERNAL SERVER ERROR if the target user exists but falls outside the actor's visible forces", async () => {
+  it("returns NOT FOUND ERROR if the target user exists but falls outside the actor's visible forces", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Allocator, UserGroup.Supervisor], {
       visibleForces: ["01"]
     })
@@ -74,11 +76,14 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
     })
 
     const caseObj = await createCase(helper.postgres, { errorLockedById: null })
-    const url = `${helper.address}${getRouteUrl(caseObj.errorId)}?allocatedToUserId=${targetUser.id}&caseType=exceptions`
+    const url = `${helper.address}${getRouteUrl(caseObj.errorId)}`
 
-    const response = await fetch(url, defaultRequest(encodedJwt))
+    const response = await fetch(
+      url,
+      defaultRequest(encodedJwt, { allocatedToUserId: targetUser.id, caseType: "exceptions" })
+    )
 
-    expect(response.status).toBe(INTERNAL_SERVER_ERROR)
+    expect(response.status).toBe(NOT_FOUND)
   })
 
   it("returns 200 OK and successfully modifies the database exception lock parameters on success", async () => {
@@ -98,9 +103,12 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
       triggerLockedById: null
     })
 
-    const url = `${helper.address}${getRouteUrl(caseObj.errorId)}?allocatedToUserId=${targetUser.id}&caseType=exceptions`
+    const url = `${helper.address}${getRouteUrl(caseObj.errorId)}`
 
-    const response = await fetch(url, defaultRequest(encodedJwt))
+    const response = await fetch(
+      url,
+      defaultRequest(encodedJwt, { allocatedToUserId: targetUser.id, caseType: "exceptions" })
+    )
 
     expect(response.status).toBe(OK)
 
@@ -111,7 +119,7 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
     expect(updatedCase[0].trigger_locked_by_id).toBeNull()
   })
 
-  it.only("returns NOT FOUND ERROR if downstream lockAndAuditLog execution fails due to a missing case entry", async () => {
+  it("returns NOT FOUND ERROR if downstream lockAndAuditLog execution fails due to a missing case entry", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Allocator, UserGroup.Supervisor], {
       visibleForces: ["01"]
     })
@@ -121,9 +129,12 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
       visibleForces: ["01"]
     })
 
-    const url = `${helper.address}${getRouteUrl(88888)}?allocatedToUserId=${targetUser.id}&caseType=exceptions`
+    const url = `${helper.address}${getRouteUrl(88888)}`
 
-    const response = await fetch(url, defaultRequest(encodedJwt))
+    const response = await fetch(
+      url,
+      defaultRequest(encodedJwt, { allocatedToUserId: targetUser.id, caseType: "exceptions" })
+    )
 
     expect(response.status).toBe(NOT_FOUND)
   })
@@ -133,10 +144,11 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
       visibleForces: ["01"]
     })
 
-    const caseObj = await createCase(helper.postgres, { errorLockedById: null })
-    const url = `${helper.address}${getRouteUrl(caseObj.errorId)}?allocatedToUserId=invalidId&caseType=exceptions`
+    await createCase(helper.postgres, { errorLockedById: null })
 
-    const response = await fetch(url, defaultRequest(encodedJwt))
+    const url = `${helper.address}${getRouteUrl("not-a-number")}`
+
+    const response = await fetch(url, defaultRequest(encodedJwt, { allocatedToUserId: 12345, caseType: "exceptions" }))
 
     expect(response.status).toBe(BAD_REQUEST)
   })

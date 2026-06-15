@@ -11,6 +11,7 @@ import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import TestDynamoGateway from "../../../tests/testGateways/TestDynamoGateway/TestDynamoGateway"
 import { NotAllowedError } from "../../../types/errors/NotAllowedError"
+import { NotFoundError } from "../../../types/errors/NotFoundError"
 import allocate from "./allocate"
 
 const mockLogger = {
@@ -82,8 +83,8 @@ describe("allocate integration", () => {
     )
 
     expect(isError(result)).toBe(true)
-    expect((result as Error).message).toContain("does not exist")
-    expect(mockLogger.error).toHaveBeenCalledWith(expect.any(Error))
+    expect(result).toBeInstanceOf(NotFoundError)
+    expect(mockLogger.error).toHaveBeenCalled()
   })
 
   it("returns an error if the target user exists but is has no visible forces in common with the executing user", async () => {
@@ -114,7 +115,7 @@ describe("allocate integration", () => {
     )
 
     expect(isError(result)).toBe(true)
-    expect((result as Error).message).toContain("does not exist")
+    expect(result).toBeInstanceOf(NotFoundError)
     expect(mockLogger.error).toHaveBeenCalled()
   })
 

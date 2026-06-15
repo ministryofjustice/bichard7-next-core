@@ -21,18 +21,18 @@ import allocate from "../../../../useCases/cases/getCase/allocate"
 
 type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway
+  body: AllocationQuery
   caseId: number
   database: DatabaseGateway
   logger: FastifyBaseLogger
-  query: AllocationQuery
   reply: FastifyReply
   user: User
 }
 
 const schema = {
   ...auth,
+  body: AllocationQuerySchema,
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
-  querystring: AllocationQuerySchema,
   response: {
     ...unauthorizedError(),
     ...forbiddenError(),
@@ -41,12 +41,12 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ auditLogGateway, caseId, database, logger, query, reply, user }: HandlerProps) => {
+const handler = async ({ auditLogGateway, body, caseId, database, logger, reply, user }: HandlerProps) => {
   if (Number.isNaN(caseId)) {
     return reply.code(BAD_REQUEST).send()
   }
 
-  const result = await allocate(auditLogGateway, database.writable, user, logger, query, caseId)
+  const result = await allocate(auditLogGateway, database.writable, user, logger, body, caseId)
 
   if (isError(result)) {
     reply.log.error(result)
@@ -69,10 +69,10 @@ const route = async (fastify: FastifyInstance) => {
   useZod(fastify).put(V1.CasesAllocate, { schema }, async (req, reply) => {
     await handler({
       auditLogGateway: req.auditLogGateway,
+      body: req.body as AllocationQuery,
       caseId: Number(req.params.caseId),
       database: req.database,
       logger: req.log,
-      query: req.query,
       reply,
       user: req.user
     })
