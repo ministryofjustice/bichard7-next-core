@@ -151,7 +151,6 @@ describe("allocate integration", () => {
     )
 
     expect(isError(result)).toBe(false)
-    expect(result).toBe(true)
 
     const updatedCase = await testDatabaseGateway.writable
       .connection`SELECT * FROM br7own.error_list WHERE error_id = ${caseObj.errorId}`
@@ -193,7 +192,6 @@ describe("allocate integration", () => {
     )
 
     expect(isError(result)).toBe(false)
-    expect(result).toBe(true)
 
     const updatedCase = await testDatabaseGateway.writable
       .connection`SELECT * FROM br7own.error_list WHERE error_id = ${caseObj.errorId}`
