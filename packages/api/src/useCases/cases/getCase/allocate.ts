@@ -1,4 +1,4 @@
-import type { AllocationQuery } from "@moj-bichard7/common/contracts/AllocationQuery"
+import type { AllocationBody } from "@moj-bichard7/common/contracts/AllocationBody"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
@@ -18,7 +18,7 @@ const allocate = async (
   database: WritableDatabaseConnection,
   user: User,
   logger: FastifyBaseLogger,
-  query: AllocationQuery,
+  query: AllocationBody,
   caseId: number
 ): PromiseResult<void> => {
   if (!userAccess(user)[Permission.CanAllocate] || !userAccess(user)[Permission.CanListUsers]) {

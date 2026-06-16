@@ -1,7 +1,7 @@
 import withApiAuthentication from "@/middleware/withApiAuthentication/withApiAuthentication"
 import ApiClient from "@/services/api/ApiClient"
 import BichardApiV1 from "@/services/api/BichardApiV1"
-import type { AllocationQuery } from "@moj-bichard7/common/contracts/AllocationQuery"
+import type { AllocationBody } from "@moj-bichard7/common/contracts/AllocationBody"
 import Permission from "@moj-bichard7/common/types/Permission"
 import { isError } from "@moj-bichard7/common/types/Result"
 import type { UserLookupDto } from "@moj-bichard7/common/types/User"
@@ -32,7 +32,7 @@ export default async function users(request: NextApiRequest, response: NextApiRe
   const apiClient = new ApiClient(jwt)
   const apiGateway = new BichardApiV1(apiClient)
 
-  const query: AllocationQuery = {
+  const query: AllocationBody = {
     caseType: caseType as "triggers" | "exceptions",
     allocatedToUserId: body.id
   }

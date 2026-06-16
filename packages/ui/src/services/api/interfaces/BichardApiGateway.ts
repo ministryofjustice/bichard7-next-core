@@ -1,4 +1,4 @@
-import type { AllocationQuery } from "@moj-bichard7/common/contracts/AllocationQuery"
+import type { AllocationBody } from "@moj-bichard7/common/contracts/AllocationBody"
 import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
@@ -24,5 +24,5 @@ export default interface BichardApiGateway {
   fetchAuditById: (auditId: number) => PromiseResult<AuditWithProgressDto>
   fetchAuditCases: (auditId: number, auditCasesQuery: AuditCasesQuery) => PromiseResult<AuditCasesMetadata>
   connectivity: (apiKey: string) => PromiseResult<ApiConnectivityDto>
-  updateAllocation: (caseId: number, query: AllocationQuery) => Promise<Error>
+  updateAllocation: (caseId: number, query: AllocationBody) => Promise<Error>
 }

@@ -3,7 +3,7 @@ import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { UserList } from "@moj-bichard7/common/types/User"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import type { AllocationQuery } from "@moj-bichard7/common/contracts/AllocationQuery"
+import type { AllocationBody } from "@moj-bichard7/common/contracts/AllocationBody"
 import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
 import { Order, OrderBy, Reason, type ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
@@ -318,7 +318,7 @@ describe("BichardApiV1", () => {
 
   describe("#updateAllocation", () => {
     const caseId = 1
-    const allocationQuery: AllocationQuery = {
+    const AllocationBody: AllocationBody = {
       allocatedToUserId: 1,
       caseType: "triggers"
     }
@@ -328,16 +328,16 @@ describe("BichardApiV1", () => {
 
       jest.spyOn(client, "put").mockResolvedValue("works")
 
-      await gateway.updateAllocation(caseId, allocationQuery)
+      await gateway.updateAllocation(caseId, AllocationBody)
 
-      expect(client.put).toHaveBeenCalledWith(endpoint, allocationQuery)
+      expect(client.put).toHaveBeenCalledWith(endpoint, AllocationBody)
     })
 
     it("can handle errors", async () => {
       const expectedError = new Error("Error")
       jest.spyOn(client, "put").mockResolvedValue(expectedError)
 
-      const result = await gateway.updateAllocation(caseId, allocationQuery)
+      const result = await gateway.updateAllocation(caseId, AllocationBody)
 
       expect(isError(result)).toBe(true)
       expect(result).toEqual(expectedError)

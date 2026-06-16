@@ -7,7 +7,7 @@ import type { DisplayFullCourtCase } from "types/display/CourtCases"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 
-import type { AllocationQuery } from "@moj-bichard7/common/contracts/AllocationQuery"
+import type { AllocationBody } from "@moj-bichard7/common/contracts/AllocationBody"
 import type { ApiUserLookupQuery } from "@moj-bichard7/common/contracts/ApiUserLookupQuery"
 import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
@@ -61,7 +61,7 @@ export default class BichardApiV1 implements BichardApiGateway {
     return await this.apiClient.get<UserLookupList>(`${V1.UsersLookup}?${generateUrlSearchParams(query)}`)
   }
 
-  async updateAllocation(caseId: number, query: AllocationQuery): Promise<Error> {
+  async updateAllocation(caseId: number, query: AllocationBody): Promise<Error> {
     return await this.apiClient.put(V1.CasesAllocate.replace(":caseId", String(caseId)), query)
   }
 

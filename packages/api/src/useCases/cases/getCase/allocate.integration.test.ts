@@ -1,4 +1,4 @@
-import type { AllocationQuery } from "@moj-bichard7/common/contracts/AllocationQuery"
+import type { AllocationBody } from "@moj-bichard7/common/contracts/AllocationBody"
 import type { FastifyBaseLogger } from "fastify"
 
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -43,7 +43,7 @@ describe("allocate integration", () => {
     })
     const caseObj = await createCase(testDatabaseGateway, { errorLockedById: null })
 
-    const query: AllocationQuery = {
+    const query: AllocationBody = {
       allocatedToUserId: 999,
       caseType: "exceptions"
     }
@@ -68,7 +68,7 @@ describe("allocate integration", () => {
     })
     const caseObj = await createCase(testDatabaseGateway, { errorLockedById: null })
 
-    const query: AllocationQuery = {
+    const query: AllocationBody = {
       allocatedToUserId: 99999,
       caseType: "exceptions"
     }
@@ -100,7 +100,7 @@ describe("allocate integration", () => {
 
     const caseObj = await createCase(testDatabaseGateway, { errorLockedById: null })
 
-    const query: AllocationQuery = {
+    const query: AllocationBody = {
       allocatedToUserId: targetUser.id,
       caseType: "exceptions"
     }
@@ -137,7 +137,7 @@ describe("allocate integration", () => {
       triggerLockedById: null
     })
 
-    const query: AllocationQuery = {
+    const query: AllocationBody = {
       allocatedToUserId: targetUser.id,
       caseType: "exceptions"
     }
@@ -178,7 +178,7 @@ describe("allocate integration", () => {
       triggerLockedById: null
     })
 
-    const query: AllocationQuery = {
+    const query: AllocationBody = {
       allocatedToUserId: targetUser.id,
       caseType: "triggers"
     }
@@ -212,7 +212,7 @@ describe("allocate integration", () => {
       visibleForces: ["01"]
     })
 
-    const query: AllocationQuery = {
+    const query: AllocationBody = {
       allocatedToUserId: targetUser.id,
       caseType: "exceptions"
     }

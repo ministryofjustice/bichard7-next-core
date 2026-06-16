@@ -1,10 +1,10 @@
-import type { AllocationQuery } from "@moj-bichard7/common/contracts/AllocationQuery"
+import type { AllocationBody } from "@moj-bichard7/common/contracts/AllocationBody"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { AllocationQuerySchema } from "@moj-bichard7/common/contracts/AllocationQuery"
+import { AllocationBodySchema } from "@moj-bichard7/common/contracts/AllocationBody"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { BAD_REQUEST, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from "http-status"
 import z from "zod"
@@ -21,7 +21,7 @@ import allocate from "../../../../useCases/cases/getCase/allocate"
 
 type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway
-  body: AllocationQuery
+  body: AllocationBody
   caseId: number
   database: DatabaseGateway
   logger: FastifyBaseLogger
@@ -31,7 +31,7 @@ type HandlerProps = {
 
 const schema = {
   ...auth,
-  body: AllocationQuerySchema,
+  body: AllocationBodySchema,
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
   response: {
     ...unauthorizedError(),
