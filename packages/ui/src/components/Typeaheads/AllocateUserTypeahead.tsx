@@ -1,117 +1,37 @@
-import { useCombobox } from "downshift"
-import { useCallback, useEffect, useState } from "react"
-import { ListWrapper } from "./Typeahead.styles"
 import { UserLookupDto } from "@moj-bichard7/common/types/User"
+import React from "react"
+import { GenericTypeahead } from "./GenericTypeahead"
 
 interface Props {
   onSelect: (item: UserLookupDto | null) => void
 }
 
-const AllocateUserTypeahead: React.FC<Props> = ({ onSelect }: Props) => {
-  const [inputItems, setInputItems] = useState<UserLookupDto[]>([])
-
-  const fetchItems = useCallback(async (searchStringParam?: string, config?: { signal?: AbortSignal }) => {
-    try {
-      const params = new URLSearchParams()
-
-      if (searchStringParam) {
-        params.append("usernameOrName", searchStringParam)
-      }
-
-      const queryString = params.toString()
-      const url = queryString
-        ? `/bichard/api/court-cases/allocation/users?${queryString}`
-        : `/bichard/api/court-cases/allocation/users`
-
-      const response = await fetch(url, {
-        method: "GET",
-        signal: config?.signal
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP Error: ${response.status}`)
-      }
-
-      const data = (await response.json()) as UserLookupDto[]
-      setInputItems(data)
-    } catch (error) {
-      if (error instanceof Error && error.name === "AbortError") {
-        return
-      }
-      console.error("Error fetching users:", error)
-    }
-  }, [])
-
-  const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue } = useCombobox({
-    defaultHighlightedIndex: 0,
-    items: inputItems,
-    itemToString: (item) => (item ? (item.fullname ?? "Unknown User") : ""),
-    onSelectedItemChange: ({ selectedItem }) => {
-      onSelect(selectedItem || null)
-    },
-    onInputValueChange: ({ inputValue: newVal }) => {
-      if (!newVal) {
-        onSelect(null)
-      }
-    },
-    stateReducer: (state, actionAndChanges) => {
-      const { type, changes } = actionAndChanges
-      if (type === useCombobox.stateChangeTypes.InputBlur) {
-        const typedValue = state.inputValue.trim()
-        const exactMatch =
-          inputItems.find((item) => item.fullname === typedValue) || (inputItems.length === 1 ? inputItems[0] : null)
-
-        if (exactMatch) {
-          return {
-            ...changes,
-            selectedItem: exactMatch,
-            inputValue: exactMatch.fullname
-          }
-        }
-      }
-      return changes
-    }
-  })
-
-  useEffect(() => {
-    const abortController = new AbortController()
-
-    const delayDebounceFn = setTimeout(() => {
-      fetchItems(inputValue, { signal: abortController.signal })
-    }, 250)
-
-    return () => {
-      clearTimeout(delayDebounceFn)
-      abortController.abort()
-    }
-  }, [fetchItems, inputValue])
-
+const AllocateUserTypeahead: React.FC<Props> = ({ onSelect }) => {
   return (
-    <div>
-      <input
-        {...getInputProps({
-          className: "govuk-input",
-          id: "allocate-user",
-          placeholder: "Type a name to allocate..."
-        })}
-      />
+    <GenericTypeahead<UserLookupDto>
+      id="allocate-user"
+      placeholder="Type a name to allocate..."
+      fetchUrlBuilder={(search) =>
+        search
+          ? `/bichard/api/court-cases/allocation/users?usernameOrName=${encodeURIComponent(search)}`
+          : "/bichard/api/court-cases/allocation/users"
+      }
+      itemToString={(item) => item?.fullname ?? "Unknown User"}
+      getItemKey={(item, index) => `${item.id}-${index}`}
+      renderItem={(item) => <>{item.fullname}</>}
+      onSelectedItemChange={onSelect}
+      onInputValueChange={(val) => {
+        if (!val) {
+          onSelect(null)
+        }
+      }}
+      customBlurMatch={(typedValue, items) => {
+        const trimmed = typedValue.trim()
+        const exactMatch = items.find((item) => item.fullname === trimmed) || (items.length === 1 ? items[0] : null)
 
-      <ListWrapper>
-        <ul {...getMenuProps()}>
-          {isOpen
-            ? inputItems.map((item, index) => (
-                <li
-                  style={highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}}
-                  key={`${item.id}-${index}`}
-                  {...getItemProps({ item, index })}
-                >
-                  {item.fullname}
-                </li>
-              ))
-            : null}
-        </ul>
-      </ListWrapper>
-    </div>
+        return exactMatch ? { selectedItem: exactMatch, inputValue: exactMatch.fullname ?? "" } : null
+      }}
+    />
   )
 }
 

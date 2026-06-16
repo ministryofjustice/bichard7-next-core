@@ -1,128 +1,67 @@
-import { useCombobox } from "downshift"
-import { useCallback, useEffect, useState } from "react"
+import React, { useCallback } from "react"
 import type ForceOwnerApiResponse from "types/ForceOwnerApiResponse"
-import { ListWrapper } from "./Typeahead.styles"
+import { GenericTypeahead } from "./GenericTypeahead"
 
 interface Props {
   onSelect: (item: ForceOwnerApiResponse[0] | null) => void
   currentForceOwner?: string
 }
 
-const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner }: Props) => {
-  const [inputItems, setInputItems] = useState<ForceOwnerApiResponse>([])
-
-  const fetchItems = useCallback(
-    async (searchStringParam?: string, config?: { signal?: AbortSignal }) => {
-      try {
-        const params = new URLSearchParams()
-
-        if (currentForceOwner) {
-          params.append("currentForceOwner", currentForceOwner)
-        }
-
-        if (searchStringParam) {
-          params.append("search", searchStringParam)
-        }
-
-        const queryString = params.toString()
-        const url = queryString ? `/bichard/api/force-owner?${queryString}` : `/bichard/api/force-owner`
-
-        const response = await fetch(url, {
-          method: "GET",
-          signal: config?.signal
-        })
-
-        if (!response.ok) {
-          throw new Error(`HTTP Error: ${response.status}`)
-        }
-
-        const data = (await response.json()) as ForceOwnerApiResponse
-        const filteredForceOwners = data.filter((item) => currentForceOwner !== item.forceCode)
-
-        setInputItems(filteredForceOwners)
-      } catch (error) {
-        if (error instanceof Error && error.name === "AbortError") {
-          return
-        }
-        console.error("Error fetching force owners:", error)
+const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner }) => {
+  const fetchUrlBuilder = useCallback(
+    (search: string) => {
+      const params = new URLSearchParams()
+      if (currentForceOwner) {
+        params.append("currentForceOwner", currentForceOwner)
       }
+      if (search) {
+        params.append("search", search)
+      }
+
+      const queryString = params.toString()
+      return queryString ? `/bichard/api/force-owner?${queryString}` : `/bichard/api/force-owner`
     },
     [currentForceOwner]
   )
 
-  const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue } = useCombobox({
-    defaultHighlightedIndex: 0,
-    items: inputItems,
-    itemToString: (item) => (item ? `${item.forceCode} - ${item.forceName}` : ""),
-    onSelectedItemChange: ({ selectedItem }) => {
-      onSelect(selectedItem || null)
+  const processData = useCallback(
+    (data: ForceOwnerApiResponse) => {
+      return data.filter((item) => currentForceOwner !== item.forceCode)
     },
-    onInputValueChange: ({ inputValue: newVal }) => {
-      if (!newVal) {
-        onSelect(null)
-      }
-    },
-    stateReducer: (state, actionAndChanges) => {
-      const { type, changes } = actionAndChanges
-      if (type === useCombobox.stateChangeTypes.InputBlur) {
-        const typedValue = state.inputValue.trim() // TRIM added to handle accidental spaces/event quirks
-        const exactMatch =
-          inputItems.find(
-            (item) => item.forceCode === typedValue || `${item.forceCode} - ${item.forceName}` === typedValue
-          ) || (inputItems.length === 1 ? inputItems[0] : null)
-
-        if (exactMatch) {
-          return {
-            ...changes,
-            selectedItem: exactMatch,
-            inputValue: `${exactMatch.forceCode} - ${exactMatch.forceName}`
-          }
-        }
-      }
-      return changes
-    }
-  })
-
-  useEffect(() => {
-    const abortController = new AbortController()
-
-    const delayDebounceFn = setTimeout(() => {
-      fetchItems(inputValue, { signal: abortController.signal })
-    }, 250)
-
-    return () => {
-      clearTimeout(delayDebounceFn)
-      abortController.abort()
-    }
-  }, [fetchItems, inputValue])
+    [currentForceOwner]
+  )
 
   return (
-    <div>
-      <input
-        {...getInputProps({
-          className: "govuk-input",
-          id: "force"
-        })}
-      />
+    <GenericTypeahead<ForceOwnerApiResponse[0]>
+      id="force"
+      fetchUrlBuilder={fetchUrlBuilder}
+      processData={processData}
+      itemToString={(item) => (item ? `${item.forceCode} - ${item.forceName}` : "")}
+      getItemKey={(item, index) => `${item.forceCode}-${index}`}
+      renderItem={(item) => (
+        <>
+          {item.forceCode}
+          {" - "}
+          {item.forceName}
+        </>
+      )}
+      onSelectedItemChange={onSelect}
+      onInputValueChange={(val) => {
+        if (!val) {
+          onSelect(null)
+        }
+      }}
+      customBlurMatch={(typedValue, items) => {
+        const trimmed = typedValue.trim()
+        const exactMatch =
+          items.find((item) => item.forceCode === trimmed || `${item.forceCode} - ${item.forceName}` === trimmed) ||
+          (items.length === 1 ? items[0] : null)
 
-      <ListWrapper>
-        <ul {...getMenuProps()}>
-          {isOpen
-            ? inputItems.map((item, index) => (
-                <li
-                  style={highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}}
-                  key={`${item.forceCode}-${index}`}
-                  {...getItemProps({ item, index })}
-                >
-                  {item.forceCode}
-                  {" - "}
-                  {item.forceName}
-                </li>
-              ))
-            : null}
-        </ul>
-      </ListWrapper>
-    </div>
+        return exactMatch
+          ? { selectedItem: exactMatch, inputValue: `${exactMatch.forceCode} - ${exactMatch.forceName}` }
+          : null
+      }}
+    />
   )
 }
 
