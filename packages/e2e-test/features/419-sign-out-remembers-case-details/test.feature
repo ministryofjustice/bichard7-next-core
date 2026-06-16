@@ -5,8 +5,7 @@ Feature: {419} If the user signs out or the session is ended return to the case 
 			"""
 
 	Background:
-		Given the data for this test is in the PNC
-			And "input-message" is received
+		Given "input-message" is received with an invalid ASN
 
 	@NextUI
 	@ExcludeOnLegacyUI
