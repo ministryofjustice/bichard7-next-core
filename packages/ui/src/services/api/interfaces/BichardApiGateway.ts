@@ -1,13 +1,14 @@
+import type { AllocationBody } from "@moj-bichard7/common/contracts/AllocationBody"
+import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
 import type { ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
-import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
-import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
 import type { AuditWithProgressDto } from "@moj-bichard7/common/types/Audit"
 import type { AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
-import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
+import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
+import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { UserList } from "@moj-bichard7/common/types/User"
-import type ApiClient from "../ApiClient"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
-import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
+import type ApiClient from "../ApiClient"
 
 export default interface BichardApiGateway {
   readonly apiClient: ApiClient
@@ -23,4 +24,5 @@ export default interface BichardApiGateway {
   fetchAuditById: (auditId: number) => PromiseResult<AuditWithProgressDto>
   fetchAuditCases: (auditId: number, auditCasesQuery: AuditCasesQuery) => PromiseResult<AuditCasesMetadata>
   connectivity: (apiKey: string) => PromiseResult<ApiConnectivityDto>
+  updateAllocation: (caseId: number, query: AllocationBody) => Promise<Error>
 }
