@@ -5,7 +5,7 @@ import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToLocked from "./updateLockStatusToLocked"
-import { lockErrorListRow } from "./lockErrorListRow"
+import { lockCourtCaseRow } from "./lockCourtCaseRow"
 
 const lockCourtCase = async (
   dataSource: DataSource,
@@ -13,7 +13,6 @@ const lockCourtCase = async (
   user: User
 ): Promise<UpdateResult | Error> => {
   return await dataSource.transaction(async (entityManager) => {
-    await lockErrorListRow(entityManager, courtCaseId)
     const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
 
     if (!courtCase) {
@@ -24,6 +23,7 @@ const lockCourtCase = async (
       throw new Error(`Failed to lock: ${courtCase.message}`)
     }
 
+    await lockCourtCaseRow(entityManager, courtCaseId)
     const events: AuditLogEvent[] = []
     const lockResult = await updateLockStatusToLocked(entityManager, courtCaseId, user, events)
 
