@@ -1,8 +1,7 @@
 import type { User } from "@moj-bichard7/common/types/User"
 
-import { type Audit, type AuditDto, AuditSchema } from "@moj-bichard7/common/types/Audit"
+import { type AuditDto, AuditSchema } from "@moj-bichard7/common/types/Audit"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
-import z from "zod"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
