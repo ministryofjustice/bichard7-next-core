@@ -8,6 +8,7 @@ import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 import type { TransactionConnection, WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
+import { lockErrorListRow } from "../../../services/db/cases/lockErrorListRow"
 import selectMessageId from "../../../services/db/cases/selectMessageId"
 import createAuditLogEvents from "../../createAuditLogEvents"
 import { lockExceptions } from "./lockExceptions"
@@ -25,6 +26,7 @@ export const lockAndAuditLog = async (
 
   return database
     .transaction(async (db: TransactionConnection) => {
+      await lockErrorListRow(db, caseId)
       const caseMessageId = await selectMessageId(db, user, caseId)
       if (isError(caseMessageId)) {
         throw caseMessageId
