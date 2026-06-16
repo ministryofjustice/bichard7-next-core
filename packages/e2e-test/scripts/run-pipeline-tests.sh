@@ -12,7 +12,7 @@ fi
 if [[ "$USE_LEDS" == "true" && "$REAL_POLICE_API" == "true" ]]
 then
   echo "Running LEDS tests against the real LEDS API"
-  CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:leds:preprod
+  CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run $TEST_COMMAND
 elif [[ "$WORKSPACE" == "e2e-test" ]]
 then
   echo "Build was triggered by $TRIGGER"
