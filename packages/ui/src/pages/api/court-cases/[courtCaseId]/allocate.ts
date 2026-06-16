@@ -1,12 +1,12 @@
-import type { NextApiRequest, NextApiResponse } from "next"
 import withApiAuthentication from "@/middleware/withApiAuthentication/withApiAuthentication"
-import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
+import ApiClient from "@/services/api/ApiClient"
+import BichardApiV1 from "@/services/api/BichardApiV1"
+import type { AllocationBody } from "@moj-bichard7/common/contracts/AllocationBody"
 import Permission from "@moj-bichard7/common/types/Permission"
+import { isError } from "@moj-bichard7/common/types/Result"
 import type { UserLookupDto } from "@moj-bichard7/common/types/User"
-// import ApiClient from "@/services/api/ApiClient"
-// import BichardApiV1 from "@/services/api/BichardApiV1"
-// import { isError } from "@moj-bichard7/common/types/Result"
-// import type { ApiUserLookupQuery } from "@moj-bichard7/common/contracts/ApiUserLookupQuery"
+import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
+import type { NextApiRequest, NextApiResponse } from "next"
 
 export default async function users(request: NextApiRequest, response: NextApiResponse) {
   const allowedMethods = ["PUT"]
@@ -28,21 +28,20 @@ export default async function users(request: NextApiRequest, response: NextApiRe
 
   const body = req.body as UserLookupDto
 
-  // const jwt = req.cookies[".AUTH"] as string
-  // const apiClient = new ApiClient(jwt)
-  // const apiGateway = new BichardApiV1(apiClient)
-  //
-  // const query: ApiUserLookupQuery = req.query
-  //
-  // const result = await apiGateway.fetchUserLookup(query)
-  //
-  // if (isError(result)) {
-  //   return res.status(500).send(result.message)
-  // }
-  //
-  // res.status(200).send(result.users)
+  const jwt = req.cookies[".AUTH"] as string
+  const apiClient = new ApiClient(jwt)
+  const apiGateway = new BichardApiV1(apiClient)
 
-  console.log(`Allocated ${courtCaseId} ${caseType} to ${body.fullname} (${body.id})`)
+  const query: AllocationBody = {
+    caseType: caseType as "triggers" | "exceptions",
+    allocatedToUserId: body.id
+  }
+
+  const result = await apiGateway.updateAllocation(Number(courtCaseId), query)
+
+  if (isError(result)) {
+    return res.status(500).send(result.message)
+  }
 
   res.status(200).send({ result: "success" })
 }

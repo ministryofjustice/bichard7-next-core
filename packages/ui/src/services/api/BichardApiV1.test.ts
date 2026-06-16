@@ -1,20 +1,21 @@
+import type { AuditWithProgressDto } from "@moj-bichard7/common/types/Audit"
 import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { UserList } from "@moj-bichard7/common/types/User"
-import type { AuditWithProgressDto } from "@moj-bichard7/common/types/Audit"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import type { AllocationBody } from "@moj-bichard7/common/contracts/AllocationBody"
+import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
 import { Order, OrderBy, Reason, type ApiCaseQuery } from "@moj-bichard7/common/types/ApiCaseQuery"
-import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
+import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { LockedState } from "types/CaseListQueryParams"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
+import { ZodError } from "zod"
 import FakeApiClient from "../../../test/helpers/api/fakeApiClient"
 import BichardApiV1 from "./BichardApiV1"
 import type BichardApiGateway from "./interfaces/BichardApiGateway"
-import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
-import type { ApiConnectivityDto } from "@moj-bichard7/common/types/ApiConnectivity"
-import { ZodError } from "zod"
 
 describe("BichardApiV1", () => {
   let client: FakeApiClient
@@ -312,6 +313,34 @@ describe("BichardApiV1", () => {
 
       expect(isError(result)).toBe(true)
       expect(result).toBeInstanceOf(ZodError)
+    })
+  })
+
+  describe("#updateAllocation", () => {
+    const caseId = 1
+    const AllocationBody: AllocationBody = {
+      allocatedToUserId: 1,
+      caseType: "triggers"
+    }
+
+    it("calls apiClient#put with a route and a body payload", async () => {
+      const endpoint = V1.CasesAllocate.replace(":caseId", String(caseId))
+
+      jest.spyOn(client, "put").mockResolvedValue("works")
+
+      await gateway.updateAllocation(caseId, AllocationBody)
+
+      expect(client.put).toHaveBeenCalledWith(endpoint, AllocationBody)
+    })
+
+    it("can handle errors", async () => {
+      const expectedError = new Error("Error")
+      jest.spyOn(client, "put").mockResolvedValue(expectedError)
+
+      const result = await gateway.updateAllocation(caseId, AllocationBody)
+
+      expect(isError(result)).toBe(true)
+      expect(result).toEqual(expectedError)
     })
   })
 })
