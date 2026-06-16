@@ -7,5 +7,5 @@ export const canUseAllocation = (user: DisplayFullUser) => {
     return false
   }
 
-  return true //user.featureFlags.allocationEnabled
+  return user.featureFlags.allocationEnabled
 }
