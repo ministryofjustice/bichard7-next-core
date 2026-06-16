@@ -172,4 +172,66 @@ describe("lockAndAuditLog", () => {
 
     expect((result as Error).message).toBe("Dummy error 3")
   })
+
+  it("locks only the exception to the current user and creates an audit log, when exceptions is specified", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.Supervisor] })
+    const caseObj = await createCase(testDatabaseGateway, { errorLockedById: null, triggerLockedById: null })
+
+    const result = await lockAndAuditLog(
+      testDatabaseGateway.writable,
+      testDynamoGateway,
+      user,
+      caseObj.errorId,
+      undefined,
+      "exceptions"
+    )
+
+    expect(isError(result)).toBe(false)
+
+    const updatedCase = await testDatabaseGateway.writable
+      .connection`SELECT * FROM br7own.error_list WHERE error_id = ${caseObj.errorId}`
+    expect(updatedCase[0].error_locked_by_id).toBe(user.username)
+    expect(updatedCase[0].trigger_locked_by_id).toBeNull()
+
+    const auditLogJson = await new FetchById(testDynamoGateway, caseObj.messageId).fetch()
+    const auditLogObj = auditLogJson as OutputApiAuditLog
+    expect(auditLogObj.events).toHaveLength(1)
+
+    const auditLogEvent = auditLogObj.events?.[0]
+    expect(auditLogEvent?.category).toBe(EventCategory.information)
+    expect(auditLogEvent?.eventCode).toBe(EventCode.ExceptionsLocked)
+    expect(auditLogEvent?.eventSource).toBe("Bichard New UI")
+    expect(auditLogEvent?.user).toBe(user.username)
+  })
+
+  it("locks only the trigger to the current user and creates an audit log, when triggers is specified", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.Supervisor] })
+    const caseObj = await createCase(testDatabaseGateway, { errorLockedById: null, triggerLockedById: null })
+
+    const result = await lockAndAuditLog(
+      testDatabaseGateway.writable,
+      testDynamoGateway,
+      user,
+      caseObj.errorId,
+      undefined,
+      "triggers"
+    )
+
+    expect(isError(result)).toBe(false)
+
+    const updatedCase = await testDatabaseGateway.writable
+      .connection`SELECT * FROM br7own.error_list WHERE error_id = ${caseObj.errorId}`
+    expect(updatedCase[0].trigger_locked_by_id).toBe(user.username)
+    expect(updatedCase[0].error_locked_by_id).toBeNull()
+
+    const auditLogJson = await new FetchById(testDynamoGateway, caseObj.messageId).fetch()
+    const auditLogObj = auditLogJson as OutputApiAuditLog
+    expect(auditLogObj.events).toHaveLength(1)
+
+    const auditLogEvent = auditLogObj.events?.[0]
+    expect(auditLogEvent?.category).toBe(EventCategory.information)
+    expect(auditLogEvent?.eventCode).toBe(EventCode.TriggersLocked)
+    expect(auditLogEvent?.eventSource).toBe("Bichard New UI")
+    expect(auditLogEvent?.user).toBe(user.username)
+  })
 })

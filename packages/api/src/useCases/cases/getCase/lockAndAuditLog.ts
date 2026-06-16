@@ -8,6 +8,7 @@ import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 import type { TransactionConnection, WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
+import { lockErrorListRow } from "../../../services/db/cases/lockErrorListRow"
 import selectMessageId from "../../../services/db/cases/selectMessageId"
 import createAuditLogEvents from "../../createAuditLogEvents"
 import { lockExceptions } from "./lockExceptions"
@@ -18,25 +19,31 @@ export const lockAndAuditLog = async (
   auditLogGateway: AuditLogDynamoGateway,
   user: User,
   caseId: number,
-  logger?: FastifyBaseLogger
+  logger?: FastifyBaseLogger,
+  lockType: "both" | "exceptions" | "triggers" = "both"
 ): PromiseResult<void> => {
   const auditLogEvents: ApiAuditLogEvent[] = []
 
   return database
     .transaction(async (db: TransactionConnection) => {
+      await lockErrorListRow(db, caseId)
       const caseMessageId = await selectMessageId(db, user, caseId)
       if (isError(caseMessageId)) {
         throw caseMessageId
       }
 
-      const lockExceptionsResult = await lockExceptions(db, user, caseId, auditLogEvents)
-      if (isError(lockExceptionsResult)) {
-        throw lockExceptionsResult
+      if (lockType === "both" || lockType === "exceptions") {
+        const lockExceptionsResult = await lockExceptions(db, user, caseId, auditLogEvents)
+        if (isError(lockExceptionsResult)) {
+          throw lockExceptionsResult
+        }
       }
 
-      const lockTriggersResult = await lockTriggers(db, user, caseId, auditLogEvents)
-      if (isError(lockTriggersResult)) {
-        throw lockTriggersResult
+      if (lockType === "both" || lockType === "triggers") {
+        const lockTriggersResult = await lockTriggers(db, user, caseId, auditLogEvents)
+        if (isError(lockTriggersResult)) {
+          throw lockTriggersResult
+        }
       }
 
       if (auditLogEvents.length > 0) {

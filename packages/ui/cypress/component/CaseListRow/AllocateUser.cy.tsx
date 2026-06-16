@@ -1,6 +1,5 @@
 import React from "react"
-import { AllocateUser } from "@/features/CourtCaseList/tags/Allocate/AllocateUser"
-import { ColumnType } from "@/features/CourtCaseList/CourtCaseListEntry/CourtCaseListEntryCells/generateAllocationComponent"
+import { AllocateUser, ColumnType } from "@/features/CourtCaseList/tags/Allocate/AllocateUser"
 
 describe("AllocateUser Component", () => {
   const mockCaseId = 123
@@ -18,6 +17,18 @@ describe("AllocateUser Component", () => {
       statusCode: 200,
       body: { success: true }
     }).as("allocateRequest")
+  })
+
+  it("displays exception button", () => {
+    cy.mount(<AllocateUser columnType={"exceptions"} caseId={mockCaseId} />)
+
+    cy.contains("button", "Allocate exceptions").click()
+  })
+
+  it("displays triggers button", () => {
+    cy.mount(<AllocateUser columnType={"triggers"} caseId={mockCaseId} />)
+
+    cy.contains("button", "Allocate triggers").click()
   })
 
   it("allocates a user and displays a success message via autosave", () => {

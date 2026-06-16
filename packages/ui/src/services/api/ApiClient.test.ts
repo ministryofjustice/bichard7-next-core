@@ -1,6 +1,6 @@
+import { ApiError } from "types/ApiError"
 import { fetch } from "undici"
 import ApiClient, { HttpMethod } from "./ApiClient" // Adjust the path if necessary
-import { ApiError } from "types/ApiError"
 
 jest.mock("undici", () => ({
   fetch: jest.fn(),
@@ -132,5 +132,25 @@ describe("ApiClient", () => {
       },
       dispatcher: expect.any(Object)
     })
+  })
+
+  it("should perform a successful PUT request with an object body", async () => {
+    const payload = { name: "TestData" }
+    const expectedData = { success: true }
+    mockFetch.mockResolvedValueOnce(mockResponse(true, 200, expectedData) as any)
+
+    const result = await client.put("/cases/1/allocate", payload)
+
+    expect(mockFetch).toHaveBeenCalledTimes(1)
+    expect(mockFetch).toHaveBeenCalledWith("https://api.example.com/cases/1/allocate", {
+      method: HttpMethod.PUT,
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload),
+      dispatcher: expect.any(Object)
+    })
+    expect(result).toEqual(expectedData)
   })
 })
