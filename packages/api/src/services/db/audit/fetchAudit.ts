@@ -15,7 +15,7 @@ export const fetchAudit = async (
 ): PromiseResult<AuditDto | null> => {
   const sql = database.connection
 
-  const results = await sql<Audit[]>`
+  const results = await sql`
       SELECT
         audit_id,
         created_by,
@@ -42,10 +42,10 @@ export const fetchAudit = async (
     return null
   }
 
-  const parsedResults = z.array(AuditSchema).safeParse(results)
+  const parsedResults = AuditSchema.safeParse(results[0])
   if (!parsedResults.success) {
     return parsedResults.error
   }
 
-  return convertAuditToDto(parsedResults.data[0])
+  return convertAuditToDto(parsedResults.data)
 }
