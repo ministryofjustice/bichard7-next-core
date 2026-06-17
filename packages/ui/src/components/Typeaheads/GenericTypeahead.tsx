@@ -62,7 +62,6 @@ export function GenericTypeahead<T>({
   )
 
   const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue } = useCombobox({
-    defaultHighlightedIndex: 0,
     initialInputValue: initialValue,
     items: inputItems,
     itemToString,
