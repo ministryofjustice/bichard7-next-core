@@ -1,7 +1,9 @@
 import { useCourtCase } from "context/CourtCaseContext"
-import React from "react"
+import { useCombobox } from "downshift"
+import { useCallback, useEffect, useState } from "react"
 import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
-import { GenericTypeahead } from "./GenericTypeahead"
+import { isError } from "types/Result"
+import { ListWrapper } from "./Typeahead.styles"
 
 interface Props {
   resultIndex: number
@@ -19,47 +21,96 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
   setOrganisations,
   setChanged,
   setSaved
-}) => {
+}: Props) => {
   const { amend } = useCourtCase()
+  const [inputItems, setInputItems] = useState<OrganisationUnitApiResponse>([])
+
+  const fetchItems = useCallback(
+    async (searchStringParam?: string) => {
+      const query = new URLSearchParams({ search: searchStringParam ?? "" })
+
+      const queryString = query.toString()
+      const url = queryString ? `/bichard/api/organisation-units?${queryString}` : `/bichard/api/force-owner`
+
+      const organisationUnitsResponse = await fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`)
+          }
+
+          return response.json() as Promise<OrganisationUnitApiResponse>
+        })
+        .catch((error) => error as Error)
+
+      if (isError(organisationUnitsResponse)) {
+        return
+      }
+
+      setInputItems(organisationUnitsResponse)
+
+      if (setOrganisations) {
+        setOrganisations(organisationUnitsResponse)
+      }
+    },
+    [setOrganisations]
+  )
+
+  const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue } = useCombobox({
+    items: inputItems,
+
+    onInputValueChange: ({ inputValue }) => {
+      amend("nextSourceOrganisation")({
+        resultIndex: resultIndex,
+        offenceIndex: offenceIndex,
+        value: inputValue
+      })
+      if (setChanged) {
+        setChanged(true)
+      }
+      if (setSaved) {
+        setSaved(false)
+      }
+    },
+    initialInputValue: value,
+    itemToString: (item) => item?.fullOrganisationCode ?? ""
+  })
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      fetchItems(inputValue)
+    }, 250)
+
+    return () => clearTimeout(delayDebounceFn)
+  }, [fetchItems, inputValue])
 
   return (
-    <GenericTypeahead<OrganisationUnitApiResponse[0]>
-      id="next-hearing-location"
-      name="next-hearing-location"
-      initialValue={value}
-      fetchUrlBuilder={(search) => {
-        const query = new URLSearchParams({ search })
-        const queryString = query.toString()
-        return queryString ? `/bichard/api/organisation-units?${queryString}` : `/bichard/api/force-owner`
-      }}
-      processData={(data) => {
-        if (setOrganisations) {
-          setOrganisations(data)
-        }
-        return data
-      }}
-      itemToString={(item) => item?.fullOrganisationCode ?? ""}
-      getItemKey={(item, index) => `${item.fullOrganisationCode}-${index}`}
-      renderItem={(item) => (
-        <>
-          {item.fullOrganisationCode}
-          <span>{item.fullOrganisationName}</span>
-        </>
-      )}
-      onInputValueChange={(inputValue) => {
-        amend("nextSourceOrganisation")({
-          resultIndex,
-          offenceIndex,
-          value: inputValue
-        })
-        if (setChanged) {
-          setChanged(true)
-        }
-        if (setSaved) {
-          setSaved(false)
-        }
-      }}
-    />
+    <div>
+      <input
+        {...getInputProps({
+          className: "govuk-input",
+          id: "next-hearing-location",
+          name: "next-hearing-location",
+          value
+        })}
+      />
+
+      <ListWrapper>
+        <ul {...getMenuProps()}>
+          {isOpen
+            ? inputItems.map((item, index) => (
+                <li
+                  style={highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}}
+                  key={`${item.fullOrganisationCode}-${index}`}
+                  {...getItemProps({ item, index })}
+                >
+                  {item.fullOrganisationCode}
+                  <span>{item.fullOrganisationName}</span>
+                </li>
+              ))
+            : null}
+        </ul>
+      </ListWrapper>
+    </div>
   )
 }
 
