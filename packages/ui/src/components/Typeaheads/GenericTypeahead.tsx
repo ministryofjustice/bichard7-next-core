@@ -33,7 +33,7 @@ export function GenericTypeahead<T>({
   onSelectedItemChange,
   onInputValueChange,
   customBlurMatch
-}: GenericTypeaheadProps<T>) {
+}: Readonly<GenericTypeaheadProps<T>>) {
   const [inputItems, setInputItems] = useState<T[]>([])
 
   const fetchItems = useCallback(
