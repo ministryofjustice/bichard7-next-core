@@ -29,7 +29,8 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
       initialValue={value}
       fetchUrlBuilder={(search) => {
         const query = new URLSearchParams({ search })
-        return `/bichard/api/organisation-units?${query.toString()}`
+        const queryString = query.toString()
+        return queryString ? `/bichard/api/organisation-units?${queryString}` : `/bichard/api/force-owner`
       }}
       processData={(data) => {
         if (setOrganisations) {
