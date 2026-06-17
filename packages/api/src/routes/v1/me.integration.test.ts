@@ -50,6 +50,7 @@ describe("/v1/me", () => {
     const response = await app.inject({ headers: { authorization: `Bearer ${encodedJwt}` }, method: "GET", url: V1.Me })
 
     const responseUser: UserDto = {
+      deleted: Boolean(user.deletedAt),
       email: user.email,
       excludedTriggers: "",
       featureFlags: {},
@@ -93,6 +94,7 @@ describe("/v1/me", () => {
     const response = await app.inject({ headers: { authorization: `Bearer ${encodedJwt}` }, method: "GET", url: V1.Me })
 
     const responseUser: UserDto = {
+      deleted: Boolean(user.deletedAt),
       email: user.email,
       excludedTriggers: "",
       featureFlags: {},

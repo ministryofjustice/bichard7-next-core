@@ -6,7 +6,10 @@ describe("AuditSearch", () => {
   it("mounts", () => {
     cy.mount(
       <MockNextRouter>
-        <AuditSearch triggerTypes={["TRPR0010"]} resolvers={[{ username: "usera", forenames: "User", surname: "A" }]} />
+        <AuditSearch
+          triggerTypes={["TRPR0010"]}
+          resolvers={[{ username: "usera", forenames: "User", surname: "A", deleted: false }]}
+        />
       </MockNextRouter>
     )
   })
@@ -17,8 +20,8 @@ describe("AuditSearch", () => {
         <AuditSearch
           triggerTypes={[]}
           resolvers={[
-            { username: "usera", forenames: "Example User", surname: "A" },
-            { username: "userb", forenames: "Another", surname: "User-B" }
+            { username: "usera", forenames: "Example User", surname: "A", deleted: false },
+            { username: "userb", forenames: "Another", surname: "User-B", deleted: false }
           ]}
         />
       </MockNextRouter>
@@ -28,6 +31,27 @@ describe("AuditSearch", () => {
 
     cy.get("#audit-search-resolved-by label").contains("Example User A").should("exist")
     cy.get("#audit-search-resolved-by label").contains("Another User-B").should("exist")
+  })
+
+  it("should list deleted resolvers", () => {
+    cy.mount(
+      <MockNextRouter>
+        <AuditSearch
+          triggerTypes={[]}
+          resolvers={[
+            { username: "usera", forenames: "Example User", surname: "A", deleted: false },
+            { username: "userb", forenames: "Another", surname: "User-B", deleted: false },
+            { username: "userc", forenames: "Deleted", surname: "User-C", deleted: true }
+          ]}
+        />
+      </MockNextRouter>
+    )
+
+    cy.get("#audit-search-resolved-by input[type=checkbox]").should("have.length", 4)
+
+    cy.get(".govuk-details__summary-text").click()
+
+    cy.get(".govuk-details__text .govuk-checkboxes__item label").contains("Deleted User-C").should("exist")
   })
 
   it("should list triggers", () => {
@@ -123,9 +147,10 @@ describe("AuditSearch", () => {
         <AuditSearch
           triggerTypes={[]}
           resolvers={[
-            { username: "usera", forenames: "First", surname: "User" },
-            { username: "userb", forenames: "Second", surname: "Example-User" },
-            { username: "userc", forenames: "Third", surname: "Test-User" }
+            { username: "usera", forenames: "First", surname: "User", deleted: false },
+            { username: "userb", forenames: "Second", surname: "Example-User", deleted: false },
+            { username: "userc", forenames: "Third", surname: "Test-User", deleted: false },
+            { username: "userd", forenames: "Fourth", surname: "Test-User", deleted: true }
           ]}
         />
       </MockNextRouter>
@@ -142,9 +167,9 @@ describe("AuditSearch", () => {
         <AuditSearch
           triggerTypes={[]}
           resolvers={[
-            { username: "usera", forenames: "First", surname: "User" },
-            { username: "userb", forenames: "Second", surname: "Example-User" },
-            { username: "userc", forenames: "Third", surname: "Test-User" }
+            { username: "usera", forenames: "First", surname: "User", deleted: false },
+            { username: "userb", forenames: "Second", surname: "Example-User", deleted: false },
+            { username: "userc", forenames: "Third", surname: "Test-User", deleted: false }
           ]}
         />
       </MockNextRouter>
@@ -162,9 +187,9 @@ describe("AuditSearch", () => {
         <AuditSearch
           triggerTypes={[]}
           resolvers={[
-            { username: "usera", forenames: "First", surname: "User" },
-            { username: "userb", forenames: "Second", surname: "Example-User" },
-            { username: "userc", forenames: "Third", surname: "Test-User" }
+            { username: "usera", forenames: "First", surname: "User", deleted: false },
+            { username: "userb", forenames: "Second", surname: "Example-User", deleted: false },
+            { username: "userc", forenames: "Third", surname: "Test-User", deleted: false }
           ]}
         />
       </MockNextRouter>
@@ -177,15 +202,37 @@ describe("AuditSearch", () => {
     cy.get("[data-testid='audit-resolved-by-all']").should("be.checked")
   })
 
+  it("should not select All checkbox if all deleted resolvers are manually selected", () => {
+    cy.mount(
+      <MockNextRouter>
+        <AuditSearch
+          triggerTypes={[]}
+          resolvers={[
+            { username: "usera", forenames: "First", surname: "User", deleted: false },
+            { username: "userb", forenames: "Second", surname: "Example-User", deleted: true },
+            { username: "userc", forenames: "Third", surname: "Test-User", deleted: true }
+          ]}
+        />
+      </MockNextRouter>
+    )
+
+    cy.get(".govuk-details__summary-text").click()
+
+    cy.get("[data-testid='audit-resolved-by-deleted-0']").click()
+    cy.get("[data-testid='audit-resolved-by-deleted-1']").click()
+
+    cy.get("[data-testid='audit-resolved-by-all']").should("not.be.checked")
+  })
+
   it("should de-select all if All is unchecked and all resolvers were selected", () => {
     cy.mount(
       <MockNextRouter>
         <AuditSearch
           triggerTypes={[]}
           resolvers={[
-            { username: "usera", forenames: "First", surname: "User" },
-            { username: "userb", forenames: "Second", surname: "Example-User" },
-            { username: "userc", forenames: "Third", surname: "Test-User" }
+            { username: "usera", forenames: "First", surname: "User", deleted: false },
+            { username: "userb", forenames: "Second", surname: "Example-User", deleted: false },
+            { username: "userc", forenames: "Third", surname: "Test-User", deleted: false }
           ]}
         />
       </MockNextRouter>
@@ -208,7 +255,7 @@ describe("AuditSearch", () => {
       <MockNextRouter>
         <AuditSearch
           triggerTypes={["TRPR0010"]}
-          resolvers={[{ username: "usera", forenames: "First", surname: "User" }]}
+          resolvers={[{ username: "usera", forenames: "First", surname: "User", deleted: false }]}
         />
       </MockNextRouter>
     )
@@ -221,7 +268,7 @@ describe("AuditSearch", () => {
       <MockNextRouter>
         <AuditSearch
           triggerTypes={["TRPR0010"]}
-          resolvers={[{ username: "usera", forenames: "First", surname: "User" }]}
+          resolvers={[{ username: "usera", forenames: "First", surname: "User", deleted: false }]}
         />
       </MockNextRouter>
     )
@@ -241,7 +288,7 @@ describe("AuditSearch", () => {
       <MockNextRouter>
         <AuditSearch
           triggerTypes={["TRPR0010"]}
-          resolvers={[{ username: "usera", forenames: "First", surname: "User" }]}
+          resolvers={[{ username: "usera", forenames: "First", surname: "User", deleted: false }]}
         />
       </MockNextRouter>
     )
@@ -260,7 +307,7 @@ describe("AuditSearch", () => {
       <MockNextRouter push={pushSpy}>
         <AuditSearch
           triggerTypes={["TRPR0010"]}
-          resolvers={[{ username: "usera", forenames: "First", surname: "User" }]}
+          resolvers={[{ username: "usera", forenames: "First", surname: "User", deleted: false }]}
         />
       </MockNextRouter>
     )
@@ -301,7 +348,7 @@ describe("AuditSearch", () => {
       <MockNextRouter push={pushSpy}>
         <AuditSearch
           triggerTypes={["TRPR0010"]}
-          resolvers={[{ username: "usera", forenames: "First", surname: "User" }]}
+          resolvers={[{ username: "usera", forenames: "First", surname: "User", deleted: false }]}
         />
       </MockNextRouter>
     )
@@ -337,8 +384,8 @@ describe("AuditSearch", () => {
         <AuditSearch
           triggerTypes={["TRPR0010"]}
           resolvers={[
-            { username: "usera", forenames: "First", surname: "User" },
-            { username: "userb", forenames: "Second", surname: "User" }
+            { username: "usera", forenames: "First", surname: "User", deleted: false },
+            { username: "userb", forenames: "Second", surname: "User", deleted: false }
           ]}
         />
       </MockNextRouter>

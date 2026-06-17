@@ -5,6 +5,7 @@ import type { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import delimitedString from "./transformers/delimitedString"
 import jsonTransformer from "./transformers/jsonTransformer"
+import dateTransformer from "./transformers/dateTransformer"
 
 import Note from "./Note"
 
@@ -49,6 +50,9 @@ export default class User {
   @OneToMany(() => SurveyFeedback, (surveyFeedback) => surveyFeedback.user)
   @JoinColumn({ name: "user_id" })
   surveyFeedback!: Relation<User>[]
+
+  @Column({ name: "deleted_at", transformer: dateTransformer, type: "timestamptz" })
+  deletedAt?: string
 
   groups: UserGroup[] = []
 

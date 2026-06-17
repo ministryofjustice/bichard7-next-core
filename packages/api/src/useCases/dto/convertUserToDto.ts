@@ -42,6 +42,7 @@ export const convertUserToDto = (user: User): UserDto => {
   }
 
   return {
+    deleted: Boolean(user.deletedAt),
     email: user.email,
     excludedTriggers: user.excludedTriggers.join(","),
     featureFlags: user.featureFlags,
