@@ -7,13 +7,17 @@ import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { CaseRowForDto } from "../../../types/Case"
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
-import logger from "../../../server/logger"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 import { convertCaseToCaseDto } from "../../../useCases/dto/convertCaseToDto"
 import { organisationUnitSql } from "../organisationUnitSql"
 import { filterByUserAccess } from "./filters/userAccess"
 
-export default async (database: DatabaseConnection, user: User, caseId: number): PromiseResult<CaseDto> => {
+export default async (
+  database: DatabaseConnection,
+  user: User,
+  caseId: number,
+  logger: FastifyBaseLogger
+): PromiseResult<CaseDto> => {
   const result = await database.connection`
       SELECT
         el.annotated_msg,
@@ -84,5 +88,5 @@ export default async (database: DatabaseConnection, user: User, caseId: number):
     return parsedResults.error
   }
 
-  return convertCaseToCaseDto(result[0] as unknown as CaseRowForDto, user, logger as unknown as FastifyBaseLogger)
+  return convertCaseToCaseDto(result[0] as unknown as CaseRowForDto, user, logger)
 }
