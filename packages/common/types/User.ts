@@ -33,6 +33,7 @@ export const UserSchema = z.object({
 })
 
 export const UserDtoSchema = z.object({
+  deleted: z.boolean(),
   email: z.string(),
   excludedTriggers: z.string().optional(),
   featureFlags: z.object({}).catchall(z.boolean()),

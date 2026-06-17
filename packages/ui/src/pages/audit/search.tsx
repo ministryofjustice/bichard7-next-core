@@ -64,7 +64,8 @@ export const getServerSideProps = withMultipleServerSideProps(
       resolvedBy = usersResponse.users.map((u) => ({
         username: u.username,
         forenames: u.forenames ?? "",
-        surname: u.surname ?? ""
+        surname: u.surname ?? "",
+        deleted: u.deleted
       }))
     }
 
