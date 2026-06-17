@@ -1,11 +1,12 @@
-import { fetch, Agent } from "undici"
 import { API_LOCATION } from "config"
 import { ApiError } from "types/ApiError"
 import type PromiseResult from "types/PromiseResult"
+import { Agent, fetch } from "undici"
 
 export enum HttpMethod {
   GET = "GET",
-  POST = "POST"
+  POST = "POST",
+  PUT = "PUT"
 }
 
 const agent = new Agent({
@@ -27,6 +28,10 @@ class ApiClient {
 
   async post<T>(route: string, data?: string | Record<string, unknown>): Promise<Error | T> {
     return await this.callApi(route, HttpMethod.POST, data)
+  }
+
+  async put<T>(route: string, data?: string | Record<string, unknown>): Promise<Error | T> {
+    return await this.callApi(route, HttpMethod.PUT, data)
   }
 
   async callApi<T>(
