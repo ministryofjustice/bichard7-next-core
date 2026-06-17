@@ -1,10 +1,10 @@
 import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
 import type { CaseOrder, CaseOrderBy } from "@moj-bichard7/common/contracts/CaseOrderingQuery"
-import type { AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import { AuditSchema } from "@moj-bichard7/common/types/Audit"
+import { AuditCaseSchema, type AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+import z from "zod"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
@@ -79,7 +79,8 @@ export const fetchAuditCases = async (
     return new Error("Failed to get audit case records")
   }
 
-  const parsedResults = AuditSchema.safeParse(results[0])
+  // const parsedResults = AuditSchema.safeParse(results[0])
+  const parsedResults = z.array(AuditCaseSchema).safeParse(results)
   if (!parsedResults.success) {
     return parsedResults.error
   }
