@@ -5,11 +5,11 @@ Feature: {418} If the user signs out or the session is ended return to case list
 			"""
 
 	Background:
-		Given the data for this test is in the PNC
-			And "input-message" is received
+		Given "input-message" is received with an invalid ASN
 
 	@NextUI
 	@ExcludeOnLegacyUI
+	@ExcludedOnRealLeds
 	Scenario: The case list remembers the filters
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
