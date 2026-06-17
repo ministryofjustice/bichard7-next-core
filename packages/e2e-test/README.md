@@ -8,6 +8,7 @@ This package contains the end-to-end and characterisation tests to run against B
   - [Locally](#locally)
     - [Cucumber test individual features](#cucumber-test-individual-features)
   - [Against E2E Test environment](#against-e2e-test-environment)
+  - [Against LEDS Test API](#against-leds-test-api)
   - [Against pre-production](#against-pre-production)
   - [Configuration parameters](#configuration-parameters)
   - [Debugging](#debugging)
@@ -17,6 +18,8 @@ This package contains the end-to-end and characterisation tests to run against B
   - [For legacy Bichard](#for-legacy-bichard)
 
 ## Running the end-to-end tests
+
+---
 
 ### Locally
 
@@ -60,6 +63,8 @@ HEADLESS=false NEXTUI=true AWS_URL=http://localhost:4566 npm run test:file featu
 - `NEXTUI` is whether we the test in the new UI or the old UI
 - `features/186*` runs the feature we want
 
+---
+
 ### Against E2E Test environment
 
 > ⚠️ You'll need to pause the deployment pipeline as it's highly likely a deployment will conflict with your tests.
@@ -86,6 +91,76 @@ This creates a `./workspaces/e2e-test.env` file (which is ignored by Git).
 # For example, to run a feature against E2E Test environment:
 aws-vault exec bichard7-shared-e2e-test -- npm run test:file features/719*
 ```
+
+---
+
+### Against LEDS Test API
+
+To run the E2E tests against the real LEDS Test API, the Bichard stack is run locally, but all API requests are routed to the LEDS Test API integrated with the `leds` workspace in the UAT environment.
+
+This means:
+
+- All services (Bichard stack, worker, E2E runner) run on your local machine
+- All external calls are executed against the remote LEDS Test API in the `leds` workspace (UAT)
+
+#### Setup Steps
+
+1. Start the Bichard stack without Conductor worker:
+
+```bash
+USE_LEDS=true npm run all-no-worker
+```
+
+2. Build the Core package:
+
+```bash
+npm run build:core
+```
+
+3. Run Conductor worker:
+
+```bash
+WORKSPACE=leds USE_LEDS=true aws-vault exec bichard7-shared-uat -- npm run worker -w packages/conductor
+```
+
+4. Open a new terminal and navigate to the E2E tests:
+
+```bash
+cd packages/e2e-test
+```
+
+5. Set environment variables:
+
+```bash
+eval $(WORKSPACE=leds aws-vault exec bichard7-shared-uat -- ../../environment/leds-environment-variable.sh --print)
+```
+
+6. Connect to the B7 LEDS VPN
+
+#### Running Tests
+
+By default, if no feature path is provided, all LEDS tests will run. To limit execution to specific tests, include a feature path such as `./features/001*`.
+
+##### Run tests and verify against snapshots
+
+```bash
+REAL_POLICE_API=true USE_LEDS=true NEXTUI=true npm run test:leds:real -- ./features/001*
+```
+
+##### Run tests and update snapshots
+
+```bash
+POLICE_API_SNAPSHOT=true REAL_POLICE_API=true USE_LEDS=true NEXTUI=true npm run test:leds:real -- ./features/001*
+```
+
+#### Debugging
+
+To debug either the Core package code or the E2E tests, run them using a JavaScript Debug Terminal in your IDE.
+
+- Use a JavaScript Debug Terminal when running the Conductor worker command.
+- Use a JavaScript Debug Terminal when running the E2E test commands.
+
+---
 
 ### Against pre-production
 
@@ -131,6 +206,8 @@ If the Test Tool looks healthy then you can run a test using it as follows (068 
 ```bash
 PNC_TEST_TOOL=https://10.129.3.16 REAL_PNC=true npm run test:file features/068*
 ```
+
+---
 
 ### Configuration parameters
 
@@ -179,6 +256,8 @@ There are other, lesser used parameters:
 | RUN_PARALLEL            | Whether the tests are running in parallel (experimental)                                 | false   |
 | SKIP_PNC_VALIDATION     | Whether the tests should validate their operations against the PNC test tool (see below) | false   |
 | UPDATE_PNC_EXPECTATIONS | Whether to update the before and after files with the PNC contents                       | false   |
+
+---
 
 ### Debugging
 
