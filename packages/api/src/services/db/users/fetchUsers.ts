@@ -33,7 +33,8 @@ export default async (database: DatabaseConnection, user: User): PromiseResult<F
         u.excluded_triggers,
         u.visible_courts,
         u.forenames,
-        u.surname
+        u.surname,
+        u.deleted_at
       FROM
         br7own.users u
         JOIN br7own.users_groups ug ON u.id = ug.user_id
@@ -41,7 +42,10 @@ export default async (database: DatabaseConnection, user: User): PromiseResult<F
       WHERE
           ${where}
       GROUP BY
-          u.id`
+          u.id
+      ORDER BY 
+          LOWER(u.forenames) ASC,
+          LOWER(u.surname) ASC`
 
   const users = userResult.map((u) => mapUserRowToUser(u))
 

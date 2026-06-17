@@ -2,7 +2,7 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { loginAndVisit } from "../../support/helpers"
 
 describe("Search", () => {
-  context("When the user is a supervisor", () => {
+  context("When the user is a supervisor and no deleted users", () => {
     before(() => {
       cy.task("clearUsers")
       cy.task("insertUsers", {
@@ -48,7 +48,66 @@ describe("Search", () => {
       cy.findByText("TRPR0006").should("not.exist")
 
       cy.findByText("Triggers").click()
-      cy.findByText("All").click()
+      cy.findByText("All active users").click()
+
+      cy.findByText("Search cases").click()
+
+      cy.location("pathname").should("match", /\/bichard\/audit\/\d+/)
+    })
+  })
+
+  context("When the user is a supervisor and with deleted users", () => {
+    before(() => {
+      cy.task("clearUsers")
+      cy.task("insertUsers", {
+        users: [
+          {
+            username: "username01",
+            forenames: "username",
+            surname: "01",
+            email: "username01@example.com",
+            visibleForces: ["01", "001"]
+          },
+          {
+            username: "username02",
+            forenames: "username",
+            surname: "02",
+            email: "username02@example.com",
+            visibleForces: ["01", "001"]
+          },
+          {
+            username: "username03",
+            forenames: "username",
+            surname: "03",
+            email: "username03@example.com",
+            visibleForces: ["01", "001"],
+            deletedAt: new Date()
+          }
+        ],
+        userGroups: [UserGroup.GeneralHandler]
+      })
+      loginAndVisit("Supervisor", "/bichard/audit/search")
+    })
+
+    it("Should show search page with supervised users and visible triggers", () => {
+      cy.findByText("Audit search").should("exist")
+
+      cy.findByText("Resolved by").should("exist")
+      cy.findByText("Supervisor User").should("exist")
+      cy.findByText("username 01").should("exist")
+      cy.findByText("username 02").should("exist")
+      cy.findByText("username 03").should("exist")
+
+      cy.findByText("Trigger type").should("exist")
+      cy.findByText("TRPR0010").should("exist")
+      cy.findByText("TRPR0006").should("not.exist")
+
+      cy.findByText("Triggers").click()
+      cy.findByText("All active users").click()
+
+      cy.get(".govuk-details__summary-text").click()
+
+      cy.get(".govuk-details__text .govuk-checkboxes__item label").contains("username 03").click()
 
       cy.findByText("Search cases").click()
 

@@ -11,4 +11,8 @@ const FormButtonRow = styled.div`
   gap: 1rem;
 `
 
-export { IncludeRow, FormButtonRow }
+const Details = styled.details`
+  padding-top: 1rem;
+`
+
+export { IncludeRow, FormButtonRow, Details }

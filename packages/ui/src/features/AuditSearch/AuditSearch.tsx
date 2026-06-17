@@ -1,6 +1,6 @@
 import React, { useActionState, useEffect, useRef, useState } from "react"
 import { FormGroup } from "components/FormGroup"
-import { IncludeRow, FormButtonRow } from "./AuditSearch.styles"
+import { IncludeRow, FormButtonRow, Details } from "./AuditSearch.styles"
 import { formatUserFullName } from "utils/formatUserFullName"
 import { subDays, format } from "date-fns"
 import { RadioGroups } from "components/Radios/RadioGroup"
@@ -20,6 +20,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
 
   const formRef = useRef<HTMLFormElement>(null)
   const resolvedByRefs = useRef<HTMLInputElement[]>([])
+  const deletedResolvedByRefs = useRef<HTMLInputElement[]>([])
 
   const DATE_FORMAT = "yyyy-MM-dd"
 
@@ -61,6 +62,17 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
       router.push(`/audit/${currentFormState.auditId}`)
     }
   }, [currentFormState.auditId, router])
+
+  const activeResolvers: AuditResolvedBy[] = []
+  const deletedResolvers: AuditResolvedBy[] = []
+
+  for (const resolver of resolvers) {
+    if (resolver.deleted) {
+      deletedResolvers.push(resolver)
+    } else {
+      activeResolvers.push(resolver)
+    }
+  }
 
   return (
     <form action={submitAction} onChange={handleFormChange} ref={formRef}>
@@ -143,7 +155,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                     <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
                       <Checkbox
                         checked={allResolversSelected}
-                        label={"All"}
+                        label={"All active users"}
                         data-testid={"audit-resolved-by-all"}
                         onChange={(e) => {
                           resolvedByRefs.current.forEach(
@@ -152,9 +164,9 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                           setAllResolversSelected(e.target.checked)
                         }}
                       />
-                      {resolvers.map((resolver, index) => (
+                      {activeResolvers.map((resolver, index) => (
                         <Checkbox
-                          key={index}
+                          key={`${resolver.username}-${index}`}
                           id={`resolvers${index}`}
                           name="resolvedBy"
                           value={resolver.username}
@@ -173,6 +185,33 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                           }}
                         />
                       ))}
+                      {deletedResolvers.length > 0 && (
+                        <Details className="govuk-details" data-module="govuk-details">
+                          <summary className="govuk-details__summary">
+                            <span className="govuk-details__summary-text">{"Show deleted users"}</span>
+                          </summary>
+                          <div className="govuk-details__text">
+                            {deletedResolvers.map((resolver, index) => {
+                              return (
+                                <Checkbox
+                                  key={`deleted-${resolver.username}`}
+                                  id={`deleted-resolvers-${index}`}
+                                  name="resolvedBy"
+                                  value={resolver.username}
+                                  defaultChecked={currentFormState.resolvedBy.includes(resolver.username)}
+                                  label={formatUserFullName(resolver.forenames, resolver.surname)}
+                                  data-testid={`audit-resolved-by-deleted-${index}`}
+                                  ref={(elem) => {
+                                    if (elem) {
+                                      deletedResolvedByRefs.current[index] = elem
+                                    }
+                                  }}
+                                />
+                              )
+                            })}
+                          </div>
+                        </Details>
+                      )}
                     </div>
                   </fieldset>
                 </FormGroup>

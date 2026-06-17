@@ -37,6 +37,7 @@ describe("/v1/me e2e", () => {
     })
 
     const responseUser: UserDto = {
+      deleted: Boolean(user.deletedAt),
       email: user.email,
       excludedTriggers: "",
       featureFlags: {},
@@ -75,6 +76,7 @@ describe("/v1/me e2e", () => {
     })
 
     const responseUser: UserDto = {
+      deleted: Boolean(user.deletedAt),
       email: user.email,
       excludedTriggers: "",
       featureFlags: {},
