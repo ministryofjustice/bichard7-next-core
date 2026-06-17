@@ -61,6 +61,7 @@ const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner }) =
           ? { selectedItem: exactMatch, inputValue: `${exactMatch.forceCode} - ${exactMatch.forceName}` }
           : null
       }}
+      defaultHighlightedIndex={0}
     />
   )
 }

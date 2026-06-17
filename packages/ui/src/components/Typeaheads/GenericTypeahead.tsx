@@ -18,6 +18,8 @@ interface GenericTypeaheadProps<T> {
   onSelectedItemChange?: (selectedItem: T | null) => void
   onInputValueChange?: (value: string) => void
   customBlurMatch?: (inputValue: string, items: T[]) => { selectedItem: T; inputValue: string } | null
+
+  defaultHighlightedIndex?: number
 }
 
 export function GenericTypeahead<T>({
@@ -32,7 +34,8 @@ export function GenericTypeahead<T>({
   getItemKey,
   onSelectedItemChange,
   onInputValueChange,
-  customBlurMatch
+  customBlurMatch,
+  defaultHighlightedIndex
 }: Readonly<GenericTypeaheadProps<T>>) {
   const [inputItems, setInputItems] = useState<T[]>([])
 
@@ -62,6 +65,7 @@ export function GenericTypeahead<T>({
   )
 
   const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue } = useCombobox({
+    defaultHighlightedIndex: defaultHighlightedIndex,
     initialInputValue: initialValue,
     items: inputItems,
     itemToString,

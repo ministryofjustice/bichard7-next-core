@@ -31,6 +31,7 @@ const AllocateUserTypeahead: React.FC<Props> = ({ onSelect }) => {
 
         return exactMatch ? { selectedItem: exactMatch, inputValue: exactMatch.fullname ?? "" } : null
       }}
+      defaultHighlightedIndex={0}
     />
   )
 }
