@@ -15,8 +15,8 @@ const retryRequest = async <T extends AxiosResponse>(request: () => Promise<T>):
       }
 
       console.log(`Bad Gateway 502 - Retrying (${attempts})...`)
-
       await delay(WAIT_BETWEEN_ATTEMPTS_IN_SECONDS)
+
       continue
     }
 

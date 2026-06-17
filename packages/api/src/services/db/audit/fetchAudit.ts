@@ -1,6 +1,6 @@
-import type { Audit, AuditDto } from "@moj-bichard7/common/types/Audit"
 import type { User } from "@moj-bichard7/common/types/User"
 
+import { type AuditDto, AuditSchema } from "@moj-bichard7/common/types/Audit"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
@@ -14,7 +14,7 @@ export const fetchAudit = async (
 ): PromiseResult<AuditDto | null> => {
   const sql = database.connection
 
-  const results = await sql<Audit[]>`
+  const results = await sql`
       SELECT
         audit_id,
         created_by,
@@ -41,5 +41,10 @@ export const fetchAudit = async (
     return null
   }
 
-  return convertAuditToDto(results[0])
+  const parsedResults = AuditSchema.safeParse(results[0])
+  if (!parsedResults.success) {
+    return parsedResults.error
+  }
+
+  return convertAuditToDto(parsedResults.data)
 }
