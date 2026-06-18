@@ -81,6 +81,7 @@ export function GenericTypeahead<T>({
       if (onInputValueChange) {
         onInputValueChange(newVal || "")
       }
+      setLoading(true)
     },
     stateReducer: (state, actionAndChanges) => {
       const { type, changes } = actionAndChanges
@@ -101,7 +102,6 @@ export function GenericTypeahead<T>({
 
   useEffect(() => {
     const abortController = new AbortController()
-    setLoading(true)
 
     const delayDebounceFn = setTimeout(() => {
       fetchItems(inputValue || "", { signal: abortController.signal })
