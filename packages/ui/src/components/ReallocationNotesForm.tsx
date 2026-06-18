@@ -1,4 +1,5 @@
 import forces from "@moj-bichard7-developers/bichard7-next-data/dist/data/forces.json"
+import { FormGroup } from "components/FormGroup"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
@@ -6,11 +7,10 @@ import Link from "next/link"
 import { FormEventHandler, useState } from "react"
 import { Button } from "./Buttons/Button"
 import ButtonsGroup from "./ButtonsGroup"
-import Form from "./Form"
-import { FormGroup } from "components/FormGroup"
-import { NoteTextArea } from "./NoteTextArea"
 import { NewForceOwnerField } from "./EditableFields/NewForceOwnerField"
+import Form from "./Form"
 import { Label } from "./Label"
+import { NoteTextArea } from "./NoteTextArea"
 
 interface Props {
   backLink: string
@@ -43,6 +43,8 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
           <Label size={"s"} htmlFor="force">
             {"New force owner"}
           </Label>
+
+          <div className={"govuk-hint"}>{"Start typing to search for a force to reallocate to"}</div>
 
           <NewForceOwnerField currentForceOwner={currentForce?.code} />
         </FormGroup>
