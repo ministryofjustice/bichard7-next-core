@@ -27,7 +27,11 @@ export default async (
 
   if (usernameOrName && usernameOrName.trim() !== "") {
     const fuzzyName = `%${usernameOrName.trim()}%`
-    const nameWhere = sql`u.username ILIKE ${fuzzyName} OR u.forenames ILIKE ${fuzzyName} OR u.surname ILIKE ${fuzzyName}`
+    const nameWhere = sql`
+    u.username ILIKE ${fuzzyName} 
+    OR (u.forenames || ' ' || u.surname) ILIKE ${fuzzyName}
+    OR (u.surname || ' ' || u.forenames) ILIKE ${fuzzyName}
+  `
     where = sql`${where} AND (${nameWhere})`
   }
 
