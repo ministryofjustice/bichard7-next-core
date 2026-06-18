@@ -38,6 +38,7 @@ export function GenericTypeahead<T>({
   defaultHighlightedIndex
 }: Readonly<GenericTypeaheadProps<T>>) {
   const [inputItems, setInputItems] = useState<T[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
 
   const fetchItems = useCallback(
     async (searchString: string, config?: { signal?: AbortSignal }) => {
@@ -98,9 +99,11 @@ export function GenericTypeahead<T>({
 
   useEffect(() => {
     const abortController = new AbortController()
+    setLoading(true)
 
     const delayDebounceFn = setTimeout(() => {
       fetchItems(inputValue || "", { signal: abortController.signal })
+      setLoading(false)
     }, 250)
 
     return () => {
@@ -108,6 +111,25 @@ export function GenericTypeahead<T>({
       abortController.abort()
     }
   }, [fetchItems, inputValue])
+
+  let resultsList = inputItems.map((item, index) => (
+    <li
+      style={highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}}
+      key={getItemKey(item, index)}
+      {...getItemProps({ item, index })}
+    >
+      {renderItem(item)}
+    </li>
+  ))
+
+  const noResultsFound = inputItems.length === 0 && !!inputValue && !loading
+  if (noResultsFound) {
+    resultsList = [
+      <li key={"no-results"}>
+        <>{"No results found"}</>
+      </li>
+    ]
+  }
 
   return (
     <div>
@@ -120,19 +142,8 @@ export function GenericTypeahead<T>({
         })}
       />
 
-      <ListWrapper>
-        <ul {...getMenuProps()}>
-          {isOpen &&
-            inputItems.map((item, index) => (
-              <li
-                style={highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}}
-                key={getItemKey(item, index)}
-                {...getItemProps({ item, index })}
-              >
-                {renderItem(item)}
-              </li>
-            ))}
-        </ul>
+      <ListWrapper $noResultsFound={noResultsFound}>
+        <ul {...getMenuProps()}>{isOpen && resultsList}</ul>
       </ListWrapper>
     </div>
   )

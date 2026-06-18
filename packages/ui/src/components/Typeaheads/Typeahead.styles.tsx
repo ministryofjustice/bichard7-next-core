@@ -1,9 +1,13 @@
 import styled from "styled-components"
 
-const ListWrapper = styled.div`
+interface TypeaheadProps {
+  $noResultsFound: boolean
+}
+
+const ListWrapper = styled.div<TypeaheadProps>`
   position: relative;
   max-height: 20rem;
-  overflow-y: scroll;
+  overflow-y: ${(props) => (props.$noResultsFound ? "" : "scroll")};
   background: white;
   width: 100%;
 
