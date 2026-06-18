@@ -125,11 +125,7 @@ export function GenericTypeahead<T>({
 
   const noResultsFound = inputItems.length === 0 && !!inputValue && !loading
   if (noResultsFound) {
-    resultsList = [
-      <li key={"no-results"}>
-        <>{"No results found"}</>
-      </li>
-    ]
+    resultsList = [<li key={"no-results"}>{"No results found"}</li>]
   }
 
   return (
