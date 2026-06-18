@@ -65,14 +65,9 @@ export const fetchAuditWithProgress = async (
   }
 
   const parsedResults = AuditWithProgressSchema.safeParse(results[0])
-  // const parsedResults = z.array(AuditCaseSchema).safeParse(results)
   if (!parsedResults.success) {
     return parsedResults.error
   }
 
-  return {
-    ...parsedResults.data,
-    audited_cases: results[0].audited_cases,
-    total_cases: results[0].total_cases
-  } as AuditWithProgress
+  return parsedResults.data
 }

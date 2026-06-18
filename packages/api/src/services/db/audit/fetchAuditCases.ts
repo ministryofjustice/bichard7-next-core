@@ -79,7 +79,6 @@ export const fetchAuditCases = async (
     return new Error("Failed to get audit case records")
   }
 
-  // const parsedResults = AuditSchema.safeParse(results[0])
   const parsedResults = z.array(AuditCaseSchema).safeParse(results)
   if (!parsedResults.success) {
     return parsedResults.error
