@@ -1,6 +1,6 @@
 import type { User } from "@moj-bichard7/common/types/User"
 
-import { AuditSchema, type AuditWithProgress } from "@moj-bichard7/common/types/Audit"
+import { type AuditWithProgress, AuditWithProgressSchema } from "@moj-bichard7/common/types/Audit"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
@@ -64,7 +64,7 @@ export const fetchAuditWithProgress = async (
     return null
   }
 
-  const parsedResults = AuditSchema.safeParse(results[0])
+  const parsedResults = AuditWithProgressSchema.safeParse(results[0])
   // const parsedResults = z.array(AuditCaseSchema).safeParse(results)
   if (!parsedResults.success) {
     return parsedResults.error
