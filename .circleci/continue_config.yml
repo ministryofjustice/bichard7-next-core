@@ -165,12 +165,23 @@ commands:
             <<parameters.ARGS>> docker compose --project-name bichard -f environment/docker-compose.yml \
             up -d <<parameters.SERVICES>> <<parameters.FLAGS>> --wait <<parameters.SERVICES>>
 
+  enable_docker_container_image_store:
+    steps:
+      - run:
+          name: Enable Docker containerd image store
+          command: |
+            echo '{"features": {"containerd-snapshotter": true}}' | sudo tee /etc/docker/daemon.json
+            sudo systemctl restart docker
+
   set_docker_tag:
     steps:
       - run:
           name: Export dynamic DOCKER_TAG
           command: |
-            SANITIZED_BRANCH=$(echo "$CIRCLE_BRANCH" | sed 's/[^a-zA-Z0-9_.-]/-/g')
+            SANITIZED_BRANCH=$(echo "$CIRCLE_BRANCH" \
+              | sed 's/[^a-zA-Z0-9_.-]/-/g' \
+              | sed 's/^[-.]*//' \
+              | cut -c 1-128)
             echo "export DOCKER_TAG=${SANITIZED_BRANCH:-latest}" >> $BASH_ENV
 
   build_and_cache_image:
@@ -291,6 +302,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - enable_docker_container_image_store
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
           images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
@@ -333,6 +345,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - enable_docker_container_image_store
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - build_and_cache_image:
           image_name: bichard-postgres
@@ -361,6 +374,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - enable_docker_container_image_store
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - build_and_cache_image:
           image_name: bichard-leds
@@ -389,6 +403,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - enable_docker_container_image_store
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
           images: nodejs-24-2023
@@ -418,6 +433,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
@@ -447,6 +463,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
@@ -476,6 +493,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
@@ -505,6 +523,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
