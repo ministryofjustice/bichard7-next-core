@@ -1,7 +1,7 @@
+import type { CaseDto } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
-import { type CaseDto, CaseSchema } from "@moj-bichard7/common/types/Case"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import type { CaseRowForDto } from "../../../types/Case"
@@ -18,7 +18,7 @@ export default async (
   caseId: number,
   logger: FastifyBaseLogger
 ): PromiseResult<CaseDto> => {
-  const result = await database.connection`
+  const result = await database.connection<CaseRowForDto[]>`
       SELECT
         el.annotated_msg,
         el.asn,
@@ -82,11 +82,5 @@ export default async (
     return new NotFoundError(`Case id ${caseId} for user ${user.username} not found`)
   }
 
-  const parsedResults = CaseSchema.safeParse(result[0])
-
-  if (!parsedResults.success) {
-    return parsedResults.error
-  }
-
-  return convertCaseToCaseDto(result[0] as unknown as CaseRowForDto, user, logger)
+  return convertCaseToCaseDto(result[0], user, logger)
 }
