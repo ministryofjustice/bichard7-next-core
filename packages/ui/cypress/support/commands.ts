@@ -154,6 +154,16 @@ Cypress.Commands.add(
   }
 )
 
+// This allows to find `sticky` elements and prove that they have been rendered
+// aka visible.
+Cypress.Commands.add("isRendered", { prevSubject: "element" }, (subject) => {
+  cy.wrap(subject).should(($el) => {
+    expect($el[0].offsetHeight).to.be.greaterThan(0)
+    expect($el[0].offsetWidth).to.be.greaterThan(0)
+    expect($el[0].getClientRects().length).to.be.greaterThan(0)
+  })
+})
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
@@ -166,6 +176,7 @@ declare global {
       setDevicePixelRatio(scaleFactor: number): void
       resetDeviceMetrics(): void
       pollUntilElementExists(selector: string, waitTime?: number, maxAttempts?: number): Chainable<JQuery>
+      isRendered(): Chainable<JQueryWithSelector>
     }
   }
 }

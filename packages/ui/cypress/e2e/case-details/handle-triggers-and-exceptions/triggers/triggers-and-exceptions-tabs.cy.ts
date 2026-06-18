@@ -24,8 +24,7 @@ describe("Triggers and exceptions tabs", () => {
     loginAndVisit("TriggerHandler", caseURL)
 
     cy.get(".case-details-sidebar #triggers-tab").should("exist")
-    cy.get(".case-details-sidebar #triggers-tab-panel").should("exist")
-    cy.get(".case-details-sidebar #triggers-tab-panel").should("be.visible")
+    cy.get(".case-details-sidebar #triggers-tab-panel").should("exist").isRendered()
 
     cy.get(".case-details-sidebar #exceptions-tab").should("not.exist")
     cy.get(".case-details-sidebar #exceptions-tab-panel").should("not.exist")
@@ -38,8 +37,7 @@ describe("Triggers and exceptions tabs", () => {
     cy.get(".case-details-sidebar #triggers-tab-panel").should("not.exist")
 
     cy.get(".case-details-sidebar #exceptions-tab").should("exist")
-    cy.get(".case-details-sidebar #exceptions-tab-panel").should("exist")
-    cy.get(".case-details-sidebar #exceptions-tab-panel").should("be.visible")
+    cy.get(".case-details-sidebar #exceptions-tab-panel").should("exist").isRendered()
   })
 
   it("should show both trigger and exceptions to General Handlers with triggers tab selected", () => {
@@ -47,8 +45,7 @@ describe("Triggers and exceptions tabs", () => {
     loginAndVisit("GeneralHandler", caseURL)
 
     cy.get(".case-details-sidebar #triggers-tab").should("exist")
-    cy.get(".case-details-sidebar #triggers-tab-panel").should("exist")
-    cy.get(".case-details-sidebar #triggers-tab-panel").should("be.visible")
+    cy.get(".case-details-sidebar #triggers-tab-panel").should("exist").isRendered()
 
     cy.get(".case-details-sidebar #exceptions-tab").should("exist")
     cy.get(".case-details-sidebar #exceptions-tab-panel").should("exist")
@@ -73,8 +70,7 @@ describe("Triggers and exceptions tabs", () => {
     cy.get(".case-details-sidebar #triggers-tab-panel").should("not.be.visible")
 
     cy.get(".case-details-sidebar #exceptions-tab").should("exist")
-    cy.get(".case-details-sidebar #exceptions-tab-panel").should("exist")
-    cy.get(".case-details-sidebar #exceptions-tab-panel").should("be.visible")
+    cy.get(".case-details-sidebar #exceptions-tab-panel").should("exist").isRendered()
   })
 
   it("will refresh CSRF token when clicking Trigger tab", () => {

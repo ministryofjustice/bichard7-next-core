@@ -31,7 +31,7 @@ describe("Trigger status", () => {
 
     cy.visit(caseURL)
 
-    cy.get(".moj-tab-panel-triggers").should("be.visible")
+    cy.get(".moj-tab-panel-triggers").isRendered()
     cy.get(".moj-tab-panel-exceptions").should("not.be.visible")
 
     cy.get(".moj-trigger-row").each((trigger) => {
@@ -44,7 +44,7 @@ describe("Trigger status", () => {
 
     cy.visit(caseURL)
 
-    cy.get(".moj-tab-panel-triggers").should("be.visible")
+    cy.get(".moj-tab-panel-triggers").isRendered()
     cy.get(".moj-tab-panel-exceptions").should("not.be.visible")
 
     cy.get(".moj-trigger-row").each((trigger) => {
