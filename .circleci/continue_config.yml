@@ -1271,7 +1271,7 @@ workflows:
             - build_user_service_image
             - build_api_image
             - build_audit_logging_images
-            - load_leds_image
+            - build_leds_image
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
