@@ -103,7 +103,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(2)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("2")
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(2) //changed string to number
   })
 
   it("will ignore trigger resolved cases", async () => {
