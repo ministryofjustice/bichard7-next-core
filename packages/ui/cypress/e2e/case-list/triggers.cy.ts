@@ -12,6 +12,10 @@ describe("When I can see triggers on cases", () => {
       }
     })
 
+  before(() => {
+    loginAndVisit("GeneralHandler")
+  })
+
   beforeEach(() => {
     cy.task("clearCourtCases")
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "011111" }])
@@ -68,5 +72,24 @@ describe("When I can see triggers on cases", () => {
     cy.get(".trigger-description:contains('PR01')")
       .contains(/\(\d+\)/) // any number between parentheses
       .should("include.text", "(12)")
+  })
+
+  it("Should display the correct locked tag", () => {
+    const triggers = makeTriggers(1, 12)
+    cy.task("insertTriggers", { caseId: 0, triggers })
+    loginAndVisit("TriggerHandler", "/bichard/court-cases/0")
+
+    cy.get("#leave-and-lock").click()
+
+    cy.get(".locked-by-tag").contains("Trigger Handler User")
+
+    loginAndVisit("GeneralHandler")
+
+    // `resonCell` is misspelled
+    cy.get(".resonCell").contains("HO100102")
+    cy.get(".extraReasonCell").contains("PR01")
+
+    cy.get(".locked-by-tag").should("have.length", 1)
+    cy.get(".extraReasonRow .locked-by-tag").contains("Trigger Handler User")
   })
 })
