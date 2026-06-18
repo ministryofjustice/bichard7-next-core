@@ -670,6 +670,7 @@ jobs:
       - load_user_service_image
       - load_api_image
       - load_audit_logging_image
+      - load_leds_image
       - node/install
       - node_install_packages
       - build_core
@@ -1270,6 +1271,7 @@ workflows:
             - build_user_service_image
             - build_api_image
             - build_audit_logging_images
+            - load_leds_image
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
