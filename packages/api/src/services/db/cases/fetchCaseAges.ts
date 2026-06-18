@@ -42,7 +42,7 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
 
   const query = queries.map((q) => database.connection`${q}`)
 
-  const caseAges = await database.connection<CaseAges[]>`
+  const caseAges = await database.connection`
     SELECT
       ${query}
     FROM br7own.error_list el
@@ -55,6 +55,10 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
 
   if (isError(caseAges)) {
     return Error(`Error while fetching the case ages: ${caseAges.message}`)
+  }
+
+  if (caseAges.length === 0) {
+    return new NotFoundError("Found no case ages")
   }
 
   if (!caseAges) {
