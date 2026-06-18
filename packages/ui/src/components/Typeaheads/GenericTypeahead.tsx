@@ -60,6 +60,8 @@ export function GenericTypeahead<T>({
           return
         }
         console.error(`Error fetching items for typeahead (${id}):`, error)
+      } finally {
+        setLoading(false)
       }
     },
     [fetchUrlBuilder, processData, id]
@@ -103,7 +105,6 @@ export function GenericTypeahead<T>({
 
     const delayDebounceFn = setTimeout(() => {
       fetchItems(inputValue || "", { signal: abortController.signal })
-      setLoading(false)
     }, 250)
 
     return () => {
