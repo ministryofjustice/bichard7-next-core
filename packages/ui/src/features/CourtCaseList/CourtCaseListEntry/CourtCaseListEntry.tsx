@@ -59,12 +59,18 @@ const CourtCaseListEntry: React.FC<Props> = ({
   const resolutionStatus = getResolutionStatus(courtCase)
   const renderExtraReasons = resolutionStatus !== ResolutionStatus.Unresolved || extraReasonCell
 
+  let firstLock: React.ReactNode | undefined = exceptionsCells?.LockTag
+
+  if (!renderExtraReasons && !exceptionsCells) {
+    firstLock = triggerCells?.LockTag
+  }
+
   return (
     <TableBody className="caseListEntry">
       <CaseDetailsRow
         courtCase={courtCase}
         reasonCell={reasonCell}
-        lockTag={exceptionsCells?.LockTag ?? triggerCells?.LockTag}
+        lockTag={firstLock}
         previousPath={previousPath}
         displayAuditQuality={displayAuditQuality}
         courtDateReceivedDateMismatch={courtDateReceivedDateMismatch}
