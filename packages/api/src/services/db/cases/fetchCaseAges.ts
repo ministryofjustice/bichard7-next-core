@@ -42,7 +42,7 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
 
   const query = queries.map((q) => database.connection`${q}`)
 
-  const caseAges = await database.connection`
+  const caseAges = await database.connection<CaseAges[]>`
     SELECT
       ${query}
     FROM br7own.error_list el
