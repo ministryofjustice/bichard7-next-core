@@ -48,6 +48,7 @@ import createRedirectResponse from "utils/createRedirectResponse"
 import { isGet, isPost } from "utils/http"
 import logger from "utils/logger"
 import { getHostFromRequest } from "lib/getAuditLogger/getHostFromRequest"
+import { useEffect } from "react"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -436,9 +437,6 @@ const Index = ({
   httpsRedirectCookie,
   incorrectDelay
 }: Props) => {
-  const upgradeToHttps =
-    typeof window !== "undefined" && !window.location.protocol.includes("https") && httpsRedirectCookie
-
   const validationErrors: { id: string; error: string }[] = []
   if (emailError) {
     validationErrors.push({ id: "email", error: emailError })
@@ -450,6 +448,35 @@ const Index = ({
     validationErrors.push({ id: "password", error: invalidCodeError })
   }
   const showValidationErrors = validationErrors.length > 0
+
+  useEffect(() => {
+    const location = globalThis?.location
+    if (!location) {
+      return
+    }
+
+    if (!httpsRedirectCookie) {
+      return
+    }
+
+    const isInsecure = !location.protocol.includes("https")
+    if (!isInsecure) {
+      return
+    }
+
+    const hosts = [
+      "bichard7.service.justice.gov.uk",
+      "proxy.bichard7.justice.gov.uk",
+      "www.gsi.exchange.gov.uk",
+      "psnportal.bichard7.pnn.police.uk"
+    ]
+    const hostMatch = hosts.includes(location.host)
+    if (!hostMatch) {
+      return
+    }
+
+    location.href = "https://bichard7.service.justice.gov.uk"
+  }, [httpsRedirectCookie])
 
   return (
     <>
@@ -594,9 +621,6 @@ const Index = ({
           </GridColumn>
         </GridRow>
       </Layout>
-      {upgradeToHttps && (
-        <script type="text/javascript">{(window.location.href = "https://bichard7.service.justice.gov.uk")}</script>
-      )}
     </>
   )
 }
