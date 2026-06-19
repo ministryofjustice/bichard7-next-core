@@ -59,7 +59,7 @@
     "@fastify/autoload": "6.3.1",
     "@fastify/swagger": "^9.7.0",
     "@fastify/swagger-ui": "^6.0.0",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.373",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.382",
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "fastify": "^5.8.5",
