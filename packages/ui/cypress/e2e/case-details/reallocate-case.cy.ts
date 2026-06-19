@@ -124,10 +124,9 @@ describe("Case details", () => {
 
     cy.get("input#force").type("03 - Cumbria")
     cy.get("ul li").should("exist").and("contain", "03")
+    cy.get("input#force").blur()
 
-    cy.get('textarea[name="note"]').then((element) => {
-      element[0].textContent = "a".repeat(990)
-    })
+    cy.get('textarea[name="note"]').invoke("val", "a".repeat(990)).trigger("input")
     cy.get('textarea[name="note"]').type("a".repeat(20))
 
     cy.get("div.govuk-hint").should("contain", "You have 990 characters remaining")
