@@ -174,4 +174,21 @@ describe("GenericTypeahead Component", () => {
     cy.get("ul").children("li").should("have.length", 1)
     cy.contains("li", "No results found").should("be.visible")
   })
+
+  it("renders 'This field is required' if showError is true", () => {
+    cy.mount(
+      <GenericTypeahead<MockItem>
+        id="test-id"
+        name="test-name"
+        placeholder="Search things..."
+        fetchUrlBuilder={(search) => `/api/test-items?q=${search}`}
+        itemToString={(item) => item?.label ?? ""}
+        getItemKey={(item, index) => `${item.id}-${index}`}
+        renderItem={(item) => <span>{item.label}</span>}
+        showError={true}
+      />
+    )
+
+    cy.get("p.govuk-error-message").should("contain", "This field is required")
+  })
 })

@@ -1,5 +1,6 @@
 import { useCombobox } from "downshift"
 import { useCallback, useEffect, useState } from "react"
+import { FormGroup } from "../FormGroup"
 import { ListWrapper } from "./Typeahead.styles"
 
 interface GenericTypeaheadProps<T> {
@@ -20,6 +21,8 @@ interface GenericTypeaheadProps<T> {
   customBlurMatch?: (inputValue: string, items: T[]) => { selectedItem: T; inputValue: string } | null
 
   defaultHighlightedIndex?: number
+
+  showError?: boolean
 }
 
 export function GenericTypeahead<T>({
@@ -35,7 +38,8 @@ export function GenericTypeahead<T>({
   onSelectedItemChange,
   onInputValueChange,
   customBlurMatch,
-  defaultHighlightedIndex
+  defaultHighlightedIndex,
+  showError
 }: Readonly<GenericTypeaheadProps<T>>) {
   const [inputItems, setInputItems] = useState<T[]>([])
   const [loading, setLoading] = useState<boolean>(false)
@@ -94,6 +98,12 @@ export function GenericTypeahead<T>({
             selectedItem: match.selectedItem,
             inputValue: match.inputValue
           }
+        } else {
+          return {
+            ...changes,
+            selectedItem: null,
+            inputValue: ""
+          }
         }
       }
       return changes
@@ -135,18 +145,25 @@ export function GenericTypeahead<T>({
 
   return (
     <div>
-      <input
-        {...getInputProps({
-          className: "govuk-input",
-          id,
-          name,
-          placeholder
-        })}
-      />
+      <FormGroup showError={showError}>
+        {showError ? (
+          <p className="govuk-error-message">
+            <span className="govuk-visually-hidden">{"Error:"}</span> {"This field is required"}
+          </p>
+        ) : null}
+        <input
+          {...getInputProps({
+            className: "govuk-input",
+            id,
+            name,
+            placeholder
+          })}
+        />
 
-      <ListWrapper $noResultsFound={noResultsFound}>
-        <ul {...getMenuProps()}>{isOpen && resultsList}</ul>
-      </ListWrapper>
+        <ListWrapper $noResultsFound={noResultsFound}>
+          <ul {...getMenuProps()}>{isOpen && resultsList}</ul>
+        </ListWrapper>
+      </FormGroup>
     </div>
   )
 }
