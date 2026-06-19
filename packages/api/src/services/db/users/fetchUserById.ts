@@ -9,16 +9,6 @@ import { NotFoundError } from "../../../types/errors/NotFoundError"
 import mapUserMinimalRowToMinimalUser from "../mapUserMinimalRowToMinimalUser"
 import filterUsersByVisibleForces from "./filterUsersByVisibleForces"
 
-const UserMinimalRowSchema = UserRowSchema.pick({
-  deleted_at: true,
-  id: true,
-  username: true,
-  visible_courts: true,
-  visible_forces: true
-}).extend({
-  groups: UserRowSchema.shape.groups
-})
-
 export default async (database: DatabaseConnection, user: User, id: number): PromiseResult<UserMinimal> => {
   const sql = database.connection
 
@@ -58,9 +48,9 @@ export default async (database: DatabaseConnection, user: User, id: number): Pro
     return new NotFoundError()
   }
 
-  const parsedResults = UserMinimalRowSchema.safeParse(userResult[0])
+  const parsedResults = UserRowSchema.safeParse(userResult[0])
   if (!parsedResults.success) {
-    console.log("!!! VALIDATION ERROR:", parsedResults.error)
+    // console.log("!!! VALIDATION ERROR:", parsedResults.error)
     return parsedResults.error
   }
 
