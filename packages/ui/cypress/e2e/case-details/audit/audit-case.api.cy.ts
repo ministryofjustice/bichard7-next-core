@@ -20,10 +20,10 @@ describe("Audit case", () => {
 
     loginAndVisit("Supervisor", "/bichard/court-cases/0")
 
-    cy.contains("Set quality status").should("be.visible")
-    cy.get("select[name='trigger-quality']").should("be.visible")
+    cy.contains("Set quality status").isRendered()
+    cy.get("select[name='trigger-quality']").isRendered()
     cy.get("select[name='trigger-quality']").select(1)
-    cy.get("select[name='exception-quality']").should("be.visible")
+    cy.get("select[name='exception-quality']").isRendered()
     cy.get("select[name='exception-quality']").select(1)
     cy.get("textarea[name='quality-status-note']").type("test note")
 
@@ -34,7 +34,7 @@ describe("Audit case", () => {
     cy.get("textarea[name='quality-status-note']").should("not.exist")
     cy.get("#quality-status-submit").should("not.exist")
 
-    cy.contains("Quality status").should("be.visible")
+    cy.contains("Quality status").isRendered()
     cy.contains("Trigger Quality").should("exist")
     cy.contains("Exception Quality").should("exist")
   })
@@ -53,15 +53,15 @@ describe("Audit case", () => {
 
     loginAndVisit("Supervisor", "/bichard/court-cases/0")
 
-    cy.contains("Set quality status").should("be.visible")
-    cy.get("select[name='trigger-quality']").should("be.visible")
+    cy.contains("Set quality status").isRendered()
+    cy.get("select[name='trigger-quality']").isRendered()
     cy.get("select[name='trigger-quality']").select(1)
-    cy.get("select[name='exception-quality']").should("be.visible")
+    cy.get("select[name='exception-quality']").isRendered()
     cy.get("textarea[name='quality-status-note']").type("test note")
 
     cy.get("#quality-status-submit").click()
 
-    cy.contains("Set quality status").should("be.visible")
+    cy.contains("Set quality status").isRendered()
     cy.get("select[name='trigger-quality']").should("not.exist")
     cy.get(".govuk-summary-list__row").should("exist")
     cy.get("select[name='exception-quality']").should("exist")
@@ -83,15 +83,15 @@ describe("Audit case", () => {
 
     loginAndVisit("Supervisor", "/bichard/court-cases/0")
 
-    cy.contains("Set quality status").should("be.visible")
-    cy.get("select[name='trigger-quality']").should("be.visible")
-    cy.get("select[name='exception-quality']").should("be.visible")
+    cy.contains("Set quality status").isRendered()
+    cy.get("select[name='trigger-quality']").isRendered()
+    cy.get("select[name='exception-quality']").isRendered()
     cy.get("select[name='exception-quality']").select(1)
     cy.get("textarea[name='quality-status-note']").type("test note")
 
     cy.get("#quality-status-submit").click()
 
-    cy.contains("Set quality status").should("be.visible")
+    cy.contains("Set quality status").isRendered()
     cy.get("select[name='trigger-quality']").should("exist")
     cy.get("select[name='exception-quality']").should("not.exist")
     cy.get(".govuk-summary-list__row").should("exist")
