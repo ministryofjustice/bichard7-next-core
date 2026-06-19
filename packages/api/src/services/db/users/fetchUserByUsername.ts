@@ -1,7 +1,7 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import { isError } from "@moj-bichard7/common/types/Result"
-import { type User, UserRowSchema, UserSchema } from "@moj-bichard7/common/types/User"
+import { type User, UserRowSchema } from "@moj-bichard7/common/types/User"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
