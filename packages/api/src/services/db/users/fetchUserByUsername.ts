@@ -1,9 +1,11 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import { isError } from "@moj-bichard7/common/types/Result"
-import { type User, UserSchema } from "@moj-bichard7/common/types/User"
+import { type User, UserRowSchema, UserSchema } from "@moj-bichard7/common/types/User"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
+
+import mapUserRowToUser from "../mapUserRowToUser"
 
 export default async (database: DatabaseConnection, username: string): PromiseResult<User> => {
   const userResult = await database.connection`
@@ -38,10 +40,10 @@ export default async (database: DatabaseConnection, username: string): PromiseRe
     return Error(`User "${username}" does not exist`)
   }
 
-  const parsedResults = UserSchema.safeParse(userResult[0])
+  const parsedResults = UserRowSchema.safeParse(userResult[0])
   if (!parsedResults.success) {
     return parsedResults.error
   }
 
-  return parsedResults.data
+  return mapUserRowToUser(parsedResults.data)
 }
