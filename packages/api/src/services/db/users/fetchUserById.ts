@@ -1,11 +1,12 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import { isError } from "@moj-bichard7/common/types/Result"
-import { type User, type UserMinimal, UserSchema } from "@moj-bichard7/common/types/User"
+import { type User, type UserMinimal, UserMinimalRowSchema } from "@moj-bichard7/common/types/User"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import { NotFoundError } from "../../../types/errors/NotFoundError"
+import mapUserMinimalRowToMinimalUser from "../mapUserMinimalRowToMinimalUser"
 import filterUsersByVisibleForces from "./filterUsersByVisibleForces"
 
 export default async (database: DatabaseConnection, user: User, id: number): PromiseResult<UserMinimal> => {
@@ -46,10 +47,10 @@ export default async (database: DatabaseConnection, user: User, id: number): Pro
     return new NotFoundError()
   }
 
-  const parsedResults = UserSchema.safeParse(userResult[0])
+  const parsedResults = UserMinimalRowSchema.safeParse(userResult[0])
   if (!parsedResults.success) {
     return parsedResults.error
   }
 
-  return parsedResults.data
+  return mapUserMinimalRowToMinimalUser(parsedResults.data)
 }
