@@ -26,25 +26,13 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
   }
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedForce, setSelectedForce] = useState<ForceOwnerApiResponse[0] | null>(null)
-  const [showError, setShowError] = useState(false)
+  const [showError] = useState(false)
 
   const { csrfToken } = useCsrfToken()
 
-  const handleSubmit = (event: React.MouseEvent<HTMLFormElement>) => {
+  const handleSubmit = () => {
     setIsSubmitting(true)
-    /*  if (selectedForce) {
-      setIsSubmitting(true)
-    } else {
-      setShowError(true)
-      event.preventDefault()
-    } */
   }
-
-  /*   useEffect(() => {
-    if (selectedForce) {
-      setShowError(false)
-    }
-  }, [selectedForce]) */
 
   return (
     <Form method="POST" action="#" csrfToken={csrfToken || ""} onSubmit={handleSubmit}>
