@@ -1,5 +1,7 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import type { User, UserRow } from "@moj-bichard7/common/types/User"
+
+import { type User, UserRowSchema } from "@moj-bichard7/common/types/User"
+import z from "zod"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
@@ -21,7 +23,7 @@ export default async (database: DatabaseConnection, user: User): PromiseResult<F
 
   const where = sql`(${visibleForcesFilter})`
 
-  const userResult = await database.connection<UserRow[]>`
+  const userResult = await database.connection`
       SELECT
         u.id,
         u.username,
@@ -47,7 +49,11 @@ export default async (database: DatabaseConnection, user: User): PromiseResult<F
           LOWER(u.forenames) ASC,
           LOWER(u.surname) ASC`
 
-  const users = userResult.map((u) => mapUserRowToUser(u))
+  const parsedResults = z.array(UserRowSchema).safeParse(userResult)
+  if (!parsedResults.success) {
+    return parsedResults.error
+  }
 
-  return { users: users }
+  const users = parsedResults.data.map((u) => mapUserRowToUser(u))
+  return { users }
 }
