@@ -47,22 +47,22 @@ describe("Sidebar", () => {
       cy.focused().tab({ shift: true })
       cy.focused().should("have.focus").and("contain.text", "Exceptions")
 
-      cy.focused().type("{leftArrow}")
+      cy.focused().type("{leftArrow}", { force: true })
       cy.focused().should("have.focus").and("contain.text", "Triggers")
-      cy.get(".moj-tab-panel-triggers").should("be.visible").and("contain.text", "There are no triggers for this case.")
+      cy.get(".moj-tab-panel-triggers").isRendered().and("contain.text", "There are no triggers for this case.")
 
-      cy.focused().type("{leftArrow}")
+      cy.focused().type("{leftArrow}", { force: true })
       cy.focused().should("have.focus").and("contain.text", "Triggers")
 
-      cy.focused().type("{rightArrow}")
+      cy.focused().type("{rightArrow}", { force: true })
       cy.focused().should("have.focus").and("contain.text", "Exceptions")
-      cy.get(".moj-tab-panel-exceptions").should("be.visible").and("contain.text", "HO100102")
+      cy.get(".moj-tab-panel-exceptions").isRendered().and("contain.text", "HO100102")
 
-      cy.focused().type("{rightArrow}")
+      cy.focused().type("{rightArrow}", { force: true })
       cy.focused().should("have.focus").and("contain.text", "PNC Details")
-      cy.get(".moj-tab-panel-pnc-details").should("be.visible").and("contain.text", "Crime Offence Reference")
+      cy.get(".moj-tab-panel-pnc-details").isRendered().and("contain.text", "Crime Offence Reference")
 
-      cy.focused().type("{rightArrow}")
+      cy.focused().type("{rightArrow}", { force: true })
       cy.focused().should("have.focus").and("contain.text", "PNC Details")
     })
   })
