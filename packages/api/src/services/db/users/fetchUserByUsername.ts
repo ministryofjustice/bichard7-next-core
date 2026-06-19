@@ -21,6 +21,7 @@ export default async (database: DatabaseConnection, username: string): PromiseRe
         u.visible_courts,
         u.forenames,
         u.surname
+        u.deleted_at
       FROM
         br7own.users u
         LEFT JOIN br7own.users_groups ug ON u.id = ug.user_id
