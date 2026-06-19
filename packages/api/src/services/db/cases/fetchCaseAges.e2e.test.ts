@@ -119,7 +119,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(2)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("2")
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(2)
   })
 
   it("will show error unresolved and trigger resolved cases", async () => {
@@ -135,7 +135,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(3)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("3")
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(3)
   })
 
   it("will show error resolved and trigger unresolved cases", async () => {
@@ -152,7 +152,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(3)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("3")
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(3)
   })
 
   it("will ignore cases that are outside of the users organisation", async () => {
@@ -172,7 +172,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(2)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("2")
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(2)
   })
 
   it("will show 0 if there's matching case age", async () => {
@@ -180,7 +180,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
 
     expect(caseMetadata.cases).toHaveLength(0)
     Object.keys(caseMetadata.caseAges).forEach((key) => {
-      expect(caseMetadata.caseAges[key]).toBe("0")
+      expect(caseMetadata.caseAges[key]).toBe(0)
     })
   })
 
@@ -210,7 +210,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(2)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("2")
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(2)
 
     /* eslint-disable perfectionist/sort-objects -- Don't need for this test */
     expect(caseMetadata.caseAges).toStrictEqual({
