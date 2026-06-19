@@ -39,6 +39,7 @@ export function GenericTypeahead<T>({
 }: Readonly<GenericTypeaheadProps<T>>) {
   const [inputItems, setInputItems] = useState<T[]>([])
   const [loading, setLoading] = useState<boolean>(false)
+  const [prevInputValue, setPrevInputValue] = useState<string>(initialValue || "")
 
   const fetchItems = useCallback(
     async (searchString: string, config?: { signal?: AbortSignal }) => {
@@ -81,7 +82,6 @@ export function GenericTypeahead<T>({
       if (onInputValueChange) {
         onInputValueChange(newVal || "")
       }
-      setLoading(true)
     },
     stateReducer: (state, actionAndChanges) => {
       const { type, changes } = actionAndChanges
@@ -99,6 +99,11 @@ export function GenericTypeahead<T>({
       return changes
     }
   })
+
+  if (inputValue !== prevInputValue) {
+    setPrevInputValue(inputValue || "")
+    setLoading(true)
+  }
 
   useEffect(() => {
     const abortController = new AbortController()
