@@ -8,10 +8,10 @@ import Link from "next/link"
 import { FormEventHandler, useEffect, useState } from "react"
 import { Button } from "./Buttons/Button"
 import ButtonsGroup from "./ButtonsGroup"
-import { NewForceOwnerField } from "./EditableFields/NewForceOwnerField"
 import Form from "./Form"
 import { Label } from "./Label"
 import { NoteTextArea } from "./NoteTextArea"
+import ForceOwnerTypeahead from "./Typeaheads/ForceOwnerTypeahead"
 
 interface Props {
   backLink: string
@@ -60,10 +60,11 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
 
           <div className={"govuk-hint"}>{"Start typing to search for a force to reallocate to"}</div>
 
-          <NewForceOwnerField
+          <input type="hidden" name="force" value={selectedForce?.forceCode ?? ""} />
+
+          <ForceOwnerTypeahead
+            onSelect={setSelectedForce}
             currentForceOwner={currentForce?.code}
-            setSelectedForce={setSelectedForce}
-            selectedForce={selectedForce}
             showError={showError}
           />
         </FormGroup>
