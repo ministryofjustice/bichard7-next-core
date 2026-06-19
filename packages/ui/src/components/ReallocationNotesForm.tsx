@@ -31,11 +31,11 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
   const { csrfToken } = useCsrfToken()
 
   const handleSubmit = (event: React.MouseEvent<HTMLFormElement>) => {
-    if (!selectedForce) {
+    if (selectedForce) {
+      setIsSubmitting(true)
+    } else {
       setShowError(true)
       event.preventDefault()
-    } else {
-      setIsSubmitting(true)
     }
   }
 
