@@ -437,11 +437,7 @@ const Index = ({
   incorrectDelay
 }: Props) => {
   const upgradeToHttps =
-    typeof window !== "undefined" &&
-    !window.location.protocol.includes("https") &&
-    (window.location.host === "bichard7.service.justice.gov.uk" ||
-      window.location.host === "psnportal.bichard7.pnn.police.uk") &&
-    httpsRedirectCookie
+    typeof window !== "undefined" && !window.location.protocol.includes("https") && httpsRedirectCookie
 
   const validationErrors: { id: string; error: string }[] = []
   if (emailError) {
