@@ -212,6 +212,7 @@ export const reallocateCaseToForce = async function (this: Bichard, force: strin
 
   await page.focus("input#force")
   await page.keyboard.type(selectedForceCode)
+  await page.$eval("input#force", (el) => (el as HTMLInputElement).blur())
 
   await page.waitForFunction(
     (text) => {
