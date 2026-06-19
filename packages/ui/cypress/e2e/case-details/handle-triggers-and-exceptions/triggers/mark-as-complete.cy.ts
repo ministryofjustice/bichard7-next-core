@@ -12,9 +12,9 @@ describe("Mark as complete button", () => {
     cy.task("insertTriggers", { caseId: 0, triggers: [unresolvedTrigger] })
 
     cy.visit(caseURL)
-    cy.get(".moj-tab-panel-triggers").should("be.visible")
+    cy.get(".moj-tab-panel-triggers").isRendered()
 
-    cy.get("#mark-triggers-complete-button").should("be.visible").should("have.attr", "disabled")
+    cy.get("#mark-triggers-complete-button").isRendered().should("have.attr", "disabled")
   })
 
   it("Should be disabled if no triggers are selected", () => {

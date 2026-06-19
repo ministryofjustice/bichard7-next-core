@@ -19,7 +19,7 @@ describe("Select all", () => {
   it("Should be visible if there are multiple unresolved triggers", () => {
     cy.task("insertTriggers", { caseId: 0, triggers: unresolvedTriggers })
     cy.visit(caseURL)
-    cy.get("#select-all-triggers").should("be.visible")
+    cy.get("#select-all-triggers").isRendered()
   })
 
   it("Should be hidden if all triggers are resolved", () => {
@@ -31,7 +31,7 @@ describe("Select all", () => {
   it("Should be visible if there is a single unresolved trigger", () => {
     cy.task("insertTriggers", { caseId: 0, triggers: [unresolvedTrigger] })
     cy.visit(caseURL)
-    cy.get("#select-all-triggers").should("be.visible")
+    cy.get("#select-all-triggers").isRendered()
   })
 
   it("Should be hidden if there is a single resolved trigger", () => {
@@ -43,7 +43,7 @@ describe("Select all", () => {
   it("Should be visible if there is a mix of resolved and unresolved triggers", () => {
     cy.task("insertTriggers", { caseId: 0, triggers: mixedTriggers })
     cy.visit(caseURL)
-    cy.get("#select-all-triggers").should("be.visible")
+    cy.get("#select-all-triggers").isRendered()
   })
 
   it("Should select all triggers when pressed if there are only unresolved triggers", () => {

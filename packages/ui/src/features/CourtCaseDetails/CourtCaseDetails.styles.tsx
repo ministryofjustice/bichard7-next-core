@@ -29,6 +29,10 @@ const SideBar = styled.div`
   padding-right: 0px;
   padding-left: 20px;
 
+  position: sticky;
+  top: 185px;
+  z-index: 8;
+
   ${repeatedCss}
   @media (max-width: 1211px) {
     padding-top: 50px;

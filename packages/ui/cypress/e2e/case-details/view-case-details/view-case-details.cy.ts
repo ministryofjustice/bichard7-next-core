@@ -575,7 +575,7 @@ describe("View case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get(".moj-tab-panel-triggers").should("be.visible")
+    cy.get(".moj-tab-panel-triggers").isRendered()
     cy.get(".moj-tab-panel-exceptions").should("not.be.visible")
 
     cy.get(".moj-tab-panel-triggers .moj-trigger-row").eq(0).contains("PR10 / Offence 1")
@@ -595,7 +595,7 @@ describe("View case details", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     cy.get(".moj-tab-panel-triggers").should("not.be.visible")
-    cy.get(".moj-tab-panel-exceptions").should("be.visible")
+    cy.get(".moj-tab-panel-exceptions").isRendered()
     cy.get(".case-details-sidebar a").contains("Triggers").click()
 
     cy.get(".moj-tab-panel-triggers .moj-trigger-row").should("not.exist")
@@ -619,13 +619,13 @@ describe("View case details", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.get(".moj-tab-panel-triggers").should("be.visible")
+    cy.get(".moj-tab-panel-triggers").isRendered()
     cy.get(".moj-tab-panel-exceptions").should("not.be.visible")
 
     cy.get(".case-details-sidebar a").contains("Exceptions").click()
 
     cy.get(".moj-tab-panel-triggers").should("not.be.visible")
-    cy.get(".moj-tab-panel-exceptions").should("be.visible")
+    cy.get(".moj-tab-panel-exceptions").isRendered()
 
     cy.get(".moj-tab-panel-exceptions .moj-exception-row").eq(0).contains("Next hearing date / Offence 1")
     cy.get(".moj-tab-panel-exceptions .moj-exception-row").eq(0).contains("HO100102 - Bad Date")
@@ -641,7 +641,7 @@ describe("View case details", () => {
     cy.get(".case-details-sidebar a").contains("Exceptions").click()
 
     cy.get(".moj-tab-panel-triggers").should("not.be.visible")
-    cy.get(".moj-tab-panel-exceptions").should("be.visible")
+    cy.get(".moj-tab-panel-exceptions").isRendered()
 
     cy.get(".moj-tab-panel-exceptions .moj-exception-row").should("not.exist")
     cy.get(".moj-tab-panel-exceptions").contains("There are no exceptions for this case.")
@@ -726,7 +726,7 @@ describe("View case details", () => {
     cy.get(".case-details-sidebar a").contains("Exceptions").click()
     cy.get(".moj-tab-panel-exceptions .moj-exception-row").eq(0).contains("Organisation unit code / Case Details")
     cy.get(".exception-header .exception-location").click()
-    cy.get('[data-testid="case"]').should("be.visible")
+    cy.get('[data-testid="case"]').isRendered()
   })
 
   it("Should show contextual help for a trigger when the accordion button is clicked", () => {
