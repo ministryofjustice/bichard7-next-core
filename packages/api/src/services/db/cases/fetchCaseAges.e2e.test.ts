@@ -82,12 +82,12 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(14)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("4")
-    expect(caseMetadata.caseAges[CaseAge.Yesterday]).toBe("3")
-    expect(caseMetadata.caseAges[CaseAge.TwoDaysAgo]).toBe("2")
-    expect(caseMetadata.caseAges[CaseAge.ThreeDaysAgo]).toBe("1")
-    expect(caseMetadata.caseAges[CaseAge.FourteenDaysAgo]).toBe("1")
-    expect(caseMetadata.caseAges[CaseAge.FifteenDaysAgoAndOlder]).toBe("3")
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(4)
+    expect(caseMetadata.caseAges[CaseAge.Yesterday]).toBe(3)
+    expect(caseMetadata.caseAges[CaseAge.TwoDaysAgo]).toBe(2)
+    expect(caseMetadata.caseAges[CaseAge.ThreeDaysAgo]).toBe(1)
+    expect(caseMetadata.caseAges[CaseAge.FourteenDaysAgo]).toBe(1)
+    expect(caseMetadata.caseAges[CaseAge.FifteenDaysAgoAndOlder]).toBe(3)
   })
 
   it("will ignore exceptions resolved cases", async () => {
