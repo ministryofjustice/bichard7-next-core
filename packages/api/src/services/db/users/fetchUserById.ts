@@ -36,7 +36,8 @@ export default async (database: DatabaseConnection, user: User, id: number): Pro
         ${visibleForcesWhere} AND u.id = ${id} AND u.deleted_at IS NULL
       GROUP BY
         u.id,
-        u.username
+        u.username,
+        u.deleted_at
     `.catch((error: Error) => error)
 
   if (isError(userResult)) {
