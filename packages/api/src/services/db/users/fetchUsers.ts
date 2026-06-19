@@ -45,6 +45,7 @@ export default async (database: DatabaseConnection, user: User): PromiseResult<F
           ${where}
       GROUP BY
           u.id
+          u.deleted_at
       ORDER BY 
           LOWER(u.forenames) ASC,
           LOWER(u.surname) ASC`
