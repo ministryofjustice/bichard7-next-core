@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 interface TypeaheadProps {
-  $noResultsFound: boolean
+  $noResultsFound?: boolean
 }
 
 const ListWrapper = styled.div<TypeaheadProps>`
