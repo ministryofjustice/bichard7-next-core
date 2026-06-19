@@ -5,7 +5,7 @@ import { MAX_NOTE_LENGTH } from "config"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import Link from "next/link"
-import { FormEventHandler, useEffect, useState } from "react"
+import { FormEventHandler, useState } from "react"
 import { Button } from "./Buttons/Button"
 import ButtonsGroup from "./ButtonsGroup"
 import Form from "./Form"
@@ -31,19 +31,20 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
   const { csrfToken } = useCsrfToken()
 
   const handleSubmit = (event: React.MouseEvent<HTMLFormElement>) => {
-    if (selectedForce) {
+    setIsSubmitting(true)
+    /*  if (selectedForce) {
       setIsSubmitting(true)
     } else {
       setShowError(true)
       event.preventDefault()
-    }
+    } */
   }
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (selectedForce) {
       setShowError(false)
     }
-  }, [selectedForce])
+  }, [selectedForce]) */
 
   return (
     <Form method="POST" action="#" csrfToken={csrfToken || ""} onSubmit={handleSubmit}>

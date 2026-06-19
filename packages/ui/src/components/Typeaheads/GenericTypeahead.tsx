@@ -98,13 +98,13 @@ export function GenericTypeahead<T>({
             selectedItem: match.selectedItem,
             inputValue: match.inputValue
           }
-        } /* else {
+        } else {
           return {
             ...changes,
             selectedItem: null,
             inputValue: ""
           }
-        } */
+        }
       }
       return changes
     }
