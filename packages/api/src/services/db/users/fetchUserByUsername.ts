@@ -20,7 +20,7 @@ export default async (database: DatabaseConnection, username: string): PromiseRe
         u.excluded_triggers,
         u.visible_courts,
         u.forenames,
-        u.surname
+        u.surname,
         u.deleted_at
       FROM
         br7own.users u
@@ -30,7 +30,8 @@ export default async (database: DatabaseConnection, username: string): PromiseRe
         username = ${username}
       GROUP BY
         u.id,
-        u.username
+        u.username,
+        u.deleted_at
     `.catch((error: Error) => error)
 
   if (isError(userResult)) {
