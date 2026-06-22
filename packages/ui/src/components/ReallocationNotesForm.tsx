@@ -1,16 +1,17 @@
+import ForceOwnerApiResponse from "@/types/ForceOwnerApiResponse"
 import forces from "@moj-bichard7-developers/bichard7-next-data/dist/data/forces.json"
 import { FormGroup } from "components/FormGroup"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCsrfToken } from "context/CsrfTokenContext"
 import Link from "next/link"
-import { FormEventHandler, useState } from "react"
+import { FormEventHandler, useEffect, useState } from "react"
 import { Button } from "./Buttons/Button"
 import ButtonsGroup from "./ButtonsGroup"
-import { NewForceOwnerField } from "./EditableFields/NewForceOwnerField"
 import Form from "./Form"
 import { Label } from "./Label"
 import { NoteTextArea } from "./NoteTextArea"
+import ForceOwnerTypeahead from "./Typeaheads/ForceOwnerTypeahead"
 
 interface Props {
   backLink: string
@@ -24,12 +25,25 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
     setNoteRemainingLength(MAX_NOTE_LENGTH - event.currentTarget.value.length)
   }
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [selectedForce, setSelectedForce] = useState<ForceOwnerApiResponse[0] | null>(null)
+  const [showError, setShowError] = useState(false)
 
   const { csrfToken } = useCsrfToken()
 
-  const handleSubmit = () => {
-    setIsSubmitting(true)
+  const handleSubmit = (event: React.MouseEvent<HTMLFormElement>) => {
+    if (selectedForce) {
+      setIsSubmitting(true)
+    } else {
+      setShowError(true)
+      event.preventDefault()
+    }
   }
+
+  useEffect(() => {
+    if (selectedForce) {
+      setShowError(false)
+    }
+  }, [selectedForce])
 
   return (
     <Form method="POST" action="#" csrfToken={csrfToken || ""} onSubmit={handleSubmit}>
@@ -46,7 +60,13 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
 
           <div className={"govuk-hint"}>{"Start typing to search for a force to reallocate to"}</div>
 
-          <NewForceOwnerField currentForceOwner={currentForce?.code} />
+          <input type="hidden" name="force" value={selectedForce?.forceCode ?? ""} />
+
+          <ForceOwnerTypeahead
+            onSelect={setSelectedForce}
+            currentForceOwner={currentForce?.code}
+            showError={showError}
+          />
         </FormGroup>
 
         <NoteTextArea
@@ -59,7 +79,7 @@ const ReallocationNotesForm = ({ backLink }: Props) => {
         />
 
         <ButtonsGroup>
-          <Button id="Reallocate" type="submit" disabled={isSubmitting}>
+          <Button id="Reallocate" type="submit" disabled={isSubmitting || showError}>
             {"Reallocate Case"}
           </Button>
           <Link href={backLink} className="govuk-link">
