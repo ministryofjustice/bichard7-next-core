@@ -114,7 +114,7 @@ describe("ForceOwnerTypeahead Component", () => {
     cy.get("@onSelectSpy").its("lastCall.args").should("deep.equal", [null])
   })
 
-  it("includes the force acronym in brackets if one exists", () => {
+  it("includes the force acronym in brackets", () => {
     const onSelectSpy = cy.spy().as("onSelectSpy")
     cy.mount(<ForceOwnerTypeahead onSelect={onSelectSpy} />)
 
