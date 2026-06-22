@@ -1,8 +1,14 @@
 import type { Force } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-import searchForceOwners, { getForceCode, getForceName, getForceOwnerCodeAndName } from "services/searchForceOwners"
+import searchForceOwners, {
+  getForceAcronym,
+  getForceCode,
+  getForceName,
+  getForceOwnerCodeNameAcronym
+} from "services/searchForceOwners"
 
 describe("searchForceOwners", () => {
   const sampleForce = { code: "01", name: "Metropolitan Police" } as Force
+  const sampleForceWithAcronym = { code: "06", name: "Greater Manchester" } as Force
 
   it("getForceCode returns the force code as a string", () => {
     expect(getForceCode(sampleForce)).toBe("01")
@@ -12,8 +18,12 @@ describe("searchForceOwners", () => {
     expect(getForceName(sampleForce)).toBe("Metropolitan Police")
   })
 
-  it("getForceOwnerCodeAndName combines code and name with a space", () => {
-    expect(getForceOwnerCodeAndName(sampleForce)).toBe("01 Metropolitan Police")
+  it("getForceOwnerCodeNameAcronym combines code and name with a space, if force has no acronym", () => {
+    expect(getForceOwnerCodeNameAcronym(sampleForce)).toBe("01 Metropolitan Police")
+  })
+
+  it("getForceOwnerCodeNameAcronym combines code, name and acronym with a space, if force has an acronym", () => {
+    expect(getForceOwnerCodeNameAcronym(sampleForceWithAcronym)).toBe("06 Greater Manchester GMP")
   })
 
   describe("searchForceOwners default function", () => {
@@ -61,6 +71,16 @@ describe("searchForceOwners", () => {
     it("returns an empty array if no matches are found", () => {
       const result = searchForceOwners("01", "NotARealForceXYZ")
       expect(result).toEqual([])
+    })
+
+    it("returns correct acronym if force has an acronym", () => {
+      const result = getForceAcronym(sampleForceWithAcronym)
+      expect(result).toBe("GMP")
+    })
+
+    it("returns empty string if force has no acronym", () => {
+      const result = getForceAcronym(sampleForce)
+      expect(result).toBe("")
     })
   })
 })

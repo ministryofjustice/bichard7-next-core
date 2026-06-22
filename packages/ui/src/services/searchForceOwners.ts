@@ -23,8 +23,15 @@ export const getForceAcronym = (force: Force) => {
   }
 }
 
-export const getForceOwnerCodeAndName = (force: Force) =>
-  `${getForceCode(force)} ${getForceName(force)} ${getForceAcronym(force)}`
+export const getForceOwnerCodeNameAcronym = (force: Force) => {
+  const acronym = getForceAcronym(force)
+
+  if (acronym) {
+    return `${getForceCode(force)} ${getForceName(force)} ${acronym}`
+  } else {
+    return `${getForceCode(force)} ${getForceName(force)}`
+  }
+}
 
 const searchForceOwners = (currentForceOwner: string, keyword: string) => {
   if (currentForceOwner === "" || keyword === "") {
@@ -34,7 +41,7 @@ const searchForceOwners = (currentForceOwner: string, keyword: string) => {
   const sortedForceOwners = sortBy(getForcesForReallocation(currentForceOwner), (force) => force.code)
 
   return sortedForceOwners.filter((force) =>
-    getForceOwnerCodeAndName(force).toLowerCase().includes(keyword.replace(" - ", " ").toLowerCase())
+    getForceOwnerCodeNameAcronym(force).toLowerCase().includes(keyword.replace(" - ", " ").toLowerCase())
   )
 }
 
