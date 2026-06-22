@@ -66,6 +66,26 @@ const getNotYourEmailLink = (query: ParsedUrlQuery): string => {
   })
 }
 
+const shouldRedirectToHttps = (location: Location, httpsRedirectCookie: boolean): boolean => {
+  if (!httpsRedirectCookie) {
+    return false
+  }
+
+  const isSecure = location.protocol.includes("https")
+  if (isSecure) {
+    return false
+  }
+
+  const hosts = [
+    "bichard7.service.justice.gov.uk",
+    "proxy.bichard7.justice.gov.uk",
+    "www.gsi.exchange.gov.uk",
+    "psnportal.bichard7.pnn.police.uk"
+  ]
+
+  return hosts.includes(location.host)
+}
+
 const handleInitialLoginStage = async (
   context: GetServerSidePropsContext<ParsedUrlQuery>,
   serviceMessages: ServiceMessage[],
@@ -455,27 +475,9 @@ const Index = ({
       return
     }
 
-    if (!httpsRedirectCookie) {
-      return
+    if (shouldRedirectToHttps(location, !!httpsRedirectCookie)) {
+      location.href = "https://bichard7.service.justice.gov.uk"
     }
-
-    const isInsecure = !location.protocol.includes("https")
-    if (!isInsecure) {
-      return
-    }
-
-    const hosts = [
-      "bichard7.service.justice.gov.uk",
-      "proxy.bichard7.justice.gov.uk",
-      "www.gsi.exchange.gov.uk",
-      "psnportal.bichard7.pnn.police.uk"
-    ]
-    const hostMatch = hosts.includes(location.host)
-    if (!hostMatch) {
-      return
-    }
-
-    location.href = "https://bichard7.service.justice.gov.uk"
   }, [httpsRedirectCookie])
 
   return (
