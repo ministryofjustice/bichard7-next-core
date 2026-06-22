@@ -203,7 +203,7 @@ describe("View case details", () => {
   })
 
   it("Should return 404 for a case that this user can not see due it being against a different force", () => {
-    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "02" }])
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "02" }]).then(() => {
     cy.loginAs("GeneralHandler")
 
     cy.request({
@@ -211,6 +211,7 @@ describe("View case details", () => {
       url: "/bichard/court-cases/0"
     }).then((response) => {
       expect(response.status).to.eq(404)
+    })
     })
   })
 
