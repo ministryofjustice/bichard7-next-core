@@ -57,9 +57,9 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
     return Error(`Error while fetching the case ages: ${caseAges.message}`)
   }
 
-  if (caseAges.length === 0) {
+  /*   if (caseAges.length === 0) {
     return new NotFoundError("Found no case ages")
-  }
+  } */
 
   if (!caseAges) {
     return new NotFoundError("Found no case ages")
