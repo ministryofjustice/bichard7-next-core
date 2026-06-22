@@ -1,6 +1,9 @@
+import { getForceAcronym } from "@/services/searchForceOwners"
 import React, { useCallback } from "react"
 import type ForceOwnerApiResponse from "types/ForceOwnerApiResponse"
 import { GenericTypeahead } from "./GenericTypeahead"
+
+type ForceOwnerDetails = { forceCode: string; forceName: string; forceAcronym?: string }
 
 interface Props {
   onSelect: (item: ForceOwnerApiResponse[0] | null) => void
@@ -25,27 +28,56 @@ const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner, sho
     [currentForceOwner]
   )
 
+  const formatForceName = (item: ForceOwnerDetails) => {
+    const forceAcronym = item.forceAcronym ? ` (${item.forceAcronym})` : ""
+
+    return `${item.forceCode} - ${item.forceName}${forceAcronym}`
+  }
+
   const processData = useCallback(
     (data: ForceOwnerApiResponse) => {
-      return data.filter((item) => currentForceOwner !== item.forceCode)
+      return data
+        .map((item) => {
+          const forceAcronym = getForceAcronym(item.forceCode)
+          if (forceAcronym) {
+            return {
+              ...item,
+              forceAcronym: forceAcronym
+            }
+          }
+
+          return item
+        })
+        .filter((item) => currentForceOwner !== item.forceCode)
     },
     [currentForceOwner]
   )
 
   return (
-    <GenericTypeahead<ForceOwnerApiResponse[0]>
+    <GenericTypeahead<ForceOwnerDetails>
       id="force"
       fetchUrlBuilder={fetchUrlBuilder}
       processData={processData}
-      itemToString={(item) => (item ? `${item.forceCode} - ${item.forceName}` : "")}
+      itemToString={(item) => (item ? formatForceName(item) : "")}
       getItemKey={(item, index) => `${item.forceCode}-${index}`}
-      renderItem={(item) => (
-        <>
-          {item.forceCode}
-          {" - "}
-          {item.forceName}
-        </>
-      )}
+      renderItem={(item) => {
+        const forceAcronymFragment = item.forceAcronym ? (
+          <>
+            {" ("}
+            {item.forceAcronym}
+            {")"}
+          </>
+        ) : null
+
+        return (
+          <>
+            {item.forceCode}
+            {" - "}
+            {item.forceName}
+            {forceAcronymFragment}
+          </>
+        )
+      }}
       onSelectedItemChange={onSelect}
       onInputValueChange={(val) => {
         if (!val) {
@@ -54,13 +86,16 @@ const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner, sho
       }}
       customBlurMatch={(typedValue, items) => {
         const trimmed = typedValue.trim()
-        const exactMatch =
-          items.find((item) => item.forceCode === trimmed || `${item.forceCode} - ${item.forceName}` === trimmed) ||
-          (items.length === 1 ? items[0] : null)
 
-        return exactMatch
-          ? { selectedItem: exactMatch, inputValue: `${exactMatch.forceCode} - ${exactMatch.forceName}` }
-          : null
+        const exactMatch =
+          items.find((item) => {
+            return item.forceCode === trimmed || formatForceName(item) === trimmed
+          }) || (items.length === 1 ? items[0] : null)
+
+        console.log(items)
+        console.log(exactMatch)
+
+        return exactMatch ? { selectedItem: exactMatch, inputValue: formatForceName(exactMatch) } : null
       }}
       defaultHighlightedIndex={0}
       showError={showError}

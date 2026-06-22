@@ -74,12 +74,12 @@ describe("searchForceOwners", () => {
     })
 
     it("returns correct acronym if force has an acronym", () => {
-      const result = getForceAcronym(sampleForceWithAcronym)
+      const result = getForceAcronym(sampleForceWithAcronym.code)
       expect(result).toBe("GMP")
     })
 
     it("returns empty string if force has no acronym", () => {
-      const result = getForceAcronym(sampleForce)
+      const result = getForceAcronym(sampleForce.code)
       expect(result).toBe("")
     })
   })

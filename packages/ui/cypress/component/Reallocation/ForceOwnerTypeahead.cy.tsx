@@ -113,4 +113,20 @@ describe("ForceOwnerTypeahead Component", () => {
 
     cy.get("@onSelectSpy").its("lastCall.args").should("deep.equal", [null])
   })
+
+  it("includes the force acronym in brackets if one exists", () => {
+    const onSelectSpy = cy.spy().as("onSelectSpy")
+    cy.mount(<ForceOwnerTypeahead onSelect={onSelectSpy} />)
+
+    cy.get("input#force").type("06")
+
+    cy.wait("@getForces")
+
+    cy.get("ul li").should("have.length", 1)
+    cy.get("ul li").first().should("contain.text", "06 - Greater Manchester (GMP)")
+
+    cy.get("input#force").type("{enter}")
+
+    cy.get("input#force").should("have.value", "06 - Greater Manchester (GMP)")
+  })
 })

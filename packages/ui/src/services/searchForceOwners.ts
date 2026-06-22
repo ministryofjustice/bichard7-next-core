@@ -14,8 +14,8 @@ const forceNameAcronymMappings: Record<string, string> = {
   93: "British Transport Police"
 }
 
-export const getForceAcronym = (force: Force) => {
-  const acronym = forceNameAcronymMappings[force.code]
+export const getForceAcronym = (forceCode: string) => {
+  const acronym = forceNameAcronymMappings[forceCode]
   if (acronym) {
     return acronym
   } else {
@@ -24,7 +24,7 @@ export const getForceAcronym = (force: Force) => {
 }
 
 export const getForceOwnerCodeNameAcronym = (force: Force) => {
-  const acronym = getForceAcronym(force)
+  const acronym = getForceAcronym(force.code)
 
   if (acronym) {
     return `${getForceCode(force)} ${getForceName(force)} ${acronym}`
@@ -40,9 +40,11 @@ const searchForceOwners = (currentForceOwner: string, keyword: string) => {
 
   const sortedForceOwners = sortBy(getForcesForReallocation(currentForceOwner), (force) => force.code)
 
-  return sortedForceOwners.filter((force) =>
-    getForceOwnerCodeNameAcronym(force).toLowerCase().includes(keyword.replace(" - ", " ").toLowerCase())
-  )
+  return sortedForceOwners.filter((force) => {
+    return getForceOwnerCodeNameAcronym(force)
+      .toLowerCase()
+      .includes(keyword.replace(" - ", " ").replace("(", "").replace(")", "").toLowerCase())
+  })
 }
 
 export default searchForceOwners
