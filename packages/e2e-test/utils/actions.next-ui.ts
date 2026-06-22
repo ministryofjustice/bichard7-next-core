@@ -222,6 +222,8 @@ export const reallocateCaseToForce = async function (this: Bichard, force: strin
     selectedForceCode
   )
 
+  await page.click(`ul li::-p-text(${selectedForceCode})`)
+
   await this.browser.clickAndWait("#Reallocate")
 }
 

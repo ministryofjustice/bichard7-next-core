@@ -5,9 +5,10 @@ import { GenericTypeahead } from "./GenericTypeahead"
 interface Props {
   onSelect: (item: ForceOwnerApiResponse[0] | null) => void
   currentForceOwner?: string
+  showError?: boolean
 }
 
-const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner }) => {
+const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner, showError }) => {
   const fetchUrlBuilder = useCallback(
     (search: string) => {
       const params = new URLSearchParams()
@@ -62,6 +63,7 @@ const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner }) =
           : null
       }}
       defaultHighlightedIndex={0}
+      showError={showError}
     />
   )
 }

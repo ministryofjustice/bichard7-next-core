@@ -1,4 +1,3 @@
-import React from "react"
 import ForceOwnerTypeahead from "components/Typeaheads/ForceOwnerTypeahead"
 import type ForceOwnerApiResponse from "types/ForceOwnerApiResponse"
 
@@ -94,7 +93,8 @@ describe("ForceOwnerTypeahead Component", () => {
     cy.get("input#force").type("Police")
     cy.wait("@getForces")
 
-    cy.get("ul li").should("have.length", 0)
+    cy.get("ul li").should("have.length", 1)
+    cy.contains("li", "No results found").should("be.visible")
   })
 
   it("clears the selection in parent when input is cleared", () => {
