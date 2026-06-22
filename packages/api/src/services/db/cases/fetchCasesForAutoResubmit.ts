@@ -32,7 +32,7 @@ export const fetchCasesForAutoResubmit = async (
   `
 
   if (isError(results)) {
-    return new Error("Failed to get cases for auto resubmit")
+    return results
   }
 
   const parsedResults = z.array(CaseRowSchema).safeParse(results)
