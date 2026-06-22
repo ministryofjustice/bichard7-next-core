@@ -4,7 +4,8 @@ import type ForceOwnerApiResponse from "types/ForceOwnerApiResponse"
 const mockForces: ForceOwnerApiResponse = [
   { forceCode: "01", forceName: "Metropolitan Police" },
   { forceCode: "02", forceName: "Suffolk Constabulary" },
-  { forceCode: "03", forceName: "Cumbria Constabulary" }
+  { forceCode: "03", forceName: "Cumbria Constabulary" },
+  { forceCode: "06", forceName: "Greater Manchester" }
 ]
 
 describe("ForceOwnerTypeahead Component", () => {
