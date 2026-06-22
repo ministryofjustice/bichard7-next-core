@@ -178,7 +178,7 @@ describe("View case details", () => {
   })
 
   it("Should be accessible", () => {
-    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }]).then(() => {
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
     cy.task("insertTriggers",{
       caseId: 0,
       triggers: [
@@ -189,7 +189,6 @@ describe("View case details", () => {
           createdAt: new Date("2022-07-09T10:22:34.000Z")
         } satisfies TestTrigger
       ]
-    })
     })
 
     loginAndVisit("/bichard/court-cases/0")
@@ -203,7 +202,7 @@ describe("View case details", () => {
   })
 
   it("Should return 404 for a case that this user can not see due it being against a different force", () => {
-    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "02" }]).then(() => {
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "02" }])
     cy.loginAs("GeneralHandler")
 
     cy.request({
@@ -212,7 +211,7 @@ describe("View case details", () => {
     }).then((response) => {
       expect(response.status).to.eq(404)
     })
-    })
+   
   })
 
   it("Should return 404 for a case that does not exist", () => {
