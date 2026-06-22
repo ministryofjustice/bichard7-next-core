@@ -92,9 +92,6 @@ const ForceOwnerTypeahead: React.FC<Props> = ({ onSelect, currentForceOwner, sho
             return item.forceCode === trimmed || formatForceName(item) === trimmed
           }) || (items.length === 1 ? items[0] : null)
 
-        console.log(items)
-        console.log(exactMatch)
-
         return exactMatch ? { selectedItem: exactMatch, inputValue: formatForceName(exactMatch) } : null
       }}
       defaultHighlightedIndex={0}
