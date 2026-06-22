@@ -6,7 +6,7 @@ export const getForceCode = (force: Force) => force.code
 
 export const getForceName = (force: Force) => [force.name].filter((part) => !!part).join(" ")
 
-const forceNameAcronymMappings: Record<string, string> = {
+const forceCodeAcronymMappings: Record<string, string> = {
   "06": "GMP",
   67: "SOCA",
   89: "ACRO",
@@ -15,7 +15,7 @@ const forceNameAcronymMappings: Record<string, string> = {
 }
 
 export const getForceAcronym = (forceCode: string) => {
-  const acronym = forceNameAcronymMappings[forceCode]
+  const acronym = forceCodeAcronymMappings[forceCode]
   if (acronym) {
     return acronym
   } else {
