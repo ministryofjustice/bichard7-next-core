@@ -1,5 +1,6 @@
 import { useCombobox } from "downshift"
 import { useCallback, useEffect, useState } from "react"
+import { FormGroup } from "../FormGroup"
 import { ListWrapper } from "./Typeahead.styles"
 
 interface GenericTypeaheadProps<T> {
@@ -20,6 +21,8 @@ interface GenericTypeaheadProps<T> {
   customBlurMatch?: (inputValue: string, items: T[]) => { selectedItem: T; inputValue: string } | null
 
   defaultHighlightedIndex?: number
+
+  showError?: boolean
 }
 
 export function GenericTypeahead<T>({
@@ -35,9 +38,12 @@ export function GenericTypeahead<T>({
   onSelectedItemChange,
   onInputValueChange,
   customBlurMatch,
-  defaultHighlightedIndex
+  defaultHighlightedIndex,
+  showError
 }: Readonly<GenericTypeaheadProps<T>>) {
   const [inputItems, setInputItems] = useState<T[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
+  const [prevInputValue, setPrevInputValue] = useState<string>(initialValue || "")
 
   const fetchItems = useCallback(
     async (searchString: string, config?: { signal?: AbortSignal }) => {
@@ -59,6 +65,8 @@ export function GenericTypeahead<T>({
           return
         }
         console.error(`Error fetching items for typeahead (${id}):`, error)
+      } finally {
+        setLoading(false)
       }
     },
     [fetchUrlBuilder, processData, id]
@@ -90,11 +98,22 @@ export function GenericTypeahead<T>({
             selectedItem: match.selectedItem,
             inputValue: match.inputValue
           }
+        } else {
+          return {
+            ...changes,
+            selectedItem: null,
+            inputValue: ""
+          }
         }
       }
       return changes
     }
   })
+
+  if (inputValue !== prevInputValue) {
+    setPrevInputValue(inputValue || "")
+    setLoading(true)
+  }
 
   useEffect(() => {
     const abortController = new AbortController()
@@ -109,31 +128,42 @@ export function GenericTypeahead<T>({
     }
   }, [fetchItems, inputValue])
 
+  let resultsList = inputItems.map((item, index) => (
+    <li
+      style={highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}}
+      key={getItemKey(item, index)}
+      {...getItemProps({ item, index })}
+    >
+      {renderItem(item)}
+    </li>
+  ))
+
+  const noResultsFound = inputItems.length === 0 && !!inputValue && !loading
+  if (noResultsFound) {
+    resultsList = [<li key={"no-results"}>{"No results found"}</li>]
+  }
+
   return (
     <div>
-      <input
-        {...getInputProps({
-          className: "govuk-input",
-          id,
-          name,
-          placeholder
-        })}
-      />
+      <FormGroup showError={showError}>
+        {showError ? (
+          <p className="govuk-error-message">
+            <span className="govuk-visually-hidden">{"Error:"}</span> {"This field is required"}
+          </p>
+        ) : null}
+        <input
+          {...getInputProps({
+            className: "govuk-input",
+            id,
+            name,
+            placeholder
+          })}
+        />
 
-      <ListWrapper>
-        <ul {...getMenuProps()}>
-          {isOpen &&
-            inputItems.map((item, index) => (
-              <li
-                style={highlightedIndex === index ? { backgroundColor: "#bde4ff" } : {}}
-                key={getItemKey(item, index)}
-                {...getItemProps({ item, index })}
-              >
-                {renderItem(item)}
-              </li>
-            ))}
-        </ul>
-      </ListWrapper>
+        <ListWrapper $noResultsFound={noResultsFound}>
+          <ul {...getMenuProps()}>{isOpen && resultsList}</ul>
+        </ListWrapper>
+      </FormGroup>
     </div>
   )
 }

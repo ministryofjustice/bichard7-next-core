@@ -124,10 +124,9 @@ describe("Case details", () => {
 
     cy.get("input#force").type("03 - Cumbria")
     cy.get("ul li").should("exist").and("contain", "03")
+    cy.get("input#force").blur()
 
-    cy.get('textarea[name="note"]').then((element) => {
-      element[0].textContent = "a".repeat(990)
-    })
+    cy.get('textarea[name="note"]').invoke("val", "a".repeat(990)).trigger("input")
     cy.get('textarea[name="note"]').type("a".repeat(20))
 
     cy.get("div.govuk-hint").should("contain", "You have 990 characters remaining")
@@ -421,6 +420,21 @@ describe("Case details", () => {
     cy.get("#triggers-tab-panel").contains("PR10").should("exist")
     cy.get("#triggers-tab-panel").contains("PR04 / Offence 1").should("exist")
     cy.get("#triggers-tab-panel").contains("PR04 / Offence 3").should("exist")
+  })
+
+  it("should prevent submission when no force has been selected", () => {
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
+
+    loginAndVisit("/bichard/court-cases/0")
+
+    cy.get(".b7-reallocate-button").click()
+    cy.contains("H2", "Case reallocation").should("exist")
+
+    cy.get("button").contains("Reallocate Case").click()
+
+    cy.get("button").contains("Reallocate Case").should("be.disabled")
+
+    cy.contains("H2", "Case reallocation").should("exist")
   })
 })
 
