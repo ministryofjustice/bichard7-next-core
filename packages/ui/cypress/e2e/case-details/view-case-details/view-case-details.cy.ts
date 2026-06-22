@@ -178,8 +178,8 @@ describe("View case details", () => {
   })
 
   it("Should be accessible", () => {
-    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
-    cy.task("insertTriggers", {
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }]).then(() => {
+    cy.task("insertTriggers",{
       caseId: 0,
       triggers: [
         {
@@ -189,6 +189,7 @@ describe("View case details", () => {
           createdAt: new Date("2022-07-09T10:22:34.000Z")
         } satisfies TestTrigger
       ]
+    })
     })
 
     loginAndVisit("/bichard/court-cases/0")
