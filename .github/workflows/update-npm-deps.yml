@@ -77,7 +77,7 @@ jobs:
           git commit -m "Update npm dependencies"
           git push -f origin "$BRANCH"
 
-          if ! gh pr "$BRANCH" >/dev/null 2>&1; then
+          if ! gh pr view "$BRANCH" >/dev/null 2>&1; then
             gh pr create \
               --base main \
               --head "$BRANCH" \
