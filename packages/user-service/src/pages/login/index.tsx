@@ -78,7 +78,7 @@ const shouldRedirectToHttps = (location: Location, httpsRedirectCookie: boolean)
 
   const hosts = [
     "bichard7.service.justice.gov.uk",
-    "proxy.bichard7.justice.gov.uk",
+    "proxy.bichard7.service.justice.gov.uk",
     "www.gsi.exchange.gov.uk",
     "psnportal.bichard7.pnn.police.uk"
   ]
