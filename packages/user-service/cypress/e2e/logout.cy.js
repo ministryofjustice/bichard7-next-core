@@ -26,6 +26,6 @@ describe("Logging Out", () => {
 
     cy.url().should("match", /\/login\/?$/)
     cy.get("input[type=email]").should("be.visible")
-    cy.get("button[type=submit").should("be.visible")
+    cy.get("button[type=submit]").should("be.visible")
   })
 })
