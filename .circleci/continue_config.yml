@@ -205,7 +205,7 @@ commands:
       - restore_cache:
           name: Restore BuildKit cache for << parameters.image_name >>
           keys:
-            - << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "<< parameters.lockfile >>" }}
+            - << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "<< parameters.lockfile >>" }}-
             - << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-
             - << parameters.cache_key >>-
       - run:
@@ -230,7 +230,7 @@ commands:
             mv /tmp/buildx-cache-<< parameters.image_name >>-new /tmp/buildx-cache-<< parameters.image_name >>
       - save_cache:
           name: Save BuildKit cache for << parameters.image_name >>
-          key: << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "<< parameters.lockfile >>" }}
+          key: << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "<< parameters.lockfile >>" }}-{{ .BuildNum }}
           paths:
             - /tmp/buildx-cache-<< parameters.image_name >>
 
@@ -670,6 +670,7 @@ jobs:
       - load_user_service_image
       - load_api_image
       - load_audit_logging_image
+      - load_leds_image
       - node/install
       - node_install_packages
       - build_core
@@ -1270,6 +1271,7 @@ workflows:
             - build_user_service_image
             - build_api_image
             - build_audit_logging_images
+            - build_leds_image
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
