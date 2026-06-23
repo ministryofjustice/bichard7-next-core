@@ -1,9 +1,9 @@
 import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
 import type { CaseOrder, CaseOrderBy } from "@moj-bichard7/common/contracts/CaseOrderingQuery"
-import type { AuditCase } from "@moj-bichard7/common/types/AuditCase"
+import type { AuditCase, AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import { AuditCaseSchema, type AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
+import { AuditCaseSchema } from "@moj-bichard7/common/types/AuditCase"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import z from "zod"
 

@@ -1,6 +1,6 @@
+import type { AuditWithProgress } from "@moj-bichard7/common/types/Audit"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import { type AuditWithProgress } from "@moj-bichard7/common/types/Audit"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
