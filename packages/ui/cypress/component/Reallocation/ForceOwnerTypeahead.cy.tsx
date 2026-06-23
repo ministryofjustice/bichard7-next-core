@@ -4,7 +4,8 @@ import type ForceOwnerApiResponse from "types/ForceOwnerApiResponse"
 const mockForces: ForceOwnerApiResponse = [
   { forceCode: "01", forceName: "Metropolitan Police" },
   { forceCode: "02", forceName: "Suffolk Constabulary" },
-  { forceCode: "03", forceName: "Cumbria Constabulary" }
+  { forceCode: "03", forceName: "Cumbria Constabulary" },
+  { forceCode: "06", forceName: "Greater Manchester" }
 ]
 
 describe("ForceOwnerTypeahead Component", () => {
@@ -112,5 +113,21 @@ describe("ForceOwnerTypeahead Component", () => {
     cy.get("input#force").clear()
 
     cy.get("@onSelectSpy").its("lastCall.args").should("deep.equal", [null])
+  })
+
+  it("includes the force acronym in brackets", () => {
+    const onSelectSpy = cy.spy().as("onSelectSpy")
+    cy.mount(<ForceOwnerTypeahead onSelect={onSelectSpy} />)
+
+    cy.get("input#force").type("06")
+
+    cy.wait("@getForces")
+
+    cy.get("ul li").should("have.length", 1)
+    cy.get("ul li").first().should("contain.text", "06 - Greater Manchester (GMP)")
+
+    cy.get("input#force").type("{enter}")
+
+    cy.get("input#force").should("have.value", "06 - Greater Manchester (GMP)")
   })
 })
