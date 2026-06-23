@@ -16,7 +16,7 @@ import { organisationUnitSql } from "../organisationUnitSql"
 const formInputDateFormat = "yyyy-MM-dd"
 const formatFormInputDateString = (date: Date): string => (isValid(date) ? format(date, formInputDateFormat) : "")
 
-export const fetchCaseAges = async (database: DatabaseConnection, user: User): PromiseResult<CaseAges[]> => {
+export const fetchCaseAges = async (database: DatabaseConnection, user: User): PromiseResult<CaseAges> => {
   const slaCaseAges = Object.values(CaseAge)
 
   const queries = slaCaseAges.reduce((queries: postgres.PendingQuery<postgres.Row[]>[], key, index) => {
@@ -59,11 +59,6 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
 
   if (!caseAges) {
     return new NotFoundError("Found no case ages")
-  }
-
-  const parsedResults = CaseAgesSchema.safeParse(caseAges[0])
-  if (!parsedResults.success) {
-    return parsedResults.error
   }
 
   return caseAges[0]
