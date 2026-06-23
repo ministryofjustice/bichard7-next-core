@@ -48,6 +48,7 @@ import createRedirectResponse from "utils/createRedirectResponse"
 import { isGet, isPost } from "utils/http"
 import logger from "utils/logger"
 import { getHostFromRequest } from "lib/getAuditLogger/getHostFromRequest"
+import { useEffect } from "react"
 
 const authenticationErrorMessage = "Error authenticating the request"
 
@@ -63,6 +64,26 @@ const getNotYourEmailLink = (query: ParsedUrlQuery): string => {
     notYou: "true",
     ...redirectParams
   })
+}
+
+const shouldRedirectToHttps = (location: Location, httpsRedirectCookie: boolean): boolean => {
+  if (!httpsRedirectCookie) {
+    return false
+  }
+
+  const isSecure = location.protocol.includes("https")
+  if (isSecure) {
+    return false
+  }
+
+  const hosts = [
+    "bichard7.service.justice.gov.uk",
+    "proxy.bichard7.service.justice.gov.uk",
+    "www.gsi.exchange.gov.uk",
+    "psnportal.bichard7.pnn.police.uk"
+  ]
+
+  return hosts.includes(location.host)
 }
 
 const handleInitialLoginStage = async (
@@ -436,13 +457,6 @@ const Index = ({
   httpsRedirectCookie,
   incorrectDelay
 }: Props) => {
-  const upgradeToHttps =
-    typeof window !== "undefined" &&
-    !window.location.protocol.includes("https") &&
-    (window.location.host === "bichard7.service.justice.gov.uk" ||
-      window.location.host === "psnportal.bichard7.pnn.police.uk") &&
-    httpsRedirectCookie
-
   const validationErrors: { id: string; error: string }[] = []
   if (emailError) {
     validationErrors.push({ id: "email", error: emailError })
@@ -454,6 +468,17 @@ const Index = ({
     validationErrors.push({ id: "password", error: invalidCodeError })
   }
   const showValidationErrors = validationErrors.length > 0
+
+  useEffect(() => {
+    const location = globalThis?.location
+    if (!location) {
+      return
+    }
+
+    if (shouldRedirectToHttps(location, !!httpsRedirectCookie)) {
+      location.href = "https://bichard7.service.justice.gov.uk"
+    }
+  }, [httpsRedirectCookie])
 
   return (
     <>
@@ -598,9 +623,6 @@ const Index = ({
           </GridColumn>
         </GridRow>
       </Layout>
-      {upgradeToHttps && (
-        <script type="text/javascript">{(window.location.href = "https://bichard7.service.justice.gov.uk")}</script>
-      )}
     </>
   )
 }
