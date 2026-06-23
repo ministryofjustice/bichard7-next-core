@@ -82,12 +82,12 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(14)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(4)
-    expect(caseMetadata.caseAges[CaseAge.Yesterday]).toBe(3)
-    expect(caseMetadata.caseAges[CaseAge.TwoDaysAgo]).toBe(2)
-    expect(caseMetadata.caseAges[CaseAge.ThreeDaysAgo]).toBe(1)
-    expect(caseMetadata.caseAges[CaseAge.FourteenDaysAgo]).toBe(1)
-    expect(caseMetadata.caseAges[CaseAge.FifteenDaysAgoAndOlder]).toBe(3)
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("4")
+    expect(caseMetadata.caseAges[CaseAge.Yesterday]).toBe("3")
+    expect(caseMetadata.caseAges[CaseAge.TwoDaysAgo]).toBe("2")
+    expect(caseMetadata.caseAges[CaseAge.ThreeDaysAgo]).toBe("1")
+    expect(caseMetadata.caseAges[CaseAge.FourteenDaysAgo]).toBe("1")
+    expect(caseMetadata.caseAges[CaseAge.FifteenDaysAgoAndOlder]).toBe("3")
   })
 
   it("will ignore exceptions resolved cases", async () => {
@@ -103,7 +103,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(2)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(2) //changed string to number
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("2")
   })
 
   it("will ignore trigger resolved cases", async () => {
@@ -119,7 +119,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(2)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(2)
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("2")
   })
 
   it("will show error unresolved and trigger resolved cases", async () => {
@@ -135,7 +135,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(3)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(3)
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("3")
   })
 
   it("will show error resolved and trigger unresolved cases", async () => {
@@ -152,7 +152,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     const caseMetadata = (await fetchCasesAndFilter(helper.postgres.readonly, defaultQuery, user)) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(3)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(3)
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("3")
   })
 
   it("will ignore cases that are outside of the users organisation", async () => {
@@ -172,7 +172,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(2)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(2)
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("2")
   })
 
   it("will show 0 if there's matching case age", async () => {
@@ -180,7 +180,7 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
 
     expect(caseMetadata.cases).toHaveLength(0)
     Object.keys(caseMetadata.caseAges).forEach((key) => {
-      expect(caseMetadata.caseAges[key]).toBe(0)
+      expect(caseMetadata.caseAges[key]).toBe("0")
     })
   })
 
@@ -210,26 +210,26 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     )) as CaseIndexMetadata
 
     expect(caseMetadata.cases).toHaveLength(2)
-    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(2)
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe("2")
 
     /* eslint-disable perfectionist/sort-objects -- Don't need for this test */
     expect(caseMetadata.caseAges).toStrictEqual({
-      [CaseAge.Today]: 2,
-      [CaseAge.Yesterday]: 0,
-      [CaseAge.TwoDaysAgo]: 0,
-      [CaseAge.ThreeDaysAgo]: 0,
-      [CaseAge.FourDaysAgo]: 0,
-      [CaseAge.FiveDaysAgo]: 0,
-      [CaseAge.SixDaysAgo]: 0,
-      [CaseAge.SevenDaysAgo]: 0,
-      [CaseAge.EightDaysAgo]: 0,
-      [CaseAge.NineDaysAgo]: 0,
-      [CaseAge.TenDaysAgo]: 0,
-      [CaseAge.ElevenDaysAgo]: 0,
-      [CaseAge.TwelveDaysAgo]: 0,
-      [CaseAge.ThirteenDaysAgo]: 0,
-      [CaseAge.FourteenDaysAgo]: 0,
-      [CaseAge.FifteenDaysAgoAndOlder]: 0
+      [CaseAge.Today]: "2",
+      [CaseAge.Yesterday]: "0",
+      [CaseAge.TwoDaysAgo]: "0",
+      [CaseAge.ThreeDaysAgo]: "0",
+      [CaseAge.FourDaysAgo]: "0",
+      [CaseAge.FiveDaysAgo]: "0",
+      [CaseAge.SixDaysAgo]: "0",
+      [CaseAge.SevenDaysAgo]: "0",
+      [CaseAge.EightDaysAgo]: "0",
+      [CaseAge.NineDaysAgo]: "0",
+      [CaseAge.TenDaysAgo]: "0",
+      [CaseAge.ElevenDaysAgo]: "0",
+      [CaseAge.TwelveDaysAgo]: "0",
+      [CaseAge.ThirteenDaysAgo]: "0",
+      [CaseAge.FourteenDaysAgo]: "0",
+      [CaseAge.FifteenDaysAgoAndOlder]: "0"
     })
   })
 })

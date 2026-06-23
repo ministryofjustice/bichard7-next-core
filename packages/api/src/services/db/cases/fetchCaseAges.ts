@@ -1,7 +1,7 @@
+import type { CaseAges } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
-import { type CaseAges, CaseAgesSchema } from "@moj-bichard7/common/types/Case"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
@@ -16,7 +16,7 @@ import { organisationUnitSql } from "../organisationUnitSql"
 const formInputDateFormat = "yyyy-MM-dd"
 const formatFormInputDateString = (date: Date): string => (isValid(date) ? format(date, formInputDateFormat) : "")
 
-export const fetchCaseAges = async (database: DatabaseConnection, user: User): PromiseResult<CaseAges> => {
+export const fetchCaseAges = async (database: DatabaseConnection, user: User): PromiseResult<CaseAges[]> => {
   const slaCaseAges = Object.values(CaseAge)
 
   const queries = slaCaseAges.reduce((queries: postgres.PendingQuery<postgres.Row[]>[], key, index) => {
@@ -24,7 +24,7 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
     const slaDateTo = formatFormInputDateString(CaseAgeOptions[key]().to)
 
     const countSql = database.connection`
-      COUNT (DISTINCT CASE WHEN el.court_date >= ${slaDateFrom} AND el.court_date <= ${slaDateTo} THEN el.error_id END)::text AS ${database.connection([key])}
+      COUNT (DISTINCT CASE WHEN el.court_date >= ${slaDateFrom} AND el.court_date <= ${slaDateTo} THEN el.error_id END) AS ${database.connection([key])}
     `
     queries.push(index + 1 === slaCaseAges.length ? countSql : database.connection`${countSql},`)
 
@@ -42,7 +42,7 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
 
   const query = queries.map((q) => database.connection`${q}`)
 
-  const caseAges = await database.connection`
+  const caseAges = await database.connection<CaseAges[]>`
     SELECT
       ${query}
     FROM br7own.error_list el
@@ -57,10 +57,6 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
     return Error(`Error while fetching the case ages: ${caseAges.message}`)
   }
 
-  /*   if (caseAges.length === 0) {
-    return new NotFoundError("Found no case ages")
-  } */
-
   if (!caseAges) {
     return new NotFoundError("Found no case ages")
   }
@@ -70,5 +66,5 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
     return parsedResults.error
   }
 
-  return parsedResults.data
+  return caseAges[0]
 }
