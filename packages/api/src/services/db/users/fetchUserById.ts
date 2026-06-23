@@ -1,7 +1,7 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import { isError } from "@moj-bichard7/common/types/Result"
-import { type User, type UserMinimal, UserRowSchema } from "@moj-bichard7/common/types/User"
+import { type User, type UserMinimal, UserMinimalRowSchema } from "@moj-bichard7/common/types/User"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
@@ -47,7 +47,7 @@ export default async (database: DatabaseConnection, user: User, id: number): Pro
     return new NotFoundError()
   }
 
-  const parsedResults = UserRowSchema.safeParse(userResult[0])
+  const parsedResults = UserMinimalRowSchema.safeParse(userResult[0])
   if (!parsedResults.success) {
     return parsedResults.error
   }
