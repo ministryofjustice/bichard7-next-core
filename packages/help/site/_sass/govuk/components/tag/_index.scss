@@ -119,15 +119,4 @@
     color: govuk-colour("black");
     background-color: govuk-colour("black", $variant: "tint-80");
   }
-
-  // Turquoise and pink are deprecated over teal and magenta respectively
-  // @deprecated
-  .govuk-tag--turquoise {
-    @include _govuk-tag-colours("teal");
-  }
-
-  // @deprecated
-  .govuk-tag--pink {
-    @include _govuk-tag-colours("magenta");
-  }
 }

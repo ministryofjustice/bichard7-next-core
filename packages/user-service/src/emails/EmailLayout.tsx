@@ -1,12 +1,12 @@
 /* eslint-disable @next/next/no-head-element */
 import { ReactNode } from "react"
 
-const outerBackgroundColour = "#f3f2f1"
+const outerBackgroundColour = "#f3f3f3"
 const innerBackgroundColour = "#ffffff"
-const borderColor = "#b1b4b6"
-const buttonColor = "#00703c"
+const borderColor = "#cecece"
+const buttonColor = "#0f7a52"
 const color = "#0b0c0c"
-const dimColor = "#505a5f"
+const dimColor = "#484949"
 const fontFamily = "Arial, sans-serif"
 
 const dimStyles = { color: dimColor, fontFamily, fontSize: "14px", lineHeight: "16px", marginBottom: "16px" }

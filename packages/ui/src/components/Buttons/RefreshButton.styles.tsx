@@ -10,7 +10,7 @@ export const RefreshButtonContainer = styled.div`
     display: flex;
     align-self: anchor-center;
     margin-bottom: 0;
-    color: #505a5f;
+    color: #484949;
   }
 `
 

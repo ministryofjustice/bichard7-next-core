@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-head-element */
 import { ReactNode } from "react"
 
-const outerBackgroundColour = "#f3f2f1"
+const outerBackgroundColour = "#f3f3f3"
 const innerBackgroundColour = "#ffffff"
-const borderColor = "#b1b4b6"
+const borderColor = "#cecece"
 const color = "#0b0c0c"
 const fontFamily = "Arial, sans-serif"
 

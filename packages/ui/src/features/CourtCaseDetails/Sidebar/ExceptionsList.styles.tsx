@@ -18,7 +18,7 @@ const SeparatorLine = styled.div`
     position: absolute;
     height: 2px;
     width: calc(100% + (1.2625rem * 2));
-    background: #b1b4b6;
+    background: #cecece;
     left: -1.2625rem;
   }
 `
