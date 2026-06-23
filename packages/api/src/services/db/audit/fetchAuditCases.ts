@@ -1,5 +1,6 @@
 import type { AuditCasesQuery } from "@moj-bichard7/common/contracts/AuditCasesQuery"
 import type { CaseOrder, CaseOrderBy } from "@moj-bichard7/common/contracts/CaseOrderingQuery"
+import type { AuditCase } from "@moj-bichard7/common/types/AuditCase"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { AuditCaseSchema, type AuditCasesMetadata } from "@moj-bichard7/common/types/AuditCase"
@@ -20,7 +21,7 @@ export const fetchAuditCases = async (
   const sql = database.connection
   const offset = (pageNum - 1) * maxPerPage
 
-  const results = await sql`
+  const results = await sql<AuditCase[]>`
     SELECT
       ac.audit_case_id,
       ac.audit_id,
