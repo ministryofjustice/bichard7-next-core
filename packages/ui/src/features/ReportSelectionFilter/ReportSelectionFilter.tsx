@@ -195,6 +195,16 @@ export const ReportSelectionFilter: React.FC = () => {
                 />
               )}
             </div>
+            {/*    <div id={"include-section"} className="include-section-wrapper">
+              {filterValues.reportType === "exceptions" && (
+                <ResolveByFilter
+                  resolvers={resolvers}
+                  resolvedByRefs={resolvedByRefs}
+                  deletedResolvedByRefs={deletedResolvedByRefs}
+                  resolvedBy={currentFormState.resolvedBy}
+                />
+              )}
+            </div> */}
           </fieldset>
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break govuk-section-break--visible" />
           <ActionBar

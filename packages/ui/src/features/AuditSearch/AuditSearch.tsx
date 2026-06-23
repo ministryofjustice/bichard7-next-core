@@ -19,8 +19,6 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
   const router = useRouter()
 
   const formRef = useRef<HTMLFormElement>(null)
-  const resolvedByRefs = useRef<HTMLInputElement[]>([])
-  const deletedResolvedByRefs = useRef<HTMLInputElement[]>([])
 
   const DATE_FORMAT = "yyyy-MM-dd"
 
@@ -53,26 +51,11 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
 
   const [formValid, setFormValid] = useState(isFormValid(currentFormState))
 
-  const [allResolversSelected, setAllResolversSelected] = useState<boolean>(
-    resolvers.every((r) => currentFormState.resolvedBy.includes(r.username))
-  )
-
   useEffect(() => {
     if (currentFormState.auditId) {
       router.push(`/audit/${currentFormState.auditId}`)
     }
   }, [currentFormState.auditId, router])
-
-  const activeResolvers: AuditResolvedBy[] = []
-  const deletedResolvers: AuditResolvedBy[] = []
-
-  for (const resolver of resolvers) {
-    if (resolver.deleted) {
-      deletedResolvers.push(resolver)
-    } else {
-      activeResolvers.push(resolver)
-    }
-  }
 
   return (
     <form action={submitAction} onChange={handleFormChange} ref={formRef}>
@@ -152,15 +135,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                 <FormGroup>
                   <fieldset className="govuk-fieldset" id="audit-search-resolved-by">
                     <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Resolved by"}</legend>
-                    <ResolveByFilter
-                      allResolversSelected={allResolversSelected}
-                      resolvedByRefs={resolvedByRefs}
-                      deletedResolvedByRefs={deletedResolvedByRefs}
-                      setAllResolversSelected={setAllResolversSelected}
-                      activeResolvers={activeResolvers}
-                      deletedResolvers={deletedResolvers}
-                      resolvedBy={currentFormState.resolvedBy}
-                    />
+                    <ResolveByFilter resolvers={resolvers} resolvedBy={currentFormState.resolvedBy} />
                   </fieldset>
                 </FormGroup>
               </div>

@@ -1,27 +1,33 @@
 import { Details } from "@/features/AuditSearch/AuditSearch.styles"
 import AuditResolvedBy from "@/types/AuditResolvedBy"
 import { formatUserFullName } from "@/utils/formatUserFullName"
+import { useRef, useState } from "react"
 import Checkbox from "../Checkbox/Checkbox"
 
 interface ResolveByFilterProps {
-  allResolversSelected: boolean
-  resolvedByRefs: React.RefObject<HTMLInputElement[]>
-  deletedResolvedByRefs: React.RefObject<HTMLInputElement[]>
-  setAllResolversSelected: React.Dispatch<React.SetStateAction<boolean>>
-  activeResolvers: AuditResolvedBy[]
-  deletedResolvers: AuditResolvedBy[]
   resolvedBy: string[]
+  resolvers: AuditResolvedBy[]
 }
 
-function ResolveByFilter({
-  allResolversSelected,
-  resolvedByRefs,
-  setAllResolversSelected,
-  activeResolvers,
-  resolvedBy,
-  deletedResolvers,
-  deletedResolvedByRefs
-}: ResolveByFilterProps) {
+function ResolveByFilter({ resolvedBy, resolvers }: ResolveByFilterProps) {
+  const [allResolversSelected, setAllResolversSelected] = useState<boolean>(
+    resolvers.every((r) => resolvedBy.includes(r.username))
+  )
+
+  const resolvedByRefs = useRef<HTMLInputElement[]>([])
+  const deletedResolvedByRefs = useRef<HTMLInputElement[]>([])
+
+  const activeResolvers: AuditResolvedBy[] = []
+  const deletedResolvers: AuditResolvedBy[] = []
+
+  for (const resolver of resolvers) {
+    if (resolver.deleted) {
+      deletedResolvers.push(resolver)
+    } else {
+      activeResolvers.push(resolver)
+    }
+  }
+
   return (
     <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
       <Checkbox
