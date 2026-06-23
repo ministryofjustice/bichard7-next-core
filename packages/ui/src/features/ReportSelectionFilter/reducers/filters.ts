@@ -13,7 +13,8 @@ export const initialFilterState: FilterState = {
   checkboxesError: null,
   dateFromError: null,
   dateToError: null,
-  reportTypeError: null
+  reportTypeError: null,
+  resolvedBy: []
 }
 
 export function filterReducer(state: FilterState, action: FilterAction): FilterState {
@@ -67,6 +68,8 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
       )
 
       return { ...state, [action.payload.id]: action.payload.checked, checkboxesError: checkboxError }
+    case "SET_RESOLVED_BY":
+      return { ...state, resolvedBy: action.payload }
     case "RESET_FILTERS":
       return initialFilterState
     case "SET_ERRORS":

@@ -7,9 +7,10 @@ import Checkbox from "../Checkbox/Checkbox"
 interface ResolveByFilterProps {
   resolvedBy: string[]
   resolvers: AuditResolvedBy[]
+  onChange?: (selected: string[]) => void
 }
 
-function ResolveByFilter({ resolvedBy, resolvers }: ResolveByFilterProps) {
+function ResolveByFilter({ resolvedBy, resolvers, onChange }: ResolveByFilterProps) {
   const [allResolversSelected, setAllResolversSelected] = useState<boolean>(
     resolvers.every((r) => resolvedBy.includes(r.username))
   )
@@ -28,6 +29,19 @@ function ResolveByFilter({ resolvedBy, resolvers }: ResolveByFilterProps) {
     }
   }
 
+  const pushUpdates = () => {
+    if (!onChange) {
+      return
+    }
+
+    const activeChecked = resolvedByRefs.current?.filter((input) => input?.checked).map((input) => input.value) || []
+
+    const deletedChecked =
+      deletedResolvedByRefs.current?.filter((input) => input?.checked).map((input) => input.value) || []
+
+    onChange([...activeChecked, ...deletedChecked])
+  }
+
   return (
     <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
       <Checkbox
@@ -37,6 +51,7 @@ function ResolveByFilter({ resolvedBy, resolvers }: ResolveByFilterProps) {
         onChange={(e) => {
           resolvedByRefs.current.forEach((input) => ((input as HTMLInputElement).checked = e.target.checked))
           setAllResolversSelected(e.target.checked)
+          pushUpdates()
         }}
       />
       {activeResolvers.map((resolver, index) => (
@@ -50,6 +65,7 @@ function ResolveByFilter({ resolvedBy, resolvers }: ResolveByFilterProps) {
           data-testid={`audit-resolved-by-${index}`}
           onChange={(_) => {
             setAllResolversSelected(resolvedByRefs.current.every((input) => (input as HTMLInputElement).checked))
+            pushUpdates()
           }}
           ref={(elem) => {
             if (elem) {
@@ -78,6 +94,9 @@ function ResolveByFilter({ resolvedBy, resolvers }: ResolveByFilterProps) {
                     if (elem) {
                       deletedResolvedByRefs.current[index] = elem
                     }
+                  }}
+                  onChange={(_) => {
+                    pushUpdates()
                   }}
                 />
               )

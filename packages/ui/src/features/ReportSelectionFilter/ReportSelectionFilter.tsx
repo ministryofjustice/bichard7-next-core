@@ -1,3 +1,4 @@
+import ResolveByFilter from "@/components/SearchFilters/ResolvedByFilter"
 import { createReportCsv } from "@/services/reports/csvGeneration/createReportCsv"
 import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
 import { AUTOMATED_REPORT_TYPE_MAP, AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
@@ -56,6 +57,10 @@ export const ReportSelectionFilter: React.FC = () => {
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
     const { id, checked } = event.currentTarget
     dispatch({ type: "SET_CHECKBOX", payload: { id, checked } })
+  }
+
+  const handleResolvedByChange = (selectedUsers: string[]) => {
+    dispatch({ type: "SET_RESOLVED_BY", payload: selectedUsers })
   }
 
   const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
@@ -195,16 +200,29 @@ export const ReportSelectionFilter: React.FC = () => {
                 />
               )}
             </div>
-            {/*    <div id={"include-section"} className="include-section-wrapper">
+            <div id={"include-section"} className="include-section-wrapper">
               {filterValues.reportType === "exceptions" && (
-                <ResolveByFilter
-                  resolvers={resolvers}
-                  resolvedByRefs={resolvedByRefs}
-                  deletedResolvedByRefs={deletedResolvedByRefs}
-                  resolvedBy={currentFormState.resolvedBy}
-                />
+                <>
+                  <h2 className="govuk-heading-m">{"Resolved by"}</h2>
+                  <ResolveByFilter
+                    /* resolvers={resolvers} */
+                    resolvers={[
+                      { forenames: "f1", surname: "s1", username: "u1", deleted: false },
+                      { forenames: "f2", surname: "s2", username: "u2", deleted: false },
+                      { forenames: "f3", surname: "s3", username: "u3", deleted: false },
+                      { forenames: "f1", surname: "s1", username: "u1", deleted: false },
+                      { forenames: "f2", surname: "s2", username: "u2", deleted: false },
+                      { forenames: "f3", surname: "s3", username: "u3", deleted: false },
+                      { forenames: "f1", surname: "s1", username: "u1", deleted: false },
+                      { forenames: "f2", surname: "s2", username: "u2", deleted: false },
+                      { forenames: "f3", surname: "s3", username: "u3", deleted: false }
+                    ]}
+                    resolvedBy={filterValues.resolvedBy}
+                    onChange={handleResolvedByChange}
+                  />
+                </>
               )}
-            </div> */}
+            </div>
           </fieldset>
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break govuk-section-break--visible" />
           <ActionBar
