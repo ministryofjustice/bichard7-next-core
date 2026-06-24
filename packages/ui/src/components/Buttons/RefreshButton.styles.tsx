@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { blue, white, yellow } from "utils/colours"
+import { blue, gdsDarkGrey, white, yellow } from "utils/colours"
 
 export const RefreshButtonContainer = styled.div`
   display: flex;
@@ -10,7 +10,7 @@ export const RefreshButtonContainer = styled.div`
     display: flex;
     align-self: anchor-center;
     margin-bottom: 0;
-    color: #484949;
+    color: ${gdsDarkGrey};
   }
 `
 

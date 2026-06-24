@@ -1,10 +1,7 @@
 /* eslint-disable @next/next/no-head-element */
+import { gdsBlack, gdsLightGrey, gdsMidGrey, white } from "@/utils/colours"
 import { ReactNode } from "react"
 
-const outerBackgroundColour = "#f3f3f3"
-const innerBackgroundColour = "#ffffff"
-const borderColor = "#cecece"
-const color = "#0b0c0c"
 const fontFamily = "Arial, sans-serif"
 
 interface ChildProps {
@@ -12,15 +9,17 @@ interface ChildProps {
 }
 
 const Title = ({ children }: ChildProps) => (
-  <h1 style={{ color, fontFamily, fontSize: "48px", lineHeight: "50px", marginBottom: "50px" }}>{children}</h1>
+  <h1 style={{ color: gdsBlack, fontFamily, fontSize: "48px", lineHeight: "50px", marginBottom: "50px" }}>
+    {children}
+  </h1>
 )
 
 const Paragraph = ({ children }: ChildProps) => (
-  <p style={{ color, fontFamily, fontSize: "19px", lineHeight: "25px", marginBottom: "20px" }}>{children}</p>
+  <p style={{ color: gdsBlack, fontFamily, fontSize: "19px", lineHeight: "25px", marginBottom: "20px" }}>{children}</p>
 )
 
 const CodeBox = ({ children }: ChildProps) => (
-  <p style={{ color, fontFamily, fontSize: "40px", lineHeight: "25px", margin: "20px", fontWeight: "bold" }}>
+  <p style={{ color: gdsBlack, fontFamily, fontSize: "40px", lineHeight: "25px", margin: "20px", fontWeight: "bold" }}>
     {children}
   </p>
 )
@@ -39,15 +38,15 @@ const EmailBase = ({ children, title }: EmailBaseProps) => (
     <body>
       <table
         role={"presentation"}
-        style={{ backgroundColor: outerBackgroundColour, margin: "0", padding: "30px", width: "100%" }}
+        style={{ backgroundColor: gdsLightGrey, margin: "0", padding: "30px", width: "100%" }}
       >
         <tr />
         <tr>
           <td
             style={{
-              backgroundColor: innerBackgroundColour,
+              backgroundColor: white,
               border: "1px solid",
-              borderColor,
+              borderColor: gdsMidGrey,
               clear: "both",
               display: "block !important",
               margin: "0 auto",
