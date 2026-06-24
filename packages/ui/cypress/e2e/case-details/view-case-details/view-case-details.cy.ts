@@ -37,6 +37,7 @@ describe("View case details", () => {
       }).then((response) => {
         expect(response.status).to.eq(404)
       })
+      cy.screenshot('debug-view');
     })
 
     it("Should return 200 if the case has unresolved exceptions and the user is an exception handler", () => {
