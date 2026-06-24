@@ -17,14 +17,23 @@ export const UserRowSchema = z.object({
   visible_forces: z.string().nullable()
 })
 
-export const UserMinimalRowSchema = z.object({
-  deleted_at: z.date().nullable(),
-  groups: z.array(z.enum(UserGroup)),
-  id: z.number(),
-  username: z.string(),
-  visible_courts: z.string().nullable(),
-  visible_forces: z.string().nullable()
+export const UserMinimalRowSchema = UserRowSchema.pick({
+  deleted_at: true,
+  groups: true,
+  id: true,
+  username: true,
+  visible_courts: true,
+  visible_forces: true
 })
+
+// export const UserMinimalRowSchema = z.object({
+//   deleted_at: z.date().nullable(),
+//   groups: z.array(z.enum(UserGroup)),
+//   id: z.number(),
+//   username: z.string(),
+//   visible_courts: z.string().nullable(),
+//   visible_forces: z.string().nullable()
+// })
 
 export const UserSchema = z.object({
   deletedAt: z.date().nullable(),
