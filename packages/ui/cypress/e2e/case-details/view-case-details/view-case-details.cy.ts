@@ -29,16 +29,16 @@ describe("View case details", () => {
 
     it("Should return 404 for a case that this user can not see due to being in no groups", () => {
       cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
-      cy.loginAs("NoGroups")
+      cy.loginAs("NoGroups").then(() => {
 
       cy.request({
         failOnStatusCode: false,
-        url: "/bichard/court-cases/0"
+        url: "/bichard/court-cases/99999999"
       }).then((response) => {
         expect(response.status).to.eq(404)
       })
-      cy.screenshot('debug-view');
     })
+  })
 
     it("Should return 200 if the case has unresolved exceptions and the user is an exception handler", () => {
       cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 1 }])
