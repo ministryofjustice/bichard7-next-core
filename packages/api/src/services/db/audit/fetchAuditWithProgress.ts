@@ -1,6 +1,6 @@
-import type { AuditWithProgress } from "@moj-bichard7/common/types/Audit"
 import type { User } from "@moj-bichard7/common/types/User"
 
+import { type AuditWithProgress, AuditWithProgressSchema } from "@moj-bichard7/common/types/Audit"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
@@ -15,7 +15,7 @@ export const fetchAuditWithProgress = async (
 ): PromiseResult<AuditWithProgress | null> => {
   const sql = database.connection
 
-  const results = await sql<AuditWithProgress[]>`
+  const results = await sql`
     SELECT
       audit_id,
       created_by,
@@ -64,5 +64,10 @@ export const fetchAuditWithProgress = async (
     return null
   }
 
-  return results[0]
+  const parsedResults = AuditWithProgressSchema.safeParse(results[0])
+  if (!parsedResults.success) {
+    return parsedResults.error
+  }
+
+  return parsedResults.data
 }
