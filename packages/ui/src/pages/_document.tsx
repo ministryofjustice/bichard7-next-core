@@ -3,6 +3,7 @@ import { ServerStyleSheet } from "styled-components"
 import generateCsp from "utils/generateCsp"
 import generateNonce from "utils/generateNonce"
 import { basePath } from "../../next.config"
+import React from "react"
 
 const GovUkMetadata = () => {
   return (
@@ -64,12 +65,21 @@ class GovUkDocument extends Document<DocumentProps> {
       }
 
       const initialProps = await Document.getInitialProps(ctx)
+
+      const styledComponentsStyleElements = React.Children.map(sheet.getStyleElement(), (child) => {
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child, { nonce } as React.Attributes)
+        }
+
+        return child
+      })
+
       const additionalProps = {
         nonce,
         styles: (
           <>
             {initialProps.styles}
-            {sheet.getStyleElement()}
+            {styledComponentsStyleElements}
           </>
         )
       }
@@ -84,11 +94,11 @@ class GovUkDocument extends Document<DocumentProps> {
   }
 
   render() {
-    const { nonce } = this.props
+    const { nonce } = this.props as DocumentProps & { nonce: string }
 
     return (
       <Html className="govuk-template" lang="en">
-        <Head>
+        <Head nonce={nonce}>
           <meta property="csp-nonce" content={nonce} />
           <GovUkMetadata />
         </Head>
@@ -98,7 +108,7 @@ class GovUkDocument extends Document<DocumentProps> {
             {"Skip to main content"}
           </a>
           <Main />
-          <NextScript />
+          <NextScript nonce={nonce} />
         </body>
       </Html>
     )
