@@ -6,17 +6,20 @@ export const ExceptionReportQuerySchema = z
   .object({
     ...dateRangeShape,
     exceptions: z.enum(["true", "false"]).transform((val) => val === "true"),
-    resolvedBy: z.preprocess((val) => {
-      if (val === undefined || Array.isArray(val)) {
-        return val
-      }
+    resolvedBy: z
+      .preprocess((val) => {
+        if (val === undefined || Array.isArray(val)) {
+          return val
+        }
 
-      if (val === "") {
-        return undefined
-      }
+        if (val === "") {
+          return undefined
+        }
 
-      return [val]
-    }, z.array(z.string()).default([])),
+        return [val]
+      }, z.array(z.string()))
+      .optional()
+      .transform((val) => val ?? []),
     triggers: z.enum(["true", "false"]).transform((val) => val === "true")
   })
   .superRefine(validateDateRange)

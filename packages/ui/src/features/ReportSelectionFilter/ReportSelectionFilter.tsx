@@ -1,7 +1,9 @@
+import { FormGroup } from "@/components/FormGroup"
 import ResolveByFilter from "@/components/SearchFilters/ResolvedByFilter"
 import { createReportCsv } from "@/services/reports/csvGeneration/createReportCsv"
 import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
 import AuditResolvedBy from "@/types/AuditResolvedBy"
+import { validateResolvedBy } from "@/utils/reports/validateResolvedBy"
 import { AUTOMATED_REPORT_TYPE_MAP, AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { Card } from "components/Card"
@@ -85,11 +87,14 @@ export const ReportSelectionFilter: React.FC<{ resolvedBy: AuditResolvedBy[] }> 
     )
     const selectReportValidation = validateSelectReport(filterValues.reportType as ReportType)
 
+    const resolvedByValidation = validateResolvedBy(filterValues.resolvedBy)
+
     const newErrors = {
       dateFromError: rangeValidation.fromError,
       dateToError: rangeValidation.toError,
       reportTypeError: selectReportValidation,
-      checkboxesError: checkboxesValidation
+      checkboxesError: checkboxesValidation,
+      resolvedByError: resolvedByValidation
     }
 
     dispatch({ type: "SET_ERRORS", payload: newErrors })
@@ -116,7 +121,8 @@ export const ReportSelectionFilter: React.FC<{ resolvedBy: AuditResolvedBy[] }> 
         fromDate: filterValues.dateFrom,
         toDate: filterValues.dateTo,
         exceptions: String(filterValues.exceptions),
-        triggers: String(filterValues.triggers)
+        triggers: String(filterValues.triggers),
+        resolvedBy: String(filterValues.resolvedBy)
       })
 
       const parsedData = await downloadReport(reportType, urlQuery)
@@ -205,11 +211,19 @@ export const ReportSelectionFilter: React.FC<{ resolvedBy: AuditResolvedBy[] }> 
               {filterValues.reportType === "exceptions" && (
                 <>
                   <h2 className="govuk-heading-m">{"Resolved by"}</h2>
-                  <ResolveByFilter
-                    resolvers={props.resolvedBy}
-                    resolvedBy={filterValues.resolvedBy}
-                    onChange={handleResolvedByChange}
-                  />
+                  <FormGroup showError={!!filterValues.resolvedByError}>
+                    {filterValues.resolvedByError && (
+                      <p className="govuk-error-message">
+                        <span className="govuk-visually-hidden">{"Error:"}</span>
+                        {filterValues.resolvedByError}
+                      </p>
+                    )}
+                    <ResolveByFilter
+                      resolvers={props.resolvedBy}
+                      resolvedBy={filterValues.resolvedBy}
+                      onChange={handleResolvedByChange}
+                    />
+                  </FormGroup>
                 </>
               )}
             </div>

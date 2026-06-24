@@ -12,6 +12,7 @@ export type FilterState = {
   dateFromError: string | null
   dateToError: string | null
   checkboxesError: string | null
+  resolvedByError: string | null
   resolvedBy: string[]
 }
 
@@ -30,5 +31,6 @@ export type FilterAction =
         dateFromError: string | null
         dateToError: string | null
         checkboxesError: string | null
+        resolvedByError: string | null
       }
     }
