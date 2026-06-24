@@ -50,7 +50,6 @@ export default async (database: DatabaseConnection, user: User, id: number): Pro
 
   const parsedResults = UserMinimalRowSchema.safeParse(userResult[0])
   if (!parsedResults.success) {
-    // console.log("!!! VALIDATION ERROR:", parsedResults.error)
     return parsedResults.error
   }
 
