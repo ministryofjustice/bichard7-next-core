@@ -1,14 +1,14 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import type { User, UserRow } from "@moj-bichard7/common/types/User"
 
 import { isError } from "@moj-bichard7/common/types/Result"
+import { type User, UserRowSchema } from "@moj-bichard7/common/types/User"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
 import mapUserRowToUser from "../mapUserRowToUser"
 
 export default async (database: DatabaseConnection, username: string): PromiseResult<User> => {
-  const userResult = await database.connection<UserRow[]>`
+  const userResult = await database.connection`
       SELECT
         u.id,
         u.username,
@@ -20,7 +20,8 @@ export default async (database: DatabaseConnection, username: string): PromiseRe
         u.excluded_triggers,
         u.visible_courts,
         u.forenames,
-        u.surname
+        u.surname,
+        u.deleted_at
       FROM
         br7own.users u
         LEFT JOIN br7own.users_groups ug ON u.id = ug.user_id
@@ -29,7 +30,8 @@ export default async (database: DatabaseConnection, username: string): PromiseRe
         username = ${username}
       GROUP BY
         u.id,
-        u.username
+        u.username,
+        u.deleted_at
     `.catch((error: Error) => error)
 
   if (isError(userResult)) {
@@ -40,5 +42,10 @@ export default async (database: DatabaseConnection, username: string): PromiseRe
     return Error(`User "${username}" does not exist`)
   }
 
-  return mapUserRowToUser(userResult[0])
+  const parsedResults = UserRowSchema.safeParse(userResult[0])
+  if (!parsedResults.success) {
+    return parsedResults.error
+  }
+
+  return mapUserRowToUser(parsedResults.data)
 }
