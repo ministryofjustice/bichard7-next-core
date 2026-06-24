@@ -32,6 +32,7 @@ const ReportSelectionFilterWrapper = styled.div`
     }
   }
 
+  .resolved-by-section-wrapper,
   .reports-section-wrapper {
     flex: 1 1 15rem;
     min-width: 9rem;

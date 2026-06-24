@@ -1,6 +1,7 @@
 import ResolveByFilter from "@/components/SearchFilters/ResolvedByFilter"
 import { createReportCsv } from "@/services/reports/csvGeneration/createReportCsv"
 import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
+import AuditResolvedBy from "@/types/AuditResolvedBy"
 import { AUTOMATED_REPORT_TYPE_MAP, AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { Card } from "components/Card"
@@ -21,7 +22,7 @@ import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { SelectReportDropdown } from "./SelectReportDropdown"
 import { filterReducer, initialFilterState } from "./reducers/filters"
 
-export const ReportSelectionFilter: React.FC = () => {
+export const ReportSelectionFilter: React.FC<{ resolvedBy: AuditResolvedBy[] }> = (props) => {
   const [isStreaming, setIsStreaming] = useState(false)
   const [rows, setRows] = useState<Record<string, unknown>[] | null>(null)
   const [fileDownloadUrl, setFileDownloadUrl] = useState<string | null>(null)
@@ -200,23 +201,12 @@ export const ReportSelectionFilter: React.FC = () => {
                 />
               )}
             </div>
-            <div id={"include-section"} className="include-section-wrapper">
+            <div id={"resolved-by-section"} className="resolved-by-section-wrapper">
               {filterValues.reportType === "exceptions" && (
                 <>
                   <h2 className="govuk-heading-m">{"Resolved by"}</h2>
                   <ResolveByFilter
-                    /* resolvers={resolvers} */
-                    resolvers={[
-                      { forenames: "f1", surname: "s1", username: "u1", deleted: false },
-                      { forenames: "f2", surname: "s2", username: "u2", deleted: false },
-                      { forenames: "f3", surname: "s3", username: "u3", deleted: false },
-                      { forenames: "f1", surname: "s1", username: "u1", deleted: false },
-                      { forenames: "f2", surname: "s2", username: "u2", deleted: false },
-                      { forenames: "f3", surname: "s3", username: "u3", deleted: false },
-                      { forenames: "f1", surname: "s1", username: "u1", deleted: false },
-                      { forenames: "f2", surname: "s2", username: "u2", deleted: false },
-                      { forenames: "f3", surname: "s3", username: "u3", deleted: false }
-                    ]}
+                    resolvers={props.resolvedBy}
                     resolvedBy={filterValues.resolvedBy}
                     onChange={handleResolvedByChange}
                   />
