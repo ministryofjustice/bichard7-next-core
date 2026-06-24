@@ -102,9 +102,6 @@ describe("Shows relevant information to a user's role", () => {
   })
 
   it("Shouldn't show cases to a user with no groups", () => {
-    beforeEach(() => {
-    cy.task("clearCourtCases")
-  })
     loginAndVisit("NoGroups")
 
     cy.findByText("There are no court cases to show").should("exist")
