@@ -1,15 +1,26 @@
+import AuditResolvedBy from "@/types/AuditResolvedBy"
 import { addDays, addMonths, endOfMonth, format, startOfMonth, startOfToday, subDays, subMonths } from "date-fns"
 import { ReportSelectionFilter } from "features/ReportSelectionFilter/ReportSelectionFilter"
 
 describe("ReportSelectionFilter", () => {
-  const today = startOfToday()
-  const earliest = startOfMonth(subMonths(today, 12))
-
   beforeEach(() => {
     cy.intercept("GET", `**/bichard/api/reports*`).as("downloadApi")
   })
 
+  const selectReportType = (
+    type:
+      | "Resolved exceptions and triggers"
+      | "Bail conditions"
+      | "Warrants"
+      | "Domestic violence and vulnerable victims"
+  ) => {
+    cy.get('select[name="select-case-type"]').select(type)
+  }
+
   describe("DateRange", () => {
+    const today = startOfToday()
+    const earliest = startOfMonth(subMonths(today, 12))
+
     const fmt = (date: Date) => format(date, "yyyy-MM-dd")
     const selectWarrants = () => cy.get('select[name="select-case-type"]').select("Warrants")
     const clickRunReport = () => cy.get("button#run-report").click()
@@ -226,7 +237,7 @@ describe("ReportSelectionFilter", () => {
 
     it("clears report selection dropdown when 'Clear filters' is clicked", () => {
       cy.mount(<ReportSelectionFilter />)
-      cy.get('select[name="select-case-type"]').select("Resolved exceptions and triggers")
+      selectReportType("Resolved exceptions and triggers")
       cy.get("button#clear-filters").click()
       cy.get('select[name="select-case-type"]').should("have.value", null)
     })
@@ -244,7 +255,7 @@ describe("ReportSelectionFilter", () => {
 
     it("'Date from' and 'Date to' fields are hidden when 'Clear filters' is clicked", () => {
       cy.mount(<ReportSelectionFilter />)
-      cy.get('select[name="select-case-type"]').select("Resolved exceptions and triggers")
+      selectReportType("Resolved exceptions and triggers")
       cy.get("button#clear-filters").click()
       cy.get("#report-selection-date-from").should("not.exist")
       cy.get("#report-selection-date-to").should("not.exist")
@@ -257,13 +268,13 @@ describe("ReportSelectionFilter", () => {
 
     it("exceptions/triggers checkboxes fields are hidden when 'Clear filters' is clicked", () => {
       cy.mount(<ReportSelectionFilter />)
-      cy.get('select[name="select-case-type"]').select("Resolved exceptions and triggers")
+      selectReportType("Resolved exceptions and triggers")
       cy.get("button#clear-filters").click()
       cy.get("#checkboxes-container").should("not.exist")
     })
   })
 
-  describe("TriggersExceptions", () => {
+  describe("TriggersExceptionsCheckboxes", () => {
     const apiCallCheck = (shouldRun: boolean) => {
       const currentDate = new Date().toISOString().split("T")[0]
       cy.get("div#date-range-section").find("input#date-from").type(currentDate)
@@ -279,7 +290,7 @@ describe("ReportSelectionFilter", () => {
     }
 
     const checkboxesMessageShouldExist = () => {
-      cy.get('select[name="select-case-type"]').select("Resolved exceptions and triggers")
+      selectReportType("Resolved exceptions and triggers")
       cy.get("div#include-section").find("input").eq(0).click()
       cy.get("div#include-section").find("input").eq(1).click()
 
@@ -291,20 +302,20 @@ describe("ReportSelectionFilter", () => {
 
     it("calls API when both checkboxes are selected and 'Run report' is clicked", () => {
       cy.mount(<ReportSelectionFilter />)
-      cy.get('select[name="select-case-type"]').select("Resolved exceptions and triggers")
+      selectReportType("Resolved exceptions and triggers")
       apiCallCheck(true)
     })
 
     it("calls API when 'Triggers' checkbox is selected and 'Run report' is clicked", () => {
       cy.mount(<ReportSelectionFilter />)
-      cy.get('select[name="select-case-type"]').select("Resolved exceptions and triggers")
+      selectReportType("Resolved exceptions and triggers")
       cy.get("div#include-section").find("input").eq(1).click()
       apiCallCheck(true)
     })
 
     it("calls API when 'Exceptions' checkbox is selected and 'Run report' is clicked", () => {
       cy.mount(<ReportSelectionFilter />)
-      cy.get('select[name="select-case-type"]').select("Resolved exceptions and triggers")
+      selectReportType("Resolved exceptions and triggers")
       cy.get("div#include-section").find("input").eq(0).click()
       apiCallCheck(true)
     })
@@ -312,7 +323,7 @@ describe("ReportSelectionFilter", () => {
     it("renders the correct fields for include/checkboxes section when 'Resolved exceptions and triggers' is selected", () => {
       cy.mount(<ReportSelectionFilter />)
 
-      cy.get('select[name="select-case-type"]').select("Resolved exceptions and triggers")
+      selectReportType("Resolved exceptions and triggers")
 
       cy.get("div#include-section").should("exist")
       cy.get("div#include-section").find("h2").should("have.text", "Include")
@@ -337,20 +348,20 @@ describe("ReportSelectionFilter", () => {
       cy.mount(<ReportSelectionFilter />)
       checkboxesShouldNotExist()
 
-      cy.get('select[name="select-case-type"]').select("Bail conditions")
+      selectReportType("Bail conditions")
       checkboxesShouldNotExist()
 
-      cy.get('select[name="select-case-type"]').select("Domestic violence and vulnerable victims")
+      selectReportType("Domestic violence and vulnerable victims")
       checkboxesShouldNotExist()
 
-      cy.get('select[name="select-case-type"]').select("Warrants")
+      selectReportType("Warrants")
       checkboxesShouldNotExist()
     })
 
     it("Triggers and Exceptions checkboxes disappear when 'Clear filters' is clicked", () => {
       cy.mount(<ReportSelectionFilter />)
 
-      cy.get('select[name="select-case-type"]').select("Resolved exceptions and triggers")
+      selectReportType("Resolved exceptions and triggers")
       cy.get("div#include-section").find("input").eq(0).click()
       cy.get("div#include-section").find("input").eq(1).click()
       cy.get("button#clear-filters").click()
@@ -403,6 +414,44 @@ describe("ReportSelectionFilter", () => {
       cy.get("div#include-section").find("p.govuk-error-message").should("not.exist")
 
       apiCallCheck(true)
+    })
+  })
+
+  describe("ResolvedBy", () => {
+    const mockResolvers: AuditResolvedBy[] = [
+      { forenames: "John", surname: "Smith", username: "john.smith", deleted: false },
+      { forenames: "Jim", surname: "Bob", username: "jim.bob", deleted: false }
+    ]
+
+    it("Does not display resolved by section if canUseTriggerAndExceptionQualityAuditing is false", () => {
+      cy.mount(<ReportSelectionFilter canUseTriggerAndExceptionQualityAuditing={false} />)
+      selectReportType("Resolved exceptions and triggers")
+
+      cy.get("div#resolved-by-section").should("not.exist")
+    })
+
+    it("Displays resolved by section if canUseTriggerAndExceptionQualityAuditing is true", () => {
+      cy.mount(<ReportSelectionFilter canUseTriggerAndExceptionQualityAuditing={true} />)
+      selectReportType("Resolved exceptions and triggers")
+
+      cy.get("div#resolved-by-section").should("exist")
+    })
+
+    it("Displays field required error message if no users are selected and run report is clicked", () => {
+      cy.mount(<ReportSelectionFilter canUseTriggerAndExceptionQualityAuditing={true} resolvedBy={mockResolvers} />)
+      selectReportType("Resolved exceptions and triggers")
+
+      cy.get("button#run-report").click()
+      cy.get("div#resolved-by-section").find("p.govuk-error-message").should("exist", "This field is required")
+    })
+
+    it("Field required error message is removed after a user is selected", () => {
+      cy.mount(<ReportSelectionFilter canUseTriggerAndExceptionQualityAuditing={true} resolvedBy={mockResolvers} />)
+      selectReportType("Resolved exceptions and triggers")
+
+      cy.get("button#run-report").click()
+      cy.get("div#resolved-by-section").find("input").eq(0).click()
+      cy.get("div#resolved-by-section").find("p.govuk-error-message").should("not.exist", "This field is required")
     })
   })
 })
