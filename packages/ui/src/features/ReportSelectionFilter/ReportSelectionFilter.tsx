@@ -127,9 +127,12 @@ export const ReportSelectionFilter: React.FC<{
         fromDate: filterValues.dateFrom,
         toDate: filterValues.dateTo,
         exceptions: String(filterValues.exceptions),
-        triggers: String(filterValues.triggers),
-        resolvedBy: String(allResolversSelected ? [] : filterValues.resolvedBy)
+        triggers: String(filterValues.triggers)
       })
+
+      if (!allResolversSelected) {
+        urlQuery.append("resolvedBy", String(filterValues.resolvedBy))
+      }
 
       const parsedData = await downloadReport(reportType, urlQuery)
 
