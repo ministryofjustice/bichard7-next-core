@@ -5,6 +5,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { DatabaseConnection } from "../types/DatabaseGateway"
 
+import checkLedsConnectivity from "../services/checkLedsConnectivity"
 import checkDbConnectivity from "../services/db/checkDbConnectivity"
 
 export default async (database: DatabaseConnection): PromiseResult<ApiConnectivityDto> => {
@@ -13,7 +14,11 @@ export default async (database: DatabaseConnection): PromiseResult<ApiConnectivi
     return dbConnectivity
   }
 
+  const ledsConnectivityResult = await checkLedsConnectivity()
+  const ledsConnectivity = isError(ledsConnectivityResult) ? false : ledsConnectivityResult
+
   return {
-    database: dbConnectivity
+    database: dbConnectivity,
+    leds: ledsConnectivity
   }
 }

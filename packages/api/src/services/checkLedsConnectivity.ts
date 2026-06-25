@@ -14,9 +14,7 @@ export default async (): PromiseResult<boolean> => {
     const timeout = new Promise((_, reject) => {
       timerId = setTimeout(() => reject(new Error("Timeout")), 2000)
     })
-
     const fetchPromise = fetch(ledsApiUrl, { method: "GET" })
-
     const response = (await Promise.race([fetchPromise, timeout])) as Response
 
     return response.ok
