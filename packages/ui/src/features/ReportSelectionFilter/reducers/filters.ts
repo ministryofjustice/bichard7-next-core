@@ -71,7 +71,7 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
       )
 
       return { ...state, [action.payload.id]: action.payload.checked, checkboxesError: checkboxError }
-    case "SET_RESOLVED_BY":
+    case "SET_RESOLVED_BY": {
       const resolvedByError = validateResolvedBy(
         state.reportType as ReportType,
         action.payload,
@@ -79,6 +79,8 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
       )
 
       return { ...state, resolvedBy: action.payload, resolvedByError: resolvedByError }
+    }
+
     case "RESET_FILTERS":
       return initialFilterState
     case "SET_ERRORS":
