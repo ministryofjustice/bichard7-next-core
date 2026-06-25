@@ -30,15 +30,13 @@ describe("View case details", () => {
     it("Should return 404 for a case that this user can not see due to being in no groups", () => {
       cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01" }])
       cy.loginAs("NoGroups")
-      // .then(() => {
 
       cy.request({
         failOnStatusCode: false,
-        url: "/bichard/court-cases/99999999"
+        url: "/bichard/court-cases/0"
       }).then((response) => {
         expect(response.status).to.eq(404)
       })
-    // })
   })
 
     it("Should return 200 if the case has unresolved exceptions and the user is an exception handler", () => {
