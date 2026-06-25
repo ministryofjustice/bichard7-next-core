@@ -47,4 +47,21 @@ describe("checkLedsConnectivity", () => {
     const result = await promiseResult
     expect(result).toBe(false)
   })
+
+  it("returns false when the network request throws an error", async () => {
+    ;(global.fetch as jest.Mock).mockRejectedValueOnce(new Error("Network error"))
+
+    const result = await checkLedsConnectivity()
+
+    expect(result).toBe(false)
+  })
+
+  it("returns false when env variable is not found", async () => {
+    delete process.env.LEDS_API_URL
+
+    const result = await checkLedsConnectivity()
+
+    expect(result).toBe(false)
+    expect(global.fetch).not.toHaveBeenCalled()
+  })
 })
