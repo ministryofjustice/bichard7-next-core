@@ -5,6 +5,7 @@ import { type User, UserRowSchema } from "@moj-bichard7/common/types/User"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
+import { NotFoundError } from "../../../types/errors/NotFoundError"
 import mapUserRowToUser from "../mapUserRowToUser"
 
 export default async (database: DatabaseConnection, username: string): PromiseResult<User> => {
@@ -41,7 +42,7 @@ export default async (database: DatabaseConnection, username: string): PromiseRe
   }
 
   if (!userResult || userResult.length === 0) {
-    return Error(`User "${username}" does not exist`)
+    return new NotFoundError()
   }
 
   const parsedResults = UserRowSchema.safeParse(userResult[0])
