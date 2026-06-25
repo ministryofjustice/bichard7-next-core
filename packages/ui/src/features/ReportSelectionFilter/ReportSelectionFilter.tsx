@@ -216,26 +216,24 @@ export const ReportSelectionFilter: React.FC<{
                 />
               )}
             </div>
-            <div id={"resolved-by-section"} className="resolved-by-section-wrapper">
-              {filterValues.reportType === "exceptions" && props.canUseTriggerAndExceptionQualityAuditing && (
-                <>
-                  <h2 className="govuk-heading-m">{"Resolved by"}</h2>
-                  <FormGroup showError={!!filterValues.resolvedByError}>
-                    {filterValues.resolvedByError && (
-                      <p className="govuk-error-message">
-                        <span className="govuk-visually-hidden">{"Error:"}</span>
-                        {filterValues.resolvedByError}
-                      </p>
-                    )}
-                    <ResolveByFilter
-                      resolvers={props.resolvedBy}
-                      resolvedBy={filterValues.resolvedBy}
-                      onChange={handleResolvedByChange}
-                    />
-                  </FormGroup>
-                </>
-              )}
-            </div>
+            {filterValues.reportType === "exceptions" && props.canUseTriggerAndExceptionQualityAuditing && (
+              <div id={"resolved-by-section"} className="resolved-by-section-wrapper">
+                <h2 className="govuk-heading-m">{"Resolved by"}</h2>
+                <FormGroup showError={!!filterValues.resolvedByError}>
+                  {filterValues.resolvedByError && (
+                    <p className="govuk-error-message">
+                      <span className="govuk-visually-hidden">{"Error:"}</span>
+                      {filterValues.resolvedByError}
+                    </p>
+                  )}
+                  <ResolveByFilter
+                    resolvers={props.resolvedBy}
+                    resolvedBy={filterValues.resolvedBy}
+                    onChange={handleResolvedByChange}
+                  />
+                </FormGroup>
+              </div>
+            )}
           </fieldset>
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break govuk-section-break--visible" />
           <ActionBar
