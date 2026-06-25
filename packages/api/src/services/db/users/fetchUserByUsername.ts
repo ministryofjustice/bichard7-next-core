@@ -41,7 +41,12 @@ export default async (database: DatabaseConnection, username: string): PromiseRe
     return Error(`User "${username}" does not exist`)
   }
 
-  const parsedResults = UserRowSchema.safeParse(userResult[0])
+  const rowToParse = {
+    ...userResult[0],
+    deleted_at: userResult[0].deleted_at ? new Date(userResult[0].deleted_at) : null
+  }
+
+  const parsedResults = UserRowSchema.safeParse(rowToParse)
   if (!parsedResults.success) {
     return parsedResults.error
   }
