@@ -1,9 +1,6 @@
 import { loginAndVisit } from "../../../support/helpers"
 
 describe("Reasons filters", () => {
-  beforeEach(() => {
-  cy.task("clearCourtCases")
-  })
   it("should not render the reasons component if no user group is specified", () => {
     loginAndVisit("NoGroups")
 
