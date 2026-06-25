@@ -25,9 +25,9 @@ import { SelectReportDropdown } from "./SelectReportDropdown"
 import { filterReducer, initialFilterState } from "./reducers/filters"
 
 export const ReportSelectionFilter: React.FC<{
-  resolvedBy: AuditResolvedBy[]
-  canUseTriggerAndExceptionQualityAuditing: boolean
-}> = (props) => {
+  resolvedBy?: AuditResolvedBy[]
+  canUseTriggerAndExceptionQualityAuditing?: boolean
+}> = ({ resolvedBy = [], canUseTriggerAndExceptionQualityAuditing = false }) => {
   const [isStreaming, setIsStreaming] = useState(false)
   const [rows, setRows] = useState<Record<string, unknown>[] | null>(null)
   const [fileDownloadUrl, setFileDownloadUrl] = useState<string | null>(null)
@@ -90,7 +90,7 @@ export const ReportSelectionFilter: React.FC<{
     )
     const selectReportValidation = validateSelectReport(filterValues.reportType as ReportType)
 
-    const resolvedByValidation = props.canUseTriggerAndExceptionQualityAuditing
+    const resolvedByValidation = canUseTriggerAndExceptionQualityAuditing
       ? validateResolvedBy(filterValues.resolvedBy)
       : null
 
@@ -123,7 +123,7 @@ export const ReportSelectionFilter: React.FC<{
     try {
       const reportType = filterValues.reportType as ReportType
 
-      const allResolversSelected = props.resolvedBy.every((r) => filterValues.resolvedBy.includes(r.username))
+      const allResolversSelected = resolvedBy.every((r) => filterValues.resolvedBy.includes(r.username))
 
       const urlQuery = new URLSearchParams({
         fromDate: filterValues.dateFrom,
@@ -218,7 +218,7 @@ export const ReportSelectionFilter: React.FC<{
                 />
               )}
             </div>
-            {filterValues.reportType === "exceptions" && props.canUseTriggerAndExceptionQualityAuditing && (
+            {filterValues.reportType === "exceptions" && canUseTriggerAndExceptionQualityAuditing && (
               <div id={"resolved-by-section"} className="resolved-by-section-wrapper">
                 <h2 className="govuk-heading-m">{"Resolved by"}</h2>
                 <FormGroup showError={!!filterValues.resolvedByError}>
@@ -229,7 +229,7 @@ export const ReportSelectionFilter: React.FC<{
                     </p>
                   )}
                   <ResolveByFilter
-                    resolvers={props.resolvedBy}
+                    resolvers={resolvedBy}
                     resolvedBy={filterValues.resolvedBy}
                     onChange={handleResolvedByChange}
                   />
