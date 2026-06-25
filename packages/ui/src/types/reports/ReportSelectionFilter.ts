@@ -14,6 +14,7 @@ export type FilterState = {
   checkboxesError: string | null
   resolvedByError: string | null
   resolvedBy: string[]
+  canUseTriggerAndExceptionQualityAuditing: boolean
 }
 
 export type FilterAction =

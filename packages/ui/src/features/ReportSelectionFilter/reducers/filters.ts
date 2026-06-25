@@ -1,11 +1,8 @@
+import { validateResolvedBy } from "@/utils/reports/validateResolvedBy"
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import type { FilterAction, FilterState } from "types/reports/ReportSelectionFilter"
 import { validateCheckboxes } from "utils/reports/validateCheckboxes"
-import {
-  DATE_CANNOT_BE_AFTER_DATE_TO,
-  DATE_CANNOT_BE_BEFORE_DATE_FROM,
-  FIELD_REQUIRED
-} from "utils/reports/validationMessages"
+import { DATE_CANNOT_BE_AFTER_DATE_TO, DATE_CANNOT_BE_BEFORE_DATE_FROM } from "utils/reports/validationMessages"
 
 export const initialFilterState: FilterState = {
   reportType: undefined,
@@ -19,7 +16,8 @@ export const initialFilterState: FilterState = {
   dateToError: null,
   reportTypeError: null,
   resolvedBy: [],
-  resolvedByError: null
+  resolvedByError: null,
+  canUseTriggerAndExceptionQualityAuditing: false
 }
 
 export function filterReducer(state: FilterState, action: FilterAction): FilterState {
@@ -74,10 +72,11 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
 
       return { ...state, [action.payload.id]: action.payload.checked, checkboxesError: checkboxError }
     case "SET_RESOLVED_BY":
-      let resolvedByError = null
-      if (action.payload.length === 0) {
-        resolvedByError = FIELD_REQUIRED
-      }
+      const resolvedByError = validateResolvedBy(
+        state.reportType as ReportType,
+        action.payload,
+        state.canUseTriggerAndExceptionQualityAuditing
+      )
 
       return { ...state, resolvedBy: action.payload, resolvedByError: resolvedByError }
     case "RESET_FILTERS":

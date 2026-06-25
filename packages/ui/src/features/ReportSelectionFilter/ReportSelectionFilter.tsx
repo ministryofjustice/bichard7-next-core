@@ -33,7 +33,10 @@ export const ReportSelectionFilter: React.FC<{
   const [fileDownloadUrl, setFileDownloadUrl] = useState<string | null>(null)
   const [reportFilename, setReportFilename] = useState<string>("")
 
-  const [filterValues, dispatch] = useReducer(filterReducer, initialFilterState)
+  const [filterValues, dispatch] = useReducer(filterReducer, {
+    ...initialFilterState,
+    canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing
+  })
 
   const config = filterValues.reportType
     ? (ReportConfigs[filterValues.reportType as keyof typeof ReportConfigs] as unknown as ReportConfig)

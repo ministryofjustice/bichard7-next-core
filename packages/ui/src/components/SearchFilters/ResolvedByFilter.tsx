@@ -10,7 +10,7 @@ interface ResolveByFilterProps {
   onChange?: (selected: string[]) => void
 }
 
-function ResolveByFilter({ resolvedBy, resolvers, onChange }: ResolveByFilterProps) {
+function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveByFilterProps>) {
   const [allResolversSelected, setAllResolversSelected] = useState<boolean>(
     resolvers.every((r) => resolvedBy.includes(r.username))
   )
