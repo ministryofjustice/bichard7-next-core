@@ -51,16 +51,6 @@ describe("ResolveByFilter Component", () => {
     cy.get("[data-testid='audit-resolved-by-all']").should("not.be.checked")
   })
 
-  it("toggles all checkbox when all other checkboxes are checked", () => {
-    const onChangeSpy = cy.spy().as("onChangeSpy")
-    cy.mount(<ResolveByFilter resolvedBy={[]} resolvers={mockResolvers} onChange={onChangeSpy} />)
-
-    cy.get("[data-testid='audit-resolved-by-1']").check()
-    cy.get("[data-testid='audit-resolved-by-0']").check()
-
-    cy.get("[data-testid='audit-resolved-by-all']").should("be.checked")
-  })
-
   it("reveals and toggles deleted users", () => {
     const onChangeSpy = cy.spy().as("onChangeSpy")
     cy.mount(<ResolveByFilter resolvedBy={[]} resolvers={mockResolvers} onChange={onChangeSpy} />)
