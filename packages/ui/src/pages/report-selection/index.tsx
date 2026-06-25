@@ -35,21 +35,21 @@ export const getServerSideProps = withMultipleServerSideProps(
       return redirectTo("/")
     }
 
-    const jwt = req.cookies[".AUTH"] as string
-    const apiClient = new ApiClient(jwt)
-    const apiGateway = new BichardApiV1(apiClient)
+    if (canUseQualityAuditing) {
+      const jwt = req.cookies[".AUTH"] as string
+      const apiClient = new ApiClient(jwt)
+      const apiGateway = new BichardApiV1(apiClient)
 
-    const usersResponse = await apiGateway.fetchUsers()
+      const usersResponse = await apiGateway.fetchUsers()
 
-    if (!isError(usersResponse) && !!usersResponse) {
-      props.resolvedBy = usersResponse.users
-        .filter((u) => canUseTriggerAndExceptionQualityAuditing(u))
-        .map((u) => ({
+      if (!isError(usersResponse) && !!usersResponse) {
+        props.resolvedBy = usersResponse.users.map((u) => ({
           username: u.username,
           forenames: u.forenames ?? "",
           surname: u.surname ?? "",
           deleted: u.deleted
         }))
+      }
     }
 
     return { props }
@@ -81,7 +81,10 @@ function ReportSelectionPage(props: Readonly<Props>) {
         canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
       >
         <h1 className={"govuk-visually-hidden"}>{"Reports"}</h1>
-        <ReportSelectionFilter resolvedBy={resolvedBy} />
+        <ReportSelectionFilter
+          resolvedBy={resolvedBy}
+          canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
+        />
       </Layout>
     </CurrentUserContext.Provider>
   )

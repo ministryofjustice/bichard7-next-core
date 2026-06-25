@@ -24,7 +24,10 @@ import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { SelectReportDropdown } from "./SelectReportDropdown"
 import { filterReducer, initialFilterState } from "./reducers/filters"
 
-export const ReportSelectionFilter: React.FC<{ resolvedBy: AuditResolvedBy[] }> = (props) => {
+export const ReportSelectionFilter: React.FC<{
+  resolvedBy: AuditResolvedBy[]
+  canUseTriggerAndExceptionQualityAuditing: boolean
+}> = (props) => {
   const [isStreaming, setIsStreaming] = useState(false)
   const [rows, setRows] = useState<Record<string, unknown>[] | null>(null)
   const [fileDownloadUrl, setFileDownloadUrl] = useState<string | null>(null)
@@ -117,12 +120,15 @@ export const ReportSelectionFilter: React.FC<{ resolvedBy: AuditResolvedBy[] }> 
   const handleDownload = async () => {
     try {
       const reportType = filterValues.reportType as ReportType
+
+      const allResolversSelected = props.resolvedBy.every((r) => filterValues.resolvedBy.includes(r.username))
+
       const urlQuery = new URLSearchParams({
         fromDate: filterValues.dateFrom,
         toDate: filterValues.dateTo,
         exceptions: String(filterValues.exceptions),
         triggers: String(filterValues.triggers),
-        resolvedBy: String(filterValues.resolvedBy)
+        resolvedBy: String(allResolversSelected ? [] : filterValues.resolvedBy)
       })
 
       const parsedData = await downloadReport(reportType, urlQuery)
@@ -208,7 +214,7 @@ export const ReportSelectionFilter: React.FC<{ resolvedBy: AuditResolvedBy[] }> 
               )}
             </div>
             <div id={"resolved-by-section"} className="resolved-by-section-wrapper">
-              {filterValues.reportType === "exceptions" && (
+              {filterValues.reportType === "exceptions" && props.canUseTriggerAndExceptionQualityAuditing && (
                 <>
                   <h2 className="govuk-heading-m">{"Resolved by"}</h2>
                   <FormGroup showError={!!filterValues.resolvedByError}>
