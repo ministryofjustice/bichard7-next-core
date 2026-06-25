@@ -90,9 +90,11 @@ export const ReportSelectionFilter: React.FC<{
     )
     const selectReportValidation = validateSelectReport(filterValues.reportType as ReportType)
 
-    const resolvedByValidation = canUseTriggerAndExceptionQualityAuditing
-      ? validateResolvedBy(filterValues.resolvedBy)
-      : null
+    const resolvedByValidation = validateResolvedBy(
+      filterValues.reportType as ReportType,
+      filterValues.resolvedBy,
+      canUseTriggerAndExceptionQualityAuditing
+    )
 
     const newErrors = {
       dateFromError: rangeValidation.fromError,

@@ -9,11 +9,15 @@ describe("exceptions/triggers report type filter", () => {
     insertSampleCases()
   })
 
-  it("queries exceptions/triggers and successfully displays only exceptions/triggers", () => {
+  const provideAllFieldsWithValidValues = () => {
     cy.get("#report-select").select("Resolved exceptions and triggers")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
+    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").click()
+  }
 
+  it("queries exceptions/triggers and successfully displays only exceptions/triggers", () => {
+    provideAllFieldsWithValidValues()
     cy.get("#run-report").click()
 
     const headers = [
@@ -62,7 +66,7 @@ describe("exceptions/triggers report type filter", () => {
   })
 
   it("queries exceptions/triggers with a date window that should not return anything", () => {
-    cy.get("#report-select").select("Resolved exceptions and triggers")
+    provideAllFieldsWithValidValues()
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(subDays(new Date(), 1), "yyyy-MM-dd"))
 
@@ -72,9 +76,7 @@ describe("exceptions/triggers report type filter", () => {
   })
 
   it("queries exceptions/triggers with triggers unchecked and successfully returns only exceptions", () => {
-    cy.get("#report-select").select("Resolved exceptions and triggers")
-    cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
-    cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
+    provideAllFieldsWithValidValues()
     cy.get("#triggers").click()
 
     cy.get("#run-report").click()
@@ -86,9 +88,7 @@ describe("exceptions/triggers report type filter", () => {
   })
 
   it("queries exceptions/triggers with exceptions unchecked and successfully returns only triggers", () => {
-    cy.get("#report-select").select("Resolved exceptions and triggers")
-    cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
-    cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
+    provideAllFieldsWithValidValues()
     cy.get("#exceptions").click()
 
     cy.get("#run-report").click()
@@ -97,5 +97,36 @@ describe("exceptions/triggers report type filter", () => {
     cy.get("table tbody tr td:nth(0)").should("have.text", "Tr")
 
     cy.get(".results-area table tbody tr td:nth(2)").should("have.text", "Case00003")
+  })
+
+  it("returns results that have been resolved by the selected resolver", () => {
+    provideAllFieldsWithValidValues()
+    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").click()
+    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-18']").click()
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr").should("have.length", 1)
+    cy.get(".results-area h3").should("contain", "GeneralHandler")
+  })
+
+  it("returns no results when querying with a 'resolvedBy' user that has not resolved anything", () => {
+    provideAllFieldsWithValidValues()
+    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").click()
+    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-19']").click()
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr").should("have.length", 0)
+  })
+
+  it("returns all results when all resolvers checkbox checked", () => {
+    provideAllFieldsWithValidValues()
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr").should("have.length", 2)
+    cy.get(".results-area h3").should("contain", "GeneralHandler")
+    cy.get(".results-area h3").should("contain", "user1")
   })
 })
