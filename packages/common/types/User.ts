@@ -17,6 +17,15 @@ export const UserRowSchema = z.object({
   visible_forces: z.string().nullable()
 })
 
+export const UserMinimalRowSchema = UserRowSchema.pick({
+  deleted_at: true,
+  groups: true,
+  id: true,
+  username: true,
+  visible_courts: true,
+  visible_forces: true
+})
+
 export const UserSchema = z.object({
   deletedAt: z.date().nullable(),
   email: z.string(),
@@ -66,8 +75,5 @@ export type UserList = z.infer<typeof UserListSchema>
 export type UserLookupDto = z.infer<typeof UserLookupDtoSchema>
 export type UserLookupList = z.infer<typeof UserLookupListSchema>
 export type UserMinimal = Pick<User, "deletedAt" | "groups" | "id" | "username" | "visibleCourts" | "visibleForces">
-export type UserMinimalRow = Pick<
-  UserRow,
-  "deleted_at" | "groups" | "id" | "username" | "visible_courts" | "visible_forces"
->
+export type UserMinimalRow = z.infer<typeof UserMinimalRowSchema>
 export type UserRow = z.infer<typeof UserRowSchema>

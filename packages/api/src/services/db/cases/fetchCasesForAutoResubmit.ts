@@ -1,11 +1,12 @@
-import type { CaseRow } from "@moj-bichard7/common/types/Case"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import { type CaseRow, CaseRowSchema } from "@moj-bichard7/common/types/Case"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { isServiceUser } from "@moj-bichard7/common/utils/userPermissions"
+import z from "zod"
 
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
@@ -20,7 +21,7 @@ export const fetchCasesForAutoResubmit = async (
     return new Error("Not a Service User")
   }
 
-  const results = await databaseConnection.connection<CaseRow[]>`
+  const results = await databaseConnection.connection`
     SELECT *
     FROM br7own.error_list el
     WHERE
@@ -34,5 +35,10 @@ export const fetchCasesForAutoResubmit = async (
     return results
   }
 
-  return results
+  const parsedResults = z.array(CaseRowSchema).safeParse(results)
+  if (!parsedResults.success) {
+    return parsedResults.error
+  }
+
+  return parsedResults.data
 }

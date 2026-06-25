@@ -1,7 +1,7 @@
-import type { CaseAges } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 
+import { type CaseAges, CaseAgesSchema } from "@moj-bichard7/common/types/Case"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
@@ -42,7 +42,7 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
 
   const query = queries.map((q) => database.connection`${q}`)
 
-  const caseAges = await database.connection<CaseAges[]>`
+  const caseAges = await database.connection`
     SELECT
       ${query}
     FROM br7own.error_list el
@@ -61,5 +61,10 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
     return new NotFoundError("Found no case ages")
   }
 
-  return caseAges[0]
+  const parsedResults = CaseAgesSchema.safeParse(caseAges[0])
+  if (!parsedResults.success) {
+    return parsedResults.error
+  }
+
+  return parsedResults.data
 }

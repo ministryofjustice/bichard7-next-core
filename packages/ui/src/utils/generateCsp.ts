@@ -1,5 +1,19 @@
 const generateCsp = (nonce: string) => {
-  return `default-src 'self'; script-src 'self' 'nonce-${nonce}' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' 'unsafe-inline' data:; frame-src 'self'; form-action 'self'; object-src 'none'; base-uri 'none'`
+  const styleSrc = process.env.NODE_ENV === "production" ? `'self' 'nonce-${nonce}'` : "'self' 'unsafe-inline'"
+
+  const policies = [
+    "default-src 'self'",
+    `script-src 'self' 'nonce-${nonce}' 'unsafe-eval'`,
+    `style-src ${styleSrc}`,
+    "img-src 'self' data:",
+    "frame-src 'self'",
+    "frame-ancestors 'none'",
+    "form-action 'self'",
+    "object-src 'none'",
+    "base-uri 'none'"
+  ]
+
+  return policies.join("; ")
 }
 
 export default generateCsp
