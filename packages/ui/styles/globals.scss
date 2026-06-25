@@ -1,40 +1,8 @@
-@use "sass:map";
-
-$govuk-default-colours: (
-    "red": #ca3535,
-    "yellow": #fd0,
-    "green": #0f7a52,
-    "blue": #1d70b8,
-    "dark-blue": #0f385c,
-    "light-blue": #5694ca,
-    "purple": #54319f,
-    "black": #0b0c0c,
-    "dark-grey": #484949,
-    "mid-grey": #cecece,
-    "light-grey": #f3f3f3,
-    "white": #fff,
-    "light-purple": #7f65b7,
-    "bright-purple": #98285d,
-    "magenta": #ca357c,
-    "light-pink": #e59abe,
-    "orange": #f47738,
-    "brown": #99704a,
-    "light-green": #4b9b7d,
-    "teal": #158187
-);
-$b7-colours: (
-    "white": #FAFAFA,
-    "black": #222,
-    "blue": #005BBB
-);
-
-@use "node_modules/govuk-frontend/dist/govuk/all" as * with (
-  $govuk-assets-path: "/bichard/govuk_assets/",
-  $govuk-colours: map.merge($govuk-default-colours, $b7-colours),
+@use "node_modules/govuk-frontend/dist/govuk/index" as * with (
+  $govuk-assets-path: "/bichard/govuk_assets/"
 );
 @forward "node_modules/@ministryofjustice/frontend/moj/all" with (
-  $moj-assets-path: "/bichard/moj_assets/",
-  $govuk-colours: map.merge($govuk-default-colours, $b7-colours),
+  $moj-assets-path: "/bichard/moj_assets/"
 );
 @import "page";
 @import "form";
