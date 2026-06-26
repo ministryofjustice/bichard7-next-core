@@ -2,7 +2,6 @@ import { type User } from "@moj-bichard7/common/types/User"
 
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
-import { NotFoundError } from "../../../types/errors/NotFoundError"
 import fetchUserByUsername from "./fetchUserByUsername"
 
 const testDatabaseGateway = new End2EndPostgres()
@@ -34,6 +33,6 @@ describe("users in groups", () => {
 
   it("should return an error if the user does not exist", async () => {
     const result = await fetchUserByUsername(testDatabaseGateway.readonly, "non-existent-user")
-    expect(result).toStrictEqual(new NotFoundError())
+    expect(result).toBe('User "non-existent-user" does not exist')
   })
 })
