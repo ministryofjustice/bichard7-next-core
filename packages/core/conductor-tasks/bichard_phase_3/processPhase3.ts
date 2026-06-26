@@ -24,8 +24,8 @@ const processPhase3: ConductorWorker = {
   taskDefName: "process_phase3",
   execute: s3TaskDataFetcher<PncUpdateDataset>(pncUpdateDatasetSchema, async (task) => {
     const { s3TaskData, s3TaskDataPath, lockId } = task.inputData
-    const policeGateway = createPoliceGateway()
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase3)
+    const policeGateway = createPoliceGateway(auditLogger)
 
     auditLogger.debug(EventCode.HearingOutcomeReceivedPhase3)
 

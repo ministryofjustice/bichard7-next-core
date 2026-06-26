@@ -1,14 +1,16 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
-import type { AxiosError } from "axios"
+import type { AxiosError, AxiosResponse } from "axios"
 
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
 import axios, { HttpStatusCode } from "axios"
 import https from "https"
 
 import type PoliceUpdateRequest from "../../../phase3/types/PoliceUpdateRequest"
+import type AuditLogger from "../../../types/AuditLogger"
 import type { AddDisposalRequest } from "../../../types/leds/AddDisposalRequest"
 import type { AsnQueryRequest } from "../../../types/leds/AsnQueryRequest"
 import type { ErrorResponse } from "../../../types/leds/ErrorResponse"
@@ -38,10 +40,40 @@ const jsonTransformer = (data: string): unknown => {
   }
 }
 
+const requestTypes = {
+  [PncOperation.DISPOSAL_UPDATED]: "Subsequently Varied",
+  [PncOperation.NORMAL_DISPOSAL]: "Disposal Results",
+  [PncOperation.REMAND]: "Remand",
+  [PncOperation.SENTENCE_DEFERRED]: "Sentence Deferred",
+  AsnQuery: "ASN Query"
+} as const
+type RequestType = (typeof requestTypes)[keyof typeof requestTypes]
+
+const generateAuditLogAttributes = (
+  requestType: RequestType,
+  url: string,
+  headers: Record<string, unknown>,
+  body: Record<string, unknown>,
+  response: AxiosError | AxiosResponse,
+  requestStartTime: Date
+) => ({
+  "Response Time": new Date().getTime() - requestStartTime.getTime(),
+  "Request Type": requestType,
+  "Request URL": url,
+  "Request Headers": { ...headers, Authorization: undefined },
+  "Request Message": body,
+  "Response Message": isError(response) ? response.response?.data || response.message : response.data,
+  "Response Status": response.status,
+  sensitiveAttributes: "Request Message,Response Message"
+})
+
 export default class LedsGateway implements PoliceGateway {
   queryTime: Date | undefined
 
-  constructor(private config: LedsApiConfig) {}
+  constructor(
+    private config: LedsApiConfig,
+    private auditLogger: AuditLogger
+  ) {}
 
   async query(
     asn: string,
@@ -61,15 +93,28 @@ export default class LedsGateway implements PoliceGateway {
     }
 
     const asnQueryUrl = this.generateUrl(endpoints.asnQuery)
+    const requestHeaders = generateRequestHeaders(correlationId, LedsActionCode.QueryByAsn, authToken)
     const apiResponse = await axios
       .post(asnQueryUrl, requestBody, {
-        headers: generateRequestHeaders(correlationId, LedsActionCode.QueryByAsn, authToken),
+        headers: requestHeaders,
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
         transformResponse: [jsonTransformer]
       })
       .catch((error: AxiosError<ErrorResponse>) => error)
+
+    this.auditLogger.info(
+      EventCode.PncResponseReceived,
+      generateAuditLogAttributes(
+        requestTypes.AsnQuery,
+        asnQueryUrl,
+        requestHeaders,
+        requestBody,
+        apiResponse,
+        this.queryTime
+      )
+    )
 
     if (isError(apiResponse)) {
       if (apiResponse.response?.data) {
@@ -105,6 +150,7 @@ export default class LedsGateway implements PoliceGateway {
     correlationId: string,
     pncUpdateDataset: PncUpdateDataset
   ): Promise<PoliceApiError | void> {
+    const updateTime = new Date()
     const personId = pncUpdateDataset.PncQuery?.personId
     const reportId = pncUpdateDataset.PncQuery?.reportId
 
@@ -149,16 +195,28 @@ export default class LedsGateway implements PoliceGateway {
 
     const updateUrl = this.generateUrl(endpoint)
     const body = cleanObjectStrings(requestBody)
-    const headers = generateRequestHeaders(correlationId, actionCode, authToken)
+    const requestHeaders = generateRequestHeaders(correlationId, actionCode, authToken)
     const apiResponse = await axios
       .post(updateUrl, body, {
-        headers,
+        headers: requestHeaders,
         httpsAgent: new https.Agent({
           rejectUnauthorized: false
         }),
         transformResponse: [jsonTransformer]
       })
       .catch((error: AxiosError<ErrorResponse>) => error)
+
+    this.auditLogger.info(
+      EventCode.PncResponseReceived,
+      generateAuditLogAttributes(
+        requestTypes[request.operation],
+        updateUrl,
+        requestHeaders,
+        requestBody,
+        apiResponse,
+        updateTime
+      )
+    )
 
     if (isError(apiResponse)) {
       if (apiResponse.response?.data) {

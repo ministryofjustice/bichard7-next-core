@@ -43,7 +43,7 @@
               "disposalFine": {},
               "disposalQualifiers": ["S"],
               "disposalQualifierDuration": {
-                "count": "0",
+                "count": 0,
                 "units": "life"
               }
             }
@@ -76,7 +76,7 @@
               "chargeAppearanceNumber": 0,
               "disposalEffectiveDate": "2011-10-12",
               "disposalDuration": {
-                "count": "5",
+                "count": 5,
                 "units": "weeks"
               },
               "disposalCode": 1015,
@@ -85,7 +85,7 @@
               },
               "disposalQualifiers": ["AB", "B"],
               "disposalQualifierDuration": {
-                "count": "12",
+                "count": 12,
                 "units": "months"
               }
             }
