@@ -1,4 +1,12 @@
-import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+import httpStatus from "http-status"
+import { Agent, fetch } from "undici"
+
+const insecureAgent = new Agent({
+  connect: {
+    rejectUnauthorized: false
+  }
+})
 
 export default async (): PromiseResult<boolean> => {
   const ledsApiUrl = process.env.LEDS_API_URL
@@ -8,21 +16,15 @@ export default async (): PromiseResult<boolean> => {
     return false
   }
 
-  let timerId: NodeJS.Timeout | undefined
+  const response = await fetch(ledsApiUrl, {
+    dispatcher: insecureAgent,
+    method: "POST",
+    signal: AbortSignal.timeout(2_000)
+  }).catch((error: Error) => error)
 
-  try {
-    const timeout = new Promise((_, reject) => {
-      timerId = setTimeout(() => reject(new Error("Timeout")), 2000)
-    })
-    const fetchPromise = fetch(ledsApiUrl, { method: "GET" })
-    const response = (await Promise.race([fetchPromise, timeout])) as Response
-
-    return response.ok
-  } catch {
+  if (isError(response)) {
     return false
-  } finally {
-    if (timerId) {
-      clearTimeout(timerId)
-    }
   }
+
+  return response.status === httpStatus.UNAUTHORIZED
 }

@@ -1,23 +1,22 @@
 import checkLedsConnectivity from "./checkLedsConnectivity"
 
 describe("checkLedsConnectivity", () => {
-  const originalEnv = process.env
+  beforeAll(() => {
+    process.env.LEDS_API_URL = "https://api.leds.test/health"
+  })
 
   beforeEach(() => {
     jest.resetModules()
-    process.env = { ...originalEnv, LEDS_API_URL: "https://api.leds.test/health" }
     global.fetch = jest.fn()
   })
 
   afterEach(() => {
-    process.env = originalEnv
     jest.clearAllMocks()
   })
 
-  it("returns true when LEDS API returns a successful 200 response", async () => {
+  it("returns true when LEDS API returns a successful 401 response", async () => {
     ;(global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: true,
-      status: 200
+      status: 401
     })
 
     const result = await checkLedsConnectivity()
