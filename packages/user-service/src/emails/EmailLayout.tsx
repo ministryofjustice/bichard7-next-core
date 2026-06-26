@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-head-element */
-import { gdsMidGrey, green, textPrimary, textSecondary, white } from "@/utils/colours"
+import { gdsMidGrey, green, textPrimary, textSecondary, white } from "utils/colours"
 import { ReactNode } from "react"
 
 const fontFamily = "Arial, sans-serif"
