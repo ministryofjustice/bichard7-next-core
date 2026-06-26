@@ -33,6 +33,6 @@ describe("users in groups", () => {
 
   it("should return an error if the user does not exist", async () => {
     const result = await fetchUserByUsername(testDatabaseGateway.readonly, "non-existent-user")
-    expect(result).toBe(new Error('User "non-existent-user" does not exist'))
+    expect(result).toEqual(new Error('User "non-existent-user" does not exist'))
   })
 })
