@@ -35,7 +35,7 @@ export default async (
     where = sql`${where} AND (${nameWhere})`
   }
 
-  const userResult = await database.connection<UserRow[]>`
+  const userResult = await database.connection`
       SELECT
         u.id,
         u.forenames,
