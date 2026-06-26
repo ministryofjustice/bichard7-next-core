@@ -13,7 +13,10 @@ export default async (database: DatabaseConnection, username: string): PromiseRe
         u.id,
         u.username,
         u.jwt_id,
-        ARRAY_AGG(g.friendly_name) AS groups,
+        COALESCE(
+          ARRAY_AGG(g.friendly_name) FILTER (WHERE g.friendly_name IS NOT NULL), 
+          '{}'
+        ) AS groups,
         u.visible_forces,
         u.email,
         u.feature_flags,

@@ -37,7 +37,7 @@ describe("View case details", () => {
       }).then((response) => {
         expect(response.status).to.eq(404)
       })
-    })
+  })
 
     it("Should return 200 if the case has unresolved exceptions and the user is an exception handler", () => {
       cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 1 }])
