@@ -43,9 +43,11 @@ export const UserSchema = z.object({
 
 export const UserMinimalSchema = UserSchema.pick({
   deletedAt: true,
+  username: true,
   forenames: true,
+  id: true,
   surname: true
-})
+}).loose()
 
 export const UserDtoSchema = z.object({
   deleted: z.boolean(),

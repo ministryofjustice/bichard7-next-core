@@ -1,9 +1,7 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import type { User, UserRow } from "@moj-bichard7/common/types/User"
+import { UserMinimalSchema, type User } from "@moj-bichard7/common/types/User"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
-
-import mapUserRowToUser from "../mapUserRowToUser"
 import filterUsersByVisibleForces from "./filterUsersByVisibleForces"
 
 export type FetchUsersResult = {
@@ -38,14 +36,27 @@ export default async (
   const userResult = await database.connection`
       SELECT
         u.id,
+        u.username,
         u.forenames,
-        u.surname
+        u.surname,
+        u.deleted_at AS "deletedAt"
       FROM
         br7own.users u
       WHERE
           ${where} AND u.deleted_at IS NULL`
 
-  const users = userResult.map((u) => mapUserRowToUser(u))
+if (!userResult || userResult.length === 0) {
+    return { users: [] }
+  }
+  
+  const users: User[] = []
+  for (const row of userResult) {
+    const parsed = UserMinimalSchema.safeParse(row)
+    if (!parsed.success) {
+      return parsed.error
+    }
+    users.push(parsed.data as any) 
+  }
 
-  return { users: users }
+  return { users: users as unknown as User[]}
 }
