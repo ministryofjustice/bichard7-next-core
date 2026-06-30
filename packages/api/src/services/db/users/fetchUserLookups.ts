@@ -1,7 +1,6 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import type { UserLookupRow } from "@moj-bichard7/common/types/User"
 
-import { type User, UserLookupRowSchema } from "@moj-bichard7/common/types/User"
+import { type User, type UserLookupRow, UserLookupRowSchema } from "@moj-bichard7/common/types/User"
 import z from "zod"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
