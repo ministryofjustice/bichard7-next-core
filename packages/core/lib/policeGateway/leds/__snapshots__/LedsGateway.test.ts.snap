@@ -1,3 +1,1021 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`LedsGateway query should return police query result and update query time 1`] = `[Error: Couldn't parse LEDS query response.]`;
+exports[`LedsGateway query should return an error when api call fails: Audit Log Events 1`] = `
+[
+  {
+    "attributes": {
+      "Request Headers": {
+        "Accept": "application/json",
+        "Authorization": undefined,
+        "X-Leds-Action-Code": "View Arrest / Summons Summary",
+        "X-Leds-Activity-Code": "Person Enquiry",
+        "X-Leds-Activity-Flow-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Application-Datetime": Any<String>,
+        "X-Leds-Correlation-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Justification": "Automated court disposal from MoJ Bichard",
+        "X-Leds-On-Behalf-Of": "Bichard7",
+        "X-Leds-Reason": "8 - On behalf of another authorised agency",
+        "X-Leds-Reference-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Session-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-System-Name": "Bichard7",
+      },
+      "Request Message": {
+        "asn": "du/mmy-/as/NaNundefined",
+        "caseStatusMarkers": [
+          "impending-prosecution-detail",
+          "penalty-notice",
+          "court-case",
+        ],
+      },
+      "Request Type": "ASN Query",
+      "Request URL": StringMatching /https:\\\\/\\\\/dummy\\\\/person-services\\\\/v1\\\\/\\.\\*/,
+      "Response Message": "API call failed.",
+      "Response Status": undefined,
+      "Response Time": Any<Number>,
+      "sensitiveAttributes": "Request Message,Response Message",
+    },
+    "category": "information",
+    "eventCode": "pnc.response-received",
+    "eventSource": "CorePhase1",
+    "eventType": "PNC Response received",
+    "timestamp": Any<Date>,
+  },
+]
+`;
+
+exports[`LedsGateway query should return an error when http status code is 200 but data is in wrong format: Audit Log Events 1`] = `
+[
+  {
+    "attributes": {
+      "Request Headers": {
+        "Accept": "application/json",
+        "Authorization": undefined,
+        "X-Leds-Action-Code": "View Arrest / Summons Summary",
+        "X-Leds-Activity-Code": "Person Enquiry",
+        "X-Leds-Activity-Flow-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Application-Datetime": Any<String>,
+        "X-Leds-Correlation-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Justification": "Automated court disposal from MoJ Bichard",
+        "X-Leds-On-Behalf-Of": "Bichard7",
+        "X-Leds-Reason": "8 - On behalf of another authorised agency",
+        "X-Leds-Reference-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Session-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-System-Name": "Bichard7",
+      },
+      "Request Message": {
+        "asn": "du/mmy-/as/NaNundefined",
+        "caseStatusMarkers": [
+          "impending-prosecution-detail",
+          "penalty-notice",
+          "court-case",
+        ],
+      },
+      "Request Type": "ASN Query",
+      "Request URL": StringMatching /https:\\\\/\\\\/dummy\\\\/person-services\\\\/v1\\\\/\\.\\*/,
+      "Response Message": {
+        "randomField": "randomValue",
+      },
+      "Response Status": 200,
+      "Response Time": Any<Number>,
+      "sensitiveAttributes": "Request Message,Response Message",
+    },
+    "category": "information",
+    "eventCode": "pnc.response-received",
+    "eventSource": "CorePhase1",
+    "eventType": "PNC Response received",
+    "timestamp": Any<Date>,
+  },
+]
+`;
+
+exports[`LedsGateway query should return an error when http status code is not 200 and response contains LEDS errors: Audit Log Events 1`] = `
+[
+  {
+    "attributes": {
+      "Request Headers": {
+        "Accept": "application/json",
+        "Authorization": undefined,
+        "X-Leds-Action-Code": "View Arrest / Summons Summary",
+        "X-Leds-Activity-Code": "Person Enquiry",
+        "X-Leds-Activity-Flow-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Application-Datetime": Any<String>,
+        "X-Leds-Correlation-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Justification": "Automated court disposal from MoJ Bichard",
+        "X-Leds-On-Behalf-Of": "Bichard7",
+        "X-Leds-Reason": "8 - On behalf of another authorised agency",
+        "X-Leds-Reference-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Session-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-System-Name": "Bichard7",
+      },
+      "Request Message": {
+        "asn": "du/mmy-/as/NaNundefined",
+        "caseStatusMarkers": [
+          "impending-prosecution-detail",
+          "penalty-notice",
+          "court-case",
+        ],
+      },
+      "Request Type": "ASN Query",
+      "Request URL": StringMatching /https:\\\\/\\\\/dummy\\\\/person-services\\\\/v1\\\\/\\.\\*/,
+      "Response Message": {
+        "details": "dummy details",
+        "instance": "dummy instance",
+        "leds": {
+          "errors": [
+            {
+              "message": "dummy error message 1",
+            },
+            {
+              "message": "dummy error message 2",
+            },
+          ],
+        },
+        "status": 501,
+        "title": "dummy title",
+        "type": "unprocessable/not-allowed",
+      },
+      "Response Status": 501,
+      "Response Time": Any<Number>,
+      "sensitiveAttributes": "Request Message,Response Message",
+    },
+    "category": "information",
+    "eventCode": "pnc.response-received",
+    "eventSource": "CorePhase1",
+    "eventType": "PNC Response received",
+    "timestamp": Any<Date>,
+  },
+]
+`;
+
+exports[`LedsGateway query should return an error when http status code is not 200 and response does not contain LEDS errors: Audit Log Events 1`] = `
+[
+  {
+    "attributes": {
+      "Request Headers": {
+        "Accept": "application/json",
+        "Authorization": undefined,
+        "X-Leds-Action-Code": "View Arrest / Summons Summary",
+        "X-Leds-Activity-Code": "Person Enquiry",
+        "X-Leds-Activity-Flow-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Application-Datetime": Any<String>,
+        "X-Leds-Correlation-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Justification": "Automated court disposal from MoJ Bichard",
+        "X-Leds-On-Behalf-Of": "Bichard7",
+        "X-Leds-Reason": "8 - On behalf of another authorised agency",
+        "X-Leds-Reference-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Session-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-System-Name": "Bichard7",
+      },
+      "Request Message": {
+        "asn": "du/mmy-/as/NaNundefined",
+        "caseStatusMarkers": [
+          "impending-prosecution-detail",
+          "penalty-notice",
+          "court-case",
+        ],
+      },
+      "Request Type": "ASN Query",
+      "Request URL": StringMatching /https:\\\\/\\\\/dummy\\\\/person-services\\\\/v1\\\\/\\.\\*/,
+      "Response Message": {
+        "randomField": "randomValue",
+      },
+      "Response Status": 501,
+      "Response Time": Any<Number>,
+      "sensitiveAttributes": "Request Message,Response Message",
+    },
+    "category": "information",
+    "eventCode": "pnc.response-received",
+    "eventSource": "CorePhase1",
+    "eventType": "PNC Response received",
+    "timestamp": Any<Date>,
+  },
+]
+`;
+
+exports[`LedsGateway query should return police query result and update query time: Audit Log Events 1`] = `
+[
+  {
+    "attributes": {
+      "Request Headers": {
+        "Accept": "application/json",
+        "Authorization": undefined,
+        "X-Leds-Action-Code": "View Arrest / Summons Summary",
+        "X-Leds-Activity-Code": "Person Enquiry",
+        "X-Leds-Activity-Flow-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Application-Datetime": Any<String>,
+        "X-Leds-Correlation-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Justification": "Automated court disposal from MoJ Bichard",
+        "X-Leds-On-Behalf-Of": "Bichard7",
+        "X-Leds-Reason": "8 - On behalf of another authorised agency",
+        "X-Leds-Reference-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Session-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-System-Name": "Bichard7",
+      },
+      "Request Message": {
+        "asn": "du/mmy-/as/NaNundefined",
+        "caseStatusMarkers": [
+          "impending-prosecution-detail",
+          "penalty-notice",
+          "court-case",
+        ],
+      },
+      "Request Type": "ASN Query",
+      "Request URL": StringMatching /https:\\\\/\\\\/dummy\\\\/person-services\\\\/v1\\\\/\\.\\*/,
+      "Response Message": {
+        "asn": "26/0000/00/00000001566Y",
+        "disposals": [
+          {
+            "caseStatusMarker": "court-case",
+            "convictionDate": "2011-09-26",
+            "court": {
+              "courtIdentityType": "name",
+              "courtName": "Magistrates' Courts London Croydon",
+            },
+            "courtCaseId": "bddbd0d2-232d-47b3-896a-ce7be613b07c",
+            "courtCaseReference": "26/9998/000826X",
+            "offences": [
+              {
+                "adjudications": [
+                  {
+                    "adjudication": "Guilty",
+                    "adjudicationId": "1fdf2ef3-d6a3-4692-aee8-98bd28ca9ea5",
+                    "appearanceNumber": 0,
+                    "disposalDate": "2011-09-26",
+                  },
+                ],
+                "arrestOffenceSequenceNumber": 3,
+                "cjsOffenceCode": "SX03001",
+                "courtOffenceSequenceNumber": 3,
+                "disposalResults": [
+                  {
+                    "chargeAppearanceNumber": 0,
+                    "disposalCode": 3052,
+                    "disposalFine": {},
+                    "disposalId": "dbf6c8ea-79f4-4b91-9b97-2720019b87b6",
+                    "disposalQualifierDuration": {
+                      "count": 0,
+                      "units": "life",
+                    },
+                    "disposalQualifiers": [
+                      "S",
+                    ],
+                  },
+                ],
+                "legislationQualifiers": [],
+                "npccOffenceCode": "2.1.4.1",
+                "offenceId": "9faec803-2428-496b-a670-68e15a7849bb",
+                "offenceStartDate": "2010-11-28",
+                "offenceTic": 2,
+                "plea": "Not Guilty",
+                "qualifiedCjsCode": "SX03001",
+                "roleQualifiers": [],
+              },
+              {
+                "adjudications": [
+                  {
+                    "adjudication": "Guilty",
+                    "adjudicationId": "f08b719c-c8fc-412e-a890-d7614b846de1",
+                    "appearanceNumber": 0,
+                    "disposalDate": "2011-09-26",
+                  },
+                ],
+                "arrestOffenceSequenceNumber": 2,
+                "cjsOffenceCode": "RT88191",
+                "courtOffenceSequenceNumber": 2,
+                "disposalResults": [
+                  {
+                    "chargeAppearanceNumber": 0,
+                    "disposalCode": 1015,
+                    "disposalDuration": {
+                      "count": 5,
+                      "units": "weeks",
+                    },
+                    "disposalEffectiveDate": "2011-10-12",
+                    "disposalFine": {
+                      "amount": 100,
+                    },
+                    "disposalId": "74260b90-e55e-4748-9133-57c09634e953",
+                    "disposalQualifierDuration": {
+                      "count": 12,
+                      "units": "months",
+                    },
+                    "disposalQualifiers": [
+                      "AB",
+                      "B",
+                    ],
+                  },
+                ],
+                "legislationQualifiers": [],
+                "npccOffenceCode": "12.15.13.1",
+                "offenceId": "ba5a7edb-a9ae-4612-a22b-be2166a66b79",
+                "offenceStartDate": "2010-11-28",
+                "offenceTic": 0,
+                "plea": "Not Guilty",
+                "qualifiedCjsCode": "RT88191",
+                "roleQualifiers": [],
+                "title": "Rape of a Female",
+              },
+              {
+                "adjudications": [
+                  {
+                    "adjudication": "Guilty",
+                    "adjudicationId": "55d9d0c5-d2a7-4b56-92fd-930fa42a3261",
+                    "appearanceNumber": 0,
+                    "disposalDate": "2011-09-26",
+                  },
+                ],
+                "arrestOffenceSequenceNumber": 1,
+                "cjsOffenceCode": "SX03001A",
+                "courtOffenceSequenceNumber": 1,
+                "disposalResults": [
+                  {
+                    "chargeAppearanceNumber": 0,
+                    "disposalCode": 3078,
+                    "disposalFine": {},
+                    "disposalId": "a8a7be2a-5d2e-4643-9665-029c66dc0c46",
+                    "disposalQualifiers": [],
+                  },
+                ],
+                "legislationQualifiers": [],
+                "npccOffenceCode": "2.1.4.1",
+                "offenceEndDate": "2010-11-29",
+                "offenceEndTime": "12:30",
+                "offenceId": "101e18ac-f0df-462c-841b-1eaed0975801",
+                "offenceStartDate": "2010-11-28",
+                "offenceStartTime": "10:00",
+                "offenceTic": 0,
+                "plea": "Not Guilty",
+                "qualifiedCjsCode": "SX03001A",
+                "roleQualifiers": [
+                  "AT",
+                ],
+                "title": "Attempt to rape a girl aged 13 / 14 / 15 / years of ag",
+              },
+            ],
+          },
+        ],
+        "longPersonUrn": "1950/1581C",
+        "ownerCode": "01ZD",
+        "personId": "5c6ab813-35b6-44de-817c-f41de14c9526",
+        "reportId": "1aaa5c44-4fca-4af7-a558-9c6148a77c4c",
+      },
+      "Response Status": 200,
+      "Response Time": Any<Number>,
+      "sensitiveAttributes": "Request Message,Response Message",
+    },
+    "category": "information",
+    "eventCode": "pnc.response-received",
+    "eventSource": "CorePhase1",
+    "eventType": "PNC Response received",
+    "timestamp": Any<Date>,
+  },
+]
+`;
+
+exports[`LedsGateway query should return police query result and update query time: Query Result 1`] = `
+{
+  "checkName": "",
+  "courtCases": [
+    {
+      "courtCaseId": "bddbd0d2-232d-47b3-896a-ce7be613b07c",
+      "courtCaseReference": "26/9998/000826X",
+      "crimeOffenceReference": undefined,
+      "offences": [
+        {
+          "adjudication": {
+            "offenceTICNumber": 0,
+            "plea": "NOT GUILTY",
+            "sentenceDate": 2011-09-26T00:00:00.000Z,
+            "verdict": "GUILTY",
+            "weedFlag": undefined,
+          },
+          "disposals": [
+            {
+              "disposalId": "dbf6c8ea-79f4-4b91-9b97-2720019b87b6",
+              "qtyDate": undefined,
+              "qtyDuration": undefined,
+              "qtyMonetaryValue": undefined,
+              "qtyUnitsFined": undefined,
+              "qualifiers": "S       Y999",
+              "text": undefined,
+              "type": 3052,
+            },
+          ],
+          "offence": {
+            "acpoOffenceCode": "2.1.4.1",
+            "cjsOffenceCode": "SX03001",
+            "endDate": undefined,
+            "endTime": undefined,
+            "offenceId": "9faec803-2428-496b-a670-68e15a7849bb",
+            "qualifier1": undefined,
+            "qualifier2": undefined,
+            "sequenceNumber": 3,
+            "startDate": 2010-11-28T00:00:00.000Z,
+            "startTime": undefined,
+            "title": undefined,
+          },
+        },
+        {
+          "adjudication": {
+            "offenceTICNumber": 0,
+            "plea": "NOT GUILTY",
+            "sentenceDate": 2011-09-26T00:00:00.000Z,
+            "verdict": "GUILTY",
+            "weedFlag": undefined,
+          },
+          "disposals": [
+            {
+              "disposalId": "74260b90-e55e-4748-9133-57c09634e953",
+              "qtyDate": "2011-10-12",
+              "qtyDuration": "W5",
+              "qtyMonetaryValue": "100.00",
+              "qtyUnitsFined": undefined,
+              "qualifiers": "ABB     M12",
+              "text": undefined,
+              "type": 1015,
+            },
+          ],
+          "offence": {
+            "acpoOffenceCode": "12.15.13.1",
+            "cjsOffenceCode": "RT88191",
+            "endDate": undefined,
+            "endTime": undefined,
+            "offenceId": "ba5a7edb-a9ae-4612-a22b-be2166a66b79",
+            "qualifier1": undefined,
+            "qualifier2": undefined,
+            "sequenceNumber": 2,
+            "startDate": 2010-11-28T00:00:00.000Z,
+            "startTime": undefined,
+            "title": undefined,
+          },
+        },
+        {
+          "adjudication": {
+            "offenceTICNumber": 0,
+            "plea": "NOT GUILTY",
+            "sentenceDate": 2011-09-26T00:00:00.000Z,
+            "verdict": "GUILTY",
+            "weedFlag": undefined,
+          },
+          "disposals": [
+            {
+              "disposalId": "a8a7be2a-5d2e-4643-9665-029c66dc0c46",
+              "qtyDate": undefined,
+              "qtyDuration": undefined,
+              "qtyMonetaryValue": undefined,
+              "qtyUnitsFined": undefined,
+              "qualifiers": undefined,
+              "text": undefined,
+              "type": 3078,
+            },
+          ],
+          "offence": {
+            "acpoOffenceCode": "2.1.4.1",
+            "cjsOffenceCode": "SX03001A",
+            "endDate": 2010-11-29T00:00:00.000Z,
+            "endTime": "12:30",
+            "offenceId": "101e18ac-f0df-462c-841b-1eaed0975801",
+            "qualifier1": "AT",
+            "qualifier2": undefined,
+            "sequenceNumber": 1,
+            "startDate": 2010-11-28T00:00:00.000Z,
+            "startTime": "10:00",
+            "title": undefined,
+          },
+        },
+      ],
+    },
+  ],
+  "croNumber": undefined,
+  "forceStationCode": "01ZD",
+  "penaltyCases": undefined,
+  "personId": "5c6ab813-35b6-44de-817c-f41de14c9526",
+  "pncId": "1950/0001581C",
+  "reportId": "1aaa5c44-4fca-4af7-a558-9c6148a77c4c",
+}
+`;
+
+exports[`LedsGateway update should return an error when api call fails: Audit Log Events 1`] = `
+[
+  {
+    "attributes": {
+      "Request Headers": {
+        "Accept": "application/json",
+        "Authorization": undefined,
+        "X-Leds-Action-Code": "Create Remand",
+        "X-Leds-Activity-Code": "Person Update",
+        "X-Leds-Activity-Flow-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Application-Datetime": Any<String>,
+        "X-Leds-Correlation-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Justification": "Automated court disposal from MoJ Bichard",
+        "X-Leds-On-Behalf-Of": "Bichard7",
+        "X-Leds-Reason": "9 - Update/Confirm/Broadcast",
+        "X-Leds-Reference-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Session-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-System-Name": "Bichard7",
+      },
+      "Request Message": {
+        "appearanceResult": "remanded-on-bail",
+        "bailConditions": [
+          "This is a dummy bail condition.
+
+
+",
+        ],
+        "currentAppearance": {
+          "court": {
+            "courtCode": "1234",
+            "courtIdentityType": "code",
+          },
+        },
+        "longPersonUrn": "2000/410770Y",
+        "nextAppearance": {
+          "court": {
+            "courtIdentityType": "name",
+            "courtName": "Magistrates' Courts London Croydon MCA",
+          },
+          "date": "2024-12-11",
+        },
+        "ownerCode": "02YZ",
+        "remandDate": "2024-12-05",
+      },
+      "Request Type": "Remand",
+      "Request URL": StringMatching /https:\\\\/\\\\/dummy\\\\/person-services\\\\/v1\\\\/\\.\\*/,
+      "Response Message": "Dummy update: API call failed.",
+      "Response Status": undefined,
+      "Response Time": Any<Number>,
+      "sensitiveAttributes": "Request Message,Response Message",
+    },
+    "category": "information",
+    "eventCode": "pnc.response-received",
+    "eventSource": "CorePhase1",
+    "eventType": "PNC Response received",
+    "timestamp": Any<Date>,
+  },
+]
+`;
+
+exports[`LedsGateway update should return an error when http status code is not 200 and response contains LEDS errors: Audit Log Events 1`] = `
+[
+  {
+    "attributes": {
+      "Request Headers": {
+        "Accept": "application/json",
+        "Authorization": undefined,
+        "X-Leds-Action-Code": "Create Remand",
+        "X-Leds-Activity-Code": "Person Update",
+        "X-Leds-Activity-Flow-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Application-Datetime": Any<String>,
+        "X-Leds-Correlation-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Justification": "Automated court disposal from MoJ Bichard",
+        "X-Leds-On-Behalf-Of": "Bichard7",
+        "X-Leds-Reason": "9 - Update/Confirm/Broadcast",
+        "X-Leds-Reference-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Session-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-System-Name": "Bichard7",
+      },
+      "Request Message": {
+        "appearanceResult": "remanded-on-bail",
+        "bailConditions": [
+          "This is a dummy bail condition.
+
+
+",
+        ],
+        "currentAppearance": {
+          "court": {
+            "courtCode": "1234",
+            "courtIdentityType": "code",
+          },
+        },
+        "longPersonUrn": "2000/410770Y",
+        "nextAppearance": {
+          "court": {
+            "courtIdentityType": "name",
+            "courtName": "Magistrates' Courts London Croydon MCA",
+          },
+          "date": "2024-12-11",
+        },
+        "ownerCode": "02YZ",
+        "remandDate": "2024-12-05",
+      },
+      "Request Type": "Remand",
+      "Request URL": StringMatching /https:\\\\/\\\\/dummy\\\\/person-services\\\\/v1\\\\/\\.\\*/,
+      "Response Message": {
+        "details": "dummy details",
+        "instance": "dummy instance",
+        "leds": {
+          "errors": [
+            {
+              "message": "dummy error message 1",
+            },
+            {
+              "message": "dummy error message 2",
+            },
+          ],
+        },
+        "status": 501,
+        "title": "dummy title",
+        "type": "unprocessable/not-allowed",
+      },
+      "Response Status": 501,
+      "Response Time": Any<Number>,
+      "sensitiveAttributes": "Request Message,Response Message",
+    },
+    "category": "information",
+    "eventCode": "pnc.response-received",
+    "eventSource": "CorePhase1",
+    "eventType": "PNC Response received",
+    "timestamp": Any<Date>,
+  },
+]
+`;
+
+exports[`LedsGateway update should return an error when http status code is not 200 and response does not contain LEDS errors: Audit Log Events 1`] = `
+[
+  {
+    "attributes": {
+      "Request Headers": {
+        "Accept": "application/json",
+        "Authorization": undefined,
+        "X-Leds-Action-Code": "Create Remand",
+        "X-Leds-Activity-Code": "Person Update",
+        "X-Leds-Activity-Flow-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Application-Datetime": Any<String>,
+        "X-Leds-Correlation-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Justification": "Automated court disposal from MoJ Bichard",
+        "X-Leds-On-Behalf-Of": "Bichard7",
+        "X-Leds-Reason": "9 - Update/Confirm/Broadcast",
+        "X-Leds-Reference-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Session-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-System-Name": "Bichard7",
+      },
+      "Request Message": {
+        "appearanceResult": "remanded-on-bail",
+        "bailConditions": [
+          "This is a dummy bail condition.
+
+
+",
+        ],
+        "currentAppearance": {
+          "court": {
+            "courtCode": "1234",
+            "courtIdentityType": "code",
+          },
+        },
+        "longPersonUrn": "2000/410770Y",
+        "nextAppearance": {
+          "court": {
+            "courtIdentityType": "name",
+            "courtName": "Magistrates' Courts London Croydon MCA",
+          },
+          "date": "2024-12-11",
+        },
+        "ownerCode": "02YZ",
+        "remandDate": "2024-12-05",
+      },
+      "Request Type": "Remand",
+      "Request URL": StringMatching /https:\\\\/\\\\/dummy\\\\/person-services\\\\/v1\\\\/\\.\\*/,
+      "Response Message": {
+        "randomField": "randomValue",
+      },
+      "Response Status": 501,
+      "Response Time": Any<Number>,
+      "sensitiveAttributes": "Request Message,Response Message",
+    },
+    "category": "information",
+    "eventCode": "pnc.response-received",
+    "eventSource": "CorePhase1",
+    "eventType": "PNC Response received",
+    "timestamp": Any<Date>,
+  },
+]
+`;
+
+exports[`LedsGateway update should successfully update when operation is add disposal results: Audit Log Events 1`] = `
+[
+  {
+    "attributes": {
+      "Request Headers": {
+        "Accept": "application/json",
+        "Authorization": undefined,
+        "X-Leds-Action-Code": "Add Disposal Results",
+        "X-Leds-Activity-Code": "Person Update",
+        "X-Leds-Activity-Flow-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Application-Datetime": Any<String>,
+        "X-Leds-Correlation-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Justification": "Automated court disposal from MoJ Bichard",
+        "X-Leds-On-Behalf-Of": "Bichard7",
+        "X-Leds-Reason": "9 - Update/Confirm/Broadcast",
+        "X-Leds-Reference-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Session-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-System-Name": "Bichard7",
+      },
+      "Request Message": {
+        "additionalArrestOffences": undefined,
+        "carryForward": {
+          "appearanceDate": "2024-12-11",
+          "court": {
+            "courtCode": "2575",
+            "courtIdentityType": "code",
+          },
+        },
+        "court": {
+          "courtCode": "1234",
+          "courtIdentityType": "code",
+        },
+        "courtCaseReference": "97/1626/008395Q",
+        "dateOfConviction": "2024-12-05",
+        "defendant": {
+          "defendantFirstNames": [
+            "TRPSTWO",
+          ],
+          "defendantLastName": "TRTHREE",
+          "defendantType": "individual",
+        },
+        "longPersonUrn": "2000/410770Y",
+        "offences": [
+          {
+            "adjudication": undefined,
+            "cjsOffenceCode": "RT88191",
+            "courtOffenceSequenceNumber": 1,
+            "dateOfSentence": undefined,
+            "disposalResults": [
+              {
+                "disposalCode": 2059,
+                "disposalDuration": undefined,
+                "disposalEffectiveDate": undefined,
+                "disposalQualifierDuration": undefined,
+                "disposalQualifiers": undefined,
+                "disposalText": undefined,
+              },
+            ],
+            "offenceId": "fb9dadf2-2b81-45eb-93cd-87602f093571",
+            "offenceTic": 0,
+            "plea": undefined,
+            "roleQualifiers": undefined,
+          },
+        ],
+        "ownerCode": "02YZ",
+        "referToCourtCase": undefined,
+      },
+      "Request Type": "Disposal Results",
+      "Request URL": StringMatching /https:\\\\/\\\\/dummy\\\\/person-services\\\\/v1\\\\/\\.\\*/,
+      "Response Message": {
+        "id": "d5f0300e-3079-4923-95a3-d4f4a6c60cd9",
+      },
+      "Response Status": 201,
+      "Response Time": Any<Number>,
+      "sensitiveAttributes": "Request Message,Response Message",
+    },
+    "category": "information",
+    "eventCode": "pnc.response-received",
+    "eventSource": "CorePhase1",
+    "eventType": "PNC Response received",
+    "timestamp": Any<Date>,
+  },
+]
+`;
+
+exports[`LedsGateway update should successfully update when operation is remand: Audit Log Events 1`] = `
+[
+  {
+    "attributes": {
+      "Request Headers": {
+        "Accept": "application/json",
+        "Authorization": undefined,
+        "X-Leds-Action-Code": "Create Remand",
+        "X-Leds-Activity-Code": "Person Update",
+        "X-Leds-Activity-Flow-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Application-Datetime": Any<String>,
+        "X-Leds-Correlation-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Justification": "Automated court disposal from MoJ Bichard",
+        "X-Leds-On-Behalf-Of": "Bichard7",
+        "X-Leds-Reason": "9 - Update/Confirm/Broadcast",
+        "X-Leds-Reference-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Session-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-System-Name": "Bichard7",
+      },
+      "Request Message": {
+        "appearanceResult": "remanded-on-bail",
+        "bailConditions": [
+          "This is a dummy bail condition.
+
+
+",
+        ],
+        "currentAppearance": {
+          "court": {
+            "courtCode": "1234",
+            "courtIdentityType": "code",
+          },
+        },
+        "longPersonUrn": "2000/410770Y",
+        "nextAppearance": {
+          "court": {
+            "courtIdentityType": "name",
+            "courtName": "Magistrates' Courts London Croydon MCA",
+          },
+          "date": "2024-12-11",
+        },
+        "ownerCode": "02YZ",
+        "remandDate": "2024-12-05",
+      },
+      "Request Type": "Remand",
+      "Request URL": StringMatching /https:\\\\/\\\\/dummy\\\\/person-services\\\\/v1\\\\/\\.\\*/,
+      "Response Message": {
+        "id": "de765c89-b99d-4116-b282-64a03b242043",
+      },
+      "Response Status": 201,
+      "Response Time": Any<Number>,
+      "sensitiveAttributes": "Request Message,Response Message",
+    },
+    "category": "information",
+    "eventCode": "pnc.response-received",
+    "eventSource": "CorePhase1",
+    "eventType": "PNC Response received",
+    "timestamp": Any<Date>,
+  },
+]
+`;
+
+exports[`LedsGateway update should successfully update when operation is sentence deferred: Audit Log Events 1`] = `
+[
+  {
+    "attributes": {
+      "Request Headers": {
+        "Accept": "application/json",
+        "Authorization": undefined,
+        "X-Leds-Action-Code": "Create Court Case Subsequent Appearance",
+        "X-Leds-Activity-Code": "Person Update",
+        "X-Leds-Activity-Flow-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Application-Datetime": Any<String>,
+        "X-Leds-Correlation-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Justification": "Automated court disposal from MoJ Bichard",
+        "X-Leds-On-Behalf-Of": "Bichard7",
+        "X-Leds-Reason": "9 - Update/Confirm/Broadcast",
+        "X-Leds-Reference-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Session-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-System-Name": "Bichard7",
+      },
+      "Request Message": {
+        "appearanceDate": "2023-12-19",
+        "court": {
+          "courtCode": "2575",
+          "courtIdentityType": "code",
+        },
+        "courtCaseReference": "97/1626/008395Q",
+        "longPersonUrn": "2000/410770Y",
+        "offences": [
+          {
+            "adjudication": undefined,
+            "cjsOffenceCode": "FA06001",
+            "courtOffenceSequenceNumber": 1,
+            "dateOfSentence": undefined,
+            "disposalResults": [
+              {
+                "disposalCode": 4004,
+                "disposalDuration": undefined,
+                "disposalEffectiveDate": undefined,
+                "disposalQualifierDuration": undefined,
+                "disposalQualifiers": undefined,
+                "disposalText": "FAILED TO APPEAR WARRANT ISSUED",
+              },
+            ],
+            "offenceId": "fb9dadf2-2b81-45eb-93cd-87602f093571",
+            "offenceTic": undefined,
+            "plea": undefined,
+            "roleQualifiers": undefined,
+          },
+          {
+            "adjudication": undefined,
+            "cjsOffenceCode": "FA06001",
+            "courtOffenceSequenceNumber": 2,
+            "dateOfSentence": undefined,
+            "disposalResults": [
+              {
+                "disposalCode": 4004,
+                "disposalDuration": undefined,
+                "disposalEffectiveDate": undefined,
+                "disposalQualifierDuration": undefined,
+                "disposalQualifiers": undefined,
+                "disposalText": "FAILED TO APPEAR WARRANT ISSUED",
+              },
+            ],
+            "offenceId": "fb9dadf2-2b81-45eb-93cd-87602f093571",
+            "offenceTic": undefined,
+            "plea": undefined,
+            "roleQualifiers": undefined,
+          },
+        ],
+        "ownerCode": "01YZ",
+        "reasonForAppearance": "Sentence Deferred",
+      },
+      "Request Type": "Sentence Deferred",
+      "Request URL": StringMatching /https:\\\\/\\\\/dummy\\\\/person-services\\\\/v1\\\\/\\.\\*/,
+      "Response Message": {
+        "id": "fed86d18-c3de-4013-93f0-54fe1571ed13",
+      },
+      "Response Status": 201,
+      "Response Time": Any<Number>,
+      "sensitiveAttributes": "Request Message,Response Message",
+    },
+    "category": "information",
+    "eventCode": "pnc.response-received",
+    "eventSource": "CorePhase1",
+    "eventType": "PNC Response received",
+    "timestamp": Any<Date>,
+  },
+]
+`;
+
+exports[`LedsGateway update should successfully update when operation is subsequently varied: Audit Log Events 1`] = `
+[
+  {
+    "attributes": {
+      "Request Headers": {
+        "Accept": "application/json",
+        "Authorization": undefined,
+        "X-Leds-Action-Code": "Create Court Case Subsequent Appearance",
+        "X-Leds-Activity-Code": "Person Update",
+        "X-Leds-Activity-Flow-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Application-Datetime": Any<String>,
+        "X-Leds-Correlation-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Justification": "Automated court disposal from MoJ Bichard",
+        "X-Leds-On-Behalf-Of": "Bichard7",
+        "X-Leds-Reason": "9 - Update/Confirm/Broadcast",
+        "X-Leds-Reference-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-Session-Id": StringMatching /\\^\\[0-9a-f\\]\\{8\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{4\\}-\\[0-9a-f\\]\\{12\\}\\$/i,
+        "X-Leds-System-Name": "Bichard7",
+      },
+      "Request Message": {
+        "appearanceDate": "2023-12-19",
+        "court": {
+          "courtCode": "2575",
+          "courtIdentityType": "code",
+        },
+        "courtCaseReference": "97/1626/008395Q",
+        "longPersonUrn": "2000/410770Y",
+        "offences": [
+          {
+            "adjudication": "Guilty",
+            "cjsOffenceCode": "FA06001",
+            "courtOffenceSequenceNumber": 1,
+            "dateOfSentence": "2023-12-19",
+            "disposalResults": [
+              {
+                "disposalCode": 4004,
+                "disposalDuration": undefined,
+                "disposalEffectiveDate": undefined,
+                "disposalQualifierDuration": undefined,
+                "disposalQualifiers": undefined,
+                "disposalText": "FAILED TO APPEAR WARRANT ISSUED",
+              },
+            ],
+            "offenceId": "fb9dadf2-2b81-45eb-93cd-87602f093571",
+            "offenceTic": 0,
+            "plea": "Guilty",
+            "roleQualifiers": undefined,
+          },
+          {
+            "adjudication": "Guilty",
+            "cjsOffenceCode": "FA06001",
+            "courtOffenceSequenceNumber": 2,
+            "dateOfSentence": "2023-12-19",
+            "disposalResults": [
+              {
+                "disposalCode": 4004,
+                "disposalDuration": undefined,
+                "disposalEffectiveDate": undefined,
+                "disposalQualifierDuration": undefined,
+                "disposalQualifiers": undefined,
+                "disposalText": "FAILED TO APPEAR WARRANT ISSUED",
+              },
+            ],
+            "offenceId": "fb9dadf2-2b81-45eb-93cd-87602f093571",
+            "offenceTic": 0,
+            "plea": "Guilty",
+            "roleQualifiers": undefined,
+          },
+        ],
+        "ownerCode": "01YZ",
+        "reasonForAppearance": "Subsequently Varied",
+      },
+      "Request Type": "Subsequently Varied",
+      "Request URL": StringMatching /https:\\\\/\\\\/dummy\\\\/person-services\\\\/v1\\\\/\\.\\*/,
+      "Response Message": {
+        "id": "061a236c-ecdc-48d1-81b2-f3f099a35991",
+      },
+      "Response Status": 201,
+      "Response Time": Any<Number>,
+      "sensitiveAttributes": "Request Message,Response Message",
+    },
+    "category": "information",
+    "eventCode": "pnc.response-received",
+    "eventSource": "CorePhase1",
+    "eventType": "PNC Response received",
+    "timestamp": Any<Date>,
+  },
+]
+`;

@@ -1,3 +1,4 @@
+import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type {
   PoliceAdjudication,
   PoliceCourtCase,
@@ -6,23 +7,23 @@ import type {
   PolicePenaltyCase,
   PoliceQueryResult
 } from "@moj-bichard7/common/types/PoliceQueryResult"
+import type { AxiosInstance } from "axios"
 
+import EventCode from "@moj-bichard7/common/types/EventCode"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import { isError } from "@moj-bichard7/common/types/Result"
 import dateTransformer from "@moj-bichard7/common/utils/dateTransformer"
 import axios from "axios"
 import https from "https"
 
 import type PoliceUpdateRequest from "../../../phase3/types/PoliceUpdateRequest"
+import type AuditLogger from "../../../types/AuditLogger"
 import type PncApiConfig from "../../../types/PncApiConfig"
 import type { PncApiDisposal, PncApiOffence, PncApiResult } from "../../../types/PncApiResult"
 import type PoliceGateway from "../../../types/PoliceGateway"
 
 import { pncApiResultSchema } from "../../../schemas/pncApiResult"
 import PoliceApiError from "../PoliceApiError"
-
-const pncAxios = axios.create({
-  transformResponse: [dateTransformer]
-})
 
 const transform = (apiResponse: PncApiResult): PoliceQueryResult => {
   const getAdjudication = (offence: PncApiOffence): PoliceAdjudication | undefined => {
@@ -106,13 +107,25 @@ const lookupPathFromOperation = (operation: PncOperation): string =>
   })[operation]
 
 export default class PncGateway implements PoliceGateway {
+  pncAxios: AxiosInstance
   queryTime: Date | undefined
 
-  constructor(private config: PncApiConfig) {}
+  constructor(
+    private readonly config: PncApiConfig,
+    private readonly auditLogger: AuditLogger
+  ) {
+    this.pncAxios = axios.create({
+      transformResponse: [dateTransformer]
+    })
+  }
 
-  query(asn: string, correlationId: string): Promise<PoliceApiError | PoliceQueryResult> {
+  async query(
+    asn: string,
+    correlationId: string,
+    aho: AnnotatedHearingOutcome
+  ): Promise<PoliceApiError | PoliceQueryResult> {
     this.queryTime = new Date()
-    return pncAxios
+    const pncResult = await this.pncAxios
       .get(`${this.config.url}/records/${asn}`, {
         headers: {
           "X-Api-Key": this.config.key,
@@ -134,12 +147,24 @@ export default class PncGateway implements PoliceGateway {
 
         return new PoliceApiError([e.message])
       })
+
+    const auditLogAttributes = {
+      "PNC Response Time": Date.now() - this.queryTime.getTime(),
+      "PNC Attempts Made": 1, // Retry is not implemented
+      "PNC Request Type": "enquiry",
+      "PNC Request Message": aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
+      "PNC Response Message": isError(pncResult) ? pncResult.messages.join(", ") : pncResult,
+      sensitiveAttributes: "PNC Request Message,PNC Response Message"
+    }
+    this.auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
+
+    return pncResult
   }
 
   update(request: PoliceUpdateRequest, correlationId: string): Promise<PoliceApiError | void> {
     const path = lookupPathFromOperation(request.operation)
 
-    return pncAxios
+    return this.pncAxios
       .post(`${this.config.url}/records/${path}`, request.request, {
         headers: {
           "X-Api-Key": this.config.key,

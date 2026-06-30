@@ -28,8 +28,8 @@ const processPhase1: ConductorWorker = {
   taskDefName: "process_phase1",
   execute: s3TaskDataFetcher<AnnotatedHearingOutcome>(unvalidatedHearingOutcomeSchema, async (task) => {
     const { s3TaskData, s3TaskDataPath, lockId } = task.inputData
-    const policeGateway = createPoliceGateway()
     const auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
+    const policeGateway = createPoliceGateway(auditLogger)
     const db = postgres(dbConfig)
 
     auditLogger.debug(EventCode.HearingOutcomeReceivedPhase1)

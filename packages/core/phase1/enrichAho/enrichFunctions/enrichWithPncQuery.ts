@@ -2,10 +2,8 @@ import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/Annotat
 import type { PoliceCourtCase, PoliceOffence, PolicePenaltyCase } from "@moj-bichard7/common/types/PoliceQueryResult"
 
 import { lookupOffenceByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
-import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type AuditLogger from "../../../types/AuditLogger"
 import type PoliceGateway from "../../../types/PoliceGateway"
 
 import createPoliceExceptionGenerator from "../../../lib/exceptions/PoliceExceptionGenerator/createPoliceExceptionGenerator"
@@ -47,10 +45,9 @@ const clearPNCPopulatedElements = (aho: AnnotatedHearingOutcome): void => {
   })
 }
 
-export default async (
+const enrichWithPncQuery = async (
   annotatedHearingOutcome: AnnotatedHearingOutcome,
   policeGateway: PoliceGateway,
-  auditLogger: AuditLogger,
   isIgnored: boolean
 ): Promise<AnnotatedHearingOutcome> => {
   clearPNCPopulatedElements(annotatedHearingOutcome)
@@ -63,21 +60,8 @@ export default async (
     return annotatedHearingOutcome
   }
 
-  const requestStartTime = new Date()
-
   const pncResult = await policeGateway.query(asn, correlationId, annotatedHearingOutcome)
 
-  const auditLogAttributes = {
-    "PNC Response Time": new Date().getTime() - requestStartTime.getTime(),
-    "PNC Attempts Made": 1, // Retry is not implemented
-    "PNC Request Type": "enquiry",
-    "PNC Request Message":
-      annotatedHearingOutcome.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
-    "PNC Response Message": isError(pncResult) ? pncResult.messages.join(", ") : pncResult,
-    sensitiveAttributes: "PNC Request Message,PNC Response Message"
-  }
-
-  auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
   if (isError(pncResult)) {
     for (const message of pncResult.messages) {
       if (
@@ -107,3 +91,5 @@ export default async (
 
   return annotatedHearingOutcome
 }
+
+export default enrichWithPncQuery
