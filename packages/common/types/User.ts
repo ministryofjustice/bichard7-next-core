@@ -30,7 +30,7 @@ export const UserLookupRowSchema = UserRowSchema.pick({
   forenames: true,
   id: true,
   surname: true
-}).loose
+})
 
 export const UserSchema = z.object({
   deletedAt: z.date().nullable(),
