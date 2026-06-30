@@ -57,7 +57,7 @@ const generateAuditLogAttributes = (
   response: AxiosError | AxiosResponse,
   requestStartTime: Date
 ) => ({
-  "Response Time": new Date().getTime() - requestStartTime.getTime(),
+  "Response Time": Date.now() - requestStartTime.getTime(),
   "Request Type": requestType,
   "Request URL": url,
   "Request Headers": { ...headers, Authorization: undefined },
@@ -71,8 +71,8 @@ export default class LedsGateway implements PoliceGateway {
   queryTime: Date | undefined
 
   constructor(
-    private config: LedsApiConfig,
-    private auditLogger: AuditLogger
+    private readonly config: LedsApiConfig,
+    private readonly auditLogger: AuditLogger
   ) {}
 
   async query(

@@ -111,8 +111,8 @@ export default class PncGateway implements PoliceGateway {
   queryTime: Date | undefined
 
   constructor(
-    private config: PncApiConfig,
-    private auditLogger: AuditLogger
+    private readonly config: PncApiConfig,
+    private readonly auditLogger: AuditLogger
   ) {
     this.pncAxios = axios.create({
       transformResponse: [dateTransformer]
@@ -149,7 +149,7 @@ export default class PncGateway implements PoliceGateway {
       })
 
     const auditLogAttributes = {
-      "PNC Response Time": new Date().getTime() - this.queryTime.getTime(),
+      "PNC Response Time": Date.now() - this.queryTime.getTime(),
       "PNC Attempts Made": 1, // Retry is not implemented
       "PNC Request Type": "enquiry",
       "PNC Request Message": aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
