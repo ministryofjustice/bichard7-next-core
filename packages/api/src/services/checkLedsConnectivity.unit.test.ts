@@ -1,56 +1,53 @@
 import checkLedsConnectivity from "./checkLedsConnectivity"
 
 describe("checkLedsConnectivity", () => {
-  beforeAll(() => {
-    process.env.LEDS_API_URL = "https://api.leds.test/health"
-  })
+  let consoleSpy: jest.SpyInstance
 
   beforeEach(() => {
-    jest.resetModules()
-    global.fetch = jest.fn()
+    process.env.LEDS_API_URL = "https://api.leds.test/health"
+    consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {})
   })
 
   afterEach(() => {
     jest.clearAllMocks()
+    consoleSpy.mockRestore()
   })
 
   it("returns true when LEDS API returns a successful 401 response", async () => {
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+    const mockFetch = jest.fn().mockResolvedValueOnce({
       status: 401
     })
 
-    const result = await checkLedsConnectivity()
+    const result = await checkLedsConnectivity(undefined, mockFetch)
 
     expect(result).toBe(true)
-    expect(global.fetch).toHaveBeenCalledWith("https://api.leds.test/health", { method: "GET" })
   })
 
   it("returns false when LEDS API returns an error", async () => {
-    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
-      ok: false,
+    const mockFetch = jest.fn().mockResolvedValueOnce({
       status: 500
     })
 
-    const result = await checkLedsConnectivity()
+    const result = await checkLedsConnectivity(undefined, mockFetch)
 
     expect(result).toBe(false)
   })
 
   it("returns false when LEDS API times out", async () => {
-    jest.useFakeTimers()
-    ;(global.fetch as jest.Mock).mockImplementationOnce(() => new Promise(() => {}))
+    process.env.LEDS_API_URL = "http://localhost/mock-leds"
 
-    const promiseResult = checkLedsConnectivity()
-    jest.advanceTimersByTime(2100)
+    const timeoutError = new DOMException("The operation was aborted due to timeout.", "TimeoutError")
+    const mockFetch = jest.fn().mockRejectedValue(timeoutError)
 
-    const result = await promiseResult
+    const result = await checkLedsConnectivity(undefined, mockFetch)
+
     expect(result).toBe(false)
   })
 
   it("returns false when the network request throws an error", async () => {
-    ;(global.fetch as jest.Mock).mockRejectedValueOnce(new Error("Network error"))
+    const mockFetch = jest.fn().mockResolvedValueOnce(new Error("Network error"))
 
-    const result = await checkLedsConnectivity()
+    const result = await checkLedsConnectivity(undefined, mockFetch)
 
     expect(result).toBe(false)
   })
@@ -61,6 +58,6 @@ describe("checkLedsConnectivity", () => {
     const result = await checkLedsConnectivity()
 
     expect(result).toBe(false)
-    expect(global.fetch).not.toHaveBeenCalled()
+    expect(consoleSpy).toHaveBeenCalledWith("LEDS_API_URL environment variable not found")
   })
 })

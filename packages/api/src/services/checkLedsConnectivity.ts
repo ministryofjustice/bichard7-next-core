@@ -1,14 +1,10 @@
-import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+import type { Dispatcher } from "undici"
+
+import { type PromiseResult } from "@moj-bichard7/common/types/Result"
 import httpStatus from "http-status"
-import { Agent, fetch } from "undici"
+import { fetch } from "undici"
 
-const insecureAgent = new Agent({
-  connect: {
-    rejectUnauthorized: false
-  }
-})
-
-export default async (): PromiseResult<boolean> => {
+export default async (dispatcher?: Dispatcher, fetchFn: typeof fetch = fetch): PromiseResult<boolean> => {
   const ledsApiUrl = process.env.LEDS_API_URL
 
   if (!ledsApiUrl) {
@@ -16,15 +12,17 @@ export default async (): PromiseResult<boolean> => {
     return false
   }
 
-  const response = await fetch(ledsApiUrl, {
-    dispatcher: insecureAgent,
+  const fetchOptions = {
     method: "POST",
-    signal: AbortSignal.timeout(2_000)
-  }).catch((error: Error) => error)
-
-  if (isError(response)) {
-    return false
+    signal: AbortSignal.timeout(2_000),
+    ...(dispatcher && { dispatcher })
   }
 
-  return response.status === httpStatus.UNAUTHORIZED
+  try {
+    const response = await fetchFn(ledsApiUrl, fetchOptions)
+    return response.status === httpStatus.UNAUTHORIZED
+  } catch (error) {
+    console.error("Connectivity check failed:", error)
+    return false
+  }
 }
