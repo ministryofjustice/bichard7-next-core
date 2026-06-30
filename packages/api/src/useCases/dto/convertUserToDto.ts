@@ -1,5 +1,5 @@
 import type { NoteUserDto, NoteUserRow } from "@moj-bichard7/common/types/Note"
-import type { User, UserDto, UserLookupDto } from "@moj-bichard7/common/types/User"
+import type { User, UserDto, UserLookupDto, UserLookupRow } from "@moj-bichard7/common/types/User"
 
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
@@ -57,7 +57,7 @@ export const convertUserToDto = (user: User): UserDto => {
   } satisfies UserDto
 }
 
-export const convertUserToLookupDto = (user: User): UserLookupDto => {
+export const convertUserToLookupDto = (user: UserLookupRow): UserLookupDto => {
   let fullname: string | undefined
 
   if (user.forenames && user.surname) {
