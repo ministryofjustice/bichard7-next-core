@@ -1,4 +1,4 @@
-const pinned = ["word-list", "next", "govuk-frontend"]
+const pinned = ["word-list", "next"]
 const ignored = ["cypress-circleci-reporter"]
 const skipped = []
 
