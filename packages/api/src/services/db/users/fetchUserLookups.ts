@@ -1,8 +1,10 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import { UserMinimalSchema, type User } from "@moj-bichard7/common/types/User"
+import { type User } from "@moj-bichard7/common/types/User"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 import filterUsersByVisibleForces from "./filterUsersByVisibleForces"
+
+import { userLookupRowSchema } from "../mapUserRowToUser"
 
 export type FetchUsersResult = {
   users: User[]
@@ -39,7 +41,7 @@ export default async (
         u.username,
         u.forenames,
         u.surname,
-        u.deleted_at AS "deletedAt"
+        u.deleted_at
       FROM
         br7own.users u
       WHERE
@@ -51,12 +53,18 @@ if (!userResult || userResult.length === 0) {
   
   const users: User[] = []
   for (const row of userResult) {
-    const parsed = UserMinimalSchema.safeParse(row)
+    const parsed = userLookupRowSchema.safeParse(row)
     if (!parsed.success) {
-      return parsed.error
+      return new Error(parsed.error.message)
     }
-    users.push(parsed.data as any) 
+  users.push({
+    id: parsed.data.id,
+    username: parsed.data.username,
+    forenames: parsed.data.forenames,
+    surname: parsed.data.surname,
+    deletedAt: parsed.data.deleted_at
+    } as unknown as User)
   }
 
-  return { users: users as unknown as User[]}
+  return { users }
 }
