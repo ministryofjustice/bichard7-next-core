@@ -1,10 +1,11 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+
 import { type User } from "@moj-bichard7/common/types/User"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
-import filterUsersByVisibleForces from "./filterUsersByVisibleForces"
 
 import { userLookupRowSchema } from "../mapUserRowToUser"
+import filterUsersByVisibleForces from "./filterUsersByVisibleForces"
 
 export type FetchUsersResult = {
   users: User[]
@@ -47,22 +48,23 @@ export default async (
       WHERE
           ${where} AND u.deleted_at IS NULL`
 
-if (!userResult || userResult.length === 0) {
+  if (!userResult || userResult.length === 0) {
     return { users: [] }
   }
-  
+
   const users: User[] = []
   for (const row of userResult) {
     const parsed = userLookupRowSchema.safeParse(row)
     if (!parsed.success) {
       return new Error(parsed.error.message)
     }
-  users.push({
-    id: parsed.data.id,
-    username: parsed.data.username,
-    forenames: parsed.data.forenames,
-    surname: parsed.data.surname,
-    deletedAt: parsed.data.deleted_at
+
+    users.push({
+      deletedAt: parsed.data.deleted_at,
+      forenames: parsed.data.forenames,
+      id: parsed.data.id,
+      surname: parsed.data.surname,
+      username: parsed.data.username
     } as unknown as User)
   }
 
