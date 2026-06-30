@@ -1,14 +1,15 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
+import type { UserLookupRow } from "@moj-bichard7/common/types/User"
 
-import { type User } from "@moj-bichard7/common/types/User"
+import { type User, UserLookupRowSchema } from "@moj-bichard7/common/types/User"
+import z from "zod"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
-import { userLookupRowSchema } from "../mapUserRowToUser"
 import filterUsersByVisibleForces from "./filterUsersByVisibleForces"
 
 export type FetchUsersResult = {
-  users: User[]
+  users: UserLookupRow[]
 }
 
 export default async (
@@ -39,10 +40,8 @@ export default async (
   const userResult = await database.connection`
       SELECT
         u.id,
-        u.username,
         u.forenames,
-        u.surname,
-        u.deleted_at
+        u.surname
       FROM
         br7own.users u
       WHERE
@@ -52,21 +51,10 @@ export default async (
     return { users: [] }
   }
 
-  const users: User[] = []
-  for (const row of userResult) {
-    const parsed = userLookupRowSchema.safeParse(row)
-    if (!parsed.success) {
-      return new Error(parsed.error.message)
-    }
-
-    users.push({
-      deletedAt: parsed.data.deleted_at,
-      forenames: parsed.data.forenames,
-      id: parsed.data.id,
-      surname: parsed.data.surname,
-      username: parsed.data.username
-    } as unknown as User)
+  const parsedResults = z.array(UserLookupRowSchema).safeParse(userResult)
+  if (!parsedResults.success) {
+    return parsedResults.error
   }
 
-  return { users }
+  return { users: parsedResults.data }
 }

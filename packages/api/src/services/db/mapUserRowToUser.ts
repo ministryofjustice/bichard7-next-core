@@ -1,7 +1,5 @@
 import type { User, UserRow } from "@moj-bichard7/common/types/User"
 
-import z from "zod"
-
 import formatForceNumbers from "../formatForceNumbers"
 
 const mapUserRowToUser = (userRow: UserRow): User => ({
@@ -19,13 +17,4 @@ const mapUserRowToUser = (userRow: UserRow): User => ({
   visibleForces: formatForceNumbers(userRow.visible_forces).map((f) => String(f).padStart(2, "0"))
 })
 
-const userLookupRowSchema = z.object({
-  deleted_at: z.date().nullable(),
-  forenames: z.string(),
-  id: z.number(),
-  surname: z.string(),
-  username: z.string()
-})
-
 export default mapUserRowToUser
-export { userLookupRowSchema }
