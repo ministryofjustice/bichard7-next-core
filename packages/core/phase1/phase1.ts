@@ -39,7 +39,7 @@ const phase1 = async (
 
   const isIgnored = isReopenedOrStatutoryDeclarationCase(hearingOutcome)
 
-  const enrichedHearingOutcome = await enrichAho(hearingOutcome, policeGateway, auditLogger, isIgnored)
+  const enrichedHearingOutcome = await enrichAho(hearingOutcome, policeGateway, isIgnored)
 
   auditLogger.info(
     EventCode.HearingOutcomeDetails,
