@@ -1,5 +1,9 @@
+import { FormGroup } from "@/components/FormGroup"
+import ResolveByFilter from "@/components/SearchFilters/ResolvedByFilter"
 import { createReportCsv } from "@/services/reports/csvGeneration/createReportCsv"
 import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
+import AuditResolvedBy from "@/types/AuditResolvedBy"
+import { validateResolvedBy } from "@/utils/reports/validateResolvedBy"
 import { AUTOMATED_REPORT_TYPE_MAP, AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { Card } from "components/Card"
@@ -20,13 +24,19 @@ import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { SelectReportDropdown } from "./SelectReportDropdown"
 import { filterReducer, initialFilterState } from "./reducers/filters"
 
-export const ReportSelectionFilter: React.FC = () => {
+export const ReportSelectionFilter: React.FC<{
+  resolvedBy?: AuditResolvedBy[]
+  canUseTriggerAndExceptionQualityAuditing?: boolean
+}> = ({ resolvedBy = [], canUseTriggerAndExceptionQualityAuditing = false }) => {
   const [isStreaming, setIsStreaming] = useState(false)
   const [rows, setRows] = useState<Record<string, unknown>[] | null>(null)
   const [fileDownloadUrl, setFileDownloadUrl] = useState<string | null>(null)
   const [reportFilename, setReportFilename] = useState<string>("")
 
-  const [filterValues, dispatch] = useReducer(filterReducer, initialFilterState)
+  const [filterValues, dispatch] = useReducer(filterReducer, {
+    ...initialFilterState,
+    canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing
+  })
 
   const config = filterValues.reportType
     ? (ReportConfigs[filterValues.reportType as keyof typeof ReportConfigs] as unknown as ReportConfig)
@@ -58,6 +68,10 @@ export const ReportSelectionFilter: React.FC = () => {
     dispatch({ type: "SET_CHECKBOX", payload: { id, checked } })
   }
 
+  const handleResolvedByChange = (selectedUsers: string[]) => {
+    dispatch({ type: "SET_RESOLVED_BY", payload: selectedUsers })
+  }
+
   const clearFilters = (event: SyntheticEvent<HTMLButtonElement>) => {
     event.preventDefault()
     setRows(null)
@@ -79,11 +93,18 @@ export const ReportSelectionFilter: React.FC = () => {
     )
     const selectReportValidation = validateSelectReport(filterValues.reportType as ReportType)
 
+    const resolvedByValidation = validateResolvedBy(
+      filterValues.reportType as ReportType,
+      filterValues.resolvedBy,
+      canUseTriggerAndExceptionQualityAuditing
+    )
+
     const newErrors = {
       dateFromError: rangeValidation.fromError,
       dateToError: rangeValidation.toError,
       reportTypeError: selectReportValidation,
-      checkboxesError: checkboxesValidation
+      checkboxesError: checkboxesValidation,
+      resolvedByError: resolvedByValidation
     }
 
     dispatch({ type: "SET_ERRORS", payload: newErrors })
@@ -106,12 +127,19 @@ export const ReportSelectionFilter: React.FC = () => {
   const handleDownload = async () => {
     try {
       const reportType = filterValues.reportType as ReportType
+
+      const allResolversSelected = resolvedBy.every((r) => filterValues.resolvedBy.includes(r.username))
+
       const urlQuery = new URLSearchParams({
         fromDate: filterValues.dateFrom,
         toDate: filterValues.dateTo,
         exceptions: String(filterValues.exceptions),
         triggers: String(filterValues.triggers)
       })
+
+      if (!allResolversSelected) {
+        urlQuery.append("resolvedBy", String(filterValues.resolvedBy))
+      }
 
       const parsedData = await downloadReport(reportType, urlQuery)
 
@@ -195,6 +223,24 @@ export const ReportSelectionFilter: React.FC = () => {
                 />
               )}
             </div>
+            {filterValues.reportType === "exceptions" && canUseTriggerAndExceptionQualityAuditing && (
+              <div id={"resolved-by-section"} className="resolved-by-section-wrapper">
+                <h2 className="govuk-heading-m">{"Resolved by"}</h2>
+                <FormGroup showError={!!filterValues.resolvedByError}>
+                  {filterValues.resolvedByError && (
+                    <p className="govuk-error-message">
+                      <span className="govuk-visually-hidden">{"Error:"}</span>
+                      {filterValues.resolvedByError}
+                    </p>
+                  )}
+                  <ResolveByFilter
+                    resolvers={resolvedBy}
+                    resolvedBy={filterValues.resolvedBy}
+                    onChange={handleResolvedByChange}
+                  />
+                </FormGroup>
+              </div>
+            )}
           </fieldset>
           <hr className="govuk-section-break govuk-section-break--m govuk-section-break govuk-section-break--visible" />
           <ActionBar

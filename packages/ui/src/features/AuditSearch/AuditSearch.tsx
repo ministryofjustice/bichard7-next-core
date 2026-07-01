@@ -1,16 +1,16 @@
-import React, { useActionState, useEffect, useRef, useState } from "react"
-import { FormGroup } from "components/FormGroup"
-import { IncludeRow, FormButtonRow, Details } from "./AuditSearch.styles"
-import { formatUserFullName } from "utils/formatUserFullName"
-import { subDays, format } from "date-fns"
-import { RadioGroups } from "components/Radios/RadioGroup"
-import RadioButton from "components/Radios/RadioButton"
-import AuditResolvedBy from "types/AuditResolvedBy"
-import { useRouter } from "next/router"
+import ResolveByFilter from "@/components/SearchFilters/ResolvedByFilter"
 import Checkbox from "components/Checkbox/Checkbox"
-import { FormState } from "types/audit/FormState"
-import submitForm from "services/audit/submitForm"
+import { FormGroup } from "components/FormGroup"
+import RadioButton from "components/Radios/RadioButton"
+import { RadioGroups } from "components/Radios/RadioGroup"
+import { format, subDays } from "date-fns"
+import { useRouter } from "next/router"
+import React, { useActionState, useEffect, useRef, useState } from "react"
 import readFormState from "services/audit/readFormState"
+import submitForm from "services/audit/submitForm"
+import { FormState } from "types/audit/FormState"
+import AuditResolvedBy from "types/AuditResolvedBy"
+import { FormButtonRow, IncludeRow } from "./AuditSearch.styles"
 import AuditSearchSubmitButton from "./AuditSearchSubmitButton"
 
 const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string[] }> = (props) => {
@@ -19,8 +19,6 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
   const router = useRouter()
 
   const formRef = useRef<HTMLFormElement>(null)
-  const resolvedByRefs = useRef<HTMLInputElement[]>([])
-  const deletedResolvedByRefs = useRef<HTMLInputElement[]>([])
 
   const DATE_FORMAT = "yyyy-MM-dd"
 
@@ -53,26 +51,11 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
 
   const [formValid, setFormValid] = useState(isFormValid(currentFormState))
 
-  const [allResolversSelected, setAllResolversSelected] = useState<boolean>(
-    resolvers.every((r) => currentFormState.resolvedBy.includes(r.username))
-  )
-
   useEffect(() => {
     if (currentFormState.auditId) {
       router.push(`/audit/${currentFormState.auditId}`)
     }
   }, [currentFormState.auditId, router])
-
-  const activeResolvers: AuditResolvedBy[] = []
-  const deletedResolvers: AuditResolvedBy[] = []
-
-  for (const resolver of resolvers) {
-    if (resolver.deleted) {
-      deletedResolvers.push(resolver)
-    } else {
-      activeResolvers.push(resolver)
-    }
-  }
 
   return (
     <form action={submitAction} onChange={handleFormChange} ref={formRef}>
@@ -152,67 +135,7 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                 <FormGroup>
                   <fieldset className="govuk-fieldset" id="audit-search-resolved-by">
                     <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">{"Resolved by"}</legend>
-                    <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
-                      <Checkbox
-                        checked={allResolversSelected}
-                        label={"All active users"}
-                        data-testid={"audit-resolved-by-all"}
-                        onChange={(e) => {
-                          resolvedByRefs.current.forEach(
-                            (input) => ((input as HTMLInputElement).checked = e.target.checked)
-                          )
-                          setAllResolversSelected(e.target.checked)
-                        }}
-                      />
-                      {activeResolvers.map((resolver, index) => (
-                        <Checkbox
-                          key={`${resolver.username}-${index}`}
-                          id={`resolvers${index}`}
-                          name="resolvedBy"
-                          value={resolver.username}
-                          defaultChecked={currentFormState.resolvedBy.includes(resolver.username)}
-                          label={formatUserFullName(resolver.forenames, resolver.surname)}
-                          data-testid={`audit-resolved-by-${index}`}
-                          onChange={(_) => {
-                            setAllResolversSelected(
-                              resolvedByRefs.current.every((input) => (input as HTMLInputElement).checked)
-                            )
-                          }}
-                          ref={(elem) => {
-                            if (elem) {
-                              resolvedByRefs.current[index] = elem
-                            }
-                          }}
-                        />
-                      ))}
-                      {deletedResolvers.length > 0 && (
-                        <Details className="govuk-details" data-module="govuk-details">
-                          <summary className="govuk-details__summary">
-                            <span className="govuk-details__summary-text">{"Show deleted users"}</span>
-                          </summary>
-                          <div className="govuk-details__text">
-                            {deletedResolvers.map((resolver, index) => {
-                              return (
-                                <Checkbox
-                                  key={`deleted-${resolver.username}`}
-                                  id={`deleted-resolvers-${index}`}
-                                  name="resolvedBy"
-                                  value={resolver.username}
-                                  defaultChecked={currentFormState.resolvedBy.includes(resolver.username)}
-                                  label={formatUserFullName(resolver.forenames, resolver.surname)}
-                                  data-testid={`audit-resolved-by-deleted-${index}`}
-                                  ref={(elem) => {
-                                    if (elem) {
-                                      deletedResolvedByRefs.current[index] = elem
-                                    }
-                                  }}
-                                />
-                              )
-                            })}
-                          </div>
-                        </Details>
-                      )}
-                    </div>
+                    <ResolveByFilter resolvers={resolvers} resolvedBy={currentFormState.resolvedBy} />
                   </fieldset>
                 </FormGroup>
               </div>
