@@ -13,7 +13,7 @@ exports[`should render the component and match the snapshot when there are messa
       >
         <time
           aria-label="time"
-          class="govuk-!-font-weight-bold govuk-!-font-size-16"
+          class="govuk-!-font-weight-bold font-size-14"
           title="28 September 2021 10:12"
         >
           28 September 2021
@@ -34,7 +34,7 @@ exports[`should render the component and match the snapshot when there are messa
       >
         <time
           aria-label="time"
-          class="govuk-!-font-weight-bold govuk-!-font-size-16"
+          class="govuk-!-font-weight-bold font-size-14"
           title="29 September 2021 11:14"
         >
           29 September 2021
@@ -55,7 +55,7 @@ exports[`should render the component and match the snapshot when there are messa
       >
         <time
           aria-label="time"
-          class="govuk-!-font-weight-bold govuk-!-font-size-16"
+          class="govuk-!-font-weight-bold font-size-14"
           title="10 October 2021 16:30"
         >
           10 October 2021
