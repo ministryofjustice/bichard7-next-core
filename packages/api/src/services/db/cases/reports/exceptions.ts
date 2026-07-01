@@ -24,6 +24,11 @@ export async function* exceptionsReport(
     const resolvedTsCol = isException ? "error_resolved_ts" : "trigger_resolved_ts"
     const statusCol = isException ? "error_status" : "trigger_status"
 
+    const resolvedByFilter =
+      filters.resolvedBy && filters.resolvedBy.length > 0
+        ? database.connection`AND el.${database.connection(resolvedByCol)} = ANY(${filters.resolvedBy})`
+        : database.connection``
+
     return database.connection`
       SELECT
         ${isException ? CASE_TYPES.Exception : CASE_TYPES.Trigger}::text as type,
@@ -59,6 +64,7 @@ export async function* exceptionsReport(
         el.${database.connection(resolvedTsCol)} BETWEEN ${startOfDay(filters.fromDate)} AND ${endOfDay(filters.toDate)}
         AND el.${database.connection(statusCol)} = ${ResolutionStatusNumber.Resolved}
         AND (${organisationUnitSql(database, user)})
+        ${resolvedByFilter}
     `
   }
 
