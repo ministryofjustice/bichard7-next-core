@@ -1,6 +1,13 @@
 import End2EndPostgres from "../tests/testGateways/e2ePostgres"
 import checkConnectivity from "./checkConnectivity"
 
+jest.mock("../services/checkLedsConnectivity", () => {
+  return {
+    __esModule: true,
+    default: jest.fn().mockResolvedValue(true)
+  }
+})
+
 describe("checkConnectivity", () => {
   const testDatabaseGateway = new End2EndPostgres()
 
@@ -12,7 +19,8 @@ describe("checkConnectivity", () => {
     const connectivity = await checkConnectivity(testDatabaseGateway.readonly)
 
     expect(connectivity).toEqual({
-      database: true
+      database: true,
+      leds: true
     })
   })
 })
