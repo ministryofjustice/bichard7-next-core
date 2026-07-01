@@ -1,9 +1,8 @@
-@use "node_modules/govuk-frontend/dist/govuk/index" as * with (
-  $govuk-assets-path: "/bichard/govuk_assets/"
-);
-@forward "node_modules/@ministryofjustice/frontend/moj/all" with (
-  $moj-assets-path: "/bichard/moj_assets/"
-);
+$govuk-assets-path: "/users/govuk_assets/";
+$moj-assets-path: "/users/moj_assets/";
+
+@import "node_modules/govuk-frontend/dist/govuk/index";
+@import "node_modules/@ministryofjustice/frontend/moj/all";
 
 @import "page";
 @import "form";
