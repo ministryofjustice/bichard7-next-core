@@ -1,10 +1,14 @@
 import styled from "styled-components"
 
 const ReportSelectionFilterWrapper = styled.div`
-  .include-section-wrapper {
+  .include-section-wrapper,
+  .resolved-by-section-wrapper,
+  .reports-section-wrapper {
     flex: 1 1 15rem;
     min-width: 9rem;
+  }
 
+  .include-section-wrapper {
     .checkboxes-wrapper {
       display: flex;
 
@@ -16,26 +20,24 @@ const ReportSelectionFilterWrapper = styled.div`
       }
 
       .govuk-checkboxes__input {
-        width: 40px;
-        height: 40px;
+        width: 2.5rem;
+        height: 2.5rem;
       }
 
-      .govuk-checkboxes__label::before {
-        top: 0;
-        left: 0;
-      }
-
-      .govuk-checkboxes__label::after {
-        top: 11px;
-        left: 9px;
+      .govuk-checkboxes__label {
+        &::before {
+          top: 0;
+          left: 0;
+        }
+        &::after {
+          top: 11px;
+          left: 9px;
+        }
       }
     }
   }
 
   .reports-section-wrapper {
-    flex: 1 1 15rem;
-    min-width: 9rem;
-
     .select-report-input {
       width: 100%;
     }
@@ -48,8 +50,8 @@ const ReportSelectionFilterWrapper = styled.div`
     flex-direction: row;
 
     .date {
-      min-width: 9rem;
       flex: 1 1 9rem;
+      min-width: 9rem;
 
       &:first-child {
         margin-right: 1.5rem;
@@ -67,8 +69,7 @@ const ReportSelectionFilterWrapper = styled.div`
     flex-wrap: wrap;
     gap: 3rem;
     align-items: flex-start;
-    padding-left: 3rem;
-    padding-right: 3rem;
+    padding: 0 3rem;
     box-sizing: border-box;
   }
 `

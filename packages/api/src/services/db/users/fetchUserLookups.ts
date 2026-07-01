@@ -1,13 +1,14 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import type { User, UserRow } from "@moj-bichard7/common/types/User"
+
+import { type User, type UserLookupRow, UserLookupRowSchema } from "@moj-bichard7/common/types/User"
+import z from "zod"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
-import mapUserRowToUser from "../mapUserRowToUser"
 import filterUsersByVisibleForces from "./filterUsersByVisibleForces"
 
 export type FetchUsersResult = {
-  users: User[]
+  users: UserLookupRow[]
 }
 
 export default async (
@@ -35,7 +36,7 @@ export default async (
     where = sql`${where} AND (${nameWhere})`
   }
 
-  const userResult = await database.connection<UserRow[]>`
+  const userResult = await database.connection`
       SELECT
         u.id,
         u.forenames,
@@ -45,7 +46,14 @@ export default async (
       WHERE
           ${where} AND u.deleted_at IS NULL`
 
-  const users = userResult.map((u) => mapUserRowToUser(u))
+  if (!userResult || userResult.length === 0) {
+    return { users: [] }
+  }
 
-  return { users: users }
+  const parsedResults = z.array(UserLookupRowSchema).safeParse(userResult)
+  if (!parsedResults.success) {
+    return parsedResults.error
+  }
+
+  return { users: parsedResults.data }
 }
