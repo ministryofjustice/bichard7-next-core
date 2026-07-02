@@ -1,11 +1,11 @@
-import type { NextApiRequest, NextApiResponse } from "next"
-import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
-import ReportsApiClient from "services/api/ReportsApiClient"
-import BichardReportGateway from "services/api/BichardV1Report"
+import Permission from "@moj-bichard7/common/types/Permission"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
-import Permission from "@moj-bichard7/common/types/Permission"
+import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
+import type { NextApiRequest, NextApiResponse } from "next"
+import BichardReportGateway from "services/api/BichardV1Report"
 import type { AnyReportQuery } from "services/api/interfaces/BichardReportGateway"
+import ReportsApiClient from "services/api/ReportsApiClient"
 import { isReportType } from "services/reports/utils/isReportType"
 
 import type { ReportConfigs } from "types/reports/ReportConfigs"
@@ -37,7 +37,7 @@ export default async function index(request: NextApiRequest, response: NextApiRe
   const streamClient = new ReportsApiClient(jwt)
   const reportGateway = new BichardReportGateway(streamClient)
 
-  const { reportType, fromDate, toDate, exceptions, triggers } = request.query
+  const { reportType, fromDate, toDate, exceptions, triggers, resolvedBy } = request.query
 
   if (!isReportType(reportType)) {
     res.status(400).send({ error: "Bad Report Type" })
@@ -48,7 +48,8 @@ export default async function index(request: NextApiRequest, response: NextApiRe
     fromDate: new Date(fromDate as string),
     toDate: new Date(toDate as string),
     exceptions: exceptions === "true",
-    triggers: triggers === "true"
+    triggers: triggers === "true",
+    resolvedBy: resolvedBy as string[]
   }
 
   const reportStream = reportGateway.reportStrategy(reportType as keyof typeof ReportConfigs, params)

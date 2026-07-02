@@ -1,4 +1,6 @@
+import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import { isError } from "@moj-bichard7/common/types/Result"
 import axios from "axios"
 import { randomUUID } from "node:crypto"
 
@@ -6,6 +8,7 @@ import type DisposalUpdatedPncUpdateRequest from "../../../phase3/types/Disposal
 import type NormalDisposalPncUpdateRequest from "../../../phase3/types/NormalDisposalPncUpdateRequest"
 import type RemandPncUpdateRequest from "../../../phase3/types/RemandPncUpdateRequest"
 import type SentenceDeferredPncUpdateRequest from "../../../phase3/types/SentenceDeferredPncUpdateRequest"
+import type AuditLogger from "../../../types/AuditLogger"
 import type PoliceApiError from "../PoliceApiError"
 
 import generateAhoFromOffenceList from "../../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
@@ -14,8 +17,27 @@ import { PncUpdateType } from "../../../phase3/types/HearingDetails"
 import ledsAsnQueryResponse from "../../../tests/fixtures/leds-asn-query-response-001.json"
 import LedsActionCode from "../../../types/leds/LedsActionCode"
 import LedsAuthentication from "../../../types/leds/LedsAuthentication"
+import CoreAuditLogger from "../../auditLog/CoreAuditLogger"
 import generateRequestHeaders from "./generateRequestHeaders"
 import LedsGateway from "./LedsGateway"
+
+const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const auditLogEventMatchers = [
+  {
+    attributes: {
+      "Request Headers": {
+        "X-Leds-Activity-Flow-Id": expect.stringMatching(uuidPattern),
+        "X-Leds-Application-Datetime": expect.any(String),
+        "X-Leds-Reference-Id": expect.stringMatching(uuidPattern),
+        "X-Leds-Session-Id": expect.stringMatching(uuidPattern),
+        "X-Leds-Correlation-Id": expect.stringMatching(uuidPattern)
+      },
+      "Request URL": expect.stringMatching(/https:\/\/dummy\/person-services\/v1\/.*/),
+      "Response Time": expect.any(Number)
+    },
+    timestamp: expect.any(Date)
+  }
+]
 
 class FakeLedsAuthentication extends LedsAuthentication {
   static newInstance = () => new FakeLedsAuthentication()
@@ -31,9 +53,9 @@ const pncUpdateDataset = generateFakePncUpdateDataset()
 pncUpdateDataset.PncQuery!.personId = randomUUID()
 pncUpdateDataset.PncQuery!.reportId = randomUUID()
 pncUpdateDataset.PncQuery!.courtCases!.forEach((courtCase) => {
-  courtCase.courtCaseId = randomUUID()
+  courtCase.courtCaseId = "3f61e151-1516-402e-8de6-6461d22b3c8c"
   courtCase.offences.forEach((offence) => {
-    offence.offence.offenceId = randomUUID()
+    offence.offence.offenceId = "fb9dadf2-2b81-45eb-93cd-87602f093571"
   })
 })
 
@@ -67,13 +89,19 @@ const generateExpectedHeaders = (correlationId: string, actionCode: LedsActionCo
 })
 
 describe("LedsGateway", () => {
+  let auditLogger: AuditLogger
   let ledsGateway: LedsGateway
-  afterEach(() => {
-    jest.restoreAllMocks()
-  })
 
   beforeEach(() => {
-    ledsGateway = new LedsGateway({ url: "https://dummy", authentication: FakeLedsAuthentication.newInstance() })
+    auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
+    ledsGateway = new LedsGateway(
+      { url: "https://dummy", authentication: FakeLedsAuthentication.newInstance() },
+      auditLogger
+    )
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
 
   describe("query", () => {
@@ -85,21 +113,25 @@ describe("LedsGateway", () => {
 
       expect(ledsGateway.queryTime).toBeUndefined()
 
-      const result = await ledsGateway.query("dummy-asn", "dummy-id", aho)
+      const correlationId = randomUUID()
+      const result = await ledsGateway.query("dummy-asn", correlationId, aho)
 
-      expect(result).toMatchSnapshot()
+      expect(isError(result)).toBe(false)
+      expect(result).toMatchSnapshot("Query Result")
       expect(ledsGateway.queryTime).toBeDefined()
       expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
-        generateExpectedHeaders("dummy-id", LedsActionCode.QueryByAsn)
+        generateExpectedHeaders(correlationId, LedsActionCode.QueryByAsn)
       )
+      expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should return an error when api call fails", async () => {
       jest.spyOn(axios, "post").mockRejectedValue(Error("API call failed."))
 
-      const result = (await ledsGateway.query("dummy-asn", "dummy-id", aho)) as PoliceApiError
+      const result = (await ledsGateway.query("dummy-asn", randomUUID(), aho)) as PoliceApiError
 
       expect(result?.messages).toEqual(["API call failed."])
+      expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should return an error when http status code is not 200 and response contains LEDS errors", async () => {
@@ -124,35 +156,41 @@ describe("LedsGateway", () => {
         }
       })
 
-      const result = (await ledsGateway.query("dummy-asn", "dummy-id", aho)) as PoliceApiError
+      const result = (await ledsGateway.query("dummy-asn", randomUUID(), aho)) as PoliceApiError
 
+      expect(isError(result)).toBe(true)
       expect(result?.messages).toEqual(["dummy error message 1", "dummy error message 2"])
+      expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should return an error when http status code is not 200 and response does not contain LEDS errors", async () => {
       jest.spyOn(axios, "post").mockResolvedValue({
         status: 501,
         data: {
-          randomField: "randomVaule"
+          randomField: "randomValue"
         }
       })
 
-      const result = (await ledsGateway.query("dummy-asn", "dummy-id", aho)) as PoliceApiError
+      const result = (await ledsGateway.query("dummy-asn", randomUUID(), aho)) as PoliceApiError
 
+      expect(isError(result)).toBe(true)
       expect(result?.messages).toEqual(["ASN query failed with status code 501."])
+      expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should return an error when http status code is 200 but data is in wrong format", async () => {
       jest.spyOn(axios, "post").mockResolvedValue({
         status: 200,
         data: {
-          randomField: "randomVaule"
+          randomField: "randomValue"
         }
       })
 
-      const result = (await ledsGateway.query("dummy-asn", "dummy-id", aho)) as PoliceApiError
+      const result = (await ledsGateway.query("dummy-asn", randomUUID(), aho)) as PoliceApiError
 
+      expect(isError(result)).toBe(true)
       expect(result?.messages).toEqual(["Couldn't parse LEDS query response."])
+      expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
   })
 
@@ -160,7 +198,7 @@ describe("LedsGateway", () => {
     it("should successfully update when operation is remand", async () => {
       const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
         status: 201,
-        data: { id: randomUUID() }
+        data: { id: "de765c89-b99d-4116-b282-64a03b242043" }
       })
 
       const request: RemandPncUpdateRequest = generateRemandRequest()
@@ -186,12 +224,13 @@ describe("LedsGateway", () => {
       expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
         generateExpectedHeaders(correlationId, LedsActionCode.AddRemand)
       )
+      expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should successfully update when operation is add disposal results", async () => {
       const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
         status: 201,
-        data: { id: randomUUID() }
+        data: { id: "d5f0300e-3079-4923-95a3-d4f4a6c60cd9" }
       })
 
       const request: NormalDisposalPncUpdateRequest = {
@@ -268,12 +307,13 @@ describe("LedsGateway", () => {
       expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
         generateExpectedHeaders(correlationId, LedsActionCode.AddDisposalResults)
       )
+      expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should successfully update when operation is subsequently varied", async () => {
       const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
         status: 201,
-        data: { id: randomUUID() }
+        data: { id: "061a236c-ecdc-48d1-81b2-f3f099a35991" }
       })
 
       const request: DisposalUpdatedPncUpdateRequest = {
@@ -380,12 +420,13 @@ describe("LedsGateway", () => {
       expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
         generateExpectedHeaders(correlationId, LedsActionCode.AddSubsequentDisposalResults)
       )
+      expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should successfully update when operation is sentence deferred", async () => {
       const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
         status: 201,
-        data: { id: randomUUID() }
+        data: { id: "fed86d18-c3de-4013-93f0-54fe1571ed13" }
       })
 
       const request: SentenceDeferredPncUpdateRequest = {
@@ -470,6 +511,7 @@ describe("LedsGateway", () => {
       expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
         generateExpectedHeaders(correlationId, LedsActionCode.AddSubsequentDisposalResults)
       )
+      expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should return an error when api call fails", async () => {
@@ -480,6 +522,7 @@ describe("LedsGateway", () => {
       const result = (await ledsGateway.update(request, correlationId, pncUpdateDataset)) as PoliceApiError
 
       expect(result?.messages).toEqual(["Dummy update: API call failed."])
+      expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should return an error when http status code is not 200 and response contains LEDS errors", async () => {
@@ -509,13 +552,14 @@ describe("LedsGateway", () => {
       const result = (await ledsGateway.update(request, correlationId, pncUpdateDataset)) as PoliceApiError
 
       expect(result?.messages).toEqual(["dummy error message 1", "dummy error message 2"])
+      expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should return an error when http status code is not 200 and response does not contain LEDS errors", async () => {
       jest.spyOn(axios, "post").mockResolvedValue({
         status: 501,
         data: {
-          randomField: "randomVaule"
+          randomField: "randomValue"
         }
       })
 
@@ -524,6 +568,7 @@ describe("LedsGateway", () => {
       const result = (await ledsGateway.update(request, correlationId, pncUpdateDataset)) as PoliceApiError
 
       expect(result?.messages).toEqual(["Update failed with status code 501."])
+      expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
   })
 })
