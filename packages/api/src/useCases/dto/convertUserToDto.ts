@@ -57,7 +57,7 @@ export const convertUserToDto = (user: User): UserDto => {
   } satisfies UserDto
 }
 
-export const convertUserToLookupDto = (user: UserLookupRow): UserLookupDto => {
+export const convertUserLookupToUserLookupDto = (user: UserLookupRow): UserLookupDto => {
   let fullname: string | undefined
 
   if (user.forenames && user.surname) {
