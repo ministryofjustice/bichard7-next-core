@@ -27,7 +27,7 @@ export default async (database: DatabaseConnection, caseIds: number[]): PromiseR
   `.catch((error: Error) => error)
 
   if (isError(result)) {
-    return Error(`Error while fetching notes for case ids ${caseIds}: ${result.message}`)
+    return new Error(`Error while fetching notes for case ids ${caseIds}: ${result.message}`)
   }
 
   const parsedResults = z.array(NoteRowSchema).safeParse(result)
