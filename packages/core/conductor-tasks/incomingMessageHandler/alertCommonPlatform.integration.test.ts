@@ -67,7 +67,19 @@ describe("alertCommonPlatform", () => {
   // HELO errors might mean your hostname isn't acceptable
   // to the SMTP client we use, check you don't have
   // apostrophes
-  it("sends an email", async () => {
+  it.each([
+    {
+      title: "sends an email when prefix is not set",
+      prefix: undefined,
+      expectedSubject: "Failed to ingest SPI message, schema mismatch"
+    },
+    {
+      title: "sends an email when prefix is set",
+      prefix: "preprod",
+      expectedSubject: "(preprod) Failed to ingest SPI message, schema mismatch"
+    }
+  ])("$title", async ({ prefix, expectedSubject }) => {
+    process.env.COMMON_PLATFORM_EMAIL_PREFIX = prefix
     await mailhog.deleteAll()
     mockGetEmailer.default = getEmailerDefault
 
@@ -85,7 +97,7 @@ describe("alertCommonPlatform", () => {
 
     const mail = allMail?.items[0]
     expect(mail?.from).toBe("no-reply@mail.bichard7.service.justice.gov.uk")
-    expect(mail?.subject).toMatch("Failed to ingest SPI message, schema mismatch")
+    expect(mail?.subject).toMatch(expectedSubject)
     expect(mail?.text).toMatch("Received date: 2023-08-31T14:48:00.000Z")
     expect(mail?.text).toMatch(`Bichard internal message ID: ${errorReportData.messageId}`)
     expect(mail?.text).toMatch(`Common Platform ID: ${errorReportData.externalId}`)
