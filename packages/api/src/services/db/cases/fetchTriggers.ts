@@ -34,7 +34,7 @@ export default async (
     }
   }
 
-  const result = await database.connection<TriggerRow[]>`
+  const result = await database.connection`
     SELECT
       *
     FROM
