@@ -179,7 +179,7 @@ describe("View case details", () => {
 
   it("Should be accessible", () => {
     cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
-    cy.task("insertTriggers", {
+    cy.task("insertTriggers",{
       caseId: 0,
       triggers: [
         {
@@ -211,6 +211,7 @@ describe("View case details", () => {
     }).then((response) => {
       expect(response.status).to.eq(404)
     })
+   
   })
 
   it("Should return 404 for a case that does not exist", () => {

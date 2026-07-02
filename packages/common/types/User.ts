@@ -47,6 +47,15 @@ export const UserSchema = z.object({
   visibleForces: z.array(z.string()).min(0)
 })
 
+export const UserMinimalSchema = z.object({
+  deletedAt: z.date().nullable(),
+  groups: z.array(z.enum(UserGroup)),
+  id: z.number(),
+  username: z.string(),
+  visibleCourts: z.array(z.string()).min(0),
+  visibleForces: z.array(z.string()).min(0)
+})
+
 export const UserDtoSchema = z.object({
   deleted: z.boolean(),
   email: z.string(),
