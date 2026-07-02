@@ -47,12 +47,14 @@ export default async (
   `.catch((error: Error) => error)
 
   if (isError(result)) {
-    return Error(`Error while fetching triggers for case ids ${caseIds} and user ${user.username}: ${result.message}`)
+    return new Error(
+      `Error while fetching triggers for case ids ${caseIds} and user ${user.username}: ${result.message}`
+    )
   }
 
   const parsedResults = z.array(TriggerRowSchema).safeParse(result)
   if (!parsedResults.success) {
-    return Error(`Schema validation failed for triggers query: ${parsedResults.error.message}`)
+    return new Error(`Schema validation failed for triggers query: ${parsedResults.error.message}`)
   }
 
   return parsedResults.data.map(mapTriggerRowToTrigger)
