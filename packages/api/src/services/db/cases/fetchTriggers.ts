@@ -1,11 +1,12 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import type { Trigger, TriggerRow } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import Permission from "@moj-bichard7/common/types/Permission"
 import { isError } from "@moj-bichard7/common/types/Result"
+import { type Trigger, TriggerRowSchema } from "@moj-bichard7/common/types/Trigger"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import { isEmpty } from "lodash"
+import z from "zod"
 
 import type { Filters } from "../../../types/CaseIndexQuerystring"
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
@@ -34,7 +35,7 @@ export default async (
     }
   }
 
-  const result = await database.connection<TriggerRow[]>`
+  const result = await database.connection`
     SELECT
       *
     FROM
@@ -46,8 +47,15 @@ export default async (
   `.catch((error: Error) => error)
 
   if (isError(result)) {
-    return Error(`Error while fetching triggers for case ids ${caseIds} and user ${user.username}: ${result.message}`)
+    return new Error(
+      `Error while fetching triggers for case ids ${caseIds} and user ${user.username}: ${result.message}`
+    )
   }
 
-  return result.map(mapTriggerRowToTrigger)
+  const parsedResults = z.array(TriggerRowSchema).safeParse(result)
+  if (!parsedResults.success) {
+    return new Error(`Schema validation failed for triggers query: ${parsedResults.error.message}`)
+  }
+
+  return parsedResults.data.map(mapTriggerRowToTrigger)
 }
