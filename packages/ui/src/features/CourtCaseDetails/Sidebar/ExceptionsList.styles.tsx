@@ -1,3 +1,4 @@
+import { gdsMidGrey } from "@/utils/colours"
 import styled from "styled-components"
 
 const ButtonContainer = styled.div`
@@ -18,7 +19,7 @@ const SeparatorLine = styled.div`
     position: absolute;
     height: 2px;
     width: calc(100% + (1.2625rem * 2));
-    background: #b1b4b6;
+    background: ${gdsMidGrey};
     left: -1.2625rem;
   }
 `

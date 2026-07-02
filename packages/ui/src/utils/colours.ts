@@ -1,22 +1,23 @@
 const darkGrey = "#62696D"
 const white = "#FAFAFA"
 const gdsGrey = "#BFC1C3"
-const gdsMidGrey = "#b1b4b6"
-const gdsLightGrey = "#F3F2F1"
+const gdsMidGrey = "#CECECE"
+const gdsLightGrey = "#F3F3F3"
+const gdsDarkGrey = "#484949"
 const textPrimary = "#0B0C0C"
 const tagBlue = "#E9F1F8"
-const textSecondary = "#505a5f"
+const textSecondary = "#484949"
 const blue = "#005BBB"
 const gdsBlue = "#1D70B8"
-const gdsBlueHover = "#003078"
+const gdsBlueHover = "#0F385C"
 const yellow = "#FFDD00"
 const gdsYellow = "#FFDD00"
-const gdsBlack = "#0b0c0c"
-const gdsTagBlue = "#bbd4ea"
-const grey = "#b0b4b6"
-const gdsGreen = "#00703c"
+const gdsBlack = "#0B0C0C"
+const gdsTagBlue = "#BBD4EA"
+const grey = "#B0B4B6"
+const gdsGreen = "#0F7A52"
 const gdsDarkGreen = "#005A30"
-const gdsRed = "#d4351c"
+const gdsRed = "#CA3535"
 const lightGrey = "#DDDDDD"
 
 export {
@@ -27,6 +28,7 @@ export {
   gdsBlueHover,
   gdsGreen,
   gdsDarkGreen,
+  gdsDarkGrey,
   gdsGrey,
   gdsLightGrey,
   gdsMidGrey,

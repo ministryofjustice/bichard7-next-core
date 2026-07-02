@@ -21,7 +21,7 @@ const ServiceMessages = ({ messages }: Props) => {
           <GridColumn width="full">
             <Paragraph className={`govuk-!-font-size-16 ${classes["service-message"]}`}>
               <time
-                className="govuk-!-font-weight-bold govuk-!-font-size-14"
+                className="govuk-!-font-weight-bold font-size-14"
                 aria-label="time"
                 title={format(new Date(message.incidentDate || message.createdAt), "dd MMMM yyyy HH:mm")}
               >
