@@ -32,11 +32,14 @@ const alertCommonPlatform: ConductorWorker = {
   pollInterval: 10000,
   execute: inputDataValidator(inputDataSchema, async (task: Task<InputData>) => {
     const { errorReportData } = task.inputData
+    const subjectPrefix = process.env.COMMON_PLATFORM_EMAIL_PREFIX
+      ? `(${process.env.COMMON_PLATFORM_EMAIL_PREFIX}) `
+      : ""
 
     const email: Email = {
       from: "no-reply@mail.bichard7.service.justice.gov.uk",
       to: process.env.ERROR_REPORT_ADDRESSES ?? "moj-bichard7@madetech.cjsm.net",
-      subject: "Failed to ingest SPI message, schema mismatch",
+      subject: `${subjectPrefix}Failed to ingest SPI message, schema mismatch`,
       text: generateEmailContent(errorReportData)
     }
 
