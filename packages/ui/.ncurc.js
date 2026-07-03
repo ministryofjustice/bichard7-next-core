@@ -1,5 +1,7 @@
 /*
   Pinned:
+  - cookies
+    - v2.0.0 contains breaking changes
   - cookies-next
     - v5 contains breaking changes
   - @faker-js/faker
@@ -14,7 +16,7 @@
       - 0.4.0 changed to module type
 */
 
-const pinned = ["cookies-next", "@faker-js/faker", "next", "undici"]
+const pinned = ["cookies", "cookies-next", "@faker-js/faker", "next", "undici"]
 const ignored = ["cypress-circleci-reporter"]
 const skipped = [{ package: "next", version: "13.4.13" }]
 
