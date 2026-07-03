@@ -1,5 +1,5 @@
 import type { SerializeOptions } from "cookie"
-import { serialize } from "cookie"
+import { stringifySetCookie } from "cookie"
 import type { ServerResponse } from "http"
 import { COOKIES_SECURE_OPTION } from "../config"
 
@@ -24,7 +24,7 @@ const getExistingCookies = (response: ServerResponse): string[] => {
 
 export default (response: ServerResponse, name: string, value: string, options?: SerializeOptions) => {
   const cookies = getExistingCookies(response)
-  const cookieValue = serialize(name, value, { ...cookieOptions, ...options })
+  const cookieValue = stringifySetCookie({ name, value }, { ...cookieOptions, ...options })
   cookies.push(cookieValue)
   response.setHeader("Set-Cookie", cookies)
 }

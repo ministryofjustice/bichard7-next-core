@@ -1,6 +1,6 @@
 jest.mock("lib/parseFormData")
 
-import { serialize } from "cookie"
+import { stringifySetCookie } from "cookie"
 import generateCsrfToken from "middleware/withCsrf/generateCsrfToken"
 import verifyCsrfToken from "middleware/withCsrf/verifyCsrfToken"
 import type { IncomingMessage } from "http"
@@ -38,10 +38,10 @@ const {
   cookieToken: validCookieToken,
   cookieName: validCookieName
 } = generateCsrfToken(dummyRequest, config)
-const cookie = serialize(validCookieName, validCookieToken)
+const cookie = stringifySetCookie({ name: validCookieName, value: validCookieToken })
 
 const { cookieToken: anotherCookieToken, cookieName: anotherCookieName } = generateCsrfToken(dummyRequest, config)
-const invalidCookieForFormToken = serialize(anotherCookieName, anotherCookieToken)
+const invalidCookieForFormToken = stringifySetCookie({ name: anotherCookieName, value: anotherCookieToken })
 
 const expiredCookie = "QO60fsUX-KKkGnqboM90s8VS9C5zSdrysjrg.FuBXqXqFzbs6JWUZIC5jIZztpbZ8gYdD4Q2%2FF569Qr4"
 const expiredFormToken =

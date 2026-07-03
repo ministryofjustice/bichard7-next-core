@@ -1,4 +1,4 @@
-import { parse } from "cookie"
+import { parseCookie } from "cookie"
 import { unsign } from "cookie-signature"
 import type { IncomingMessage } from "http"
 import config from "lib/config"
@@ -11,7 +11,7 @@ export default (request: IncomingMessage, cookieName: string): Result<string> =>
   }
 
   const { cookieSecret } = config.csrf
-  const parsedCookie = parse(request.headers.cookie)
+  const parsedCookie = parseCookie(request.headers.cookie)
   const cookieToken = parsedCookie[cookieName]
 
   let unsignedCookieToken: string | false
