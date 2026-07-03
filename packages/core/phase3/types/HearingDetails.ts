@@ -28,9 +28,7 @@ export type PncUpdateArrestHearing = {
 }
 
 export type PncUpdateArrestHearingAdjudicationAndDisposal =
-  | PncUpdateAdjudication
-  | PncUpdateArrestHearing
-  | PncUpdateDisposal
+  PncUpdateAdjudication | PncUpdateArrestHearing | PncUpdateDisposal
 
 export type PncUpdateCourtHearing = {
   courtOffenceSequenceNumber: string
@@ -39,9 +37,7 @@ export type PncUpdateCourtHearing = {
 }
 
 export type PncUpdateCourtHearingAdjudicationAndDisposal =
-  | PncUpdateAdjudication
-  | PncUpdateCourtHearing
-  | PncUpdateDisposal
+  PncUpdateAdjudication | PncUpdateCourtHearing | PncUpdateDisposal
 
 export type PncUpdateCourtHearingAndDisposal = PncUpdateCourtHearing | PncUpdateDisposal
 

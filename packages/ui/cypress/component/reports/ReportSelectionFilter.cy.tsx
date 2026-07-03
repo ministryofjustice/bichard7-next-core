@@ -9,10 +9,7 @@ describe("ReportSelectionFilter", () => {
 
   const selectReportType = (
     type:
-      | "Resolved exceptions and triggers"
-      | "Bail conditions"
-      | "Warrants"
-      | "Domestic violence and vulnerable victims"
+      "Resolved exceptions and triggers" | "Bail conditions" | "Warrants" | "Domestic violence and vulnerable victims"
   ) => {
     cy.get('select[name="select-case-type"]').select(type)
   }

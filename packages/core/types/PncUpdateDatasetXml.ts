@@ -5,11 +5,7 @@ export type OperationStatusXml = "C" | "F" | "N"
 
 export type PncOperationXml = {
   operationCode:
-    | DisarrOperationCode
-    | NewremOperationCode
-    | PenhrgOperationCode
-    | SendefOperationCode
-    | SubvarOperationCode
+    DisarrOperationCode | NewremOperationCode | PenhrgOperationCode | SendefOperationCode | SubvarOperationCode
   operationStatus: OperationStatusXml
 }
 

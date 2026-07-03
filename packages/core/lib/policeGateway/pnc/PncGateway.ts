@@ -47,17 +47,15 @@ const transform = (apiResponse: PncApiResult): PoliceQueryResult => {
       return undefined
     }
 
-    return offence.disposals.map(
-      (d: PncApiDisposal): PoliceDisposal => ({
-        qtyDate: d.disposalQuantityDate,
-        qtyDuration: d.disposalQuantityDuration,
-        qtyMonetaryValue: d.disposalQuantityMonetaryValue,
-        qtyUnitsFined: undefined,
-        qualifiers: d.disposalQualifiers,
-        text: d.disposalText,
-        type: Number(d.disposalType)
-      })
-    )
+    return offence.disposals.map((d: PncApiDisposal): PoliceDisposal => ({
+      qtyDate: d.disposalQuantityDate,
+      qtyDuration: d.disposalQuantityDuration,
+      qtyMonetaryValue: d.disposalQuantityMonetaryValue,
+      qtyUnitsFined: undefined,
+      qualifiers: d.disposalQualifiers,
+      text: d.disposalText,
+      type: Number(d.disposalType)
+    }))
   }
 
   const getOffences = (o: PncApiOffence): PoliceOffence => ({
@@ -81,19 +79,15 @@ const transform = (apiResponse: PncApiResult): PoliceQueryResult => {
     croNumber: apiResponse.croNumber,
     checkName: apiResponse.pncCheckName,
     pncId: apiResponse.pncIdentifier,
-    courtCases: apiResponse.courtCases.map(
-      (c): PoliceCourtCase => ({
-        courtCaseReference: c.courtCaseRefNo,
-        crimeOffenceReference: c.crimeOffenceRefNo,
-        offences: c.offences.map(getOffences)
-      })
-    ),
-    penaltyCases: apiResponse.penaltyCases.map(
-      (c): PolicePenaltyCase => ({
-        penaltyCaseReference: c.penaltyCaseRefNo,
-        offences: c.offences.map(getOffences)
-      })
-    )
+    courtCases: apiResponse.courtCases.map((c): PoliceCourtCase => ({
+      courtCaseReference: c.courtCaseRefNo,
+      crimeOffenceReference: c.crimeOffenceRefNo,
+      offences: c.offences.map(getOffences)
+    })),
+    penaltyCases: apiResponse.penaltyCases.map((c): PolicePenaltyCase => ({
+      penaltyCaseReference: c.penaltyCaseRefNo,
+      offences: c.offences.map(getOffences)
+    }))
   }
 }
 
