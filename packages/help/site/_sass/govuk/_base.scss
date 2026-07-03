@@ -1,4 +1,4 @@
-@import "settings/index";
-@import "tools/index";
-@import "helpers/index";
-@import "custom-properties/index";
+@forward "settings";
+@forward "tools";
+@forward "helpers";
+@forward "components/button/settings";

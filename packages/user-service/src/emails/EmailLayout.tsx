@@ -1,26 +1,25 @@
 /* eslint-disable @next/next/no-head-element */
+import { gdsMidGrey, green, textPrimary, textSecondary, white } from "utils/colours"
 import { ReactNode } from "react"
 
-const outerBackgroundColour = "#f3f2f1"
-const innerBackgroundColour = "#ffffff"
-const borderColor = "#b1b4b6"
-const buttonColor = "#00703c"
-const color = "#0b0c0c"
-const dimColor = "#505a5f"
 const fontFamily = "Arial, sans-serif"
 
-const dimStyles = { color: dimColor, fontFamily, fontSize: "14px", lineHeight: "16px", marginBottom: "16px" }
+const dimStyles = { color: textSecondary, fontFamily, fontSize: "14px", lineHeight: "16px", marginBottom: "16px" }
 
 interface ChildProps {
   children: ReactNode
 }
 
 const Title = ({ children }: ChildProps) => (
-  <h1 style={{ color, fontFamily, fontSize: "48px", lineHeight: "50px", marginBottom: "50px" }}>{children}</h1>
+  <h1 style={{ color: textPrimary, fontFamily, fontSize: "48px", lineHeight: "50px", marginBottom: "50px" }}>
+    {children}
+  </h1>
 )
 
 const Paragraph = ({ children }: ChildProps) => (
-  <p style={{ color, fontFamily, fontSize: "19px", lineHeight: "25px", marginBottom: "20px" }}>{children}</p>
+  <p style={{ color: textPrimary, fontFamily, fontSize: "19px", lineHeight: "25px", marginBottom: "20px" }}>
+    {children}
+  </p>
 )
 
 interface ButtonProps {
@@ -32,8 +31,8 @@ const Button = ({ href, label }: ButtonProps) => (
   <a
     href={href}
     style={{
-      backgroundColor: buttonColor,
-      color: "#ffffff",
+      backgroundColor: green,
+      color: white,
       cursor: "pointer",
       display: "inline-block",
       fontFamily,
@@ -60,17 +59,14 @@ const EmailBase = ({ children, title }: EmailBaseProps) => (
       <title>{title}</title>
     </head>
     <body>
-      <table
-        role={"presentation"}
-        style={{ backgroundColor: outerBackgroundColour, margin: "0", padding: "30px", width: "100%" }}
-      >
+      <table role={"presentation"} style={{ backgroundColor: gdsMidGrey, margin: "0", padding: "30px", width: "100%" }}>
         <tr />
         <tr>
           <td
             style={{
-              backgroundColor: innerBackgroundColour,
+              backgroundColor: white,
               border: "1px solid",
-              borderColor,
+              borderColor: gdsMidGrey,
               clear: "both",
               display: "block !important",
               margin: "0 auto",

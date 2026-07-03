@@ -1,10 +1,4 @@
-/*
-  Pinned:
-  - @ministryofjustice/frontend
-    - v9 contains breaking changes
- */
-
-const pinned = ["@ministryofjustice/frontend", "word-list", "next", "govuk-frontend"]
+const pinned = ["word-list", "next"]
 const ignored = ["cypress-circleci-reporter"]
 const skipped = []
 
