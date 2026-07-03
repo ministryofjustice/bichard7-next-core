@@ -16,7 +16,7 @@
       - 0.4.0 changed to module type
 */
 
-const pinned = ["cookies", "cookies-next", "@faker-js/faker", "next", "undici"]
+const pinned = ["cookie", "cookies-next", "@faker-js/faker", "next", "undici"]
 const ignored = ["cypress-circleci-reporter"]
 const skipped = [{ package: "next", version: "13.4.13" }]
 
