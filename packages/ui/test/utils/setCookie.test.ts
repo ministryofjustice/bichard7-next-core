@@ -1,4 +1,4 @@
-import { stringifySetCookie } from "cookie"
+import { serialize } from "cookie"
 import type { IncomingMessage } from "http"
 import { ServerResponse } from "http"
 import setCookie from "utils/setCookie"
@@ -12,7 +12,7 @@ it("should set the cookie when no cookie is in the response", () => {
   const cookieValues = response.getHeader("Set-Cookie") as string[]
   expect(cookieValues).toBeDefined()
   expect(cookieValues).toHaveLength(1)
-  expect(cookieValues[0]).toMatch(new RegExp(`^${stringifySetCookie({ name: cookieName, value: cookieValue })}`))
+  expect(cookieValues[0]).toMatch(new RegExp(`^${serialize(cookieName, cookieValue)}`))
 })
 
 it("should set the cookie when threre is already a cookie in the response", () => {
@@ -24,7 +24,7 @@ it("should set the cookie when threre is already a cookie in the response", () =
   const cookieValues1 = response.getHeader("Set-Cookie") as string[]
   expect(cookieValues1).toBeDefined()
   expect(cookieValues1).toHaveLength(1)
-  expect(cookieValues1[0]).toMatch(new RegExp(`^${stringifySetCookie({ name: cookieName1, value: cookieValue1 })}`))
+  expect(cookieValues1[0]).toMatch(new RegExp(`^${serialize(cookieName1, cookieValue1)}`))
 
   const cookieName2 = ".DUMMY2"
   const cookieValue2 = "Dummy Cookie 2"
@@ -33,8 +33,8 @@ it("should set the cookie when threre is already a cookie in the response", () =
   const cookieValues2 = response.getHeader("Set-Cookie") as string[]
   expect(cookieValues2).toBeDefined()
   expect(cookieValues2).toHaveLength(2)
-  expect(cookieValues2[0]).toMatch(new RegExp(`^${stringifySetCookie({ name: cookieName1, value: cookieValue1 })}`))
-  expect(cookieValues2[1]).toMatch(new RegExp(`^${stringifySetCookie({ name: cookieName2, value: cookieValue2 })}`))
+  expect(cookieValues2[0]).toMatch(new RegExp(`^${serialize(cookieName1, cookieValue1)}`))
+  expect(cookieValues2[1]).toMatch(new RegExp(`^${serialize(cookieName2, cookieValue2)}`))
 })
 
 it("should add the same cookie multiple times", () => {
@@ -44,8 +44,6 @@ it("should add the same cookie multiple times", () => {
   const cookieValues = response.getHeader("Set-Cookie") as string[]
   expect(cookieValues).toBeDefined()
   cookieValues.forEach((cookieValue, index) => {
-    expect(cookieValue).toMatch(
-      new RegExp(`^${stringifySetCookie({ name: `Cookie${index}`, value: `Value${index}` })}`)
-    )
+    expect(cookieValue).toMatch(new RegExp(`^${serialize(`Cookie${index}`, `Value${index}`)}`))
   })
 })

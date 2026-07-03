@@ -33,7 +33,7 @@
     "argon2": "^0.44.0",
     "badwords-list": "^1.0.0",
     "classnames": "^2.5.1",
-    "cookie": "^2.0.0",
+    "cookie": "^1.1.1",
     "cookie-signature": "^1.2.2",
     "cookies-next": "^6.1.1",
     "crypto-secure-random-digit": "^1.0.10",
