@@ -13,7 +13,7 @@ describe("exceptions/triggers report type filter", () => {
     cy.get("#report-select").select("Resolved exceptions and triggers")
     cy.get("#date-from").type(formatDate(subDays(new Date(), 7), "yyyy-MM-dd"))
     cy.get("#date-to").type(formatDate(new Date(), "yyyy-MM-dd"))
-    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").click()
+    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").check()
   }
 
   it("queries exceptions/triggers and successfully displays only exceptions/triggers", () => {
@@ -101,8 +101,8 @@ describe("exceptions/triggers report type filter", () => {
 
   it("returns results that have been resolved by the selected resolver", () => {
     provideAllFieldsWithValidValues()
-    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").click()
-    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-18']").click()
+    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").uncheck()
+    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-18']").check()
 
     cy.get("#run-report").click()
 
@@ -112,12 +112,12 @@ describe("exceptions/triggers report type filter", () => {
 
   it("returns no results when querying with a 'resolvedBy' user that has not resolved anything", () => {
     provideAllFieldsWithValidValues()
-    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").click()
-    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-19']").click()
+    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").uncheck()
+    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-19']").check()
 
     cy.get("#run-report").click()
 
-    cy.get(".results-area table tbody tr").should("have.length", 0)
+    cy.get(".results-area output").should("have.text", "No results found for the selected criteria.")
   })
 
   it("returns all results when all resolvers checkbox checked", () => {
