@@ -1,6 +1,6 @@
 /*
   Pinned:
-  - cookies
+  - cookie
     - v2.0.0 contains breaking changes
   - cookies-next
     - v5 contains breaking changes
