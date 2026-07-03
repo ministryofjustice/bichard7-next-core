@@ -2,12 +2,15 @@ import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAudi
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
+import { casesToAuditSchema } from "@moj-bichard7/common/types/Case"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { addDays } from "date-fns"
+import z from "zod"
 
 import type { CasesToAuditByUser } from "../../../types/CasesToAuditByUser"
 import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
+import { convertCasesToAudit } from "../../../useCases/dto/convertCasestoAuditDto"
 import { organisationUnitSql } from "../organisationUnitSql"
 
 export async function getPotentialCasesToAudit(
@@ -82,21 +85,27 @@ export async function getPotentialCasesToAudit(
     return new Error("Failed to get cases to audit")
   }
 
+  const convertedResults = convertCasesToAudit(results as Record<string, unknown>[])
+  const parsedResults = z.array(casesToAuditSchema).safeParse(convertedResults)
+  if (!parsedResults.success) {
+    return parsedResults.error
+  }
+
   return resolvedByUsers.map((resolvedByUsername) => {
     return {
-      cases: results
+      cases: parsedResults.data
         .filter((result) => {
           return (
-            (checkForResolvedTriggers && result.trigger_resolved_by == resolvedByUsername) ||
-            (checkForResolvedExceptions && result.error_resolved_by == resolvedByUsername)
+            (checkForResolvedTriggers && result.triggerResolvedBy == resolvedByUsername) ||
+            (checkForResolvedExceptions && result.errorResolvedBy == resolvedByUsername)
           )
         })
         .map((result) => {
           let audited = false
           const triggersNeedAudit =
-            (result.trigger_resolved_by?.length ?? 0) > 0 && (result.trigger_quality_checked ?? 1) <= 1
+            (result.triggerResolvedBy?.length ?? 0) > 0 && (result.triggerQualityChecked ?? 1) <= 1
           const exceptionsNeedAudit =
-            (result.error_resolved_by?.length ?? 0) > 0 && (result.error_quality_checked ?? 1) <= 1
+            (result.errorResolvedBy?.length ?? 0) > 0 && (result.errorQualityChecked ?? 1) <= 1
           if (checkForResolvedTriggers && checkForResolvedExceptions) {
             audited = !triggersNeedAudit && !exceptionsNeedAudit
           } else if (checkForResolvedTriggers) {
@@ -105,7 +114,7 @@ export async function getPotentialCasesToAudit(
             audited = !exceptionsNeedAudit
           }
 
-          return { audited, id: result.error_id }
+          return { audited, id: result.errorId }
         }),
       username: resolvedByUsername
     }

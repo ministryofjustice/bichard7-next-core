@@ -97,6 +97,14 @@ export const CaseSchema = z.object({
   userUpdatedFlag: z.number()
 })
 
+export const casesToAuditSchema = CaseSchema.pick({
+  errorId: true,
+  errorQualityChecked: true,
+  errorResolvedBy: true,
+  triggerQualityChecked: true,
+  triggerResolvedBy: true
+})
+
 export const CaseIndexDtoSchema = z.object({
   asn: z.string().nullable(),
   canUserEditExceptions: z.boolean().optional(),
