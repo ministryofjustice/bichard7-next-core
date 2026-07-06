@@ -1,6 +1,6 @@
 import z from "zod"
 
-import { CaseSchema } from "./Case"
+import { CaseRowSchema } from "./Case"
 
 export const AuditSchema = z.object({
   audit_id: z.number(),
@@ -15,12 +15,12 @@ export const AuditSchema = z.object({
   volume_of_cases: z.number()
 })
 
-export const casesToAuditSchema = CaseSchema.pick({
-  errorId: true,
-  errorQualityChecked: true,
-  errorResolvedBy: true,
-  triggerQualityChecked: true,
-  triggerResolvedBy: true
+export const CasesToAuditRowSchema = CaseRowSchema.pick({
+  error_id: true,
+  error_quality_checked: true,
+  error_resolved_by: true,
+  trigger_quality_checked: true,
+  trigger_resolved_by: true
 })
 
 export const AuditDtoSchema = z.object({

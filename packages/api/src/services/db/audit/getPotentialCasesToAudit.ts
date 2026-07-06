@@ -2,7 +2,7 @@ import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAudi
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import { casesToAuditSchema } from "@moj-bichard7/common/types/Audit"
+import { CasesToAuditRowSchema } from "@moj-bichard7/common/types/Audit"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { addDays } from "date-fns"
 import z from "zod"
@@ -24,11 +24,11 @@ export async function getPotentialCasesToAudit(
 
   const baseQuery = sql`
     SELECT 
-      error_id AS "errorId",
-      trigger_resolved_by AS "triggerResolvedBy",
-      trigger_quality_checked AS "triggerQualityChecked",
-      error_resolved_by AS "errorResolvedBy",
-      error_quality_checked AS "errorQualityChecked"
+      error_id,
+      trigger_resolved_by,
+      trigger_quality_checked,
+      error_resolved_by,
+      error_quality_checked"
     FROM 
       br7own.error_list el
     WHERE
@@ -73,18 +73,18 @@ export async function getPotentialCasesToAudit(
 
   const results = await sql<
     {
-      errorId: number
-      errorQualityChecked: null | number
-      errorResolvedBy: null | string
-      triggerQualityChecked: null | number
-      triggerResolvedBy: null | string
+      error_id: number
+      error_quality_checked: null | number
+      error_resolved_by: null | string
+      trigger_quality_checked: null | number
+      trigger_resolved_by: null | string
     }[]
   >`${baseQuery} ${filter}`.catch((error: Error) => error)
   if (isError(results)) {
     return new Error("Failed to get cases to audit")
   }
 
-  const parsedResults = z.array(casesToAuditSchema).safeParse(results)
+  const parsedResults = z.array(CasesToAuditRowSchema).safeParse(results)
   if (!parsedResults.success) {
     return parsedResults.error
   }
@@ -94,16 +94,16 @@ export async function getPotentialCasesToAudit(
       cases: parsedResults.data
         .filter((result) => {
           return (
-            (checkForResolvedTriggers && result.triggerResolvedBy == resolvedByUsername) ||
-            (checkForResolvedExceptions && result.errorResolvedBy == resolvedByUsername)
+            (checkForResolvedTriggers && result.trigger_resolved_by == resolvedByUsername) ||
+            (checkForResolvedExceptions && result.error_resolved_by == resolvedByUsername)
           )
         })
         .map((result) => {
           let audited = false
           const triggersNeedAudit =
-            (result.triggerResolvedBy?.length ?? 0) > 0 && (result.triggerQualityChecked ?? 1) <= 1
+            (result.trigger_resolved_by?.length ?? 0) > 0 && (result.trigger_quality_checked ?? 1) <= 1
           const exceptionsNeedAudit =
-            (result.errorResolvedBy?.length ?? 0) > 0 && (result.errorQualityChecked ?? 1) <= 1
+            (result.error_resolved_by?.length ?? 0) > 0 && (result.error_quality_checked ?? 1) <= 1
           if (checkForResolvedTriggers && checkForResolvedExceptions) {
             audited = !triggersNeedAudit && !exceptionsNeedAudit
           } else if (checkForResolvedTriggers) {
@@ -112,7 +112,7 @@ export async function getPotentialCasesToAudit(
             audited = !exceptionsNeedAudit
           }
 
-          return { audited, id: result.errorId }
+          return { audited, id: result.error_id }
         }),
       username: resolvedByUsername
     }
