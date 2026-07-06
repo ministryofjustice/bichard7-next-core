@@ -4,8 +4,7 @@ UPDATE
   br7own.users
 SET feature_flags = jsonb_set(feature_flags, '{onlyAccessToNewBichard}', 'true', true)
 WHERE deleted_at IS NULL
-  AND id IN (37, 68, 77, 349, 679, 756, 765, 862, 1027, 1083, 1240, 1347, 1481, 1556,
-             1557, 1558, 1559, 1560, 6536, 6537, 8681, 10330, 11518)
+  AND id IN (1017, 1165, 12607, 12608, 1076, 1579, 1117, 1066)
 RETURNING id, username, email;
 COMMIT;
 
@@ -15,7 +14,6 @@ UPDATE
   br7own.users
 SET feature_flags = jsonb_set(feature_flags, '{onlyAccessToNewBichard}', 'false', true)
 WHERE deleted_at IS NULL
-  AND id IN (37, 68, 77, 349, 679, 756, 765, 862, 1027, 1083, 1240, 1347, 1481, 1556,
-             1557, 1558, 1559, 1560, 6536, 6537, 8681, 10330, 11518)
+  AND id IN (1017, 1165, 12607, 12608, 1076, 1579, 1117, 1066)
 RETURNING id, username, email;
 COMMIT;
