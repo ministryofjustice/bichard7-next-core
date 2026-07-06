@@ -28,7 +28,7 @@ export async function getPotentialCasesToAudit(
       trigger_resolved_by,
       trigger_quality_checked,
       error_resolved_by,
-      error_quality_checked"
+      error_quality_checked
     FROM 
       br7own.error_list el
     WHERE
