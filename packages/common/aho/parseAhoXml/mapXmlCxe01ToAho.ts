@@ -85,22 +85,20 @@ const mapXmlAdjudicationsToAho = (adj: Adj | undefined): PoliceAdjudication | un
 }
 
 const mapXmlOffencesToAho = (offences: AhoXmlPncOffence[]): PoliceOffence[] =>
-  offences.map(
-    (offence): PoliceOffence => ({
-      adjudication: mapXmlAdjudicationsToAho(offence.ADJ),
-      disposals: mapXmlDisposalsToAho(offence.DISList?.DIS),
-      offence: {
-        acpoOffenceCode: offence.COF["@_ACPOOffenceCode"],
-        cjsOffenceCode: offence.COF["@_CJSOffenceCode"],
-        qualifier1: offence.COF["@_OffenceQualifier1"],
-        qualifier2: offence.COF["@_OffenceQualifier2"],
-        sequenceNumber: parseInt(offence.COF["@_ReferenceNumber"], 10),
-        title: offence.COF["@_OffenceTitle"],
-        ...extractDates(offence),
-        ...extractTimes(offence)
-      }
-    })
-  )
+  offences.map((offence): PoliceOffence => ({
+    adjudication: mapXmlAdjudicationsToAho(offence.ADJ),
+    disposals: mapXmlDisposalsToAho(offence.DISList?.DIS),
+    offence: {
+      acpoOffenceCode: offence.COF["@_ACPOOffenceCode"],
+      cjsOffenceCode: offence.COF["@_CJSOffenceCode"],
+      qualifier1: offence.COF["@_OffenceQualifier1"],
+      qualifier2: offence.COF["@_OffenceQualifier2"],
+      sequenceNumber: parseInt(offence.COF["@_ReferenceNumber"], 10),
+      title: offence.COF["@_OffenceTitle"],
+      ...extractDates(offence),
+      ...extractTimes(offence)
+    }
+  }))
 
 const mapXmlCxe01ToAho = (cxe: Cxe01 | undefined) => {
   let courtCases: PoliceCourtCase[] | undefined

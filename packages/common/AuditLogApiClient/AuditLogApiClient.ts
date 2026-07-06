@@ -160,9 +160,8 @@ export default class AuditLogApiClient {
           return new Error(`Error ${response.status}: Could not create audit log event.`)
         })
       })
-      .catch(
-        (error: unknown): Result<void> =>
-          handleApiError(error, `creating event for user '${userName}'`, "creating event")
+      .catch((error: unknown): Result<void> =>
+        handleApiError(error, `creating event for user '${userName}'`, "creating event")
       )
   }
 
@@ -192,9 +191,8 @@ export default class AuditLogApiClient {
           return new ApplicationError(`Error getting unsanitised messages: ${text}`, new Error(text))
         })
       })
-      .catch(
-        (error: unknown): Result<AuditLogApiRecordOutput[]> =>
-          handleApiError(error, "getting unsanitised messages", "getting unsanitised messages")
+      .catch((error: unknown): Result<AuditLogApiRecordOutput[]> =>
+        handleApiError(error, "getting unsanitised messages", "getting unsanitised messages")
       )
   }
 
@@ -240,9 +238,8 @@ export default class AuditLogApiClient {
           return new ApplicationError(`Error getting messages: ${text}`, new Error(text))
         })
       })
-      .catch(
-        (error: unknown): Result<AuditLogApiRecordOutput> =>
-          handleApiError(error, `getting messages for correlation Id ${correlationId}`, "getting messages")
+      .catch((error: unknown): Result<AuditLogApiRecordOutput> =>
+        handleApiError(error, `getting messages for correlation Id ${correlationId}`, "getting messages")
       )
   }
 
@@ -271,9 +268,8 @@ export default class AuditLogApiClient {
           return new ApplicationError(`Error getting messages: ${text}`, new Error(text))
         })
       })
-      .catch(
-        (error: unknown): Result<AuditLogApiRecordOutput[]> =>
-          handleApiError(error, "getting messages", "getting messages")
+      .catch((error: unknown): Result<AuditLogApiRecordOutput[]> =>
+        handleApiError(error, "getting messages", "getting messages")
       )
   }
 
@@ -314,9 +310,8 @@ export default class AuditLogApiClient {
           return new ApplicationError(`Error getting message by hash: ${text}`, new Error(text))
         })
       })
-      .catch(
-        (error: unknown): Result<AuditLogApiRecordOutput[]> =>
-          handleApiError(error, `getting message by hash: ${messageHash}`, "getting message by hash")
+      .catch((error: unknown): Result<AuditLogApiRecordOutput[]> =>
+        handleApiError(error, `getting message by hash: ${messageHash}`, "getting message by hash")
       )
   }
 
@@ -347,9 +342,8 @@ export default class AuditLogApiClient {
           return new Error(`Error ${response.status}: Could not retry audit log event.`)
         })
       })
-      .catch(
-        (error: unknown): Result<void> =>
-          handleApiError(error, `retrying event for message with Id ${correlationId}`, "retrying event")
+      .catch((error: unknown): Result<void> =>
+        handleApiError(error, `retrying event for message with Id ${correlationId}`, "retrying event")
       )
   }
 

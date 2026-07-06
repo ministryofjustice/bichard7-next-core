@@ -61,18 +61,16 @@ export const createHOOffence = ({
     },
     ActualOffenceDateCode: offenceDateCode,
     Result: resultCodes
-      ? resultCodes.map(
-          (code): Result => ({
-            CJSresultCode: parseInt(code, 10),
-            SourceOrganisation: {
-              SecondLevelCode: "01",
-              ThirdLevelCode: "OK",
-              BottomLevelCode: "00",
-              OrganisationUnitCode: "01OK00"
-            },
-            ResultQualifierVariable: [{ Code: "A" }]
-          })
-        )
+      ? resultCodes.map((code): Result => ({
+          CJSresultCode: parseInt(code, 10),
+          SourceOrganisation: {
+            SecondLevelCode: "01",
+            ThirdLevelCode: "OK",
+            BottomLevelCode: "00",
+            OrganisationUnitCode: "01OK00"
+          },
+          ResultQualifierVariable: [{ Code: "A" }]
+        }))
       : [],
     OffenceCategory: offenceCategory,
     CourtCaseReferenceNumber: courtCaseReferenceNumber
