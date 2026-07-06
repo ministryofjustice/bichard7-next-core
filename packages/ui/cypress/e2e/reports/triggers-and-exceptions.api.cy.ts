@@ -35,8 +35,8 @@ describe("exceptions/triggers report type filter", () => {
       "Resolution action"
     ]
 
-    cy.get("section#table-user1-1-section").within(() => {
-      cy.get("h3#table-user1-1-header").should("exist")
+    cy.get("section#table-user1-0-section").within(() => {
+      cy.get("h3#table-user1-0-header").should("exist")
 
       headers.forEach((text, index) => {
         cy.get("table thead tr th").eq(index).should("have.text", text)
@@ -48,8 +48,8 @@ describe("exceptions/triggers report type filter", () => {
       cy.get("table tbody tr td:nth(2)").should("have.text", "Case00003")
     })
 
-    cy.get("section#table-generalhandler-0-section").within(() => {
-      cy.get("h3#table-generalhandler-0-header").should("exist")
+    cy.get("section#table-general-handler-user-1-section").within(() => {
+      cy.get("h3#table-general-handler-user-1-header").should("exist")
 
       cy.get("table tbody tr").should("have.length", 1)
 
@@ -107,7 +107,7 @@ describe("exceptions/triggers report type filter", () => {
     cy.get("#run-report").click()
 
     cy.get(".results-area table tbody tr").should("have.length", 1)
-    cy.get(".results-area h3").should("contain", "GeneralHandler")
+    cy.get(".results-area h3").should("contain", "General Handler User")
   })
 
   it("returns no results when querying with a 'resolvedBy' user that has not resolved anything", () => {
@@ -126,7 +126,19 @@ describe("exceptions/triggers report type filter", () => {
     cy.get("#run-report").click()
 
     cy.get(".results-area table tbody tr").should("have.length", 2)
-    cy.get(".results-area h3").should("contain", "GeneralHandler")
+    cy.get(".results-area h3").should("contain", "General Handler User")
     cy.get(".results-area h3").should("contain", "user1")
+  })
+
+  it("returns results that have been resolved by the selected resolvers", () => {
+    provideAllFieldsWithValidValues()
+    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").uncheck()
+    cy.get("div#resolved-by-section").contains("General Handler User").click()
+    cy.get("div#resolved-by-section").contains("Supervisor").click()
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr").should("have.length", 1)
+    cy.get(".results-area h3").should("contain", "General Handler User")
   })
 })

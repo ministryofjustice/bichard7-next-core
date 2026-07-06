@@ -138,7 +138,9 @@ export const ReportSelectionFilter: React.FC<{
       })
 
       if (!allResolversSelected) {
-        urlQuery.append("resolvedBy", String(filterValues.resolvedBy))
+        for (const user of filterValues.resolvedBy) {
+          urlQuery.append("resolvedBy", user)
+        }
       }
 
       const parsedData = await downloadReport(reportType, urlQuery)
