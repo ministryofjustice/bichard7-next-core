@@ -24,11 +24,11 @@ export async function getPotentialCasesToAudit(
 
   const baseQuery = sql`
     SELECT 
-      error_id,
-      trigger_resolved_by,
-      trigger_quality_checked,
-      error_resolved_by,
-      error_quality_checked
+      error_id AS "errorId",
+      trigger_resolved_by AS "triggerResolvedBy",
+      trigger_quality_checked AS "triggerQualityChecked",
+      error_resolved_by AS "errorResolvedBy",
+      error_quality_checked AS "errorQualityChecked"
     FROM 
       br7own.error_list el
     WHERE
@@ -73,33 +73,18 @@ export async function getPotentialCasesToAudit(
 
   const results = await sql<
     {
-      error_id: number
-      error_quality_checked: null | number
-      error_resolved_by: null | string
-      trigger_quality_checked: null | number
-      trigger_resolved_by: null | string
+      errorId: number
+      errorQualityChecked: null | number
+      errorResolvedBy: null | string
+      triggerQualityChecked: null | number
+      triggerResolvedBy: null | string
     }[]
   >`${baseQuery} ${filter}`.catch((error: Error) => error)
   if (isError(results)) {
     return new Error("Failed to get cases to audit")
   }
 
-  const auditMappingSchema = z.preprocess((val) => {
-    if (!val || typeof val !== "object") {
-      return val
-    }
-
-    const row = val as Record<string, unknown>
-    return {
-      errorId: row.error_id,
-      errorQualityChecked: row.error_quality_checked,
-      errorResolvedBy: row.error_resolved_by,
-      triggerQualityChecked: row.trigger_quality_checked,
-      triggerResolvedBy: row.trigger_resolved_by
-    }
-  }, casesToAuditSchema)
-
-  const parsedResults = z.array(auditMappingSchema).safeParse(results)
+  const parsedResults = z.array(casesToAuditSchema).safeParse(results)
   if (!parsedResults.success) {
     return parsedResults.error
   }
