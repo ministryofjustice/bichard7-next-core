@@ -71,15 +71,7 @@ export async function getPotentialCasesToAudit(
     filter = sql`${filter} AND ${exceptionsFilter}`
   }
 
-  const results = await sql<
-    {
-      error_id: number
-      error_quality_checked: null | number
-      error_resolved_by: null | string
-      trigger_quality_checked: null | number
-      trigger_resolved_by: null | string
-    }[]
-  >`${baseQuery} ${filter}`.catch((error: Error) => error)
+  const results = await sql`${baseQuery} ${filter}`.catch((error: Error) => error)
   if (isError(results)) {
     return new Error("Failed to get cases to audit")
   }
