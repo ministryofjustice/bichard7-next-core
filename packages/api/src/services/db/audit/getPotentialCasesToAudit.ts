@@ -2,7 +2,7 @@ import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAudi
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import { casesToAuditSchema } from "@moj-bichard7/common/types/Case"
+import { casesToAuditSchema } from "@moj-bichard7/common/types/Audit"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { addDays } from "date-fns"
 import z from "zod"
