@@ -94,10 +94,17 @@ export async function* exceptionsReport(
     WITH combined_data AS (${combinedParts})
     SELECT
       cb.resolver as username,
+      CONCAT_WS(' ', u.forenames, u.surname) as full_name,
       json_agg(cb.* ORDER BY cb.type DESC, cb.resolved_ts, cb.error_id) as cases
     FROM combined_data cb
-    GROUP BY cb.resolver
-    ORDER BY cb.resolver
+    LEFT JOIN br7own.users u ON cb.resolver = u.username
+    GROUP BY
+      cb.resolver,
+      u.forenames,
+      u.surname
+    ORDER BY
+      full_name,
+      cb.resolver
   `
 
   try {

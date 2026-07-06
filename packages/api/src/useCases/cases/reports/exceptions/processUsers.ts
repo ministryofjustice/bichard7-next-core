@@ -28,7 +28,7 @@ export const processUsers = (userRows: UserExceptionReportRow[]): ExceptionRepor
         total: userRow.cases.length,
         triggers
       },
-      username: userRow.username
+      username: userRow.full_name || userRow.username
     }
   })
 }

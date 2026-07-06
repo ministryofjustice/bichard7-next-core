@@ -22,6 +22,7 @@ export const CaseRowForExceptionReportSchema = z.object({
 
 export const UserExceptionReportRowSchema = z.object({
   cases: z.array(CaseRowForExceptionReportSchema),
+  full_name: z.string().nullable(),
   username: z.string()
 })
 
