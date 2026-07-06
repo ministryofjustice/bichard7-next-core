@@ -10,7 +10,6 @@ import z from "zod"
 import type { CasesToAuditByUser } from "../../../types/CasesToAuditByUser"
 import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
-import { convertCasesToAudit } from "../../../useCases/dto/convertCasestoAuditDto"
 import { organisationUnitSql } from "../organisationUnitSql"
 
 export async function getPotentialCasesToAudit(
@@ -85,8 +84,22 @@ export async function getPotentialCasesToAudit(
     return new Error("Failed to get cases to audit")
   }
 
-  const convertedResults = convertCasesToAudit(results as Record<string, unknown>[])
-  const parsedResults = z.array(casesToAuditSchema).safeParse(convertedResults)
+  const auditMappingSchema = z.preprocess((val) => {
+    if (!val || typeof val !== "object") {
+      return val
+    }
+
+    const row = val as Record<string, unknown>
+    return {
+      errorId: row.error_id,
+      errorQualityChecked: row.error_quality_checked,
+      errorResolvedBy: row.error_resolved_by,
+      triggerQualityChecked: row.trigger_quality_checked,
+      triggerResolvedBy: row.trigger_resolved_by
+    }
+  }, casesToAuditSchema)
+
+  const parsedResults = z.array(auditMappingSchema).safeParse(results)
   if (!parsedResults.success) {
     return parsedResults.error
   }

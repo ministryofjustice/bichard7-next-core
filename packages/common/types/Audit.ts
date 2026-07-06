@@ -1,5 +1,7 @@
 import z from "zod"
 
+import { CaseSchema } from "./Case"
+
 export const AuditSchema = z.object({
   audit_id: z.number(),
   completed_when: z.date().nullable(),
@@ -11,6 +13,14 @@ export const AuditSchema = z.object({
   to_date: z.date(),
   trigger_types: z.string().array().nullable(),
   volume_of_cases: z.number()
+})
+
+export const casesToAuditSchema = CaseSchema.pick({
+  errorId: true,
+  errorQualityChecked: true,
+  errorResolvedBy: true,
+  triggerQualityChecked: true,
+  triggerResolvedBy: true
 })
 
 export const AuditDtoSchema = z.object({
