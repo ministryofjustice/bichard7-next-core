@@ -129,4 +129,16 @@ describe("exceptions/triggers report type filter", () => {
     cy.get(".results-area h3").should("contain", "GeneralHandler")
     cy.get(".results-area h3").should("contain", "user1")
   })
+
+  it("returns results that have been resolved by the selected resolvers", () => {
+    provideAllFieldsWithValidValues()
+    cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").uncheck()
+    cy.get("div#resolved-by-section").contains("General Handler User").click()
+    cy.get("div#resolved-by-section").contains("Supervisor").click()
+
+    cy.get("#run-report").click()
+
+    cy.get(".results-area table tbody tr").should("have.length", 1)
+    cy.get(".results-area h3").should("contain", "General Handler User")
+  })
 })
