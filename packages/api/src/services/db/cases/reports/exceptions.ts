@@ -25,8 +25,8 @@ export async function* exceptionsReport(
     const statusCol = isException ? "error_status" : "trigger_status"
 
     const resolvedByFilter =
-      filters.resolvedBy && filters.resolvedBy.length > 0
-        ? database.connection`AND el.${database.connection(resolvedByCol)} = ANY(${filters.resolvedBy})`
+      filters.resolvedBy.length > 0
+        ? database.connection`AND el.${database.connection(resolvedByCol)} IN ${database.connection(filters.resolvedBy)}`
         : database.connection``
 
     return database.connection`
