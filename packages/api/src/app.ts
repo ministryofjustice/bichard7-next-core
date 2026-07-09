@@ -9,6 +9,9 @@ import type DatabaseGateway from "./types/DatabaseGateway"
 
 import authenticate from "./server/auth/authenticate"
 import createFastify from "./server/createFastify"
+import addOnRequestHook from "./server/hooks/addOnRequestHook"
+import addOnResponseHook from "./server/hooks/onResponse"
+import addOnSendHook from "./server/hooks/onSend"
 import setupSwagger from "./server/openapi/setupSwagger"
 import setupZod from "./server/openapi/setupZod"
 
@@ -22,6 +25,7 @@ declare module "fastify" {
     auditLogGateway: AuditLogDynamoGateway
     database: DatabaseGateway
     s3: AwsS3Gateway
+    traceId: string
     user: User
   }
 }
@@ -40,6 +44,10 @@ export default async function ({ auditLogGateway, database }: Gateways) {
 
   await setupZod(fastify)
   await setupSwagger(fastify)
+
+  addOnRequestHook(fastify)
+  addOnSendHook(fastify)
+  addOnResponseHook(fastify)
 
   // Autoloaded API routes (bearer token required)
   fastify.register(async (instance) => {
@@ -74,23 +82,6 @@ export default async function ({ auditLogGateway, database }: Gateways) {
       ignoreFilter: (path: string) => path.endsWith(".test.ts"),
       matchFilter: (path: string) => path.includes("public")
     })
-  })
-
-  fastify.addHook("onResponse", (request, reply) => {
-    request.log.info(
-      {
-        request: {
-          requestMethod: request.method,
-          requestParams: request.params,
-          url: request.url
-        },
-        response: {
-          responseTime: reply.elapsedTime,
-          statusCode: reply.statusCode
-        }
-      },
-      "request completed"
-    )
   })
 
   fastify.addHook("onClose", async (instance) => {
