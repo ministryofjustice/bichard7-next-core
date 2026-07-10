@@ -43,8 +43,7 @@ describe("addOnResponseHook (Unit Test)", () => {
     expect(mockRequest.log.info).toHaveBeenCalledWith(
       {
         responseTime: 120.5,
-        statusCode: 200,
-        traceId: "mock-trace-456"
+        statusCode: 200
       },
       "request completed"
     )

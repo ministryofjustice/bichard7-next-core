@@ -5,8 +5,7 @@ const addOnResponseHook = (fastify: FastifyInstance) => {
     request.log.info(
       {
         responseTime: reply.elapsedTime,
-        statusCode: reply.statusCode,
-        traceId: request.traceId
+        statusCode: reply.statusCode
       },
       "request completed"
     )
