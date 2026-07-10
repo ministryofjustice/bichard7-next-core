@@ -76,9 +76,9 @@ describe("createReportCsv Orchestrator", () => {
 
     const blob = await createReportCsv(reportData, "TEST_TYPE" as ReportType, null, null)
 
-    const finalString = (blob as any).content[0]
+    const finalString = (blob as any).content.join("")
 
-    const expected = `\n${mockMetadata}\n\nrow1\nrow2`
+    const expected = `\uFEFF\n${mockMetadata}\n\nrow1\nrow2`
     expect(finalString).toBe(expected)
   })
 

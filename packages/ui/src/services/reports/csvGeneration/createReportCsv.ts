@@ -5,6 +5,9 @@ import { getFlatReportCsvChunks } from "./getFlatReportCsvChunks"
 import { getGroupReportCsvChunks } from "./getGroupReportCsvChunks"
 import { getNestedReportCsvChunks } from "./getNestedReportCsvChunks"
 
+// The first character fixes Excel encoding for UTF-8
+const BYTE_ORDER_MARK = "\uFEFF"
+
 export const createReportCsv = async (
   reportData: ReportData,
   reportType: ReportType,
@@ -29,5 +32,5 @@ export const createReportCsv = async (
 
   const csvString = csvChunks.join("\n")
 
-  return new Blob([csvString], { type: "text/csv;charset=utf-8;" })
+  return new Blob([BYTE_ORDER_MARK, csvString], { type: "text/csv;charset=utf-8;" })
 }
