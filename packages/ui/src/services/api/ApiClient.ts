@@ -2,7 +2,7 @@ import { API_LOCATION } from "config"
 import { ApiError } from "types/ApiError"
 import type PromiseResult from "types/PromiseResult"
 import { Agent, fetch } from "undici"
-import { randomUUID } from "crypto"
+import { randomUUID } from "node:crypto"
 import apiLogger from "./apiLogger"
 
 export enum HttpMethod {
@@ -44,7 +44,7 @@ class ApiClient {
   ): PromiseResult<T> {
     const traceId = randomUUID()
     const logger = apiLogger(traceId, route)
-    const startTime = new Date().getTime()
+    const startTime = Date.now()
 
     const headers: Record<string, string> = {
       Authorization: `Bearer ${this.jwt}`,
@@ -86,7 +86,7 @@ class ApiClient {
         return new ApiError(response.status, `${message} - Trace ID ${traceId}`)
       }
 
-      const duration = new Date().getTime() - startTime
+      const duration = Date.now() - startTime
       logger.info(`Success - Took ${duration}ms`)
 
       return (await response.json()) as T

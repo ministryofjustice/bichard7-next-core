@@ -1,8 +1,8 @@
 import type { FastifyInstance } from "fastify"
 import type { IncomingMessage, Server, ServerResponse } from "http"
 
-import { randomUUID } from "crypto"
 import { fastify as Fastify } from "fastify"
+import { randomUUID } from "node:crypto"
 
 import logger from "./logging/logger"
 

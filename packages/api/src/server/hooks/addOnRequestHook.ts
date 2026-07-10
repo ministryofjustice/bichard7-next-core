@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify"
 
-import { randomUUID } from "crypto"
+import { randomUUID } from "node:crypto"
 
 const addOnRequestHook = (fastify: FastifyInstance) => {
   fastify.addHook("onRequest", async (request) => {

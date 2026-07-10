@@ -1,6 +1,6 @@
 import { fetch, Agent } from "undici"
 import { API_LOCATION } from "config"
-import { randomUUID } from "crypto"
+import { randomUUID } from "node:crypto"
 import apiLogger from "./apiLogger"
 
 export default class ReportsApiClient {
@@ -22,7 +22,7 @@ export default class ReportsApiClient {
     const logger = apiLogger(traceId, url)
 
     try {
-      const startTime = new Date().getTime()
+      const startTime = Date.now()
 
       logger.info("Requesting reports")
 
@@ -49,7 +49,7 @@ export default class ReportsApiClient {
           yield chunk as T
         }
 
-        const duration = new Date().getTime() - startTime
+        const duration = Date.now() - startTime
         logger.info(`Success - Took ${duration}ms`)
       }
     } catch (err) {
