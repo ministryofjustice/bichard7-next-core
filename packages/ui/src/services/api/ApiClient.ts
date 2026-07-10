@@ -2,6 +2,8 @@ import { API_LOCATION } from "config"
 import { ApiError } from "types/ApiError"
 import type PromiseResult from "types/PromiseResult"
 import { Agent, fetch } from "undici"
+import { randomUUID } from "node:crypto"
+import apiLogger from "./apiLogger"
 
 export enum HttpMethod {
   GET = "GET",
@@ -40,9 +42,14 @@ class ApiClient {
     bodyContent: string | Record<string, unknown> = {},
     additionalHeaders: Record<string, unknown> = {}
   ): PromiseResult<T> {
+    const traceId = randomUUID()
+    const logger = apiLogger(traceId, route)
+    const startTime = Date.now()
+
     const headers: Record<string, string> = {
       Authorization: `Bearer ${this.jwt}`,
       "Content-Type": "application/json",
+      "x-trace-id": traceId,
       ...additionalHeaders
     }
 
@@ -58,6 +65,8 @@ class ApiClient {
       requestOptions.body = typeof bodyContent === "string" ? bodyContent : JSON.stringify(bodyContent)
     }
 
+    logger.info("Requesting")
+
     try {
       const response = await fetch(url, requestOptions)
 
@@ -72,12 +81,21 @@ class ApiClient {
           // No op
         }
 
-        return new ApiError(response.status, message)
+        logger.error(`Error: ${message}`)
+
+        return new ApiError(response.status, `${message} - Trace ID ${traceId}`)
       }
+
+      const duration = Date.now() - startTime
+      logger.info(`Success - Took ${duration}ms`)
 
       return (await response.json()) as T
     } catch (err) {
-      return err as Error
+      const error = err as Error
+
+      logger.error(`Error: ${error.name}  ${error.message}`)
+
+      return error
     }
   }
 }

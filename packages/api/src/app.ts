@@ -1,16 +1,17 @@
 import type { User } from "@moj-bichard7/common/types/User"
 
-import AutoLoad from "@fastify/autoload"
-import path from "node:path"
-
 import type { AuditLogDynamoGateway } from "./services/gateways/dynamo"
 import type AwsS3Gateway from "./types/AwsS3Gateway"
 import type DatabaseGateway from "./types/DatabaseGateway"
 
-import authenticate from "./server/auth/authenticate"
 import createFastify from "./server/createFastify"
+import addOnRequestHook from "./server/hooks/addOnRequestHook"
+import addOnResponseHook from "./server/hooks/addOnResponseHook"
+import addOnSendHook from "./server/hooks/addOnSendHook"
 import setupSwagger from "./server/openapi/setupSwagger"
 import setupZod from "./server/openapi/setupZod"
+import addPrivateRoutes from "./server/register/addPrivateRoutes"
+import addPublicRoutes from "./server/register/addPublicRoutes"
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -22,6 +23,7 @@ declare module "fastify" {
     auditLogGateway: AuditLogDynamoGateway
     database: DatabaseGateway
     s3: AwsS3Gateway
+    traceId: string
     user: User
   }
 }
@@ -41,57 +43,12 @@ export default async function ({ auditLogGateway, database }: Gateways) {
   await setupZod(fastify)
   await setupSwagger(fastify)
 
-  // Autoloaded API routes (bearer token required)
-  fastify.register(async (instance) => {
-    instance.addHook("onRequest", async (request, reply) => {
-      const authenticatedUser = await authenticate(instance.database.readonly, request, reply)
-      if (!authenticatedUser) {
-        return
-      }
+  addOnRequestHook(fastify)
+  addOnSendHook(fastify)
+  addOnResponseHook(fastify)
 
-      request.auditLogGateway = instance.auditLogGateway
-      request.database = instance.database
-      request.user = authenticatedUser
-    })
-
-    await instance.register(AutoLoad, {
-      dir: path.join(__dirname, "routes"),
-      dirNameRoutePrefix: false,
-      ignoreFilter: (path: string) => path.includes("public") || path.endsWith(".test.ts")
-    })
-  })
-
-  // Autoloaded Public API routes (no bearer token required)
-  fastify.register(async (instance) => {
-    instance.addHook("onRequest", async (request) => {
-      request.auditLogGateway = instance.auditLogGateway
-      request.database = instance.database
-    })
-
-    await instance.register(AutoLoad, {
-      dir: path.join(__dirname, "routes"),
-      dirNameRoutePrefix: false,
-      ignoreFilter: (path: string) => path.endsWith(".test.ts"),
-      matchFilter: (path: string) => path.includes("public")
-    })
-  })
-
-  fastify.addHook("onResponse", (request, reply) => {
-    request.log.info(
-      {
-        request: {
-          requestMethod: request.method,
-          requestParams: request.params,
-          url: request.url
-        },
-        response: {
-          responseTime: reply.elapsedTime,
-          statusCode: reply.statusCode
-        }
-      },
-      "request completed"
-    )
-  })
+  addPublicRoutes(fastify)
+  addPrivateRoutes(fastify)
 
   fastify.addHook("onClose", async (instance) => {
     await instance.database.readonly.connection.end()

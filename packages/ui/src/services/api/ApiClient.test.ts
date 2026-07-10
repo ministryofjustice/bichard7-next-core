@@ -1,6 +1,7 @@
 import { ApiError } from "types/ApiError"
 import { fetch } from "undici"
-import ApiClient, { HttpMethod } from "./ApiClient" // Adjust the path if necessary
+import ApiClient, { HttpMethod } from "./ApiClient"
+import { randomUUID } from "crypto"
 
 jest.mock("undici", () => ({
   fetch: jest.fn(),
@@ -11,15 +12,26 @@ jest.mock("config", () => ({
   API_LOCATION: "https://api.example.com"
 }))
 
+jest.mock("crypto", () => ({
+  ...jest.requireActual("crypto"),
+  randomUUID: jest.fn()
+}))
+
 const mockFetch = fetch as jest.MockedFunction<typeof fetch>
+const mockRandomUUID = randomUUID as jest.MockedFunction<typeof randomUUID>
 
 describe("ApiClient", () => {
   const jwt = "test-jwt-token"
+  const mockUUID = "123e4567-e89b-12d3-a456-426614174000"
   let client: ApiClient
 
   beforeEach(() => {
-    jest.clearAllMocks()
     client = new ApiClient(jwt)
+    mockRandomUUID.mockReturnValue(mockUUID)
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 
   const mockResponse = (ok: boolean, status: number, data: any, isJson = true) => ({
@@ -40,7 +52,8 @@ describe("ApiClient", () => {
       method: HttpMethod.GET,
       headers: {
         Authorization: `Bearer ${jwt}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "x-trace-id": mockUUID
       },
       dispatcher: expect.any(Object)
     })
@@ -59,7 +72,8 @@ describe("ApiClient", () => {
       method: HttpMethod.POST,
       headers: {
         Authorization: `Bearer ${jwt}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "x-trace-id": mockUUID
       },
       body: JSON.stringify(payload),
       dispatcher: expect.any(Object)
@@ -90,7 +104,7 @@ describe("ApiClient", () => {
 
     expect(result).toBeInstanceOf(ApiError)
     expect((result as ApiError).status).toBe(401)
-    expect((result as ApiError).message).toBe("Invalid credentials")
+    expect((result as ApiError).message).toBe(`Invalid credentials - Trace ID ${mockUUID}`)
   })
 
   it("should return an ApiError using the raw body when response is not ok and contains invalid JSON", async () => {
@@ -101,7 +115,7 @@ describe("ApiClient", () => {
 
     expect(result).toBeInstanceOf(ApiError)
     expect((result as ApiError).status).toBe(500)
-    expect((result as ApiError).message).toBe("Internal Server Error")
+    expect((result as ApiError).message).toBe(`Internal Server Error - Trace ID ${mockUUID}`)
   })
 
   it("should catch and return network errors", async () => {
@@ -128,6 +142,7 @@ describe("ApiClient", () => {
       headers: {
         Authorization: `Bearer ${jwt}`,
         "Content-Type": "application/json",
+        "x-trace-id": mockUUID,
         ...additionalHeaders
       },
       dispatcher: expect.any(Object)
@@ -146,7 +161,8 @@ describe("ApiClient", () => {
       method: HttpMethod.PUT,
       headers: {
         Authorization: `Bearer ${jwt}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "x-trace-id": mockUUID
       },
       body: JSON.stringify(payload),
       dispatcher: expect.any(Object)
