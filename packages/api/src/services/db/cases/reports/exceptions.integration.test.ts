@@ -4,7 +4,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode" // Update this path
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
-import { startOfDay, subDays } from "date-fns"
+import { parse, startOfDay, subDays } from "date-fns"
 
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import { createTriggers } from "../../../../tests/helpers/triggerHelper"
@@ -95,8 +95,9 @@ describe("usersDetailPerformance - Integration", () => {
     expect(johnResult.cases[0].type).toBe("Ex")
     expect(johnResult.cases[1].type).toBe("Ex")
 
-    const johnFirstCaseResolvedTs = new Date(johnResult.cases[0].resolvedAt).getTime()
-    const johnSecondCaseResolvedTs = new Date(johnResult.cases[1].resolvedAt).getTime()
+    const johnFirstCaseResolvedTs = parse(johnResult.cases[0].resolvedAt, "dd/MM/yyyy HH:mm", new Date()).getTime()
+    const johnSecondCaseResolvedTs = parse(johnResult.cases[1].resolvedAt, "dd/MM/yyyy HH:mm", new Date()).getTime()
+
     expect(johnFirstCaseResolvedTs).toBeLessThanOrEqual(johnSecondCaseResolvedTs)
   })
 
