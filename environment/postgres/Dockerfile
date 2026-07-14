@@ -1,16 +1,12 @@
 FROM postgres:14
 
-RUN apt-get update && apt-get -y install git build-essential postgresql-server-dev-14 && \
-    git clone https://github.com/citusdata/pg_cron.git
-
-WORKDIR /pg_cron
-
-RUN make && make install && \
-    rm -rf /pg_cron && \
-    apt-get remove -y git build-essential postgresql-server-dev-14 && \
-    apt-get autoremove --purge -y && \
+RUN apt-get update && \
+    apt-get -y install postgresql-14-cron && \
     apt-get clean && \
-    apt-get purge
+    rm -rf /var/lib/apt/lists/*
+
+RUN echo "shared_preload_libraries='pg_cron'" >> /usr/share/postgresql/postgresql.conf.sample && \
+    echo "cron.database_name='bichard'" >> /usr/share/postgresql/postgresql.conf.sample
 
 # fixes missing locale issue
 # initdb: error: invalid locale settings; check LANG and LC_* environment variables
