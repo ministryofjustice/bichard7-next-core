@@ -9,8 +9,8 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends openssl curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install necessary dependencies to run TypeScript directly (ts-node and typescript)
-RUN npm install -g --ignore-scripts typescript ts-node
+# Install necessary dependencies to run TypeScript directly (tsx and typescript)
+RUN npm install -g --ignore-scripts typescript tsx
 
 # Copy the server file and the entrypoint script
 COPY mock-server* .
