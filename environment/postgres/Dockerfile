@@ -1,7 +1,7 @@
 FROM postgres:14
 
-RUN apt-get update || (cat /var/log/apt/term.log && exit 1)
-RUN apt-get -y install postgresql-14-cron && \
+RUN apt-get update && \
+    apt-get -y install postgresql-14-cron && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
