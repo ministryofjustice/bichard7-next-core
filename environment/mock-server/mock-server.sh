@@ -27,4 +27,4 @@ fi
 echo "Starting TypeScript Mock Server..."
 
 # Run the TypeScript server using ts-node
-npx ts-node mock-server.ts
+npx tsx mock-server.ts
