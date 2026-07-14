@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^9.0.0",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.389",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.401",
     "cookie": "^1.1.1",
     "cookie-signature": "^1.2.2",
     "cookies-next": "4.3.0",
@@ -84,7 +84,7 @@
     "@types/jest-axe": "^3.5.9",
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/lodash.sample": "^4.2.9",
-    "@types/node": "26.1.0",
+    "@types/node": "26.1.1",
     "@types/qs": "^6.15.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
@@ -93,7 +93,7 @@
     "aws-sdk": "^2.1693.0",
     "axe-core": "^4.12.1",
     "concurrently": "^10.0.3",
-    "cypress": "^15.18.0",
+    "cypress": "^15.18.1",
     "cypress-axe": "^1.7.0",
     "cypress-circleci-reporter": "0.3.0",
     "cypress-plugin-tab": "^2.0.0",
@@ -108,7 +108,7 @@
     "npm-check-updates": "^22.2.9",
     "pg-promise": "^12.7.0",
     "postgres": "^3.4.9",
-    "prettier": "^3.9.4",
+    "prettier": "^3.9.5",
     "sass": "^1.101.0",
     "stylelint": "^17.14.0",
     "stylelint-config-standard-scss": "^17.0.0",
@@ -116,6 +116,6 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths-webpack-plugin": "^4.2.0",
     "wait-on": "^9.0.10",
-    "webpack": "^5.108.3"
+    "webpack": "^5.108.4"
   }
 }
