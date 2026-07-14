@@ -55,7 +55,7 @@
     "zod-fixture": "^2.5.2"
   },
   "dependencies": {
-    "@aws-sdk/lib-dynamodb": "^3.1084.0",
+    "@aws-sdk/lib-dynamodb": "^3.1085.0",
     "@fastify/autoload": "6.4.0",
     "@fastify/swagger": "^9.8.0",
     "@fastify/swagger-ui": "^6.1.0",
