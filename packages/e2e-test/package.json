@@ -39,15 +39,15 @@
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-tests#readme",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1079.0",
-    "@aws-sdk/lib-storage": "^3.1079.0",
+    "@aws-sdk/client-s3": "^3.1084.0",
+    "@aws-sdk/lib-storage": "^3.1084.0",
     "@babel/core": "^8.0.1",
     "@babel/preset-env": "^8.0.2",
     "@cucumber/cucumber": "^9.5.1",
     "@cucumber/pretty-formatter": "^1.0.1",
     "@faker-js/faker": "^9.9.0",
     "@io-orkes/conductor-javascript": "^3.0.3",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.389",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.401",
     "@types/jest": "^30.0.0",
     "axios": "^1.18.1",
     "csv-parse": "^7.0.1",
@@ -57,7 +57,7 @@
     "jest": "^30.4.2",
     "jsonwebtoken": "^9.0.3",
     "lodash.orderby": "^4.18.0",
-    "mockserver-client": "^7.3.0",
+    "mockserver-client": "^7.4.0",
     "nunjucks": "^3.2.4",
     "pg-promise": "^12.7.0",
     "promise-poller": "^1.9.1",
@@ -76,7 +76,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^26.1.0",
+    "@types/node": "^26.1.1",
     "@types/nunjucks": "^3.2.6",
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
@@ -84,7 +84,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8",
     "npm-check-updates": "^22.2.9",
-    "prettier": "^3.9.4"
+    "prettier": "^3.9.5"
   },
   "lint-staged": {
     "*.js": [
