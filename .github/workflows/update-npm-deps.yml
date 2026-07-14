@@ -58,6 +58,10 @@ jobs:
         uses: ./.github/actions/create-pull-request
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "auto/update-npm-deps"
+          commit_message: "Update npm dependencies"
+          pr_title: "Update npm dependencies"
+          update_type: "npm dependency updates"
 
       - name: Check PR information
         run: |
