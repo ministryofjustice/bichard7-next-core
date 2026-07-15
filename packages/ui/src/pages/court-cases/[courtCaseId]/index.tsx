@@ -41,12 +41,12 @@ import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
 import getCaseDetailsCookieName from "utils/getCaseDetailsCookieName"
 import { isPost } from "utils/http"
-import logger from "utils/logger"
 import { logRenderTime } from "utils/logging"
 import redirectTo from "utils/redirectTo"
 import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackForm"
 import { isApiError } from "types/ApiError"
 import { ApiEndpoints } from "services/api/types"
+import apiLogger from "@/services/api/apiLogger"
 
 const mqGatewayConfig = createMqConfig()
 const mqGateway = new StompitMqGateway(mqGatewayConfig)
@@ -153,7 +153,8 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     if (isPost(req) && resubmitCase === "true") {
       if (useApiForCaseResubmit && apiGateway) {
-        logger.info("[API] Using API to resubmit")
+        const logger = apiLogger(undefined, req.url)
+        logger.info("Using API to resubmit")
         const resubmitResult = await apiGateway.resubmitCase(Number(courtCaseId))
 
         if (isError(resubmitResult)) {
@@ -243,7 +244,8 @@ export const getServerSideProps = withMultipleServerSideProps(
     let apiCase: DisplayFullCourtCase | Error | undefined
 
     if (useApiForCaseDetails && apiGateway) {
-      logger.info("[API] Using API to fetch case details")
+      const logger = apiLogger(undefined, req.url)
+      logger.info("Using API to fetch case details")
       apiCase = await apiGateway.fetchCase(Number(courtCaseId))
 
       if (isError(apiCase)) {
