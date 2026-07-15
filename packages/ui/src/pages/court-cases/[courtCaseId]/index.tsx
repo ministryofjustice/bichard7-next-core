@@ -154,7 +154,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     if (isPost(req) && resubmitCase === "true") {
       if (useApiForCaseResubmit && apiGateway) {
         const logger = apiLogger(undefined, req.url)
-        logger.info("Using API to resubmit case ${courtCaseId}")
+        logger.info(`Resubmitting court case ${courtCaseId}`)
         const resubmitResult = await apiGateway.resubmitCase(Number(courtCaseId))
 
         if (isError(resubmitResult)) {
@@ -245,7 +245,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     if (useApiForCaseDetails && apiGateway) {
       const logger = apiLogger(undefined, req.url)
-      logger.info("Using API to fetch details for ${courtCaseId")
+      logger.info(`Fetching details for ${courtCaseId}`)
       apiCase = await apiGateway.fetchCase(Number(courtCaseId))
 
       if (isError(apiCase)) {

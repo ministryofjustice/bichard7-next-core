@@ -147,7 +147,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       const apiGateway = new BichardApiV1(apiClient)
       const logger = apiLogger(undefined, req.url)
 
-      logger.info("Using API to fetch cases")
+      logger.info("Fetching cases")
 
       const caseAge = [query?.caseAge].flat().filter((value) => Object.values(CaseAge).includes(value as CaseAge))
 
