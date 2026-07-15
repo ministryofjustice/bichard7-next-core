@@ -7,13 +7,13 @@
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100002683P",
+          "arrestSummonsReference": "26/0000/00/100010140V",
           "chargeStatusMarker": "A",
           "cjsOffenceCode": "TH68006",
           "committedOnBail": false,
-          "courtCaseChargeNumber": 2,
-          "courtCaseReferenceNumber": "26/2576/000740F",
-          "crimeReference": "5PYPBGJCMBYOPGU",
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/009273F",
+          "crimeReference": "40OLXW3-GAVQTNK",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -22,7 +22,7 @@
           },
           "locationFSCode": "01ZD",
           "npccOffenceCode": "5.5.5.1",
-          "offenceChargeNumber": 2,
+          "offenceChargeNumber": 1,
           "offenceDescription": [],
           "othersCharged": [],
           "qualifiedCjsCode": "TH68006",
@@ -34,13 +34,13 @@
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 2,
-          "arrestSummonsReference": "26/0000/00/100002683P",
+          "arrestSummonsReference": "26/0000/00/100010140V",
           "chargeStatusMarker": "A",
           "cjsOffenceCode": "TH68151",
           "committedOnBail": false,
-          "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/2576/000740F",
-          "crimeReference": "OFZDJFBHIXA-3J5",
+          "courtCaseChargeNumber": 2,
+          "courtCaseReferenceNumber": "26/2576/009273F",
+          "crimeReference": "Q3DK-4U3DNGXNX6",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -49,7 +49,7 @@
           },
           "locationFSCode": "01ZD",
           "npccOffenceCode": "5.7.11.10",
-          "offenceChargeNumber": 1,
+          "offenceChargeNumber": 2,
           "offenceDescription": [],
           "othersCharged": [],
           "qualifiedCjsCode": "TH68151",
@@ -63,7 +63,7 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/000740F"
+      "courtCaseReference": "26/2576/009273F"
     }
   ],
   "remands": []
