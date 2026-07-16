@@ -1,4 +1,7 @@
-import searchCourtOrganisationUnits, { getOrganisationCodeAndName } from "./searchCourtOrganisationUnits"
+import searchCourtOrganisationUnits, {
+  getFullOrganisationName,
+  getOrganisationCodeAndName
+} from "./searchCourtOrganisationUnits"
 
 describe("searchCourtOrganisationUnits", () => {
   it("Should return an empty array when search keyword is an empty string", () => {
@@ -31,5 +34,13 @@ describe("searchCourtOrganisationUnits", () => {
     expect(getOrganisationCodeAndName(result[0])).toBe("C01CY00 Crown Courts London Croydon")
     expect(getOrganisationCodeAndName(result[1])).toBe("B01EF00 Magistrates' Courts London Croydon")
     expect(getOrganisationCodeAndName(result[2])).toBe("C01JI00 Crown Courts London Jury's Inn Croydon")
+  })
+
+  it("Should return 'Magistrates Courts Greater Manchester Wigan'", () => {
+    const result = searchCourtOrganisationUnits("B06OJ08")
+
+    expect(result).toHaveLength(1)
+
+    expect(getFullOrganisationName(result[0])).toBe("Magistrates' Courts Greater Manchester Wigan")
   })
 })
