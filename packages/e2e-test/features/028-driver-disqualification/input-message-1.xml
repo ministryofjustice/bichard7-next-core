@@ -105,9 +105,7 @@
 							</DC:Result>
 							<DC:Result>
 								<DC:ResultCode>4047</DC:ResultCode>
-								<DC:ResultText>Adjourned to 26/10/2011 at 14:00 in Courtroom 01,
-									Croydon Magistrates Court. Reason: non-standard reason: For
-									sentence.</DC:ResultText>
+								<DC:ResultText>Remanded on unconditional bail</DC:ResultText>
 								<DC:NextHearing>
 									<DC:NextHearingDetails>
 										<DC:CourtHearingLocation>B01EF01</DC:CourtHearingLocation>
