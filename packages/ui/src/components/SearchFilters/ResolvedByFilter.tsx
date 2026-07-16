@@ -54,26 +54,33 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
           pushUpdates()
         }}
       />
-      {activeResolvers.map((resolver, index) => (
-        <Checkbox
-          key={`${resolver.username}-${index}`}
-          id={`resolvers${index}`}
-          name="resolvedBy"
-          value={resolver.username}
-          defaultChecked={resolvedBy.includes(resolver.username)}
-          label={formatUserFullName(resolver.forenames, resolver.surname)}
-          data-testid={`audit-resolved-by-${index}`}
-          onChange={(_) => {
-            setAllResolversSelected(resolvedByRefs.current.every((input) => (input as HTMLInputElement).checked))
-            pushUpdates()
-          }}
-          ref={(elem) => {
-            if (elem) {
-              resolvedByRefs.current[index] = elem
-            }
-          }}
-        />
-      ))}
+      <Details className="govuk-details" data-module="govuk-details">
+        <summary className="govuk-details__summary">
+          <span className="govuk-details__summary-text">{"Show active users"}</span>
+        </summary>
+        <div className="govuk-details__text">
+          {activeResolvers.map((resolver, index) => (
+            <Checkbox
+              key={`${resolver.username}-${index}`}
+              id={`resolvers${index}`}
+              name="resolvedBy"
+              value={resolver.username}
+              defaultChecked={resolvedBy.includes(resolver.username)}
+              label={formatUserFullName(resolver.forenames, resolver.surname)}
+              data-testid={`audit-resolved-by-${index}`}
+              onChange={(_) => {
+                setAllResolversSelected(resolvedByRefs.current.every((input) => (input as HTMLInputElement).checked))
+                pushUpdates()
+              }}
+              ref={(elem) => {
+                if (elem) {
+                  resolvedByRefs.current[index] = elem
+                }
+              }}
+            />
+          ))}
+        </div>
+      </Details>
       {deletedResolvers.length > 0 && (
         <Details className="govuk-details" data-module="govuk-details">
           <summary className="govuk-details__summary">
