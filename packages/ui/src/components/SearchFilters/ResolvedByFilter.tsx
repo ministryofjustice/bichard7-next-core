@@ -46,7 +46,7 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
     summary: string
     resolvers: AuditResolvedBy[]
     refs: React.RefObject<HTMLInputElement[]>
-    getKey: (resolver: AuditResolvedBy[], index: number) => string
+    getKey: (resolver: AuditResolvedBy, index: number) => string
     getId: (index: number) => string
     getTestId: (index: number) => string
     onCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void
