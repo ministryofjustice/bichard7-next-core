@@ -43,7 +43,6 @@ import getCaseDetailsCookieName from "utils/getCaseDetailsCookieName"
 import getQueryStringCookieName from "utils/getQueryStringCookieName"
 import { isPost } from "utils/http"
 import { logUiDetails } from "utils/logUiDetails"
-import logger from "utils/logger"
 import { logCaseListRenderTime } from "utils/logging"
 import { calculateLastPossiblePageNumber } from "utils/pagination/calculateLastPossiblePageNumber"
 import redirectTo from "utils/redirectTo"
@@ -53,6 +52,7 @@ import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
 import shouldShowSwitchingFeedbackForm from "../utils/shouldShowSwitchingFeedbackForm"
 import { ApiEndpoints } from "services/api/types"
+import apiLogger from "@/services/api/apiLogger"
 
 type Props = {
   build: string | null
@@ -145,8 +145,9 @@ export const getServerSideProps = withMultipleServerSideProps(
       const jwt = req.cookies[".AUTH"] as string
       const apiClient = new ApiClient(jwt)
       const apiGateway = new BichardApiV1(apiClient)
+      const logger = apiLogger(undefined, req.url)
 
-      logger.info("[API] Using API to fetch cases")
+      logger.info("Fetching cases")
 
       const caseAge = [query?.caseAge].flat().filter((value) => Object.values(CaseAge).includes(value as CaseAge))
 
