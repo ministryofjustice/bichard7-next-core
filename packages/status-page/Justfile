@@ -1,0 +1,41 @@
+# Variables
+aws_account_id := "439237763202"
+region         := "eu-west-2"
+vault_profile  := "bichard7-shared-uat"
+image_name     := "ecs-metrics-aggregator"
+tag            := "latest"
+registry       := aws_account_id + ".dkr.ecr." + region + ".amazonaws.com"
+
+# Create the ECR repository
+create-repo:
+    aws-vault exec {{vault_profile}} -- aws ecr create-repository \
+        --repository-name {{image_name}} \
+        --region {{region}}
+
+# Authenticate Docker to ECR using aws-vault
+login:
+    aws-vault exec {{vault_profile}} -- aws ecr get-login-password --region {{region}} | docker login --username AWS --password-stdin {{registry}}
+
+# Build the container for linux/amd64 architecture
+build:
+    docker build --platform linux/amd64 -t {{image_name}}:{{tag}} .
+
+# Tag the container image for ECR
+tag:
+    docker tag {{image_name}}:{{tag}} {{registry}}/{{image_name}}:{{tag}}
+
+# Push the container image to ECR
+push:
+    docker push {{registry}}/{{image_name}}:{{tag}}
+
+# Build, tag, and push everything in one command
+deploy: build tag push
+
+# Run locally using temporary credentials via aws-vault
+run-local:
+    aws-vault exec {{vault_profile}} -- docker run --rm -it \
+        -e AWS_ACCESS_KEY_ID \
+        -e AWS_SECRET_ACCESS_KEY \
+        -e AWS_SESSION_TOKEN \
+        -e AWS_DEFAULT_REGION={{region}} \
+        {{image_name}}:{{tag}}
