@@ -1,8 +1,8 @@
-import { Details } from "@/features/AuditSearch/AuditSearch.styles"
 import AuditResolvedBy from "@/types/AuditResolvedBy"
 import { formatUserFullName } from "@/utils/formatUserFullName"
 import { useRef, useState } from "react"
 import Checkbox from "../Checkbox/Checkbox"
+import Details from "../Details/Details"
 
 interface ResolveByFilterProps {
   resolvedBy: string[]
@@ -63,29 +63,24 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
       return null
     }
     return (
-      <Details className="govuk-details" data-module="govuk-details">
-        <summary className="govuk-details__summary">
-          <span className="govuk-details__summary-text">{summary}</span>
-        </summary>
-        <div className="govuk-details__text">
-          {resolvers.map((resolver, index) => (
-            <Checkbox
-              key={`${keyPrefix}${resolver.username}-${index}`}
-              id={`${idPrefix}${index}`}
-              name="resolvedBy"
-              value={resolver.username}
-              defaultChecked={resolvedBy.includes(resolver.username)}
-              label={formatUserFullName(resolver.forenames, resolver.surname)}
-              data-testid={`audit-resolved-by-${keyPrefix}${index}`}
-              onChange={onCheckboxChange}
-              ref={(elem) => {
-                if (elem) {
-                  refs.current[index] = elem
-                }
-              }}
-            />
-          ))}
-        </div>
+      <Details summary={summary}>
+        {resolvers.map((resolver, index) => (
+          <Checkbox
+            key={`${keyPrefix}${resolver.username}-${index}`}
+            id={`${idPrefix}${index}`}
+            name="resolvedBy"
+            value={resolver.username}
+            defaultChecked={resolvedBy.includes(resolver.username)}
+            label={formatUserFullName(resolver.forenames, resolver.surname)}
+            data-testid={`audit-resolved-by-${keyPrefix}${index}`}
+            onChange={onCheckboxChange}
+            ref={(elem) => {
+              if (elem) {
+                refs.current[index] = elem
+              }
+            }}
+          />
+        ))}
       </Details>
     )
   }
