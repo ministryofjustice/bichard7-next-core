@@ -56,6 +56,7 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
       />
       <ResolverDetails
         summary="Show active users"
+        detailsId="active-users"
         resolvers={activeResolvers}
         refs={resolvedByRefs}
         resolvedBy={resolvedBy}
@@ -69,6 +70,7 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
       {deletedResolvers.length > 0 && (
         <ResolverDetails
           summary="Show deleted users"
+          detailsId="deleted-users"
           resolvers={deletedResolvers}
           refs={deletedResolvedByRefs}
           resolvedBy={resolvedBy}
@@ -85,6 +87,7 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
 
 interface ResolverDetailsProps {
   summary: string
+  detailsId: string
   resolvers: AuditResolvedBy[]
   refs: React.RefObject<HTMLInputElement[]>
   resolvedBy: string[]
@@ -95,6 +98,7 @@ interface ResolverDetailsProps {
 
 const ResolverDetails = ({
   summary,
+  detailsId,
   resolvers,
   refs,
   resolvedBy,
@@ -106,7 +110,7 @@ const ResolverDetails = ({
     return null
   }
   return (
-    <Details summary={summary}>
+    <Details summary={summary} id={detailsId}>
       {resolvers.map((resolver, index) => (
         <Checkbox
           key={`${keyPrefix}${resolver.username}-${index}`}
