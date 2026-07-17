@@ -49,9 +49,9 @@ describe("AuditSearch", () => {
 
     cy.get("#audit-search-resolved-by input[type=checkbox]").should("have.length", 4)
 
-    cy.get(".govuk-details__summary-text").click()
+    cy.get("#deleted-users").click()
 
-    cy.get(".govuk-details__text .govuk-checkboxes__item label").contains("Deleted User-C").should("exist")
+    cy.get("#deleted-users").contains("Deleted User-C").should("exist")
   })
 
   it("should list triggers", () => {
@@ -161,7 +161,7 @@ describe("AuditSearch", () => {
     cy.get("#audit-search-resolved-by input[type=checkbox]:checked").should("have.length", 4)
   })
 
-  it("should de-selected All checkbox if all resolvers are not selected", () => {
+  it("should de-select All checkbox if all resolvers are not selected", () => {
     cy.mount(
       <MockNextRouter>
         <AuditSearch
@@ -176,6 +176,7 @@ describe("AuditSearch", () => {
     )
 
     cy.get("[data-testid='audit-resolved-by-all']").click()
+    cy.get("#active-users").click()
     cy.get("[data-testid='audit-resolved-by-0']").click()
 
     cy.get("[data-testid='audit-resolved-by-all']").should("not.be.checked")
@@ -194,6 +195,8 @@ describe("AuditSearch", () => {
         />
       </MockNextRouter>
     )
+
+    cy.get("#active-users").click()
 
     cy.get("[data-testid='audit-resolved-by-0']").click()
     cy.get("[data-testid='audit-resolved-by-1']").click()
@@ -216,7 +219,7 @@ describe("AuditSearch", () => {
       </MockNextRouter>
     )
 
-    cy.get(".govuk-details__summary-text").click()
+    cy.get("#deleted-users").click()
 
     cy.get("[data-testid='audit-resolved-by-deleted-0']").click()
     cy.get("[data-testid='audit-resolved-by-deleted-1']").click()
@@ -237,6 +240,8 @@ describe("AuditSearch", () => {
         />
       </MockNextRouter>
     )
+
+    cy.get("#active-users").click()
 
     cy.get("[data-testid='audit-resolved-by-0']").click()
     cy.get("[data-testid='audit-resolved-by-1']").click()
