@@ -42,48 +42,6 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
     onChange([...activeChecked, ...deletedChecked])
   }
 
-  interface ResolverDetailsProps {
-    summary: string
-    resolvers: AuditResolvedBy[]
-    refs: React.RefObject<HTMLInputElement[]>
-    keyPrefix?: string
-    idPrefix: string
-    onCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  }
-
-  const ResolverDetails = ({
-    summary,
-    resolvers,
-    refs,
-    keyPrefix = "",
-    idPrefix,
-    onCheckboxChange
-  }: ResolverDetailsProps) => {
-    if (!resolvers || resolvers.length === 0) {
-      return null
-    }
-    return (
-      <Details summary={summary}>
-        {resolvers.map((resolver, index) => (
-          <Checkbox
-            key={`${keyPrefix}${resolver.username}-${index}`}
-            id={`${idPrefix}${index}`}
-            name="resolvedBy"
-            value={resolver.username}
-            defaultChecked={resolvedBy.includes(resolver.username)}
-            label={formatUserFullName(resolver.forenames, resolver.surname)}
-            data-testid={`audit-resolved-by-${keyPrefix}${index}`}
-            onChange={onCheckboxChange}
-            ref={(elem) => {
-              if (elem) {
-                refs.current[index] = elem
-              }
-            }}
-          />
-        ))}
-      </Details>
-    )
-  }
   return (
     <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
       <Checkbox
@@ -100,6 +58,7 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
         summary="Show active users"
         resolvers={activeResolvers}
         refs={resolvedByRefs}
+        resolvedBy={resolvedBy}
         idPrefix="resolvers"
         onCheckboxChange={(_) => {
           setAllResolversSelected(resolvedByRefs.current.every((input) => (input as HTMLInputElement).checked))
@@ -112,6 +71,7 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
           summary="Show deleted users"
           resolvers={deletedResolvers}
           refs={deletedResolvedByRefs}
+          resolvedBy={resolvedBy}
           keyPrefix="deleted-"
           idPrefix="deleted-resolvers-"
           onCheckboxChange={(_) => {
@@ -120,6 +80,51 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
         />
       )}
     </div>
+  )
+}
+
+interface ResolverDetailsProps {
+  summary: string
+  resolvers: AuditResolvedBy[]
+  refs: React.RefObject<HTMLInputElement[]>
+  resolvedBy: string[]
+  keyPrefix?: string
+  idPrefix: string
+  onCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+const ResolverDetails = ({
+  summary,
+  resolvers,
+  refs,
+  resolvedBy,
+  keyPrefix = "",
+  idPrefix,
+  onCheckboxChange
+}: ResolverDetailsProps) => {
+  if (!resolvers || resolvers.length === 0) {
+    return null
+  }
+  return (
+    <Details summary={summary}>
+      {resolvers.map((resolver, index) => (
+        <Checkbox
+          key={`${keyPrefix}${resolver.username}-${index}`}
+          id={`${idPrefix}${index}`}
+          name="resolvedBy"
+          value={resolver.username}
+          defaultChecked={resolvedBy.includes(resolver.username)}
+          label={formatUserFullName(resolver.forenames, resolver.surname)}
+          data-testid={`audit-resolved-by-${keyPrefix}${index}`}
+          onChange={onCheckboxChange}
+          ref={(elem) => {
+            if (elem) {
+              refs.current[index] = elem
+            }
+          }}
+        />
+      ))}
+    </Details>
   )
 }
 
