@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <title>S3 Server</title>
+  </head>
+  <body>
+    This is an S3 Server. It proxies your requests to the {{s3Bucket}} S3 bucket.
+    The current path you chose had a '/' at the end and I didn't find an index.html inside it,
+    so here are all the subfolders I found instead:
+    <ul>
+      {{#prefixes}}
+        <li><a href="/{{Prefix}}">{{Prefix}}</a></li>
+      {{/prefixes}}
+    </ul>
+  </body>
+</html>

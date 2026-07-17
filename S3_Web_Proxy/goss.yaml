@@ -1,0 +1,128 @@
+---
+file:
+  /certs:
+    exists: true
+    owner: node
+    group: node
+    filetype: directory
+    contains: []
+  /certs/server.crt:
+    exists: true
+    owner: node
+    group: node
+    size: 2378
+    filetype: file
+    contains: []
+  /certs/server.key:
+    exists: true
+    owner: node
+    group: node
+    filetype: file
+    size:
+      and:
+        - lt: 3300
+        - gt: 3267
+    contains: []
+  /etc/nginx/nginx.conf:
+    exists: true
+    owner: root
+    group: root
+    filetype: file
+  /var/log/nginx:
+    exists: true
+    filetype: directory
+    owner: node
+    group: node
+  /var/cache/nginx:
+    exists: true
+    filetype: directory
+    owner: node
+    group: node
+  /etc/supervisord.conf:
+    exists: true
+    owner: root
+    group: root
+    filetype: file
+  /var/log/supervisor:
+    exists: true
+    filetype: directory
+    owner: node
+    group: node
+  /etc/passwd:
+    exists: true
+    mode: "0644"
+    owner: root
+    group: root
+    filetype: file
+  /tmp:
+    exists: true
+    filetype: directory
+  /tmp/openssl.cnf:
+    exists: false
+package:
+  git:
+    installed: true
+  nginx:
+    installed: true
+  python3:
+    installed: true
+  shadow-utils:
+    installed: true
+user:
+  dbus:
+    exists: true
+    uid: 81
+    gid: 81
+    groups:
+      - dbus
+    home: /
+    shell: /sbin/nologin
+  nginx:
+    exists: true
+    groups:
+      - nginx
+    home: /var/cache/nginx
+    shell: /sbin/nologin
+  nobody:
+    exists: true
+    uid: 65534
+    gid: 65534
+    groups:
+      - nobody
+    home: /
+    shell: /sbin/nologin
+  node:
+    exists: true
+    uid: 1000
+    gid: 1000
+    groups:
+      - node
+    home: /home/node
+    shell: /bin/bash
+  systemd-network:
+    exists: true
+    uid: 192
+    gid: 192
+    groups:
+      - systemd-network
+    home: /
+    shell: /usr/sbin/nologin
+process:
+  bash:
+    running: true
+  nginx:
+    running: true
+  python:
+    running: false
+  supervisord:
+    running: true
+command:
+  check_running_user:
+    exec: "whoami"
+    exit-status: 0
+    stdout:
+      - "node"
+  "supervisorctl status s3-server":
+    exit-status: 0
+    stdout:
+      - RUNNING
