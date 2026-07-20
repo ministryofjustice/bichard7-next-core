@@ -35,6 +35,12 @@ METRICS_CONFIG: List[dict[str, Any]] = [
         "metric_name": "ActiveConnectionCount",
         "load_balancer": "app/cjse-uat-bichard-7-conductor/3c3aa9f65bfe9489",
     },
+    {
+        "output_filename": "leds_incoming_message_queue_num_msg_received",
+        "namespace": "AWS/SQS",
+        "metric_name": "NumberOfMessagesReceived",
+        "queue_name": "bichard-7-leds-incomingMessageQueue",  # TODO
+    },
 ]
 PA_SCHEMA = pa.schema(
     [
@@ -229,6 +235,8 @@ def main() -> None:
         logger.info(
             f"Metrics for {config['output_filename']} written to '{table_output_path}'."
         )
+
+        ########
 
         last_row = get_last_row(metrics[config["output_filename"]])
         timestamp_uk = convert_utc_to_uk(last_row["timestamp"][0])
