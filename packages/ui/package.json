@@ -43,8 +43,8 @@
     "*.scss": "stylelint './styles/*.scss' --fix"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^9.0.0",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.403",
+    "@ministryofjustice/frontend": "^10.0.0",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.404",
     "cookie": "^1.1.1",
     "cookie-signature": "^1.2.2",
     "cookies-next": "4.3.0",
@@ -52,7 +52,7 @@
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "downshift": "^9.4.0",
-    "govuk-frontend": "^6.3.0",
+    "govuk-frontend": "^6.4.0",
     "json-2-csv": "^5.5.11",
     "lodash": "^4.18.1",
     "lodash.clonedeep": "^4.5.0",
@@ -60,13 +60,13 @@
     "pg": "^8.22.0",
     "pino": "^10.3.1",
     "qs": "^6.15.3",
-    "raw-body": "^3.0.2",
+    "raw-body": "^4.0.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "reflect-metadata": "^0.2.2",
     "stompit": "^1.0.0",
     "styled-components": "^6.4.3",
-    "typeorm": "^1.0.0",
+    "typeorm": "^1.1.0",
     "undici": "^7.28.0"
   },
   "devDependencies": {
