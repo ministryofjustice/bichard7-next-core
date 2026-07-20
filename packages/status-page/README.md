@@ -12,3 +12,7 @@ A static web page to display Bichard service health metrics
   - replaces `_data/ui_data.json` on each run, this represents the current state for the UI
 - html
   - the content of the static site, draws from `_data/ui_data.json`
+
+## Development
+UV is used for python version and package management during development (see uv.lock, pyproject.toml, .python-version)
+For deployment, pip with requirements.txt is used for package management, and the base image in the dockerfile determines the python version.This is to keep the docker image as lightweight as possible, while allowing simpler development.
