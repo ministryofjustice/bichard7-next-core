@@ -210,26 +210,33 @@ def main() -> None:
             end_time=datetime.now(),
         )
         if not metrics:
-            logger.info("No metrics found, terminating without writing to s3.")
-            return
-
-        if not metrics[config["output_filename"]].num_rows == 0:
-            # read-append-overwrite method used due to assumed small file size (2 cols, low granularity data, data retention period)
-            # this avoids many small files problem if a new file got written on each pipeline run
-            append_new_data_to_parquet(
-                table_output_path, metrics[config["output_filename"]]
-            )
             logger.info(
-                f"Metrics for {config['output_filename']} written to '{table_output_path}'."
+                f"No metrics found for {config['output_filename']}, terminating without writing to s3."
             )
+            continue
 
-            last_row = get_last_row(metrics[config["output_filename"]])
-            timestamp_uk = convert_utc_to_uk(last_row["timestamp"][0])
+        if metrics[config["output_filename"]].num_rows == 0:
+            logger.info(
+                f"No metrics found for {config['output_filename']}, terminating without writing to s3."
+            )
+            continue
 
-            # cloudwatch labels the data with the start of the time window (e.g. average cpu usage 07:00-08:00 has a timestamp of 07:00)
-            # so add the time window on to get the end of the most recent data point window
-            last_updated.append(timestamp_uk + timedelta(seconds=GRANULARITY))
-            ui_data[config["output_filename"]] = f"{last_row['value'][0]:.2f}%"
+        # read-append-overwrite method used due to assumed small file size (2 cols, low granularity data, data retention period)
+        # this avoids many small files problem if a new file got written on each pipeline run
+        append_new_data_to_parquet(
+            table_output_path, metrics[config["output_filename"]]
+        )
+        logger.info(
+            f"Metrics for {config['output_filename']} written to '{table_output_path}'."
+        )
+
+        last_row = get_last_row(metrics[config["output_filename"]])
+        timestamp_uk = convert_utc_to_uk(last_row["timestamp"][0])
+
+        # cloudwatch labels the data with the start of the time window (e.g. average cpu usage 07:00-08:00 has a timestamp of 07:00)
+        # so add the time window on to get the end of the most recent data point window
+        last_updated.append(timestamp_uk + timedelta(seconds=GRANULARITY))
+        ui_data[config["output_filename"]] = f"{last_row['value'][0]:.2f}%"
 
     ui_data["lastUpdated"] = max(last_updated).strftime("%Y-%m-%d %H:%M:%S")
     s3 = boto3.client("s3")
