@@ -102,6 +102,7 @@ describe("exceptions/triggers report type filter", () => {
   it("returns results that have been resolved by the selected resolver", () => {
     provideAllFieldsWithValidValues()
     cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").uncheck()
+    cy.get("details").findByText("Show active users").click()
     cy.get("div#resolved-by-section").contains("General Handler User").click()
 
     cy.get("#run-report").click()
@@ -113,6 +114,7 @@ describe("exceptions/triggers report type filter", () => {
   it("returns no results when querying with a 'resolvedBy' user that has not resolved anything", () => {
     provideAllFieldsWithValidValues()
     cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").uncheck()
+    cy.get("details").findByText("Show active users").click()
     cy.get("div#resolved-by-section").contains("Supervisor User").click()
 
     cy.get("#run-report").click()
@@ -133,6 +135,7 @@ describe("exceptions/triggers report type filter", () => {
   it("returns results that have been resolved by the selected resolvers", () => {
     provideAllFieldsWithValidValues()
     cy.get("div#resolved-by-section").find("input[data-testid='audit-resolved-by-all']").uncheck()
+    cy.get("details").findByText("Show active users").click()
     cy.get("div#resolved-by-section").contains("General Handler User").click()
     cy.get("div#resolved-by-section").contains("Supervisor").click()
 

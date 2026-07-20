@@ -42,6 +42,8 @@ describe("ResolveByFilter Component", () => {
     const onChangeSpy = cy.spy().as("onChangeSpy")
     cy.mount(<ResolveByFilter resolvedBy={["user1"]} resolvers={mockResolvers} onChange={onChangeSpy} />)
 
+    cy.get("#active-users").click()
+
     cy.get("[data-testid='audit-resolved-by-1']").check()
     cy.get("@onChangeSpy").should("have.been.calledWith", ["user1", "user2"])
     cy.get("[data-testid='audit-resolved-by-all']").should("be.checked")
@@ -55,9 +57,9 @@ describe("ResolveByFilter Component", () => {
     const onChangeSpy = cy.spy().as("onChangeSpy")
     cy.mount(<ResolveByFilter resolvedBy={[]} resolvers={mockResolvers} onChange={onChangeSpy} />)
 
-    cy.get("details.govuk-details").should("not.have.attr", "open")
-    cy.get("summary.govuk-details__summary").click()
-    cy.get("details.govuk-details").should("have.attr", "open")
+    cy.get("#deleted-users").should("not.have.attr", "open")
+    cy.get("#deleted-users").click()
+    cy.get("#deleted-users").should("have.attr", "open")
 
     cy.get("[data-testid='audit-resolved-by-deleted-0']").check()
     cy.get("@onChangeSpy").should("have.been.calledWith", ["user3"])

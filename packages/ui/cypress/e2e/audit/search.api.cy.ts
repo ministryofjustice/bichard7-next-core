@@ -105,9 +105,11 @@ describe("Search", () => {
       cy.findByText("Triggers").click()
       cy.findByText("All active users").click()
 
-      cy.get(".govuk-details__summary-text").click()
+      cy.get("#deleted-users").within(() => {
+        cy.get("summary").click()
 
-      cy.get(".govuk-details__text .govuk-checkboxes__item label").contains("username 03").click()
+        cy.get("label").contains("username 03").click()
+      })
 
       cy.findByText("Search cases").click()
 
