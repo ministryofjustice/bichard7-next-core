@@ -6,7 +6,7 @@ IMAGE="s3-web-proxy"
 
 docker build -t $IMAGE .
 
-if [ "$SKIP_GOSS" = "true" ]; then
+if [[ "$SKIP_GOSS" = "true" ]]; then
   echo "Skipping dgoss tests"
 else
   dgoss run \

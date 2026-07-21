@@ -1,24 +1,24 @@
 #!/usr/bin/env node
 
-var express = require("express")
-var AWS = require("aws-sdk")
-var argv = require("minimist")(process.argv.slice(2))
-var path = require("path")
-var fs = require("fs")
-var http = require("http")
+const express = require("express")
+const AWS = require("aws-sdk")
+const argv = require("minimist")(process.argv.slice(2))
+var path = require("node:path")
+const fs = require("node:fs")
+const http = require("http")
 var https = require("https")
 var Mustache = require("mustache")
 
 // Load the list html
 var listHtmlFile = path.resolve(__dirname, "../lib/list.html")
-var listHtml = fs.readFileSync(listHtmlFile).toString()
+const listHtml = fs.readFileSync(listHtmlFile).toString()
 Mustache.parse(listHtml)
 
 var endpoint = argv.endpoint || process.env.S3_SERVER_ENDPOINT
-var bucket = argv.bucket || process.env.S3_SERVER_BUCKET
+const bucket = argv.bucket || process.env.S3_SERVER_BUCKET
 var port = argv.p || argv.port || process.env.S3_SERVER_PORT || 3010
-var securePort = argv.securePort || process.env.S3_SERVER_SECURE_PORT || 3020
-var securePassphrase = argv.securePassphrase || process.env.S3_SERVER_SECURE_PASSPHRASE
+const securePort = argv.securePort || process.env.S3_SERVER_SECURE_PORT || 3020
+const securePassphrase = argv.securePassphrase || process.env.S3_SERVER_SECURE_PASSPHRASE
 var noCache = argv.noCache || process.env.NO_CACHE
 
 var privateKey, certificate
@@ -33,7 +33,7 @@ console.log("Serving " + bucket + " on port " + port)
 
 var s3 = new AWS.S3({ endpoint: endpoint })
 
-var app = express()
+const app = express()
 
 function loadPrefixes(prefix, callback) {
   s3.listObjects(
@@ -109,7 +109,7 @@ app.use((req, res, next) => {
 })
 
 app.use(function (req, res, next) {
-  var path = prefix + req.path.substr(1)
+  const path = prefix + req.path.substr(1)
 
   if (path === "" || path.slice(-1) === "/") {
     loadPrefixes(path, function (err, data) {
