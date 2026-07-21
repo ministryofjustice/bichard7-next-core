@@ -21,7 +21,7 @@ const securePort = argv.securePort || process.env.S3_SERVER_SECURE_PORT || 3020
 const securePassphrase = argv.securePassphrase || process.env.S3_SERVER_SECURE_PASSPHRASE
 const noCache = argv.noCache || process.env.NO_CACHE
 
-var privateKey, certificate
+let privateKey, certificate
 if (process.env.S3_SERVER_SECURE_KEY_FILE || argv.secureKey) {
   privateKey = fs.readFileSync(argv.secureKey || process.env.S3_SERVER_SECURE_KEY_FILE, "utf8")
   certificate = fs.readFileSync(argv.secureCert || process.env.S3_SERVER_SECURE_CERT_FILE, "utf8")
@@ -122,7 +122,7 @@ app.use(function (req, res, next) {
       }
 
       if (data.Contents.length) {
-        var indexPath
+        let indexPath
         data.Contents.some(function (obj) {
           if (obj.Key.index("index.html") !== -1) {
             indexPath = obj.Key
@@ -147,7 +147,7 @@ app.use(function (req, res, next) {
 http.createServer(app).listen(port)
 
 if (privateKey) {
-  var credentials = { key: privateKey, cert: certificate }
+  const credentials = { key: privateKey, cert: certificate }
   if (securePassphrase) {
     credentials.passphrase = securePassphrase
   }
