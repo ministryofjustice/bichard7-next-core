@@ -39,7 +39,7 @@ METRICS_CONFIG: List[dict[str, Any]] = [
         "output_filename": "leds_incoming_message_queue_num_msg_received",
         "namespace": "AWS/SQS",
         "metric_name": "NumberOfMessagesReceived",
-        "queue_name": "bichard-7-leds-incomingMessageQueue",  # TODO
+        "queue_name": "bichard-7-leds-incomingMessageQueue",
     },
 ]
 PA_SCHEMA = pa.schema(
@@ -60,6 +60,7 @@ def build_metric_data_query(
     cluster_name: str | None = None,
     service_name: str | None = None,
     load_balancer: str | None = None,
+    queue_name: str | None = None,
 ) -> dict[str, Any]:
     dimensions: list[dict[str, str]] = []
 
@@ -69,6 +70,8 @@ def build_metric_data_query(
         dimensions.append({"Name": "ServiceName", "Value": service_name})
     if load_balancer:
         dimensions.append({"Name": "LoadBalancer", "Value": load_balancer})
+    if queue_name:
+        dimensions.append({"Name": "QueueName", "Value": queue_name})
 
     return {
         "Id": output_filename,  # A unique identifier for this metric query (lowercase/numbers)
