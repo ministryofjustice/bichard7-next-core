@@ -61,7 +61,7 @@
     "packages/uat-data",
     "packages/ui",
     "packages/user-service",
-    "S3_Web_Proxy/s3-server"
+    "packages/s3_web_proxy/s3-server"
   ],
   "license": "MIT",
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
