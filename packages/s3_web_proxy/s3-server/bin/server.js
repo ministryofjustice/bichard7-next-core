@@ -5,8 +5,8 @@ const AWS = require("aws-sdk")
 const argv = require("minimist")(process.argv.slice(2))
 const path = require("node:path")
 const fs = require("node:fs")
-const http = require("http")
-const https = require("https")
+const http = require("node:http")
+const https = require("node:https")
 const Mustache = require("mustache")
 
 // Load the list html
