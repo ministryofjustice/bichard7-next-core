@@ -3,23 +3,23 @@
 const express = require("express")
 const AWS = require("aws-sdk")
 const argv = require("minimist")(process.argv.slice(2))
-var path = require("node:path")
+const path = require("node:path")
 const fs = require("node:fs")
 const http = require("http")
-var https = require("https")
-var Mustache = require("mustache")
+const https = require("https")
+const Mustache = require("mustache")
 
 // Load the list html
-var listHtmlFile = path.resolve(__dirname, "../lib/list.html")
+const listHtmlFile = path.resolve(__dirname, "../lib/list.html")
 const listHtml = fs.readFileSync(listHtmlFile).toString()
 Mustache.parse(listHtml)
 
-var endpoint = argv.endpoint || process.env.S3_SERVER_ENDPOINT
+const endpoint = argv.endpoint || process.env.S3_SERVER_ENDPOINT
 const bucket = argv.bucket || process.env.S3_SERVER_BUCKET
-var port = argv.p || argv.port || process.env.S3_SERVER_PORT || 3010
+const port = argv.p || argv.port || process.env.S3_SERVER_PORT || 3010
 const securePort = argv.securePort || process.env.S3_SERVER_SECURE_PORT || 3020
 const securePassphrase = argv.securePassphrase || process.env.S3_SERVER_SECURE_PASSPHRASE
-var noCache = argv.noCache || process.env.NO_CACHE
+const noCache = argv.noCache || process.env.NO_CACHE
 
 var privateKey, certificate
 if (process.env.S3_SERVER_SECURE_KEY_FILE || argv.secureKey) {
@@ -31,7 +31,7 @@ const prefix = argv.prefix || process.env.S3_KEY_PREFIX || ""
 
 console.log("Serving " + bucket + " on port " + port)
 
-var s3 = new AWS.S3({ endpoint: endpoint })
+const s3 = new AWS.S3({ endpoint: endpoint })
 
 const app = express()
 
@@ -124,7 +124,7 @@ app.use(function (req, res, next) {
       if (data.Contents.length) {
         var indexPath
         data.Contents.some(function (obj) {
-          if (obj.Key.indexOf("index.html") !== -1) {
+          if (obj.Key.index("index.html") !== -1) {
             indexPath = obj.Key
             return true
           }
