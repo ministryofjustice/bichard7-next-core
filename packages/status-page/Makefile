@@ -5,6 +5,7 @@ VAULT_PROFILE  = bichard7-shared-uat
 IMAGE_NAME     = ecs-metrics-aggregator
 TAG            = latest
 REGISTRY       = $(AWS_ACCOUNT_ID).dkr.ecr.$(REGION).amazonaws.com
+LAMBDA_NAME    = bichard-7-demo-status-page-lambda
 
 .PHONY: create-repo login build tag push deploy run-local
 
@@ -16,7 +17,8 @@ create-repo:
 
 # Authenticate Docker to ECR using aws-vault
 login:
-	aws-vault exec $(VAULT_PROFILE) -- aws ecr get-login-password --region $(REGION) | docker login --username AWS --password-stdin $(REGISTRY)
+	aws-vault exec $(VAULT_PROFILE) -- aws ecr get-login-password --region $(REGION) | \
+	    docker login --username AWS --password-stdin $(REGISTRY)
 
 # Build the container for linux/amd64 architecture
 build:
@@ -30,8 +32,13 @@ tag:
 push:
 	docker push $(REGISTRY)/$(IMAGE_NAME):$(TAG)
 
+# point the lambda at the correct image version
+update-lambda:
+	aws-vault exec $(VAULT_PROFILE) -- aws lambda update-function-code \
+	    --function-name $(LAMBDA_NAME) --image-uri $(REGISTRY)/$(IMAGE_NAME):$(TAG)
+
 # Build, tag, and push everything in one command
-deploy: build tag push
+deploy: build tag push update-lambda
 
 # Run locally using temporary credentials via aws-vault
 run-local:
