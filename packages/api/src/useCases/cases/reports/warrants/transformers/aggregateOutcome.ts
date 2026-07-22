@@ -1,8 +1,8 @@
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import type { NextHearingDetails } from "../utils/findNextHearing"
+import type { NextHearingDetails } from "../../utils/findNextHearing"
 
-import { findNextHearing } from "../utils/findNextHearing"
+import { findNextHearing } from "../../utils/findNextHearing"
 import { analyzeResult } from "./analyzeResult"
 
 interface AggregatedOutcome {

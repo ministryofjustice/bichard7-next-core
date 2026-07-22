@@ -29,22 +29,28 @@ export default async (
   if (usernameOrName && usernameOrName.trim() !== "") {
     const fuzzyName = `%${usernameOrName.trim()}%`
     const nameWhere = sql`
-    u.username ILIKE ${fuzzyName} 
-    OR (u.forenames || ' ' || u.surname) ILIKE ${fuzzyName}
-    OR (u.surname || ' ' || u.forenames) ILIKE ${fuzzyName}
-  `
+      u.username ILIKE ${fuzzyName} 
+      OR (u.forenames || ' ' || u.surname) ILIKE ${fuzzyName}
+      OR (u.surname || ' ' || u.forenames) ILIKE ${fuzzyName}
+    `
+
     where = sql`${where} AND (${nameWhere})`
   }
 
   const userResult = await database.connection`
-      SELECT
-        u.id,
-        u.forenames,
-        u.surname
-      FROM
-        br7own.users u
-      WHERE
-          ${where} AND u.deleted_at IS NULL`
+    SELECT
+      u.id,
+      u.forenames,
+      u.surname
+    FROM
+      br7own.users u
+    WHERE
+      ${where} AND
+      u.deleted_at IS NULL
+    ORDER BY
+      u.forenames,
+      u.surname
+  `
 
   if (!userResult || userResult.length === 0) {
     return { users: [] }

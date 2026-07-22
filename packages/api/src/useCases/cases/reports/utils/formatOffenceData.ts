@@ -1,10 +1,6 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import searchCourtOrganisationUnits, {
-  getFullOrganisationName
-} from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
-
-import { formatDate } from "./formatDate"
+import { findNextHearing } from "./findNextHearing"
 
 export interface EnrichedOffenceData {
   nextCourtDates: string
@@ -33,26 +29,15 @@ export const formatOffenceData = (aho: AnnotatedHearingOutcome): EnrichedOffence
     wordings.push(offence.ActualOffenceWording ?? UNAVAILABLE)
 
     const results = offence.Result.filter((r) => r.NextResultSourceOrganisation?.OrganisationUnitCode)
+
     for (const result of results) {
-      const ouCode = result.NextResultSourceOrganisation?.OrganisationUnitCode ?? ""
-      const organisationUnits = searchCourtOrganisationUnits(ouCode)
+      const nextHearing = findNextHearing(result)
 
-      let courtName = ouCode
-      if (organisationUnits.length > 0) {
-        courtName = getFullOrganisationName(organisationUnits[0])
-      }
-
-      const dateRaw = result.NextHearingDate
-      const time = result.NextHearingTime ?? UNAVAILABLE
-      const date = formatDate(dateRaw) || UNAVAILABLE
-
-      const uniqueKey = `${ouCode.substring(0, 5)}|${date}|${time}`
-
-      if (!uniqueCourts.has(uniqueKey)) {
-        uniqueCourts.add(uniqueKey)
-        nextNames.push(courtName)
-        nextDates.push(date)
-        nextTimes.push(time)
+      if (nextHearing && !uniqueCourts.has(nextHearing.uniqueKey)) {
+        uniqueCourts.add(nextHearing.uniqueKey)
+        nextNames.push(nextHearing.courtName ?? UNAVAILABLE)
+        nextDates.push(nextHearing.date ?? UNAVAILABLE)
+        nextTimes.push(nextHearing.time ?? UNAVAILABLE)
       }
     }
   }

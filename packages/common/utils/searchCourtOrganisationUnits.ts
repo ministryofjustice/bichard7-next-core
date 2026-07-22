@@ -3,6 +3,10 @@ import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-da
 import OrganisationUnits from "@moj-bichard7-developers/bichard7-next-data/data/organisation-unit.json"
 import { sortBy } from "lodash"
 
+// This regex matches the whole Organisation Unit Code and only takes the first part of
+// E.g. B06OJ08 -> B06OJ
+const ORGANISATION_UNIT_REGEX = /([a-z]\d{2}[a-z]{2})(?:\d{2})?/i
+
 export const getFullOrganisationCode = (organisationUnit: OrganisationUnit) =>
   `${organisationUnit.topLevelCode}${organisationUnit.secondLevelCode}${organisationUnit.thirdLevelCode}${organisationUnit.bottomLevelCode}`
 
@@ -28,12 +32,23 @@ const sortedCourtOrganisationUnits = sortBy(
   (organisationUnit) => organisationUnit.thirdLevelName
 )
 
+const findInSortedCourtOrganisationUnits = (keyword: string) =>
+  sortedCourtOrganisationUnits.filter((organisationUnit) =>
+    getOrganisationCodeAndName(organisationUnit).toLowerCase().includes(keyword.toLowerCase())
+  )
+
 const searchCourtOrganisationUnits = (keyword: string): OrganisationUnit[] => {
-  return keyword === ""
-    ? []
-    : sortedCourtOrganisationUnits.filter((organisationUnit) =>
-        getOrganisationCodeAndName(organisationUnit).toLowerCase().includes(keyword.toLowerCase())
-      )
+  if (keyword === "") {
+    return []
+  }
+
+  const matched = new RegExp(ORGANISATION_UNIT_REGEX).exec(keyword)
+
+  if (matched && matched.length > 1) {
+    return findInSortedCourtOrganisationUnits(matched[1])
+  }
+
+  return findInSortedCourtOrganisationUnits(keyword)
 }
 
 export default searchCourtOrganisationUnits

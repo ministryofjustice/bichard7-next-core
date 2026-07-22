@@ -156,4 +156,23 @@ describe("fetchUserLookups", () => {
       expect(ids).not.toContain(deletedUser.id)
     })
   })
+
+  describe("Ordering", () => {
+    it("should order the results alphabetically", async () => {
+      const currentUser = await createUser(testDatabaseGateway)
+
+      const bonnieTyler = await createUser(testDatabaseGateway, { forenames: "Bonnie", surname: "Tyler" })
+      const borisKarloff = await createUser(testDatabaseGateway, { forenames: "Boris", surname: "Karloff" })
+      const bonnieBecker = await createUser(testDatabaseGateway, { forenames: "Bonnie", surname: "Becker" })
+      const borisBennett = await createUser(testDatabaseGateway, { forenames: "Boris", surname: "Bennett" })
+
+      const result = (await fetchUserLookups(testDatabaseGateway.readonly, currentUser, "bo")) as FetchUsersResult
+
+      const ids = result.users.map((u) => u.id)
+      expect(ids[0]).toBe(bonnieBecker.id)
+      expect(ids[1]).toBe(bonnieTyler.id)
+      expect(ids[2]).toBe(borisBennett.id)
+      expect(ids[3]).toBe(borisKarloff.id)
+    })
+  })
 })
