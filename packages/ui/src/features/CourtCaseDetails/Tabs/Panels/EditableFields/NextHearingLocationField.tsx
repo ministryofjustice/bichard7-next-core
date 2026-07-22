@@ -45,7 +45,6 @@ export const NextHearingLocationField = ({
     }
 
     const foundOrg = organisations.find((org) => org.fullOrganisationCode === value)
-    console.log(value, foundOrg)
     return foundOrg ? `${foundOrg.fullOrganisationCode} - ${foundOrg.fullOrganisationName}` : `${value} - Unknown`
   }
 
