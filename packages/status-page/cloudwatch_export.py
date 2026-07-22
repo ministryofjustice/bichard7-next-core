@@ -1,54 +1,25 @@
-import json
 import logging
 from datetime import datetime, timedelta
 from typing import Any, List
-from zoneinfo import ZoneInfo
 
 import boto3
 
 # pyarrow used to keep dependencies light (as opposed to pandas/polars/duckdb)
 import pyarrow as pa
-import pyarrow.compute as pc
 import pyarrow.parquet as pq
-from pyarrow.lib import ArrowInvalid
+from common import (
+    BUCKET_NAME,
+    DEFAULT_BACKFILL_DAYS,
+    GRANULARITY_SECONDS,
+    METRICS_CONFIG,
+    PA_SCHEMA,
+    TABLE_OUTPUT_PREFIX,
+    get_last_row_from_table,
+    read_parquet,
+)
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-
-
-BUCKET_NAME = "bichard-7-demo-status-page"
-TABLE_OUTPUT_PREFIX = "data_tables/"
-JSON_OUTPUT_KEY = "_data/ui_data.json"
-DEFAULT_BACKFILL_DAYS = 1
-GRANULARITY = 60
-METRICS_CONFIG: List[dict[str, Any]] = [
-    {
-        "output_filename": "base_infra_ecs_cluster_cpu_utilisation",  # alphanumeric and underscores only
-        "namespace": "AWS/ECS",
-        "metric_name": "CPUUtilization",
-        "cluster_name": "cjse-bichard7-leds-base-infra",
-        "service_name": "cjse-bichard7-leds-base-infra-web",
-    },
-    {
-        "output_filename": "conductor_elb_active_connection_count",
-        "namespace": "AWS/ApplicationELB",
-        "metric_name": "ActiveConnectionCount",
-        "load_balancer": "app/cjse-uat-bichard-7-conductor/3c3aa9f65bfe9489",
-    },
-    {
-        "output_filename": "leds_incoming_message_queue_num_msg_received",
-        "namespace": "AWS/SQS",
-        "metric_name": "NumberOfMessagesReceived",
-        "queue_name": "bichard-7-leds-incomingMessageQueue",
-    },
-]
-PA_SCHEMA = pa.schema(
-    [
-        ("timestamp", pa.timestamp(unit="s")),
-        ("value", pa.float32()),
-        ("insert_timestamp", pa.timestamp(unit="s")),
-    ]
-)
 
 
 def build_metric_data_query(
@@ -137,32 +108,6 @@ def fetch_cloudwatch_metrics(
         raise
 
 
-def get_last_row(table: pa.Table) -> dict:
-    return table.slice(table.num_rows - 1, 1).to_pydict()
-
-
-def get_last_timestamp_from_parquet(path: str) -> datetime:
-    default = datetime.now() - timedelta(days=DEFAULT_BACKFILL_DAYS)
-
-    try:
-        file = pq.ParquetFile(path)
-    except (FileNotFoundError, OSError, ArrowInvalid) as e:
-        logger.info(
-            f"Returning default last timestamp from parquet. File doesn't exist in S3, or the path is invalid '{path}'"
-        )
-        logger.info(e)
-        return default
-
-    table = file.read(columns=["timestamp"])
-    if len(table) > 0:
-        return pc.max(table["timestamp"]).as_py()  # type: ignore
-    else:
-        logger.info(
-            f"Returning default last timestamp from parquet. 0 columns found in '{file}'"
-        )
-        return default
-
-
 def append_new_data_to_parquet(path: str, new_table: pa.Table) -> None:
     """
     Appends new data to an existing S3 parquet file by reading,
@@ -188,45 +133,39 @@ def append_new_data_to_parquet(path: str, new_table: pa.Table) -> None:
     pq.write_table(combined_table, path, compression="SNAPPY")
 
 
-def convert_utc_to_uk(utc_time):
-    uk_tz = ZoneInfo("Europe/London")
-    if utc_time.tzinfo is None:
-        utc_time = utc_time.replace(tzinfo=ZoneInfo("UTC"))
-    return utc_time.astimezone(uk_tz)
-
-
-def lambda_handler(event, context) -> None:
-    main()
-
-
-def main() -> None:
-    last_updated = []
-    ui_data = {}
+def cloudwatch_export() -> None:
     for config in METRICS_CONFIG:
         table_output_path = f"s3://{BUCKET_NAME}/{TABLE_OUTPUT_PREFIX}{config['output_filename']}.parquet"
 
-        start_time = get_last_timestamp_from_parquet(table_output_path)
+        table = read_parquet(table_output_path, ["timestamp"])
+        if table:
+            last_row = get_last_row_from_table(table_output_path)
+            start_time = last_row["timestamp"]
+        else:
+            start_time = datetime.now() - timedelta(days=DEFAULT_BACKFILL_DAYS)
+
         end_time = datetime.now()
         logger.info(f"{start_time=}")
         logger.info(f"{end_time=}")
 
-        config["granularity_seconds"] = GRANULARITY
+        config["granularity_seconds"] = GRANULARITY_SECONDS
         metric_data_query = build_metric_data_query(**config)
+
         logger.info(f"Obtaining metrics for {config['output_filename']}...")
         metrics = fetch_cloudwatch_metrics(
             metric_data_queries=[metric_data_query],
-            start_time=start_time + timedelta(seconds=GRANULARITY),
-            end_time=datetime.now(),
+            start_time=start_time + timedelta(seconds=GRANULARITY_SECONDS),
+            end_time=end_time,
         )
         if not metrics:
             logger.info(
-                f"No metrics found for {config['output_filename']}, terminating without writing to s3."
+                f"No metrics found for {config['output_filename']}, skipping this metric without writing to s3."
             )
             continue
 
         if metrics[config["output_filename"]].num_rows == 0:
             logger.info(
-                f"No metrics found for {config['output_filename']}, terminating without writing to s3."
+                f"No metrics found for {config['output_filename']}, skipping this metric without writing to s3."
             )
             continue
 
@@ -239,27 +178,6 @@ def main() -> None:
             f"Metrics for {config['output_filename']} written to '{table_output_path}'."
         )
 
-        ########
-
-        last_row = get_last_row(metrics[config["output_filename"]])
-        timestamp_uk = convert_utc_to_uk(last_row["timestamp"][0])
-
-        # cloudwatch labels the data with the start of the time window (e.g. average cpu usage 07:00-08:00 has a timestamp of 07:00)
-        # so add the time window on to get the end of the most recent data point window
-        last_updated.append(timestamp_uk + timedelta(seconds=GRANULARITY))
-        ui_data[config["output_filename"]] = f"{last_row['value'][0]:.2f}%"
-
-    ui_data["lastUpdated"] = max(last_updated).strftime("%Y-%m-%d %H:%M:%S")
-    s3 = boto3.client("s3")
-    # json file overwritten on each run
-    s3.put_object(
-        Bucket=BUCKET_NAME,
-        Key=JSON_OUTPUT_KEY,
-        Body=json.dumps(ui_data),
-        ContentType="application/json",
-    )
-    logger.info(f"ui data updated: {BUCKET_NAME=}, {JSON_OUTPUT_KEY=}")
-
 
 if __name__ == "__main__":
-    main()
+    cloudwatch_export()

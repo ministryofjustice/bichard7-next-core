@@ -9,4 +9,4 @@ RUN pip install --no-cache-dir -r ${LAMBDA_TASK_ROOT}/requirements.txt
 COPY . ${LAMBDA_TASK_ROOT}
 
 # Command to run your script when the container starts
-CMD ["cloudwatch_export.lambda_handler"]
+CMD ["common.lambda_handler"]
