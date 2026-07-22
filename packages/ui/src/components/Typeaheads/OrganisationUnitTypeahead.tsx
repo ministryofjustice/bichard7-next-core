@@ -6,6 +6,7 @@ import { isError } from "types/Result"
 import { ListWrapper } from "./Typeahead.styles"
 
 interface Props {
+  key: string
   resultIndex: number
   offenceIndex: number
   value?: string
@@ -59,7 +60,6 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
     items: inputItems,
 
     onInputValueChange: ({ inputValue }) => {
-      console.log(inputValue)
       amend("nextSourceOrganisation")({
         resultIndex: resultIndex,
         offenceIndex: offenceIndex,
@@ -95,8 +95,7 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
         {...getInputProps({
           className: "govuk-input",
           id: "next-hearing-location",
-          name: "next-hearing-location",
-          value
+          name: "next-hearing-location"
         })}
       />
 
