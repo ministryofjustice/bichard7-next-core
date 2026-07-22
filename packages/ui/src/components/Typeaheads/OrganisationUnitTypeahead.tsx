@@ -59,10 +59,11 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
     items: inputItems,
 
     onInputValueChange: ({ inputValue }) => {
+      console.log(inputValue)
       amend("nextSourceOrganisation")({
         resultIndex: resultIndex,
         offenceIndex: offenceIndex,
-        value: inputValue
+        value: inputValue.split(" ")[0]
       })
       if (setChanged) {
         setChanged(true)
@@ -72,7 +73,12 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
       }
     },
     initialInputValue: value,
-    itemToString: (item) => item?.fullOrganisationCode ?? ""
+    itemToString: (item) => {
+      if (item) {
+        return `${item.fullOrganisationCode} - ${item.fullOrganisationName}`
+      }
+      return ""
+    }
   })
 
   useEffect(() => {
@@ -103,8 +109,11 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
                   key={`${item.fullOrganisationCode}-${index}`}
                   {...getItemProps({ item, index })}
                 >
-                  {item.fullOrganisationCode}
-                  <span>{item.fullOrganisationName}</span>
+                  <span>
+                    {item.fullOrganisationCode}
+                    {" - "}
+                    {item.fullOrganisationName}
+                  </span>
                 </li>
               ))
             : null}
