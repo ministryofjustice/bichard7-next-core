@@ -4,13 +4,12 @@ from typing import Any, List
 # pyarrow used to keep dependencies light (as opposed to pandas/polars/duckdb)
 import pyarrow as pa
 import pyarrow.parquet as pq
-from cloudwatch_export import cloudwatch_export
 from pyarrow.lib import ArrowInvalid
-from transform import transform
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+# TODO env (UAT, prod, etc) from container env var
 METRICS_CONFIG: List[dict[str, Any]] = [
     {
         "output_filename": "base_infra_ecs_cluster_cpu_utilisation",  # alphanumeric and underscores only
@@ -67,8 +66,3 @@ def get_last_row_from_table(table: pa.Table) -> dict:
     else:
         logger.info("0 columns found in table")
         return {}
-
-
-def lambda_handler(event, context) -> None:
-    cloudwatch_export()
-    # transform()
