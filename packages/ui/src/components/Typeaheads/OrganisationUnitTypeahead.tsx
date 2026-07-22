@@ -60,10 +60,11 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
     items: inputItems,
 
     onInputValueChange: ({ inputValue }) => {
+      const organisationCode = inputValue.split(" ")[0]
       amend("nextSourceOrganisation")({
         resultIndex: resultIndex,
         offenceIndex: offenceIndex,
-        value: inputValue.split(" ")[0]
+        value: organisationCode
       })
       if (setChanged) {
         setChanged(true)
@@ -73,12 +74,7 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
       }
     },
     initialInputValue: value,
-    itemToString: (item) => {
-      if (item) {
-        return `${item.fullOrganisationCode} - ${item.fullOrganisationName}`
-      }
-      return ""
-    }
+    itemToString: (item) => (item ? `${item.fullOrganisationCode} - ${item.fullOrganisationName}` : "")
   })
 
   useEffect(() => {
