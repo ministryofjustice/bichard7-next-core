@@ -139,8 +139,8 @@ def cloudwatch_export() -> None:
 
         table = read_parquet(table_output_path, ["timestamp"])
         if table:
-            last_row = get_last_row_from_table(table_output_path)
-            start_time = last_row["timestamp"]
+            last_row = get_last_row_from_table(table)
+            start_time = last_row["timestamp"][0]
         else:
             start_time = datetime.now() - timedelta(days=DEFAULT_BACKFILL_DAYS)
 
