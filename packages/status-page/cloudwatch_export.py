@@ -8,13 +8,12 @@ import boto3
 import pyarrow as pa
 import pyarrow.parquet as pq
 from common import (
-    BUCKET_NAME,
     DEFAULT_BACKFILL_DAYS,
     GRANULARITY_SECONDS,
     METRICS_CONFIG,
     PA_SCHEMA,
-    TABLE_OUTPUT_PREFIX,
     get_last_row_from_table,
+    get_parquet_file_path,
     read_parquet,
 )
 
@@ -135,8 +134,7 @@ def append_new_data_to_parquet(path: str, new_table: pa.Table) -> None:
 
 def cloudwatch_export() -> None:
     for config in METRICS_CONFIG:
-        table_output_path = f"s3://{BUCKET_NAME}/{TABLE_OUTPUT_PREFIX}{config['output_filename']}.parquet"
-
+        table_output_path = get_parquet_file_path(config["output_filename"])
         table = read_parquet(table_output_path, ["timestamp"])
         if table:
             last_row = get_last_row_from_table(table)

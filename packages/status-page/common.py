@@ -46,6 +46,10 @@ PA_SCHEMA = pa.schema(
 )
 
 
+def get_parquet_file_path(output_filename: str):
+    return f"s3://{BUCKET_NAME}/{TABLE_OUTPUT_PREFIX}{output_filename}.parquet"
+
+
 def read_parquet(path: str, columns: List[str]) -> pa.Table | None:
     try:
         file = pq.ParquetFile(path)
