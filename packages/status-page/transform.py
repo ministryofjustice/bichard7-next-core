@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from datetime import timedelta
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -18,6 +19,17 @@ from common import (
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+
+task_root = os.environ.get("LAMBDA_TASK_ROOT", "/var/task")
+
+
+def query_duckdb(sql: str):
+    con = duckdb.connect()
+    # Point DuckDB to the pre-installed extension path (see dockerfile)
+    con.execute(f"SET extension_directory='{task_root}/.duckdb/extensions'")
+    con.execute("LOAD httpfs;")
+
+    return con.execute(sql).fetchall()
 
 
 def convert_utc_to_uk(utc_time):
@@ -84,7 +96,7 @@ def get_historic_metric_values(
         GROUP BY date_trunc('day', timestamp)
         ORDER BY day;
     """
-    result = duckdb.sql(sql).fetchall()
+    result = query_duckdb(sql)
 
     timestamps = []
     values = []
