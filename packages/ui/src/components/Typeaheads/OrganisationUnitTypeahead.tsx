@@ -6,6 +6,7 @@ import { isError } from "types/Result"
 import { ListWrapper } from "./Typeahead.styles"
 
 interface Props {
+  key: string
   resultIndex: number
   offenceIndex: number
   value?: string
@@ -59,10 +60,11 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
     items: inputItems,
 
     onInputValueChange: ({ inputValue }) => {
+      const organisationCode = inputValue.split(" ")[0]
       amend("nextSourceOrganisation")({
         resultIndex: resultIndex,
         offenceIndex: offenceIndex,
-        value: inputValue
+        value: organisationCode
       })
       if (setChanged) {
         setChanged(true)
@@ -72,7 +74,7 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
       }
     },
     initialInputValue: value,
-    itemToString: (item) => item?.fullOrganisationCode ?? ""
+    itemToString: (item) => (item ? `${item.fullOrganisationCode} - ${item.fullOrganisationName}` : "")
   })
 
   useEffect(() => {
@@ -89,8 +91,7 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
         {...getInputProps({
           className: "govuk-input",
           id: "next-hearing-location",
-          name: "next-hearing-location",
-          value
+          name: "next-hearing-location"
         })}
       />
 
@@ -103,8 +104,11 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
                   key={`${item.fullOrganisationCode}-${index}`}
                   {...getItemProps({ item, index })}
                 >
-                  {item.fullOrganisationCode}
-                  <span>{item.fullOrganisationName}</span>
+                  <span>
+                    {item.fullOrganisationCode}
+                    {" - "}
+                    {item.fullOrganisationName}
+                  </span>
                 </li>
               ))
             : null}
