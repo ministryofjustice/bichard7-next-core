@@ -473,11 +473,11 @@ describe("NextHearingLocation", () => {
     cy.get(".govuk-link")
       .contains("Offence with HO100323 - COURT HAS PROVIDED AN ADJOURNMENT WITH NO NEXT HEARING DATE EXCEPTION")
       .click()
-    cy.get("#next-hearing-location").clear()
 
     cy.intercept("GET", "/bichard/api/organisation-units?search=*").as("fetchInitialOrganisation")
     cy.wait("@fetchInitialOrganisation")
 
+    cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B01EF00")
 
     cy.get(".next-hearing-location-row .success-message").should("not.exist")
