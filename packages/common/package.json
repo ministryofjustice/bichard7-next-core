@@ -38,7 +38,7 @@
     "*.{js,ts,tsx}": "eslint"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1084.0",
+    "@aws-sdk/client-s3": "^3.1089.0",
     "@io-orkes/conductor-javascript": "~2.1.5",
     "@stomp/stompjs": "^7.3.0",
     "@types/nodemailer": "^8.0.1",
@@ -52,7 +52,7 @@
     "promise-poller": "^1.9.1",
     "stompit": "^1.0.0",
     "undici": "^7.28.0",
-    "ws": "^8.21.0",
+    "ws": "^8.21.1",
     "zod": "^4.4.3",
     "zod-validation-error": "^5.0.0"
   },
