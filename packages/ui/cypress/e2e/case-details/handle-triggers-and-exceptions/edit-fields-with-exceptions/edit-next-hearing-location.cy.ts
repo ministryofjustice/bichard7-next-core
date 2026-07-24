@@ -168,6 +168,10 @@ describe("NextHearingLocation", () => {
       .contains("Offence with HO100322 - Court has provided an adjournment with no location for the next hearing")
       .click()
     cy.contains("dt", "Next hearing location").siblings().should("include.text", "")
+
+    cy.intercept("GET", "/bichard/api/organisation-units?search=*").as("fetchInitialOrganisation")
+    cy.wait("@fetchInitialOrganisation")
+
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B01EF00")
     cy.get(".next-hearing-location-row .success-message").should("exist")
@@ -241,6 +245,7 @@ describe("NextHearingLocation", () => {
     cy.wait("@fetchInitialOrganisation")
 
     cy.get("#next-hearing-location").clear()
+    cy.wait("@fetchInitialOrganisation")
     cy.get("#next-hearing-location").type("B01EF00")
     cy.get(".next-hearing-location-row .success-message").should("exist")
 
@@ -249,9 +254,10 @@ describe("NextHearingLocation", () => {
     cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
 
     cy.wait("@fetchInitialOrganisation")
-
     cy.get("#next-hearing-location").clear()
+    cy.wait("@fetchInitialOrganisation")
     cy.get("#next-hearing-location").type("B21XA00")
+    cy.wait("@fetchInitialOrganisation")
     cy.get(".next-hearing-location-row .success-message").should("exist")
 
     cy.get("a.govuk-back-link").contains("Back to all offences").click()
@@ -259,8 +265,11 @@ describe("NextHearingLocation", () => {
     cy.get(".govuk-link")
       .contains("Offence with HO100322 - Court has provided an adjournment with no location for the next hearing")
       .click()
+
     cy.get("#next-hearing-location").clear()
-    cy.get("#next-hearing-location").type("B46DB00")
+    cy.wait("@fetchInitialOrganisation")
+    cy.get("#next-hearing-location").type("B46DB00", { delay: 100 })
+    cy.wait("@fetchInitialOrganisation")
     cy.get(".next-hearing-location-row .success-message").should("exist")
 
     submitAndConfirmExceptions()
@@ -449,6 +458,7 @@ describe("NextHearingLocation", () => {
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
+
     cy.contains("dt", "Next hearing location").siblings().should("include.text", "B@1EF$1")
   })
 
