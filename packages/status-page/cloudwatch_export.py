@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime, timedelta
-from typing import Any, List
+from typing import Any
 
 import boto3
 
@@ -12,7 +12,7 @@ from common import (
     GRANULARITY_SECONDS,
     METRICS_CONFIG,
     PA_SCHEMA,
-    get_last_row_from_table,
+    get_last_rows_from_table,
     get_parquet_file_path,
     read_parquet,
 )
@@ -59,7 +59,7 @@ def build_metric_data_query(
 
 
 def fetch_cloudwatch_metrics(
-    metric_data_queries: List[dict],
+    metric_data_queries: list[dict],
     start_time: datetime,
     end_time: datetime,
 ) -> dict[str, pa.Table]:
@@ -137,7 +137,7 @@ def cloudwatch_export() -> None:
         table_output_path = get_parquet_file_path(config["output_filename"])
         table = read_parquet(table_output_path, ["timestamp"])
         if table:
-            last_row = get_last_row_from_table(table)
+            last_row = get_last_rows_from_table(table)
             start_time = last_row["timestamp"][0]
         else:
             start_time = datetime.now() - timedelta(days=DEFAULT_BACKFILL_DAYS)

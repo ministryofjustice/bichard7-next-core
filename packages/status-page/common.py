@@ -1,5 +1,5 @@
 import logging
-from typing import Any, List
+from typing import Any
 
 # pyarrow used to keep dependencies light (as opposed to pandas/polars/duckdb)
 import pyarrow as pa
@@ -10,7 +10,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # TODO env (UAT, prod, etc) from container env var
-METRICS_CONFIG: List[dict[str, Any]] = [
+METRICS_CONFIG: list[dict[str, Any]] = [
     {
         "output_filename": "base_infra_ecs_cluster_cpu_utilisation",  # alphanumeric and underscores only
         "namespace": "AWS/ECS",
@@ -50,7 +50,7 @@ def get_parquet_file_path(output_filename: str):
     return f"s3://{BUCKET_NAME}/{TABLE_OUTPUT_PREFIX}{output_filename}.parquet"
 
 
-def read_parquet(path: str, columns: List[str]) -> pa.Table | None:
+def read_parquet(path: str, columns: list[str]) -> pa.Table | None:
     try:
         file = pq.ParquetFile(path)
     except FileNotFoundError:
@@ -64,9 +64,9 @@ def read_parquet(path: str, columns: List[str]) -> pa.Table | None:
     return file.read(columns=columns)
 
 
-def get_last_row_from_table(table: pa.Table) -> dict:
+def get_last_rows_from_table(table: pa.Table, n_rows: int = 1) -> dict:
     if len(table) > 0:
-        return table.slice(table.num_rows - 1, 1).to_pydict()
+        return table.slice(table.num_rows - n_rows, n_rows).to_pydict()
     else:
         logger.info("0 columns found in table")
         return {}
