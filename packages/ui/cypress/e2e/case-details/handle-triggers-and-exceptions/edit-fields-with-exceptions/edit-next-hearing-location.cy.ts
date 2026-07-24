@@ -248,7 +248,6 @@ describe("NextHearingLocation", () => {
 
     cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
 
-    cy.intercept("GET", "/bichard/api/organisation-units?search=*").as("fetchInitialOrganisation")
     cy.wait("@fetchInitialOrganisation")
 
     cy.get("#next-hearing-location").clear()
