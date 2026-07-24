@@ -15,20 +15,26 @@ METRICS_CONFIG: list[dict[str, Any]] = [
         "output_filename": "base_infra_ecs_cluster_cpu_utilisation",  # alphanumeric and underscores only
         "namespace": "AWS/ECS",
         "metric_name": "CPUUtilization",
-        "cluster_name": "cjse-bichard7-leds-base-infra",
-        "service_name": "cjse-bichard7-leds-base-infra-web",
+        "dimensions": {
+            "cluster_name": "cjse-bichard7-leds-base-infra",
+            "service_name": "cjse-bichard7-leds-base-infra-web",
+        },
     },
     {
         "output_filename": "conductor_elb_active_connection_count",
         "namespace": "AWS/ApplicationELB",
         "metric_name": "ActiveConnectionCount",
-        "load_balancer": "app/cjse-uat-bichard-7-conductor/3c3aa9f65bfe9489",
+        "dimensions": {
+            "load_balancer": "app/cjse-uat-bichard-7-conductor/3c3aa9f65bfe9489",
+        },
     },
     {
         "output_filename": "leds_incoming_message_queue_num_msg_received",
         "namespace": "AWS/SQS",
         "metric_name": "NumberOfMessagesReceived",
-        "queue_name": "bichard-7-leds-incomingMessageQueue",
+        "dimensions": {
+            "queue_name": "bichard-7-leds-incomingMessageQueue",
+        },
     },
 ]
 

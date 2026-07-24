@@ -7,7 +7,7 @@ TAG            = latest
 REGISTRY       = $(AWS_ACCOUNT_ID).dkr.ecr.$(REGION).amazonaws.com
 LAMBDA_NAME    = bichard-7-demo-status-page-lambda
 
-.PHONY: create-repo login build tag push deploy run-local
+.PHONY: create-repo login build tag push deploy run-local update-lambda
 
 # Create the ECR repository
 create-repo:

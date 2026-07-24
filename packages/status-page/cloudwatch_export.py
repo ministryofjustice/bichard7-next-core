@@ -27,21 +27,14 @@ def build_metric_data_query(
     metric_name: str,
     granularity_seconds: int,
     statistic: str = "Average",
-    cluster_name: str | None = None,
-    service_name: str | None = None,
-    load_balancer: str | None = None,
-    queue_name: str | None = None,
+    dimensions: dict[str, str] | None = None,
+    **_: Any,  # Silently ignores any extra unexpected dictionary keys
 ) -> dict[str, Any]:
-    dimensions: list[dict[str, str]] = []
-
-    if cluster_name:
-        dimensions.append({"Name": "ClusterName", "Value": cluster_name})
-    if service_name:
-        dimensions.append({"Name": "ServiceName", "Value": service_name})
-    if load_balancer:
-        dimensions.append({"Name": "LoadBalancer", "Value": load_balancer})
-    if queue_name:
-        dimensions.append({"Name": "QueueName", "Value": queue_name})
+    formatted_dimensions = [
+        {"Name": key, "Value": str(val)}
+        for key, val in (dimensions or {}).items()
+        if val is not None
+    ]
 
     return {
         "Id": output_filename,  # A unique identifier for this metric query (lowercase/numbers)
@@ -49,7 +42,7 @@ def build_metric_data_query(
             "Metric": {
                 "Namespace": namespace,
                 "MetricName": metric_name,
-                "Dimensions": dimensions,
+                "Dimensions": formatted_dimensions,
             },
             "Period": granularity_seconds,  # Granularity of the data points (e.g., 300 = 5 minutes)
             "Stat": statistic,  # Can be Average, Sum, SampleCount, Maximum, Minimum
