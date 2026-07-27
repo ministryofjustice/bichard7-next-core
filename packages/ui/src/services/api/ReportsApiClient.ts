@@ -5,8 +5,8 @@ import apiLogger from "./apiLogger"
 
 export default class ReportsApiClient {
   private readonly jwt: string
-  private readonly traceId: string
   private readonly dispatcher: Agent
+  public readonly traceId: string
 
   constructor(jwt: string, traceId: string = randomUUID()) {
     this.jwt = jwt
