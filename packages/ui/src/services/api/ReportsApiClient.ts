@@ -20,8 +20,7 @@ export default class ReportsApiClient {
   }
 
   async *fetchReport<T>(url: string): AsyncIterable<T | Error> {
-    const traceId = this.traceId
-    const logger = apiLogger(traceId, url)
+    const logger = apiLogger(this.traceId, url)
 
     try {
       const startTime = Date.now()
@@ -34,7 +33,7 @@ export default class ReportsApiClient {
         method: "GET",
         headers: {
           Authorization: `Bearer ${this.jwt}`,
-          "x-trace-id": traceId
+          "x-trace-id": this.traceId
         },
         dispatcher: this.dispatcher
       })
@@ -42,7 +41,7 @@ export default class ReportsApiClient {
       if (!response.ok) {
         logger.error("Error: stream error")
 
-        yield new Error(`Stream failed: Request failed with status code ${response.status}, trace ID ${traceId}`)
+        yield new Error(`Stream failed: Request failed with status code ${response.status}, trace ID ${this.traceId}`)
         return
       }
 

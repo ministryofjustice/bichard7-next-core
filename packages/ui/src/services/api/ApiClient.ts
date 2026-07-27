@@ -44,14 +44,13 @@ class ApiClient {
     bodyContent: string | Record<string, unknown> = {},
     additionalHeaders: Record<string, unknown> = {}
   ): PromiseResult<T> {
-    const traceId = this.traceId
-    const logger = apiLogger(traceId, route)
+    const logger = apiLogger(this.traceId, route)
     const startTime = Date.now()
 
     const headers: Record<string, string> = {
       Authorization: `Bearer ${this.jwt}`,
       "Content-Type": "application/json",
-      "x-trace-id": traceId,
+      "x-trace-id": this.traceId,
       ...additionalHeaders
     }
 
@@ -85,7 +84,7 @@ class ApiClient {
 
         logger.error(`Error: ${message}`)
 
-        return new ApiError(response.status, `${message} - Trace ID ${traceId}`)
+        return new ApiError(response.status, `${message} - Trace ID ${this.traceId}`)
       }
 
       const duration = Date.now() - startTime
