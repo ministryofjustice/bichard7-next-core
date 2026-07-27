@@ -4,6 +4,7 @@ set -ex
 
 readonly DOCKER_REFERENCE="nginx-nodejs-24-2023-supervisord"
 readonly DOCKER_OUTPUT_TAG="ui"
+GOSS_VERSION="v0.4.9"
 
 function has_local_image() {
   IMAGES=$(docker images --filter=reference="${DOCKER_REFERENCE}:*" -q | wc -l)
