@@ -16,8 +16,8 @@ METRICS_CONFIG: list[dict[str, Any]] = [
         "namespace": "AWS/ECS",
         "metric_name": "CPUUtilization",
         "dimensions": {
-            "cluster_name": "cjse-bichard7-leds-base-infra",
-            "service_name": "cjse-bichard7-leds-base-infra-web",
+            "ClusterName": "cjse-bichard7-leds-base-infra",
+            "ServiceName": "cjse-bichard7-leds-base-infra-web",
         },
     },
     {
@@ -25,7 +25,7 @@ METRICS_CONFIG: list[dict[str, Any]] = [
         "namespace": "AWS/ApplicationELB",
         "metric_name": "ActiveConnectionCount",
         "dimensions": {
-            "load_balancer": "app/cjse-uat-bichard-7-conductor/3c3aa9f65bfe9489",
+            "LoadBalancer": "app/cjse-uat-bichard-7-conductor/3c3aa9f65bfe9489",
         },
     },
     {
@@ -33,7 +33,7 @@ METRICS_CONFIG: list[dict[str, Any]] = [
         "namespace": "AWS/SQS",
         "metric_name": "NumberOfMessagesReceived",
         "dimensions": {
-            "queue_name": "bichard-7-leds-incomingMessageQueue",
+            "QueueName": "bichard-7-leds-incomingMessageQueue",
         },
     },
 ]
