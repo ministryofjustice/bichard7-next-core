@@ -32,7 +32,10 @@ export type DisplayPartialCourtCase = Pick<CourtCase, FieldsForDisplayPartialCou
 }
 
 type FieldsForDisplayFullCourtCase =
-  FieldsForDisplayPartialCourtCase | "orgForPoliceFilter" | "courtCode" | "courtReference"
+  | FieldsForDisplayPartialCourtCase
+  | "orgForPoliceFilter"
+  | "courtCode"
+  | "courtReference"
 
 export type DisplayFullCourtCase = Pick<CourtCase, FieldsForDisplayFullCourtCase> &
   DisplayPartialCourtCase & {
