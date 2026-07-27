@@ -16,9 +16,7 @@ const handleArray = (
 ) => {
   const newValues: (OffenceField<number> | OffenceField<string> | ResultQualifierCode)[] = []
   const amendmentsArray = amendments[amendmentField] as
-    | OffenceField<number>[]
-    | OffenceField<string>[]
-    | ResultQualifierCode[]
+    OffenceField<number>[] | OffenceField<string>[] | ResultQualifierCode[]
 
   const savedAmendmentsArray =
     (savedAmendments[amendmentField] as OffenceField<number>[] | OffenceField<string>[] | ResultQualifierCode[]) ?? []

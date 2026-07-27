@@ -50,9 +50,7 @@ export type NestedGroupedReportConfig<TGroup, TTable, TRow> = {
   Formatter
 
 export type ReportConfig<TGroup = Record<string, never>, TTable = Record<string, never>, TRow = unknown> =
-  | FlatReportConfig<TRow>
-  | GroupedReportConfig<TGroup, TRow>
-  | NestedGroupedReportConfig<TGroup, TTable, TRow>
+  FlatReportConfig<TRow> | GroupedReportConfig<TGroup, TRow> | NestedGroupedReportConfig<TGroup, TTable, TRow>
 
 export type ReportData =
   | { config: FlatReportConfig<Record<string, unknown>>; rows: Record<string, unknown>[] }
