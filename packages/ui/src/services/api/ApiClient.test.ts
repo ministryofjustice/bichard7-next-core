@@ -1,7 +1,7 @@
+import { randomUUID } from "crypto"
 import { ApiError } from "types/ApiError"
 import { fetch } from "undici"
 import ApiClient, { HttpMethod } from "./ApiClient"
-import { randomUUID } from "crypto"
 
 jest.mock("undici", () => ({
   fetch: jest.fn(),
@@ -26,8 +26,8 @@ describe("ApiClient", () => {
   let client: ApiClient
 
   beforeEach(() => {
-    client = new ApiClient(jwt)
     mockRandomUUID.mockReturnValue(mockUUID)
+    client = new ApiClient(jwt)
   })
 
   afterEach(() => {
