@@ -262,10 +262,12 @@ describe("NextHearingLocation", () => {
 
     cy.get("a.govuk-back-link").contains("Back to all offences").click()
 
+    cy.wait("@fetchInitialOrganisation")
     cy.get(".govuk-link")
       .contains("Offence with HO100322 - Court has provided an adjournment with no location for the next hearing")
       .click()
 
+    cy.wait("@fetchInitialOrganisation")
     cy.get("#next-hearing-location").clear()
     cy.wait("@fetchInitialOrganisation")
     cy.get("#next-hearing-location").type("B46DB00", { delay: 100 })
@@ -571,7 +573,7 @@ describe("NextHearingLocation", () => {
     )
   })
 
-  it("should display error when invalid Next Hearing Location is entered", () => {
+  it("Should display error when invalid Next Hearing Location is entered", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
