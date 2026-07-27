@@ -1,14 +1,16 @@
-import { fetch, Agent } from "undici"
 import { API_LOCATION } from "config"
 import { randomUUID } from "node:crypto"
+import { Agent, fetch } from "undici"
 import apiLogger from "./apiLogger"
 
 export default class ReportsApiClient {
   private readonly jwt: string
+  private readonly traceId: string
   private readonly dispatcher: Agent
 
-  constructor(jwt: string) {
+  constructor(jwt: string, traceId: string = randomUUID()) {
     this.jwt = jwt
+    this.traceId = traceId
 
     this.dispatcher = new Agent({
       connect: {
@@ -18,7 +20,7 @@ export default class ReportsApiClient {
   }
 
   async *fetchReport<T>(url: string): AsyncIterable<T | Error> {
-    const traceId = randomUUID()
+    const traceId = this.traceId
     const logger = apiLogger(traceId, url)
 
     try {
