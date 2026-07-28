@@ -1,3 +1,4 @@
+import "pg"
 import { baseConfig } from "@moj-bichard7/common/db/baseConfig"
 import type { DataSourceOptions } from "typeorm"
 import { DataSource } from "typeorm"

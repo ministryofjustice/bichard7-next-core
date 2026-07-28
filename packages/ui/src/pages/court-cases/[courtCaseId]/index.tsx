@@ -1,3 +1,4 @@
+import apiLogger from "@/services/api/apiLogger"
 import Permission from "@moj-bichard7/common/types/Permission"
 import Layout from "components/Layout"
 import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseContext"
@@ -19,6 +20,7 @@ import addNote from "services/addNote"
 import ApiClient from "services/api/ApiClient"
 import BichardApiV1 from "services/api/BichardApiV1"
 import { canUseApiEndpoint } from "services/api/canUseApi/canUseEndpoint"
+import { ApiEndpoints } from "services/api/types"
 import { canReallocate, canResolveOrSubmit } from "services/case"
 import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
@@ -33,6 +35,7 @@ import resolveTriggers from "services/resolveTriggers"
 import resubmitCourtCase from "services/resubmitCourtCase"
 import unlockCourtCase from "services/unlockCourtCase"
 import { UpdateResult } from "typeorm"
+import { isApiError } from "types/ApiError"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
 import CsrfServerSidePropsContext from "types/CsrfServerSidePropsContext"
 import { isError } from "types/Result"
@@ -44,9 +47,6 @@ import { isPost } from "utils/http"
 import { logRenderTime } from "utils/logging"
 import redirectTo from "utils/redirectTo"
 import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackForm"
-import { isApiError } from "types/ApiError"
-import { ApiEndpoints } from "services/api/types"
-import apiLogger from "@/services/api/apiLogger"
 
 const mqGatewayConfig = createMqConfig()
 const mqGateway = new StompitMqGateway(mqGatewayConfig)
@@ -91,10 +91,12 @@ export const getServerSideProps = withMultipleServerSideProps(
     )
 
     let apiGateway: BichardApiV1 | undefined = undefined
+    let apiClientTraceId: string | undefined = undefined
 
     if (useApiForCaseDetails || useApiForCaseResubmit) {
       const jwt = req.cookies[".AUTH"] as string
       const apiClient = new ApiClient(jwt)
+      apiClientTraceId = apiClient.traceId
       apiGateway = new BichardApiV1(apiClient)
     }
 
@@ -153,7 +155,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     if (isPost(req) && resubmitCase === "true") {
       if (useApiForCaseResubmit && apiGateway) {
-        const logger = apiLogger(undefined, req.url)
+        const logger = apiLogger(apiClientTraceId, req.url)
         logger.info(`Resubmitting court case ${courtCaseId}`)
         const resubmitResult = await apiGateway.resubmitCase(Number(courtCaseId))
 
@@ -244,7 +246,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     let apiCase: DisplayFullCourtCase | Error | undefined
 
     if (useApiForCaseDetails && apiGateway) {
-      const logger = apiLogger(undefined, req.url)
+      const logger = apiLogger(apiClientTraceId, req.url)
       logger.info(`Fetching details for ${courtCaseId}`)
       apiCase = await apiGateway.fetchCase(Number(courtCaseId))
 
