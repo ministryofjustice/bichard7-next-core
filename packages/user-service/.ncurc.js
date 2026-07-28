@@ -1,5 +1,5 @@
 const pinned = ["cookie", "word-list", "next"]
-const ignored = ["cypress-circleci-reporter"]
+const ignored = ["cypress-circleci-reporter", "raw-body"]
 const skipped = []
 
 module.exports = {

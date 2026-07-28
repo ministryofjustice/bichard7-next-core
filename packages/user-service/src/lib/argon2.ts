@@ -1,14 +1,14 @@
-import type { Options } from "argon2"
+import type { HashOptions } from "argon2"
 import { argon2id, hash, verify } from "argon2"
 import logger from "utils/logger"
 import config from "./config"
 
-const hashPassword = (plainPassword: string, options: Options = {}): Promise<string | null> => {
+const hashPassword = (plainPassword: string, options: HashOptions = {}): Promise<string | null> => {
   const {
     argon2: { parallelism, timeCost, memoryCost, hashLength }
   } = config
 
-  const defaultOptions: Options = {
+  const defaultOptions: HashOptions = {
     parallelism,
     timeCost,
     memoryCost,
@@ -16,7 +16,7 @@ const hashPassword = (plainPassword: string, options: Options = {}): Promise<str
     type: argon2id
   }
 
-  const hashOptions = { ...defaultOptions, ...options } as Options & { raw?: false }
+  const hashOptions = { ...defaultOptions, ...options } as HashOptions & { raw?: false }
 
   return hash(plainPassword, hashOptions).catch((error) => {
     logger.error(error)
