@@ -14,10 +14,12 @@
   Ignored:
     - cypress-circleci-reporter
       - 0.4.0 changed to module type
+    - raw-body
+      - v4 breaks our CI
 */
 
 const pinned = ["cookie", "cookies-next", "@faker-js/faker", "next", "undici"]
-const ignored = ["cypress-circleci-reporter"]
+const ignored = ["cypress-circleci-reporter", "raw-body"]
 const skipped = [{ package: "next", version: "13.4.13" }]
 
 module.exports = {
