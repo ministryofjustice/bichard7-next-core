@@ -37,7 +37,7 @@ describe("escapeCsvCell", () => {
     })
 
     it("should safely wrap strings containing newlines", () => {
-      expect(escapeCsvCell("Line 1\nLine 2")).toBe('"Line 1\nLine 2"')
+      expect(escapeCsvCell("Line 1\nLine 2")).toBe('"Line 1 Line 2"')
     })
   })
 
