@@ -6,7 +6,6 @@ import { isError } from "types/Result"
 import { ListWrapper } from "./Typeahead.styles"
 
 interface Props {
-  key: string
   resultIndex: number
   offenceIndex: number
   value?: string
@@ -56,26 +55,36 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
     [setOrganisations]
   )
 
-  const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue } = useCombobox({
-    items: inputItems,
+  const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue, setInputValue } =
+    useCombobox({
+      items: inputItems,
+      onInputValueChange: ({ inputValue }) => {
+        const codeToSave = (inputValue || "").split(" - ")[0].trim()
 
-    onInputValueChange: ({ inputValue }) => {
-      const organisationCode = inputValue.split(" ")[0]
-      amend("nextSourceOrganisation")({
-        resultIndex: resultIndex,
-        offenceIndex: offenceIndex,
-        value: organisationCode
-      })
-      if (setChanged) {
-        setChanged(true)
+        amend("nextSourceOrganisation")({
+          resultIndex: resultIndex,
+          offenceIndex: offenceIndex,
+          value: codeToSave
+        })
+        if (setChanged) {
+          setChanged(true)
+        }
+        if (setSaved) {
+          setSaved(false)
+        }
+      },
+      initialInputValue: value,
+      itemToString: (item) => (item ? `${item.fullOrganisationCode} - ${item.fullOrganisationName}` : "")
+    })
+
+  useEffect(() => {
+    if (value && inputItems.length > 0 && inputValue === value) {
+      const exactMatch = inputItems.find((i) => i.fullOrganisationCode === value)
+      if (exactMatch) {
+        setInputValue(`${exactMatch.fullOrganisationCode} - ${exactMatch.fullOrganisationName}`)
       }
-      if (setSaved) {
-        setSaved(false)
-      }
-    },
-    initialInputValue: value,
-    itemToString: (item) => (item ? `${item.fullOrganisationCode} - ${item.fullOrganisationName}` : "")
-  })
+    }
+  }, [inputItems, value, inputValue, setInputValue])
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {

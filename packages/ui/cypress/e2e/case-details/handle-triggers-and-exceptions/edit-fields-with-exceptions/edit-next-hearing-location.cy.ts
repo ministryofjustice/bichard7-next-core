@@ -115,10 +115,6 @@ describe("NextHearingLocation", () => {
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100300 - Organisation not recognised").click()
     cy.contains("dt", "Next hearing location").siblings().should("include.text", "B46AM03")
-
-    cy.intercept("GET", "/bichard/api/organisation-units?search=*").as("fetchInitialOrganisation")
-    cy.wait("@fetchInitialOrganisation")
-
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B46DB00")
     cy.get(".next-hearing-location-row .success-message").should("exist")
@@ -168,10 +164,6 @@ describe("NextHearingLocation", () => {
       .contains("Offence with HO100322 - Court has provided an adjournment with no location for the next hearing")
       .click()
     cy.contains("dt", "Next hearing location").siblings().should("include.text", "")
-
-    cy.intercept("GET", "/bichard/api/organisation-units?search=*").as("fetchInitialOrganisation")
-    cy.wait("@fetchInitialOrganisation")
-
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B01EF00")
     cy.get(".next-hearing-location-row .success-message").should("exist")
@@ -240,38 +232,24 @@ describe("NextHearingLocation", () => {
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100300 - Organisation not recognised").click()
-
-    cy.intercept("GET", "/bichard/api/organisation-units?search=*").as("fetchInitialOrganisation")
-    cy.wait("@fetchInitialOrganisation")
-
     cy.get("#next-hearing-location").clear()
-    cy.wait("@fetchInitialOrganisation")
     cy.get("#next-hearing-location").type("B01EF00")
     cy.get(".next-hearing-location-row .success-message").should("exist")
 
     cy.get("a.govuk-back-link").contains("Back to all offences").click()
 
     cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
-
-    cy.wait("@fetchInitialOrganisation")
     cy.get("#next-hearing-location").clear()
-    cy.wait("@fetchInitialOrganisation")
     cy.get("#next-hearing-location").type("B21XA00")
-    cy.wait("@fetchInitialOrganisation")
     cy.get(".next-hearing-location-row .success-message").should("exist")
 
     cy.get("a.govuk-back-link").contains("Back to all offences").click()
 
-    cy.wait("@fetchInitialOrganisation")
     cy.get(".govuk-link")
       .contains("Offence with HO100322 - Court has provided an adjournment with no location for the next hearing")
       .click()
-
-    cy.wait("@fetchInitialOrganisation")
     cy.get("#next-hearing-location").clear()
-    cy.wait("@fetchInitialOrganisation")
-    cy.get("#next-hearing-location").type("B46DB00", { delay: 100 })
-    cy.wait("@fetchInitialOrganisation")
+    cy.get("#next-hearing-location").type("B46DB00")
     cy.get(".next-hearing-location-row .success-message").should("exist")
 
     submitAndConfirmExceptions()
@@ -337,9 +315,6 @@ describe("NextHearingLocation", () => {
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
     cy.get(".hearing-result-1").contains("dt", "Next hearing location").siblings().should("include.text", "B@1EF$1")
-
-    cy.intercept("GET", "/bichard/api/organisation-units?search=*").as("fetchInitialOrganisation")
-    cy.wait("@fetchInitialOrganisation")
 
     cy.get(".hearing-result-1 #next-hearing-location").clear()
     cy.get(".hearing-result-1 #next-hearing-location").type("B01EF00")
@@ -460,7 +435,6 @@ describe("NextHearingLocation", () => {
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
-
     cy.contains("dt", "Next hearing location").siblings().should("include.text", "B@1EF$1")
   })
 
@@ -485,10 +459,6 @@ describe("NextHearingLocation", () => {
     cy.get(".govuk-link")
       .contains("Offence with HO100323 - COURT HAS PROVIDED AN ADJOURNMENT WITH NO NEXT HEARING DATE EXCEPTION")
       .click()
-
-    cy.intercept("GET", "/bichard/api/organisation-units?search=*").as("fetchInitialOrganisation")
-    cy.wait("@fetchInitialOrganisation")
-
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B01EF00")
 
@@ -513,10 +483,6 @@ describe("NextHearingLocation", () => {
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
-
-    cy.intercept("GET", "/bichard/api/organisation-units?search=*").as("fetchInitialOrganisation")
-    cy.wait("@fetchInitialOrganisation")
-
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B43UY00")
     cy.get(".next-hearing-location-row .success-message").contains("Input saved").should("exist")
@@ -549,10 +515,6 @@ describe("NextHearingLocation", () => {
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
-
-    cy.intercept("GET", "/bichard/api/organisation-units?search=*").as("fetchInitialOrganisation")
-    cy.wait("@fetchInitialOrganisation")
-
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type(nextHearingLocation)
 
@@ -573,15 +535,11 @@ describe("NextHearingLocation", () => {
     )
   })
 
-  it("Should display error when invalid Next Hearing Location is entered", () => {
+  it("should display error when invalid Next Hearing Location is entered", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
-
-    cy.intercept("GET", "/bichard/api/organisation-units?search=*").as("fetchInitialOrganisation")
-    cy.wait("@fetchInitialOrganisation")
-
     cy.get("#next-hearing-location").clear()
     cy.get("#next-hearing-location").type("B43UYXX")
 
@@ -611,10 +569,6 @@ describe("NextHearingLocation", () => {
 
       cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
       cy.get(".govuk-link").contains("Offence with HO100200 - Unrecognised Force or Station Code").click()
-
-      cy.intercept("GET", "/bichard/api/organisation-units?search=*").as("fetchInitialOrganisation")
-      cy.wait("@fetchInitialOrganisation")
-
       cy.get("#next-hearing-location").clear()
       cy.get("#next-hearing-location").type(nextHearingLocation)
 

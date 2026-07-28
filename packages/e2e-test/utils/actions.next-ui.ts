@@ -563,7 +563,6 @@ export const correctOffenceException = async function (
 export const correctOffenceExceptionByTypeahead = async function (this: Bichard, field: string, newValue: string) {
   const { page } = this.browser
 
-  // Needs to wait for the component to remount
   await delay(0.5)
 
   await correctOffence(page, convertFieldToHtml(field), newValue)
