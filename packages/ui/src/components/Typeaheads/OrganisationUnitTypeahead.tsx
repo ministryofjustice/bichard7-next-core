@@ -30,7 +30,7 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
       const query = new URLSearchParams({ search: searchStringParam ?? "" })
 
       const queryString = query.toString()
-      const url = queryString ? `/bichard/api/organisation-units?${queryString}` : `/bichard/api/force-owner`
+      const url = queryString ? `/bichard/api/organisation-units?${queryString}` : `/bichard/api/organisation-units`
 
       const organisationUnitsResponse = await fetch(url)
         .then((response) => {

@@ -535,7 +535,7 @@ describe("NextHearingLocation", () => {
     )
   })
 
-  it("should display error when invalid Next Hearing Location is entered", () => {
+  it("Should display error when invalid Next Hearing Location is entered", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
