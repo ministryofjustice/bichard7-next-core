@@ -9,3 +9,6 @@ dependencies = [
     "duckdb>=1.5.5",
     "pyarrow>=25.0.0",
 ]
+
+[tool.pyrefly]
+preset = "basic"

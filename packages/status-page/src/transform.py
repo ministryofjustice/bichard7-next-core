@@ -7,7 +7,8 @@ from zoneinfo import ZoneInfo
 
 import boto3
 import duckdb
-from common import (
+
+from src.common import (
     BUCKET_NAME,
     GRANULARITY_SECONDS,
     JSON_OUTPUT_KEY,

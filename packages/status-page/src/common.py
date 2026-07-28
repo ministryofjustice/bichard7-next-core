@@ -65,7 +65,7 @@ def read_parquet(path: str, columns: list[str]) -> pa.Table | None:
     except (OSError, ArrowInvalid) as e:
         logger.info(f"Cannot read file, the path or file is invalid '{path}'")
         logger.info(e)
-        raise (e)
+        raise
 
     return file.read(columns=columns)
 

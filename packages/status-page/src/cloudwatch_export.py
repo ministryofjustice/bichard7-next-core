@@ -7,7 +7,8 @@ import boto3
 # pyarrow used to keep dependencies light (as opposed to pandas/polars/duckdb)
 import pyarrow as pa
 import pyarrow.parquet as pq
-from common import (
+
+from src.common import (
     DEFAULT_BACKFILL_DAYS,
     GRANULARITY_SECONDS,
     METRICS_CONFIG,

@@ -22,6 +22,7 @@ login:
 
 # Build the container for linux/amd64 architecture
 build:
+	uv lock && \
 	docker build --platform linux/amd64 -t $(IMAGE_NAME):$(TAG) .
 
 # Tag the container image for ECR
