@@ -1,3 +1,4 @@
+import apiLogger from "@/services/api/apiLogger"
 import { ApiCaseQuery, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { CaseIndexDto } from "@moj-bichard7/common/types/Case"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
@@ -22,6 +23,7 @@ import { useEffect, useState } from "react"
 import ApiClient from "services/api/ApiClient"
 import BichardApiV1 from "services/api/BichardApiV1"
 import { canUseApiEndpoint } from "services/api/canUseApi/canUseEndpoint"
+import { ApiEndpoints } from "services/api/types"
 import { courtCaseToDisplayPartialCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
 import CourtCase from "services/entities/CourtCase"
@@ -51,8 +53,6 @@ import { canUseCourtDateReceivedDateMismatchFilters } from "../features/flags/ca
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
 import shouldShowSwitchingFeedbackForm from "../utils/shouldShowSwitchingFeedbackForm"
-import { ApiEndpoints } from "services/api/types"
-import apiLogger from "@/services/api/apiLogger"
 
 type Props = {
   build: string | null
@@ -145,7 +145,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       const jwt = req.cookies[".AUTH"] as string
       const apiClient = new ApiClient(jwt)
       const apiGateway = new BichardApiV1(apiClient)
-      const logger = apiLogger(undefined, req.url)
+      const logger = apiLogger(apiClient.traceId, req.url)
 
       logger.info("Fetching cases")
 
