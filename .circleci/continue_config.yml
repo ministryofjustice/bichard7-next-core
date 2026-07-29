@@ -41,8 +41,8 @@ parameters:
     type: boolean
     default: false
   s3-web-proxy-changes:
-      type: boolean
-      default: false
+    type: boolean
+    default: false
 
 commands:
   fetch_images:
