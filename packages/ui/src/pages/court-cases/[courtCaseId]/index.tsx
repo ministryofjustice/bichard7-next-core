@@ -273,12 +273,10 @@ export const getServerSideProps = withMultipleServerSideProps(
       ? (apiCase as DisplayFullCourtCase)
       : courtCaseToDisplayFullCourtCaseDto(courtCase as CourtCase, currentUser)
 
-    const organisationUnits: OrganisationUnitApiResponse = searchCourtOrganisationUnits("")
-      .map((ou) => ({
-        fullOrganisationCode: getFullOrganisationCode(ou),
-        fullOrganisationName: getFullOrganisationName(ou)
-      }))
-      .slice(0, 20)
+    const organisationUnits: OrganisationUnitApiResponse = searchCourtOrganisationUnits("").map((ou) => ({
+      fullOrganisationCode: getFullOrganisationCode(ou),
+      fullOrganisationName: getFullOrganisationName(ou)
+    }))
 
     return {
       props: {
