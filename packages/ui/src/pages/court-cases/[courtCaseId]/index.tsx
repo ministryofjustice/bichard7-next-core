@@ -1,4 +1,6 @@
+import { OrganisationUnitsProvider } from "@/context/OrganisationUnitsContext"
 import apiLogger from "@/services/api/apiLogger"
+import OrganisationUnitApiResponse from "@/types/OrganisationUnitApiResponse"
 import Permission from "@moj-bichard7/common/types/Permission"
 import Layout from "components/Layout"
 import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseContext"
@@ -267,6 +269,27 @@ export const getServerSideProps = withMultipleServerSideProps(
       ? (apiCase as DisplayFullCourtCase)
       : courtCaseToDisplayFullCourtCaseDto(courtCase as CourtCase, currentUser)
 
+    let orgs = [] as OrganisationUnitApiResponse
+    const fetchOrganisations = async () => {
+      const organisationUnitsResponse = await fetch("/bichard/api/organisation-units")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`)
+          }
+
+          return response.json() as Promise<OrganisationUnitApiResponse>
+        })
+        .catch((error) => error as Error)
+
+      if (isError(organisationUnitsResponse)) {
+        return
+      }
+
+      orgs = organisationUnitsResponse
+    }
+
+    fetchOrganisations()
+
     return {
       props: {
         csrfToken,
@@ -278,7 +301,8 @@ export const getServerSideProps = withMultipleServerSideProps(
         canResolveAndSubmit: canResolveOrSubmit(currentUser, caseDto),
         canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser),
         displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0)),
-        allIssuesCleared: allIssuesCleared(caseDto, triggersToResolve, currentUser)
+        allIssuesCleared: allIssuesCleared(caseDto, triggersToResolve, currentUser),
+        organisationUnits: orgs
       }
     }
   }
@@ -295,6 +319,7 @@ interface Props {
   previousPath: string
   caseDetailsCookieName: string
   allIssuesCleared: boolean
+  organisationUnits: OrganisationUnitApiResponse
 }
 
 const CourtCaseDetailsPage: NextPage<Props> = ({
@@ -307,7 +332,8 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
   csrfToken,
   previousPath,
   caseDetailsCookieName,
-  allIssuesCleared
+  allIssuesCleared,
+  organisationUnits
 }: Props) => {
   const csrfTokenContext = useCsrfTokenContextState(csrfToken)
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
@@ -330,21 +356,23 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
         <CurrentUserContext.Provider value={currentUserContext}>
           <CourtCaseContext.Provider value={courtCaseContext}>
             <PreviousPathContext.Provider value={previousPathContext}>
-              <Layout
-                bichardSwitch={{
-                  display: true,
-                  href: `/bichard-ui/SelectRecord?unstick=true&error_id=${courtCase.errorId}`,
-                  displaySwitchingSurveyFeedback
-                }}
-                canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
-              >
-                <Header canReallocate={canReallocate} />
-                <CourtCaseDetails
-                  canResolveAndSubmit={canResolveAndSubmit}
+              <OrganisationUnitsProvider organisationUnits={organisationUnits}>
+                <Layout
+                  bichardSwitch={{
+                    display: true,
+                    href: `/bichard-ui/SelectRecord?unstick=true&error_id=${courtCase.errorId}`,
+                    displaySwitchingSurveyFeedback
+                  }}
                   canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
-                  allIssuesCleared={allIssuesCleared}
-                />
-              </Layout>
+                >
+                  <Header canReallocate={canReallocate} />
+                  <CourtCaseDetails
+                    canResolveAndSubmit={canResolveAndSubmit}
+                    canUseTriggerAndExceptionQualityAuditing={canUseTriggerAndExceptionQualityAuditing}
+                    allIssuesCleared={allIssuesCleared}
+                  />
+                </Layout>
+              </OrganisationUnitsProvider>
             </PreviousPathContext.Provider>
           </CourtCaseContext.Provider>
         </CurrentUserContext.Provider>

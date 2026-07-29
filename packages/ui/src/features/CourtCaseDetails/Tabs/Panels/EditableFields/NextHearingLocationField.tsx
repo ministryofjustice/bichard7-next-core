@@ -1,11 +1,11 @@
-import { isError } from "@/types/Result"
+import { useOrganisationUnits } from "@/context/OrganisationUnitsContext"
 import { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import AutoSave from "components/EditableFields/AutoSave"
 import EditableFieldRow from "components/EditableFields/EditableFieldRow"
 import ErrorMessage from "components/EditableFields/ErrorMessage"
 import OrganisationUnitTypeahead from "components/Typeaheads/OrganisationUnitTypeahead"
 import { useCourtCase } from "context/CourtCaseContext"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
 import { Exception } from "types/exceptions"
 import getNextHearingLocationValue from "utils/amendments/getAmendmentValues/getNextHearingLocationValue"
@@ -30,39 +30,11 @@ export const NextHearingLocationField = ({
   const { amendments } = useCourtCase()
   const amendedNextHearingLocation = getNextHearingLocationValue(amendments, offenceIndex, resultIndex) ?? ""
   const [isNhlSaved, setIsNhlSaved] = useState<boolean>(false)
-  const [organisations, setOrganisations] = useState<OrganisationUnitApiResponse>([])
+  const { organisationUnits } = useOrganisationUnits()
+  const [organisations, setOrganisations] = useState<OrganisationUnitApiResponse>(organisationUnits)
   const [isNhlChanged, setIsNhlChanged] = useState<boolean>(false)
-  const [orgsLoading, setOrgsLoading] = useState<boolean>(true)
 
   const originalCode = result.NextResultSourceOrganisation?.OrganisationUnitCode
-
-  useEffect(() => {
-    const fetchOrganisations = async () => {
-      const organisationUnitsResponse = await fetch("/bichard/api/organisation-units")
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP Error: ${response.status}`)
-          }
-
-          return response.json() as Promise<OrganisationUnitApiResponse>
-        })
-        .catch((error) => error as Error)
-
-      setOrgsLoading(false)
-
-      if (isError(organisationUnitsResponse)) {
-        return
-      }
-
-      setOrganisations(organisationUnitsResponse)
-    }
-
-    fetchOrganisations()
-  }, [])
-
-  if (orgsLoading) {
-    return <></>
-  }
 
   const isValidNhl = isValidNextHearingLocation(amendedNextHearingLocation, organisations)
   const isEditable = isCaseEditable && hasNextHearingLocationException(exceptions)
