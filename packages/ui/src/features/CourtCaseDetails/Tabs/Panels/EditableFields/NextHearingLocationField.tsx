@@ -1,3 +1,4 @@
+import { isError } from "@/types/Result"
 import { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import AutoSave from "components/EditableFields/AutoSave"
 import EditableFieldRow from "components/EditableFields/EditableFieldRow"
@@ -29,28 +30,32 @@ export const NextHearingLocationField = ({
   const { amendments } = useCourtCase()
   const amendedNextHearingLocation = getNextHearingLocationValue(amendments, offenceIndex, resultIndex) ?? ""
   const [isNhlSaved, setIsNhlSaved] = useState<boolean>(false)
-  const [loadingOrganisations, setLoadingOrganisations] = useState<boolean>(true)
   const [organisations, setOrganisations] = useState<OrganisationUnitApiResponse>([])
   const [isNhlChanged, setIsNhlChanged] = useState<boolean>(false)
 
   const originalCode = result.NextResultSourceOrganisation?.OrganisationUnitCode
 
   useEffect(() => {
-    if (loadingOrganisations) {
-      const fetchOrganisations = async () => {
-        fetch(`/bichard/api/organisation-units`)
-          .then((data) => {
-            if (Array.isArray(data)) {
-              setOrganisations(data)
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching organisation name:", error)
-          })
+    const fetchOrganisations = async () => {
+      const organisationUnitsResponse = await fetch("/bichard/api/organisation-units")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`)
+          }
+
+          return response.json() as Promise<OrganisationUnitApiResponse>
+        })
+        .catch((error) => error as Error)
+
+      if (isError(organisationUnitsResponse)) {
+        return
       }
-      fetchOrganisations().finally(() => setLoadingOrganisations(false))
+
+      setOrganisations(organisationUnitsResponse)
     }
-  }, [organisations])
+
+    fetchOrganisations()
+  }, [])
 
   const isValidNhl = isValidNextHearingLocation(amendedNextHearingLocation, organisations)
   const isEditable = isCaseEditable && hasNextHearingLocationException(exceptions)
@@ -62,6 +67,9 @@ export const NextHearingLocationField = ({
     const matchingOrg = organisations.find((org) => org.fullOrganisationCode === code)
     return matchingOrg ? `${code} - ${matchingOrg.fullOrganisationName}` : code
   }
+
+  const rawCode = amendedNextHearingLocation || originalCode || undefined
+  const typeaheadValue = isValidNhl ? rawCode : undefined
 
   return (
     <EditableFieldRow
@@ -76,7 +84,7 @@ export const NextHearingLocationField = ({
       htmlFor={"next-hearing-location"}
     >
       <OrganisationUnitTypeahead
-        value={isValidNhl ? amendedNextHearingLocation || originalCode || undefined : undefined}
+        value={typeaheadValue}
         resultIndex={resultIndex}
         offenceIndex={offenceIndex}
         setOrganisations={setOrganisations}
