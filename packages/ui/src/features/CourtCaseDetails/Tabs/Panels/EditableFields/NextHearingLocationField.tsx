@@ -32,6 +32,7 @@ export const NextHearingLocationField = ({
   const [isNhlSaved, setIsNhlSaved] = useState<boolean>(false)
   const [organisations, setOrganisations] = useState<OrganisationUnitApiResponse>([])
   const [isNhlChanged, setIsNhlChanged] = useState<boolean>(false)
+  const [orgsLoading, setOrgsLoading] = useState<boolean>(true)
 
   const originalCode = result.NextResultSourceOrganisation?.OrganisationUnitCode
 
@@ -47,6 +48,8 @@ export const NextHearingLocationField = ({
         })
         .catch((error) => error as Error)
 
+      setOrgsLoading(false)
+
       if (isError(organisationUnitsResponse)) {
         return
       }
@@ -56,6 +59,10 @@ export const NextHearingLocationField = ({
 
     fetchOrganisations()
   }, [])
+
+  if (orgsLoading) {
+    return <></>
+  }
 
   const isValidNhl = isValidNextHearingLocation(amendedNextHearingLocation, organisations)
   const isEditable = isCaseEditable && hasNextHearingLocationException(exceptions)
