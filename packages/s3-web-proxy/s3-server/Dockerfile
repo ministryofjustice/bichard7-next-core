@@ -1,5 +1,4 @@
-FROM quay.io/signalfuse/maestro-base:alp-3.2
-
+FROM nginx-nodejs-24-2023-supervisord
 
 
 MAINTAINER Ozan Turgut <ozan@signalfuse.com>
