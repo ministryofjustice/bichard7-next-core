@@ -1,14 +1,16 @@
-import { fetch, Agent } from "undici"
 import { API_LOCATION } from "config"
 import { randomUUID } from "node:crypto"
+import { Agent, fetch } from "undici"
 import apiLogger from "./apiLogger"
 
 export default class ReportsApiClient {
   private readonly jwt: string
   private readonly dispatcher: Agent
+  public readonly traceId: string
 
-  constructor(jwt: string) {
+  constructor(jwt: string, traceId: string = randomUUID()) {
     this.jwt = jwt
+    this.traceId = traceId
 
     this.dispatcher = new Agent({
       connect: {
@@ -18,8 +20,7 @@ export default class ReportsApiClient {
   }
 
   async *fetchReport<T>(url: string): AsyncIterable<T | Error> {
-    const traceId = randomUUID()
-    const logger = apiLogger(traceId, url)
+    const logger = apiLogger(this.traceId, url)
 
     try {
       const startTime = Date.now()
@@ -32,7 +33,7 @@ export default class ReportsApiClient {
         method: "GET",
         headers: {
           Authorization: `Bearer ${this.jwt}`,
-          "x-trace-id": traceId
+          "x-trace-id": this.traceId
         },
         dispatcher: this.dispatcher
       })
@@ -40,7 +41,7 @@ export default class ReportsApiClient {
       if (!response.ok) {
         logger.error("Error: stream error")
 
-        yield new Error(`Stream failed: Request failed with status code ${response.status}, trace ID ${traceId}`)
+        yield new Error(`Stream failed: Request failed with status code ${response.status}, trace ID ${this.traceId}`)
         return
       }
 

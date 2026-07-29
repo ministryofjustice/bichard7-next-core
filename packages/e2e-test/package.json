@@ -39,15 +39,15 @@
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-tests#readme",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1084.0",
-    "@aws-sdk/lib-storage": "^3.1084.0",
+    "@aws-sdk/client-s3": "^3.1094.0",
+    "@aws-sdk/lib-storage": "^3.1094.0",
     "@babel/core": "^8.0.1",
     "@babel/preset-env": "^8.0.2",
     "@cucumber/cucumber": "^9.5.1",
     "@cucumber/pretty-formatter": "^1.0.1",
     "@faker-js/faker": "^9.9.0",
     "@io-orkes/conductor-javascript": "^3.0.3",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.403",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.405",
     "@types/jest": "^30.0.0",
     "axios": "^1.18.1",
     "csv-parse": "^7.0.1",
@@ -66,12 +66,12 @@
     "puppeteer-mass-screenshots": "^1.0.15",
     "stompit": "^1.0.0",
     "tiny-glob": "^0.2.9",
-    "ts-jest": "^29.4.11",
+    "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@swc/core": "^1.15.43",
+    "@swc/core": "^1.15.46",
     "@swc/jest": "^0.2.39",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash.merge": "^4.6.9",
@@ -82,9 +82,9 @@
     "@types/stompit": "^0.26.6",
     "gherkin-lint": "^4.2.4",
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.8",
+    "lint-staged": "^17.2.0",
     "npm-check-updates": "^22.2.9",
-    "prettier": "^3.9.5"
+    "prettier": "^3.9.6"
   },
   "lint-staged": {
     "*.js": [

@@ -1,8 +1,8 @@
 import { API_LOCATION } from "config"
+import { randomUUID } from "node:crypto"
 import { ApiError } from "types/ApiError"
 import type PromiseResult from "types/PromiseResult"
 import { Agent, fetch } from "undici"
-import { randomUUID } from "node:crypto"
 import apiLogger from "./apiLogger"
 
 export enum HttpMethod {
@@ -19,9 +19,11 @@ const agent = new Agent({
 
 class ApiClient {
   readonly jwt: string
+  readonly traceId: string
 
-  constructor(jwt: string) {
+  constructor(jwt: string, traceId: string = randomUUID()) {
     this.jwt = jwt
+    this.traceId = traceId
   }
 
   async get<T>(route: string, additionalHeaders: Record<string, unknown> = {}): Promise<Error | T> {
@@ -42,14 +44,13 @@ class ApiClient {
     bodyContent: string | Record<string, unknown> = {},
     additionalHeaders: Record<string, unknown> = {}
   ): PromiseResult<T> {
-    const traceId = randomUUID()
-    const logger = apiLogger(traceId, route)
+    const logger = apiLogger(this.traceId, route)
     const startTime = Date.now()
 
     const headers: Record<string, string> = {
       Authorization: `Bearer ${this.jwt}`,
       "Content-Type": "application/json",
-      "x-trace-id": traceId,
+      "x-trace-id": this.traceId,
       ...additionalHeaders
     }
 
@@ -83,7 +84,7 @@ class ApiClient {
 
         logger.error(`Error: ${message}`)
 
-        return new ApiError(response.status, `${message} - Trace ID ${traceId}`)
+        return new ApiError(response.status, `${message} - Trace ID ${this.traceId}`)
       }
 
       const duration = Date.now() - startTime

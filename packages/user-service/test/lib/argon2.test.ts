@@ -3,7 +3,7 @@ import { hashPassword, verifyPassword } from "lib/argon2"
 it("should generate correct hash format", async () => {
   const hash = await hashPassword("Dummy password")
 
-  expect(hash).toMatch(/\$argon2id\$v=19\$m=15360,t=2,p=1\$.+/)
+  expect(hash).toMatch(/\$argon2id\$v=19\$m=15360,p=1,t=2\$.+/)
 })
 
 it("should verify the password when correct password is provided", async () => {

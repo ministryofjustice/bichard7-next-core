@@ -37,7 +37,7 @@
     "@io-orkes/conductor-javascript": "~2.1.5",
     "@stomp/stompjs": "^7.3.0",
     "node-fetch": "^3.3.2",
-    "ws": "^8.21.0"
+    "ws": "^8.21.1"
   },
   "optionalDependencies": {
     "@esbuild/linux-arm64": "^0.28.1",
