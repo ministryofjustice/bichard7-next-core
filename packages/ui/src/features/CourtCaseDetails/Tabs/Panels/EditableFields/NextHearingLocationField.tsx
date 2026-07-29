@@ -4,7 +4,7 @@ import EditableFieldRow from "components/EditableFields/EditableFieldRow"
 import ErrorMessage from "components/EditableFields/ErrorMessage"
 import OrganisationUnitTypeahead from "components/Typeaheads/OrganisationUnitTypeahead"
 import { useCourtCase } from "context/CourtCaseContext"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
 import { Exception } from "types/exceptions"
 import getNextHearingLocationValue from "utils/amendments/getAmendmentValues/getNextHearingLocationValue"
@@ -32,6 +32,36 @@ export const NextHearingLocationField = ({
   const [organisations, setOrganisations] = useState<OrganisationUnitApiResponse>([])
   const [isNhlChanged, setIsNhlChanged] = useState<boolean>(false)
 
+  const originalCode = result.NextResultSourceOrganisation?.OrganisationUnitCode
+
+  useEffect(() => {
+    const codeToFetch = amendedNextHearingLocation || originalCode
+
+    if (codeToFetch) {
+      fetch(`/bichard/api/organisation-units?search=${codeToFetch}`)
+        .then((response) => {
+          if (!response.ok) {
+            console.log("Failed to fetch initial organisation")
+          }
+          return response.json()
+        })
+        .then((data) => {
+          if (Array.isArray(data)) {
+            setOrganisations((prevOrgs) => {
+              const newOrgs = [...prevOrgs]
+              data.forEach((org) => {
+                if (!newOrgs.some((o) => o.fullOrganisationCode === org.fullOrganisationCode)) {
+                  newOrgs.push(org)
+                }
+              })
+              return newOrgs
+            })
+          }
+        })
+        .catch((error) => console.error("Error fetching organisation name:", error))
+    }
+  }, [amendedNextHearingLocation, originalCode])
+
   const isValidNhl = isValidNextHearingLocation(amendedNextHearingLocation, organisations)
   const isEditable = isCaseEditable && hasNextHearingLocationException(exceptions)
 
@@ -48,7 +78,7 @@ export const NextHearingLocationField = ({
       className={"next-hearing-location-row"}
       label="Next hearing location"
       hasExceptions={hasNextHearingLocationException(exceptions)}
-      value={getDisplayValue(result.NextResultSourceOrganisation?.OrganisationUnitCode)}
+      value={getDisplayValue(originalCode)}
       updatedValue={getDisplayValue(amendedNextHearingLocation)}
       isEditable={isEditable}
       inputLabel="Enter next hearing location"
@@ -56,7 +86,7 @@ export const NextHearingLocationField = ({
       htmlFor={"next-hearing-location"}
     >
       <OrganisationUnitTypeahead
-        value={amendedNextHearingLocation || result.NextResultSourceOrganisation?.OrganisationUnitCode || undefined}
+        value={amendedNextHearingLocation || originalCode || undefined}
         resultIndex={resultIndex}
         offenceIndex={offenceIndex}
         setOrganisations={setOrganisations}
