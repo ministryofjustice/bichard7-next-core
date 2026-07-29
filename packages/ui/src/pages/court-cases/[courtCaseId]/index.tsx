@@ -2,6 +2,10 @@ import { OrganisationUnitsProvider } from "@/context/OrganisationUnitsContext"
 import apiLogger from "@/services/api/apiLogger"
 import OrganisationUnitApiResponse from "@/types/OrganisationUnitApiResponse"
 import Permission from "@moj-bichard7/common/types/Permission"
+import searchCourtOrganisationUnits, {
+  getFullOrganisationCode,
+  getFullOrganisationName
+} from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
 import Layout from "components/Layout"
 import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseContext"
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
@@ -269,26 +273,12 @@ export const getServerSideProps = withMultipleServerSideProps(
       ? (apiCase as DisplayFullCourtCase)
       : courtCaseToDisplayFullCourtCaseDto(courtCase as CourtCase, currentUser)
 
-    let orgs = [] as OrganisationUnitApiResponse
-    const fetchOrganisations = async () => {
-      const organisationUnitsResponse = await fetch("/bichard/api/organisation-units")
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP Error: ${response.status}`)
-          }
-
-          return response.json() as Promise<OrganisationUnitApiResponse>
-        })
-        .catch((error) => error as Error)
-
-      if (isError(organisationUnitsResponse)) {
-        return
-      }
-
-      orgs = organisationUnitsResponse
-    }
-
-    fetchOrganisations()
+    const organisationUnits: OrganisationUnitApiResponse = searchCourtOrganisationUnits("")
+      .map((ou) => ({
+        fullOrganisationCode: getFullOrganisationCode(ou),
+        fullOrganisationName: getFullOrganisationName(ou)
+      }))
+      .slice(0, 20)
 
     return {
       props: {
@@ -302,7 +292,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser),
         displaySwitchingSurveyFeedback: shouldShowSwitchingFeedbackForm(lastSwitchingFormSubmission ?? new Date(0)),
         allIssuesCleared: allIssuesCleared(caseDto, triggersToResolve, currentUser),
-        organisationUnits: orgs
+        organisationUnits: organisationUnits
       }
     }
   }
