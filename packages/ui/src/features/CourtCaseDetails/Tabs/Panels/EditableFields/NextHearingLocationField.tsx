@@ -29,29 +29,26 @@ export const NextHearingLocationField = ({
   const { amendments } = useCourtCase()
   const amendedNextHearingLocation = getNextHearingLocationValue(amendments, offenceIndex, resultIndex) ?? ""
   const [isNhlSaved, setIsNhlSaved] = useState<boolean>(false)
+  const [loadingOrganisations, setLoadingOrganisations] = useState<boolean>(true)
   const [organisations, setOrganisations] = useState<OrganisationUnitApiResponse>([])
   const [isNhlChanged, setIsNhlChanged] = useState<boolean>(false)
 
   const originalCode = result.NextResultSourceOrganisation?.OrganisationUnitCode
 
-  console.log("amendedNextHearingLocation", amendedNextHearingLocation)
-  console.log("originalCode", originalCode)
-
   useEffect(() => {
-    if (organisations.length === 0) {
-      fetch(`/bichard/api/organisation-units`)
-        .then((response) => {
-          if (!response.ok) {
-            console.log("Failed to fetch initial organisation")
-          }
-          return response.json()
-        })
-        .then((data) => {
-          if (Array.isArray(data)) {
-            setOrganisations(data)
-          }
-        })
-        .catch((error) => console.error("Error fetching organisation name:", error))
+    if (loadingOrganisations) {
+      const fetchOrganisations = async () => {
+        fetch(`/bichard/api/organisation-units`)
+          .then((data) => {
+            if (Array.isArray(data)) {
+              setOrganisations(data)
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching organisation name:", error)
+          })
+      }
+      fetchOrganisations().finally(() => setLoadingOrganisations(false))
     }
   }, [organisations])
 
@@ -66,8 +63,6 @@ export const NextHearingLocationField = ({
     return matchingOrg ? `${code} - ${matchingOrg.fullOrganisationName}` : code
   }
 
-  const tmpCode = isValidNhl ? originalCode : undefined
-
   return (
     <EditableFieldRow
       className={"next-hearing-location-row"}
@@ -81,7 +76,7 @@ export const NextHearingLocationField = ({
       htmlFor={"next-hearing-location"}
     >
       <OrganisationUnitTypeahead
-        value={amendedNextHearingLocation || tmpCode || undefined}
+        value={isValidNhl ? amendedNextHearingLocation || originalCode || undefined : undefined}
         resultIndex={resultIndex}
         offenceIndex={offenceIndex}
         setOrganisations={setOrganisations}
