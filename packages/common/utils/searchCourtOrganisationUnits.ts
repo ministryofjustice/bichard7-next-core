@@ -39,7 +39,7 @@ const findInSortedCourtOrganisationUnits = (keyword: string) =>
 
 const searchCourtOrganisationUnits = (keyword: string): OrganisationUnit[] => {
   if (keyword === "") {
-    return []
+    return sortedCourtOrganisationUnits
   }
 
   const matched = new RegExp(ORGANISATION_UNIT_REGEX).exec(keyword)

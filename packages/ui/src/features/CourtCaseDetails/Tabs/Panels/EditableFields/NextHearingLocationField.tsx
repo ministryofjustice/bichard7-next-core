@@ -34,11 +34,12 @@ export const NextHearingLocationField = ({
 
   const originalCode = result.NextResultSourceOrganisation?.OrganisationUnitCode
 
-  useEffect(() => {
-    const codeToFetch = amendedNextHearingLocation || originalCode
+  console.log("amendedNextHearingLocation", amendedNextHearingLocation)
+  console.log("originalCode", originalCode)
 
-    if (codeToFetch) {
-      fetch(`/bichard/api/organisation-units?search=${codeToFetch}`)
+  useEffect(() => {
+    if (organisations.length === 0) {
+      fetch(`/bichard/api/organisation-units`)
         .then((response) => {
           if (!response.ok) {
             console.log("Failed to fetch initial organisation")
@@ -47,20 +48,12 @@ export const NextHearingLocationField = ({
         })
         .then((data) => {
           if (Array.isArray(data)) {
-            setOrganisations((prevOrgs) => {
-              const newOrgs = [...prevOrgs]
-              data.forEach((org) => {
-                if (!newOrgs.some((o) => o.fullOrganisationCode === org.fullOrganisationCode)) {
-                  newOrgs.push(org)
-                }
-              })
-              return newOrgs
-            })
+            setOrganisations(data)
           }
         })
         .catch((error) => console.error("Error fetching organisation name:", error))
     }
-  }, [amendedNextHearingLocation, originalCode])
+  }, [organisations])
 
   const isValidNhl = isValidNextHearingLocation(amendedNextHearingLocation, organisations)
   const isEditable = isCaseEditable && hasNextHearingLocationException(exceptions)
@@ -72,6 +65,8 @@ export const NextHearingLocationField = ({
     const matchingOrg = organisations.find((org) => org.fullOrganisationCode === code)
     return matchingOrg ? `${code} - ${matchingOrg.fullOrganisationName}` : code
   }
+
+  const tmpCode = isValidNhl ? originalCode : undefined
 
   return (
     <EditableFieldRow
@@ -86,7 +81,7 @@ export const NextHearingLocationField = ({
       htmlFor={"next-hearing-location"}
     >
       <OrganisationUnitTypeahead
-        value={amendedNextHearingLocation || originalCode || undefined}
+        value={amendedNextHearingLocation || tmpCode || undefined}
         resultIndex={resultIndex}
         offenceIndex={offenceIndex}
         setOrganisations={setOrganisations}
