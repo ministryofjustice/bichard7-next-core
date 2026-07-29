@@ -74,4 +74,4 @@ Feature: 433 - Next Hearing location Next UI
 		Then I reload the page
 			And I click the "Offences" tab
 			And I view offence with text "Aggravated vehicle taking - ( driver did not take ) and vehicle damage of £5000 or over"
-			And I see the correction for "Next Hearing location" to "B21XA00"
+			And I see the correction for "Next Hearing location" to "B21XA00 - Magistrates' Courts Staffordshire AIT Stoke-on-Trent"
