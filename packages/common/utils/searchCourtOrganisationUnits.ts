@@ -27,7 +27,7 @@ const courtOrganisationUnits: OrganisationUnit[] = OrganisationUnits.filter(
   (organisationUnit) => organisationUnit.topLevelName !== "Police Service" && /\S/.test(organisationUnit.thirdLevelName)
 )
 
-const sortedCourtOrganisationUnits = sortBy(
+export const sortedCourtOrganisationUnits = sortBy(
   courtOrganisationUnits,
   (organisationUnit) => organisationUnit.thirdLevelName
 )
