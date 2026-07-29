@@ -78,6 +78,11 @@ export const NextHearingLocationField = ({
   const rawCode = amendedNextHearingLocation || originalCode || undefined
   const typeaheadValue = isValidNhl ? rawCode : undefined
 
+  const selectedOrg = organisations.find((org) => org.fullOrganisationCode === typeaheadValue)
+  const displayValue = selectedOrg
+    ? `${selectedOrg.fullOrganisationCode} - ${selectedOrg.fullOrganisationName}`
+    : undefined
+
   return (
     <EditableFieldRow
       className={"next-hearing-location-row"}
@@ -91,7 +96,7 @@ export const NextHearingLocationField = ({
       htmlFor={"next-hearing-location"}
     >
       <OrganisationUnitTypeahead
-        value={typeaheadValue}
+        value={displayValue}
         resultIndex={resultIndex}
         offenceIndex={offenceIndex}
         setOrganisations={setOrganisations}
