@@ -506,6 +506,7 @@ jobs:
           image_name: s3-web-proxy
           dockerfile: packages/s3-web-proxy/Dockerfile
           cache_key: buildkit-s3-web-proxy
+          lockfile: packages/s3-web-proxy/s3-server/package-lock.json
       - run:
           name: Save Docker image
           command: |
