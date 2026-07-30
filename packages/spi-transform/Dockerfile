@@ -19,9 +19,7 @@ RUN --mount=from=uv,source=/uv,target=/bin/uv \
     --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv venv .venv && \
-    uv export --frozen --no-dev -o requirements.txt && \
-    .venv/bin/uv pip install -r requirements.txt
+    uv sync --frozen --no-dev --no-install-project
 
 # 2. Copy source code into current directory (.) and install package
 COPY pyproject.toml README.md* ./
@@ -29,7 +27,7 @@ COPY ./src ./src
 
 RUN --mount=from=uv,source=/uv,target=/bin/uv \
     --mount=type=cache,target=/root/.cache/uv \
-    .venv/bin/uv pip install --no-deps .
+    uv pip install --no-deps .
 
 # ------------------------------------------------------------------------------
 # Stage 2: Final lightweight runtime stage
@@ -46,4 +44,4 @@ ENV PATH="/app/.venv/bin:$PATH" \
 COPY --from=builder /app/.venv ./.venv
 
 # Run the entrypoint module
-CMD ["spi_transform"]
+CMD ["spi-transform"]
