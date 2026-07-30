@@ -98,7 +98,7 @@ export const CaseSchema = z.object({
   triggers: z.array(TriggerSchema).optional(),
   triggerStatus: z.number().nullable(),
   updatedAho: z.string().nullable(),
-  updatedHearingOutcome: unvalidatedHearingOutcomeSchema.nullable(),
+  updatedHearingOutcome: annotatedHearingOutcomeOrPncUpdateDatasetSchema.nullable(),
   userUpdatedFlag: z.number()
 })
 
