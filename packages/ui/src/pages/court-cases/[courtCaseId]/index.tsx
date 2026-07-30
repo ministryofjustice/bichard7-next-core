@@ -1,4 +1,4 @@
-import { OrganisationUnitsProvider } from "@/context/OrganisationUnitsContext"
+import { OrganisationUnitsContext, OrganisationUnitsContextType } from "@/context/OrganisationUnitsContext"
 import apiLogger from "@/services/api/apiLogger"
 import OrganisationUnitApiResponse from "@/types/OrganisationUnitApiResponse"
 import Permission from "@moj-bichard7/common/types/Permission"
@@ -327,6 +327,7 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
   const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
   const courtCaseContext = useCourtCaseContextState(courtCase)
   const [previousPathContext] = useState<PreviousPathContextType>({ previousPath })
+  const [organisationUnitsContext] = useState<OrganisationUnitsContextType>({ organisationUnits })
 
   useEffect(() => {
     setCookie(caseDetailsCookieName, `${courtCase.errorId}?previousPath=${encodeURIComponent(previousPath)}`, {
@@ -344,7 +345,7 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
         <CurrentUserContext.Provider value={currentUserContext}>
           <CourtCaseContext.Provider value={courtCaseContext}>
             <PreviousPathContext.Provider value={previousPathContext}>
-              <OrganisationUnitsProvider organisationUnits={organisationUnits}>
+              <OrganisationUnitsContext.Provider value={organisationUnitsContext}>
                 <Layout
                   bichardSwitch={{
                     display: true,
@@ -360,7 +361,7 @@ const CourtCaseDetailsPage: NextPage<Props> = ({
                     allIssuesCleared={allIssuesCleared}
                   />
                 </Layout>
-              </OrganisationUnitsProvider>
+              </OrganisationUnitsContext.Provider>
             </PreviousPathContext.Provider>
           </CourtCaseContext.Provider>
         </CurrentUserContext.Provider>

@@ -48,9 +48,9 @@ export const NextHearingLocationField = ({
   }
 
   const rawCode = amendedNextHearingLocation || originalCode || undefined
-  const typeaheadValue = isValidNhl ? rawCode : undefined
+  const validatedCode = isValidNhl ? rawCode : undefined
 
-  const selectedOrg = organisations.find((org) => org.fullOrganisationCode === typeaheadValue)
+  const selectedOrg = organisations.find((org) => org.fullOrganisationCode === validatedCode)
   const displayValue = selectedOrg
     ? `${selectedOrg.fullOrganisationCode} - ${selectedOrg.fullOrganisationName}`
     : undefined
