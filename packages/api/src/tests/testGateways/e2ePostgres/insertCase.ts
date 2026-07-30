@@ -2,23 +2,21 @@ import type { CaseRow } from "@moj-bichard7/common/types/Case"
 import type postgres from "postgres"
 
 export default async function (sql: postgres.Sql, caseRow: CaseRow): Promise<CaseRow> {
-  if (
-    !(
-      caseRow.annotated_msg ||
-      caseRow.court_reference ||
-      caseRow.create_ts ||
-      caseRow.error_count ||
-      caseRow.error_report ||
-      caseRow.is_urgent ||
-      caseRow.message_id ||
-      caseRow.msg_received_ts ||
-      caseRow.org_for_police_filter ||
-      caseRow.phase ||
-      caseRow.total_pnc_failure_resubmissions ||
-      caseRow.trigger_count ||
-      caseRow.user_updated_flag
-    )
-  ) {
+  if (!(
+    caseRow.annotated_msg ||
+    caseRow.court_reference ||
+    caseRow.create_ts ||
+    caseRow.error_count ||
+    caseRow.error_report ||
+    caseRow.is_urgent ||
+    caseRow.message_id ||
+    caseRow.msg_received_ts ||
+    caseRow.org_for_police_filter ||
+    caseRow.phase ||
+    caseRow.total_pnc_failure_resubmissions ||
+    caseRow.trigger_count ||
+    caseRow.user_updated_flag
+  )) {
     throw new Error("Missing required attributes")
   }
 
