@@ -7,10 +7,7 @@ import type { Relation } from "typeorm"
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from "typeorm"
 
 import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
-import type { ExceptionQuality } from "@moj-bichard7/common/types/ExceptionQuality"
-import type { TriggerQuality } from "@moj-bichard7/common/types/TriggerQuality"
 
-import Permission from "@moj-bichard7/common/types/Permission"
 import Note from "./Note"
 import Trigger from "./Trigger"
 import User from "./User"
