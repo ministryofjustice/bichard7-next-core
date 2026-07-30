@@ -229,8 +229,12 @@ commands:
           name: Rotate cache for << parameters.image_name >>
           when: always
           command: |
-            rm -rf /tmp/buildx-cache-<< parameters.image_name >>
-            mv /tmp/buildx-cache-<< parameters.image_name >>-new /tmp/buildx-cache-<< parameters.image_name >>
+            if [ -d "/tmp/buildx-cache-<< parameters.image_name >>-new" ]; then
+              rm -rf /tmp/buildx-cache-<< parameters.image_name >>
+              mv /tmp/buildx-cache-<< parameters.image_name >>-new /tmp/buildx-cache-<< parameters.image_name >>
+            else
+              echo "No new cache was generated during build, skipping rotation."
+            fi
       - save_cache:
           name: Save BuildKit cache for << parameters.image_name >>
           key: << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "<< parameters.lockfile >>" }}-{{ .BuildNum }}
@@ -506,7 +510,6 @@ jobs:
           image_name: s3-web-proxy
           dockerfile: packages/s3-web-proxy/Dockerfile
           cache_key: buildkit-s3-web-proxy
-          lockfile: packages/s3-web-proxy/s3-server/package-lock.json
       - run:
           name: Save Docker image
           command: |
