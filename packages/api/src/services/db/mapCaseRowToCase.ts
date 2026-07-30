@@ -25,6 +25,7 @@ const mapCaseRowToCase = (caseRow: CaseRow): Case => ({
   errorResolvedAt: caseRow.error_resolved_ts,
   errorResolvedBy: caseRow.error_resolved_by,
   errorStatus: caseRow.error_status,
+  hearingOutcome: caseRow.hearing_outcome,
   isUrgent: caseRow.is_urgent,
   lastPncFailureResubmissionAt: caseRow.last_pnc_failure_resubmission_ts,
   messageId: caseRow.message_id,
@@ -46,6 +47,7 @@ const mapCaseRowToCase = (caseRow: CaseRow): Case => ({
   triggers: caseRow.triggers?.map(mapTriggerRowToTrigger) ?? [],
   triggerStatus: caseRow.trigger_status,
   updatedAho: caseRow.updated_msg,
+  updatedHearingOutcome: caseRow.updated_hearing_outcome,
   userUpdatedFlag: caseRow.user_updated_flag
 })
 

@@ -34,6 +34,7 @@ export const convertCaseToCaseDto = (
     aho,
     courtCode: caseRowForDto.court_code,
     courtReference: caseRowForDto.court_reference,
+    hearingOutcome: caseRowForDto.hearing_outcome,
     orgForPoliceFilter: caseRowForDto.org_for_police_filter.trim(),
     phase: caseRowForDto.phase,
     updatedHearingOutcome: isEmpty(updatedAhoResult) ? null : updatedAhoResult

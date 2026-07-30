@@ -58,6 +58,7 @@ export async function* warrants(
       el.court_name,
       el.defendant_name,
       el.error_id,
+      el.hearing_outcome,
       el.msg_received_ts,
       el.ptiurn,
       at.triggers

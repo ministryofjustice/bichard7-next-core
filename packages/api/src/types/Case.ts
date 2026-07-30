@@ -1,7 +1,14 @@
 import type { Case, CaseRow } from "@moj-bichard7/common/types/Case"
 
 export type CaseData =
-  "aho" | "courtCode" | "courtReference" | "isUrgent" | "orgForPoliceFilter" | "phase" | "updatedAho" | CaseDataIndex
+  | "aho"
+  | "courtCode"
+  | "courtReference"
+  | "isUrgent"
+  | "orgForPoliceFilter"
+  | "phase"
+  | "updatedAho"
+  | CaseDataIndex
 
 export type CaseDataForDto = FullnameFields & Pick<Case, CaseData>
 
@@ -15,9 +22,11 @@ export type CaseDataRow =
   | "annotated_msg"
   | "court_code"
   | "court_reference"
+  | "hearing_outcome"
   | "is_urgent"
   | "org_for_police_filter"
   | "phase"
+  | "updated_hearing_outcome"
   | "updated_msg"
   | CaseDataIndexRow
 
