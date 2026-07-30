@@ -6,7 +6,6 @@ import ErrorMessage from "components/EditableFields/ErrorMessage"
 import OrganisationUnitTypeahead from "components/Typeaheads/OrganisationUnitTypeahead"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useState } from "react"
-import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
 import { Exception } from "types/exceptions"
 import getNextHearingLocationValue from "utils/amendments/getAmendmentValues/getNextHearingLocationValue"
 import hasNextHearingLocationException from "utils/exceptions/hasNextHearingLocationException"
@@ -31,29 +30,23 @@ export const NextHearingLocationField = ({
   const { organisationUnits } = useOrganisationUnits()
   const amendedNextHearingLocation = getNextHearingLocationValue(amendments, offenceIndex, resultIndex) ?? ""
   const [isNhlSaved, setIsNhlSaved] = useState<boolean>(false)
-  const [organisations, setOrganisations] = useState<OrganisationUnitApiResponse>(organisationUnits)
   const [isNhlChanged, setIsNhlChanged] = useState<boolean>(false)
 
   const originalCode = result.NextResultSourceOrganisation?.OrganisationUnitCode
 
-  const isValidNhl = isValidNextHearingLocation(amendedNextHearingLocation, organisations)
+  const isValidNhl = isValidNextHearingLocation(amendedNextHearingLocation, organisationUnits)
   const isEditable = isCaseEditable && hasNextHearingLocationException(exceptions)
 
   const getDisplayValue = (code?: string | null) => {
     if (!code) {
       return ""
     }
-    const matchingOrg = organisations.find((org) => org.fullOrganisationCode === code)
+    const matchingOrg = organisationUnits.find((org) => org.fullOrganisationCode === code)
     return matchingOrg ? `${code} - ${matchingOrg.fullOrganisationName}` : code
   }
 
   const rawCode = amendedNextHearingLocation || originalCode || undefined
   const validatedCode = isValidNhl ? rawCode : undefined
-
-  const selectedOrg = organisations.find((org) => org.fullOrganisationCode === validatedCode)
-  const displayValue = selectedOrg
-    ? `${selectedOrg.fullOrganisationCode} - ${selectedOrg.fullOrganisationName}`
-    : undefined
 
   return (
     <EditableFieldRow
@@ -68,10 +61,9 @@ export const NextHearingLocationField = ({
       htmlFor={"next-hearing-location"}
     >
       <OrganisationUnitTypeahead
-        value={displayValue}
+        value={getDisplayValue(validatedCode)}
         resultIndex={resultIndex}
         offenceIndex={offenceIndex}
-        setOrganisations={setOrganisations}
         setChanged={setIsNhlChanged}
         setSaved={setIsNhlSaved}
       />

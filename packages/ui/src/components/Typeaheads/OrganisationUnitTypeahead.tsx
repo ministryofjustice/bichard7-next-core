@@ -9,7 +9,6 @@ interface Props {
   resultIndex: number
   offenceIndex: number
   value?: string
-  setOrganisations?: (OrganisationUnitApiResponse: OrganisationUnitApiResponse) => void
   setChanged?: (changed: boolean) => void
   setSaved?: (changed: boolean) => void
 }
@@ -18,42 +17,34 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
   value,
   resultIndex,
   offenceIndex,
-  setOrganisations,
   setChanged,
   setSaved
 }: Props) => {
   const { amend } = useCourtCase()
   const [inputItems, setInputItems] = useState<OrganisationUnitApiResponse>([])
 
-  const fetchItems = useCallback(
-    async (searchStringParam?: string) => {
-      const query = new URLSearchParams({ search: searchStringParam ?? "" })
+  const fetchItems = useCallback(async (searchStringParam?: string) => {
+    const query = new URLSearchParams({ search: searchStringParam ?? "" })
 
-      const queryString = query.toString()
-      const url = queryString ? `/bichard/api/organisation-units?${queryString}` : `/bichard/api/organisation-units`
+    const queryString = query.toString()
+    const url = queryString ? `/bichard/api/organisation-units?${queryString}` : `/bichard/api/organisation-units`
 
-      const organisationUnitsResponse = await fetch(url)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP Error: ${response.status}`)
-          }
+    const organisationUnitsResponse = await fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP Error: ${response.status}`)
+        }
 
-          return response.json() as Promise<OrganisationUnitApiResponse>
-        })
-        .catch((error) => error as Error)
+        return response.json() as Promise<OrganisationUnitApiResponse>
+      })
+      .catch((error) => error as Error)
 
-      if (isError(organisationUnitsResponse)) {
-        return
-      }
+    if (isError(organisationUnitsResponse)) {
+      return
+    }
 
-      setInputItems(organisationUnitsResponse)
-
-      if (setOrganisations) {
-        setOrganisations(organisationUnitsResponse)
-      }
-    },
-    [setOrganisations]
-  )
+    setInputItems(organisationUnitsResponse)
+  }, [])
 
   const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue, setInputValue } =
     useCombobox({
