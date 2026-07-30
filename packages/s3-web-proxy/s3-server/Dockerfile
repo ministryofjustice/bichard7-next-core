@@ -15,8 +15,7 @@ WORKDIR /opt/s3-server/
 
 # Install node and socat
 
-RUN apk-install nodejs socat
-
+RUN yum update -y && yum install -y socat
 
 
 # Install s3-server
