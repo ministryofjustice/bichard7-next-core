@@ -1,0 +1,8 @@
+---
+version: 0.2
+phases:
+  build:
+    commands:
+      - set -ev
+      - cd ./S3_Web_Proxy
+      - /bin/bash ./scripts/build_docker.sh
