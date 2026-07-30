@@ -1,8 +1,17 @@
+# python
+.venv
+.ruff_cache
+__pycache__
+*.pyc
+
+
+# misc
 build
 node_modules
 .eslintcache
 .vscode
 .idea
+.vim-session
 
 dist
 
