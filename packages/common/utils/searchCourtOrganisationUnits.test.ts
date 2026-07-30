@@ -5,7 +5,7 @@ import searchCourtOrganisationUnits, {
 } from "./searchCourtOrganisationUnits"
 
 describe("searchCourtOrganisationUnits", () => {
-  it("Should return an empty array when search keyword is an empty string", () => {
+  it("Should return an array with all organisation units when search keyword is an empty string", () => {
     expect(searchCourtOrganisationUnits("")).toHaveLength(sortedCourtOrganisationUnits.length)
   })
 
