@@ -497,7 +497,9 @@ jobs:
     steps:
       - unless:
           condition:
-            <<: *any_change
+            or:
+             - << pipeline.parameters.circleci-changes >>
+             - << pipeline.parameters.s3-web-proxy-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
