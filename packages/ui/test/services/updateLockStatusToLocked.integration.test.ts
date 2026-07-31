@@ -1,8 +1,7 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
-import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
-import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 
 import type User from "services/entities/User"
 import type { DataSource } from "typeorm"
@@ -12,7 +11,6 @@ import getCourtCase from "../../src/services/getCourtCase"
 import getDataSource from "../../src/services/getDataSource"
 import updateLockStatusToLocked from "../../src/services/updateLockStatusToLocked"
 import { isError } from "../../src/types/Result"
-import "../helpers/jest-extensions"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCases } from "../utils/insertCourtCases"
 
@@ -260,7 +258,7 @@ describe("Update lock status to locked", () => {
       })
 
       const actualCourtCase = await getCourtCase(dataSource, inputCourtCase.errorId)
-      expect(actualCourtCase).toMatchJson(expectedCourtCase)
+      expect(actualCourtCase).toStrictEqual(expectedCourtCase)
       expect(events).toStrictEqual(expectedEvents)
     }
   )

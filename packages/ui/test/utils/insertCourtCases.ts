@@ -4,7 +4,6 @@ import { randomUUID } from "crypto"
 import fs from "fs"
 
 import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
-import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 
 import type Note from "services/entities/Note"
 import type Trigger from "services/entities/Trigger"
@@ -50,7 +49,7 @@ const getDummyCourtCase = async (overrides?: Partial<CourtCase>): Promise<CourtC
   const hearingOutcome =
     overrides?.hearingOutcome ??
     (overrides?.phase === 2 ? getAnnotatedPncUpdateDatasetXml() : DummyMultipleOffencesAho.hearingOutcomeXml)
-  const hearingOutcomeJson = parseHearingOutcome(hearingOutcome)
+  const hearingOutcomeJson = JSON.parse(JSON.stringify(parseHearingOutcome(hearingOutcome)))
 
   return (await getDataSource()).getRepository(CourtCase).create({
     ...DummyCourtCase,

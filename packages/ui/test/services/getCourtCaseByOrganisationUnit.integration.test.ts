@@ -10,12 +10,7 @@ import type User from "services/entities/User"
 import getCourtCaseByOrganisationUnit from "services/getCourtCaseByOrganisationUnit"
 import getDataSource from "services/getDataSource"
 import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTriggersQuery"
-import type { DataSource } from "typeorm"
-import CourtCase from "../../src/services/entities/CourtCase"
-import getCourtCaseByOrganisationUnit from "../../src/services/getCourtCaseByOrganisationUnit"
-import getDataSource from "../../src/services/getDataSource"
 import { isError } from "../../src/types/Result"
-import "../helpers/jest-extensions"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCases } from "../utils/insertCourtCases"
 
@@ -285,7 +280,7 @@ describe("getCourtCaseByOrganisationUnits", () => {
     } as Partial<User> as User)
 
     expect(isError(result)).toBe(false)
-    expect(result as CourtCase).toStrictEqual(inputCourtCase)
+    expect(result).toStrictEqual(inputCourtCase)
   })
 
   it("Should return null if the court case doesn't exist", async () => {
