@@ -505,8 +505,8 @@ jobs:
       - run:
           name: Install Goss
           command: |
-            curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
-            chmod +rx /usr/local/bin/goss
+            sudo curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
+            sudo chmod +rx /usr/local/bin/goss
       - checkout
       - enable_docker_container_image_store
       - set_docker_tag
