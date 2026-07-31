@@ -223,6 +223,10 @@ def drop_sensitive_data(message: dict) -> dict:
         message["Case"]["Defendant"]["CourtIndividualDefendant"]["PersonDefendant"].pop("BasePersonDetails", None)
     except (KeyError, TypeError):
         pass  # no need to do anything if BasePersonDetails doesn't exist (e.g. for a corporate defendant)
+    try:
+        message["Case"]["Defendant"]["CourtIndividualDefendant"].pop("Address", None)
+    except (KeyError, TypeError):
+        pass
     return message
 
 
