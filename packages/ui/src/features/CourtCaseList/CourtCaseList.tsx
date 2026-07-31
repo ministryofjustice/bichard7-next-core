@@ -1,7 +1,9 @@
+import { useAnnouncer } from "@/hooks/useAnnouncer"
+import { useSortOrder } from "@/hooks/useSortOrder"
 import { RefreshButton } from "components/Buttons/RefreshButton"
 import { Table, TableHead } from "components/Table"
 import { useRouter } from "next/router"
-import React, { useEffect, useRef } from "react"
+import React, { useEffect } from "react"
 import type { QueryOrder } from "types/CaseListQueryParams"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import CourtCaseListEntry from "./CourtCaseListEntry/CourtCaseListEntry"
@@ -20,8 +22,10 @@ const CourtCaseList: React.FC<Props> = ({
   displayAuditQuality,
   courtDateReceivedDateMismatch
 }: Props) => {
-  const { query, events } = useRouter()
-  const announcerRef = useRef<HTMLDivElement>(null)
+  const { query } = useRouter()
+  const { announce, announcerRef } = useAnnouncer()
+  const sortMessage = useSortOrder()
+
   const recentlyUnlockedExceptionId = query.unlockException
   const recentlyUnlockedTriggerId = query.unlockTrigger
 
@@ -38,18 +42,10 @@ const CourtCaseList: React.FC<Props> = ({
     .join("&")
 
   useEffect(() => {
-    const handleRouteChangeComplete = () => {
-      if (announcerRef.current) {
-        const orderBy = query.orderBy as string
-        const order = query.order as QueryOrder
-        announcerRef.current.textContent = `Sorted by ${orderBy}, ${order}`
-      }
+    if (sortMessage) {
+      announce(sortMessage)
     }
-    events.on("routeChangeComplete", handleRouteChangeComplete)
-    return () => {
-      events.off("routeChangeComplete", handleRouteChangeComplete)
-    }
-  }, [query.orderBy, query.order, events])
+  }, [sortMessage, announce])
 
   return courtCases.length === 0 ? (
     <div>
