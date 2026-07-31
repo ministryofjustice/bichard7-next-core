@@ -497,11 +497,11 @@ jobs:
     steps:
       - when:
         unless:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.s3-web-proxy-changes >>
+          or:
+            - << pipeline.parameters.circleci-changes >>
+            - << pipeline.parameters.s3-web-proxy-changes >>
         steps:
-            - run: circleci-agent step halt
+          - run: circleci-agent step halt
       - run:
         name: Install Goss
         command: |
