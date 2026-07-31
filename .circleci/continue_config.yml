@@ -526,10 +526,7 @@ jobs:
       - run:
           name: Run Goss tests
           command: |
-            docker run --rm \
-              -v /usr/local/bin/goss:/usr/local/bin/goss \
-              -v $(pwd)/packages/s3-web-proxy:/goss \
-              "s3-web-proxy:${DOCKER_TAG}" goss --gossfile /goss/goss.yaml validate
+            docker run --rm --entrypoint "" -v /usr/local/bin/goss:/usr/local/bin/goss -v $(pwd)/packages/s3-web-proxy:/goss "s3-web-proxy:${DOCKER_TAG}" goss --gossfile /goss/goss.yaml validate
 
   build_ui_image:
     machine:
