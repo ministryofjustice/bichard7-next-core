@@ -495,13 +495,13 @@ jobs:
       image: ubuntu-2204:current
     resource_class: medium
     steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.s3-web-proxy-changes >>
-          steps:
-            - run: circleci-agent step halt
+      # - unless:
+      #     condition:
+      #       or:
+      #         - << pipeline.parameters.circleci-changes >>
+      #         - << pipeline.parameters.s3-web-proxy-changes >>
+      #     steps:
+      #       - run: circleci-agent step halt
       - run:
           name: Install Goss
           command: |
