@@ -495,14 +495,14 @@ jobs:
       image: ubuntu-2204:current
     resource_class: medium
     steps:
-      - unless:
-          condition:
+      - when:
+        unless:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.s3-web-proxy-changes >>
-          steps:
+        steps:
             - run: circleci-agent step halt
-            - run:
+      - run:
         name: Install Goss
         command: |
           curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
