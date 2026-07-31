@@ -218,21 +218,12 @@ def merge_dfs(
     return df_merge2
 
 
-def drop_sensitive_columns(flattened_df: pd.DataFrame) -> pd.DataFrame:
-    cols_to_drop = [
-        "Case_Defendant_CourtIndividualDefendant_Address_SimpleAddress_AddressLine1",
-        "Case_Defendant_CourtIndividualDefendant_Address_SimpleAddress_AddressLine2",
-        "Case_Defendant_CourtIndividualDefendant_Address_SimpleAddress_AddressLine3",
-        "Case_Defendant_CourtIndividualDefendant_Address_SimpleAddress_AddressLine4",
-        "Case_Defendant_CourtIndividualDefendant_Address_SimpleAddress_AddressLine5",
-        "Case_Defendant_CourtIndividualDefendant_PersonDefendant_BasePersonDetails_Birthdate",
-        "Case_Defendant_CourtIndividualDefendant_PersonDefendant_BasePersonDetails_Gender",
-        "Case_Defendant_CourtIndividualDefendant_PersonDefendant_BasePersonDetails_PersonName_PersonFamilyName",
-        "Case_Defendant_CourtIndividualDefendant_PersonDefendant_BasePersonDetails_PersonName_PersonGivenName1",
-        "Case_Defendant_CourtIndividualDefendant_PersonDefendant_BasePersonDetails_PersonName_PersonTitle",
-        "Case_Defendant_CourtIndividualDefendant_PersonDefendant_BasePersonDetails_TelephoneDetails_TelephoneNumberHome",
-    ]
-    return flattened_df.drop(columns=cols_to_drop, errors="ignore")
+def drop_sensitive_data(message: dict) -> dict:
+    try:
+        message["Case"]["Defendant"]["CourtIndividualDefendant"]["PersonDefendant"].pop("BasePersonDetails", None)
+    except (KeyError, TypeError):
+        pass  # no need to do anything if BasePersonDetails doesn't exist (e.g. for a corporate defendant)
+    return message
 
 
 def convert_column_to_list(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
@@ -273,6 +264,7 @@ def write(df: pd.DataFrame, dest_path: str) -> None:
 
 def spi_xml_to_delta_table(xml_file_path: str, delta_table_path: str):
     message = extract_session_from_spi(filename=xml_file_path)
+    message = drop_sensitive_data(message)
 
     file_uuid = extract_file_uuid(filename=xml_file_path)
     mrd = extract_message_received_datetime(filename=xml_file_path, include_time=False)
@@ -290,8 +282,6 @@ def spi_xml_to_delta_table(xml_file_path: str, delta_table_path: str):
     offences_df = flatten_offences_dict(message)
     results_df = flatten_results_dict(message)
     df = merge_dfs(base_df, offences_df, results_df)
-
-    df = drop_sensitive_columns(df)
 
     # according to the schema documentation (bichard-next-core repo) these columns can be scalar or array of str
     df = convert_column_to_list(df, "Case_Defendant_Offence_Result_ResultCodeQualifier")
