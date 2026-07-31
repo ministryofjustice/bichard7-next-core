@@ -1,10 +1,11 @@
-from deltalake import DeltaTable
 import logging
+import os
+import sys
 import traceback
 
 import boto3
 import pandas as pd
-from deltalake import write_deltalake
+from deltalake import DeltaTable, write_deltalake
 
 from spi_transform.spi_xml_to_delta_table import parse_s3_path, spi_xml_to_delta_table
 
@@ -14,12 +15,12 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-SOURCE_PATH = (
-    "s3://bichard-7-production-conductor-internal-incoming-messages/2026/07/28/17"
-)
-DEST_PATH = "s3://joe-u-delta-table-test/spi_messages"
-ERROR_PATH = "s3://joe-u-delta-table-test/spi_messages_errors"
-
+def get_required_env(var_name: str) -> str:
+    value = os.getenv(var_name)
+    if not value:
+        print(f"FATAL: Environment variable {var_name} is not set.", file=sys.stderr)
+        sys.exit(1)
+    return value
 
 def list_s3_files(s3_path: str):
     """Parses an s3:// URL and lists all XML files in that prefix."""
@@ -59,13 +60,19 @@ def optimise_delta_table(path: str) -> None:
         }
     )
 
+    logger.info(f"Optimising delta table: {path}")
     dt.optimize.compact()
+    logger.info("Compaction complete")
     dt.vacuum(dry_run=False)
-
-
+    logger.info("Vacuum complete")
+    logger.info("Optimisation complete for '{path}'")
 
 
 def main():
+    SOURCE_PATH = get_required_env("SPI_TRANSFORM_SOURCE_PATH")
+    DEST_PATH = get_required_env("SPI_TRANSFORM_DEST_PATH")
+    ERROR_PATH = get_required_env("SPI_TRANSFORM_ERROR_PATH")
+
     # 1. Get the list of XML files
     xml_files = list_s3_files(SOURCE_PATH)
 
@@ -102,7 +109,7 @@ def main():
                 mode="append",
                 schema_mode="merge",  # Automatically handles missing/new fields
             )
-    
+
     # 3. optimise
     optimise_delta_table(DEST_PATH)
     optimise_delta_table(ERROR_PATH)
