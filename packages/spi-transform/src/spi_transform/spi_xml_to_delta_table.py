@@ -104,7 +104,7 @@ def inject_metadata(
     file_uri: str,
     message_received_date: str,
     message_received_datetime: str,
-    ingest_datetime: str
+    ingest_datetime: str,
 ) -> dict:
     base_dict["_file_uuid"] = file_uuid
     base_dict["_file_uri"] = file_uri
@@ -283,7 +283,7 @@ def spi_xml_to_delta_table(xml_file_path: str, delta_table_path: str):
         file_uri=xml_file_path,
         message_received_date=mrd,
         message_received_datetime=mrdt,
-        ingest_datetime=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        ingest_datetime=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     )
 
     base_df = flatten_base_dict(message)
