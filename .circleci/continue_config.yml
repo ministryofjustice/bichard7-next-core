@@ -527,10 +527,10 @@ jobs:
           name: Run Goss tests
           command: |
             source $BASH_ENV
-            
+
             # 1. Start the container in background
             docker run -d --name test-container "s3-web-proxy:${DOCKER_TAG}"
-            
+
             # 2. Run goss validation directly on the host against the repo's goss.yaml
             goss --gossfile packages/s3-web-proxy/goss.yaml validate
 
