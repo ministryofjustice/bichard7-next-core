@@ -101,8 +101,10 @@ def extract_message_received_datetime(filename: str, include_time: bool) -> str:
 def inject_metadata(
     base_dict: dict,
     file_uuid: str,
+    file_uri: str,
     message_received_date: str,
     message_received_datetime: str,
+    ingest_datetime: str
 ) -> dict:
     base_dict["_file_uuid"] = file_uuid
     base_dict["_message_received_date"] = message_received_date
@@ -276,8 +278,10 @@ def spi_xml_to_delta_table(xml_file_path: str, delta_table_path: str):
     message = inject_metadata(
         base_dict=message,
         file_uuid=file_uuid,
+        file_uri=xml_file_path,
         message_received_date=mrd,
         message_received_datetime=mrdt,
+        ingest_datetime=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     )
 
     base_df = flatten_base_dict(message)
