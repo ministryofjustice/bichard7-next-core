@@ -528,7 +528,7 @@ jobs:
           command: |
             docker run --rm -v $(pwd)/packages/s3-web-proxy:/goss "s3-web-proxy:${DOCKER_TAG}" goss --gossfile /goss/goss.yaml validate
 
- build_ui_image:
+  build_ui_image:
     machine:
       image: ubuntu-2204:current
     resource_class: medium
