@@ -1,3 +1,4 @@
+from deltalake import DeltaTable
 import logging
 import traceback
 
@@ -45,20 +46,26 @@ def list_s3_files(s3_path: str):
         return []
 
 
+def optimise_delta_table(path: str) -> None:
+    dt = DeltaTable(path)
+    dt.alter.set_table_properties(
+        {
+            # Keep only 24 hours of history for time travel / log files
+            "delta.logRetentionDuration": "interval 24 hours",
+            # Keep deleted parquet files for 15 minutes max (safeguard for active readers)
+            "delta.deletedFileRetentionDuration": "interval 15 minutes",
+            # Checkpoint every 100 commits (crucial for a 10k/day write volume)
+            "delta.checkpointInterval": "100",
+        }
+    )
+
+    dt.optimize.compact()
+    dt.vacuum(dry_run=False)
+
+
+
+
 def main():
-    # dt = DeltaTable("./spi_messages_errors")
-
-    # dt.alter.set_table_properties(
-    #     {
-    #         # Keep only 24 hours of history for time travel / log files
-    #         "delta.logRetentionDuration": "interval 24 hours",
-    #         # Keep deleted parquet files for 15 minutes max (safeguard for active readers)
-    #         "delta.deletedFileRetentionDuration": "interval 15 minutes",
-    #         # Checkpoint every 100 commits (crucial for a 10k/day write volume)
-    #         "delta.checkpointInterval": "100",
-    #     }
-    # )
-
     # 1. Get the list of XML files
     xml_files = list_s3_files(SOURCE_PATH)
 
@@ -95,6 +102,10 @@ def main():
                 mode="append",
                 schema_mode="merge",  # Automatically handles missing/new fields
             )
+    
+    # 3. optimise
+    optimise_delta_table(DEST_PATH)
+    optimise_delta_table(ERROR_PATH)
 
 
 if __name__ == "__main__":
