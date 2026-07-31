@@ -13,7 +13,6 @@ A web page to display Bichard service health metrics
 - html
   - the content of the web page, uses embedded Javascript to read the json file updated by the lambda
 
-
 ## Development
 
 UV is used for python version and package management (see uv.lock, pyproject.toml, .python-version). To recreate the environment, ensure uv is installed on your machine, and run `uv sync`.
