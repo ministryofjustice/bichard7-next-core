@@ -524,12 +524,12 @@ jobs:
               mkdir -p images
               docker image save "s3-web-proxy:${DOCKER_TAG}" | pigz > "images/s3-web-proxy.tar.gz"
         - run:
-          name: Run Goss tests
-          shell: /bin/bash -eo pipefail
-          command: |
-            source $BASH_ENV
-            docker run -d --name test-container "s3-web-proxy:${DOCKER_TAG}"
-            goss --gossfile packages/s3-web-proxy/goss.yaml validate
+            name: Run Goss tests
+            shell: /bin/bash -eo pipefail
+            command: |
+              source $BASH_ENV
+              docker run -d --name test-container "s3-web-proxy:${DOCKER_TAG}"
+              goss --gossfile packages/s3-web-proxy/goss.yaml validate
 
   build_ui_image:
     machine:
