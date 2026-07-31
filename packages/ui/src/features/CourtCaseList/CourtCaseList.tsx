@@ -31,9 +31,7 @@ const CourtCaseList: React.FC<Props> = ({
 
   const queryString = Object.entries(query)
     .reduce((acc, [key, value]) => {
-      if (key === "unlockException" || key === "unlockTrigger") {
-        // next
-      } else {
+      if (key !== "unlockException" && key !== "unlockTrigger") {
         acc.push(`${key}=${value}`)
       }
 
