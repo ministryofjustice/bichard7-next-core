@@ -107,8 +107,10 @@ def inject_metadata(
     ingest_datetime: str
 ) -> dict:
     base_dict["_file_uuid"] = file_uuid
+    base_dict["_file_uri"] = file_uri
     base_dict["_message_received_date"] = message_received_date
     base_dict["_message_received_datetime"] = message_received_datetime
+    base_dict["_ingest_datetime"] = ingest_datetime
     return base_dict
 
 
