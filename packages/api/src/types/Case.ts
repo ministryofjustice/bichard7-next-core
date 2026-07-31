@@ -15,9 +15,11 @@ export type CaseDataRow =
   | "annotated_msg"
   | "court_code"
   | "court_reference"
+  | "hearing_outcome"
   | "is_urgent"
   | "org_for_police_filter"
   | "phase"
+  | "updated_hearing_outcome"
   | "updated_msg"
   | CaseDataIndexRow
 

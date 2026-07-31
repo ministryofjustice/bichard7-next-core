@@ -9,6 +9,7 @@ export const CaseRowForDomesticViolenceReportSchema = CaseRowSchema.pick({
   defendant_name: true,
   error_count: true,
   error_id: true,
+  hearing_outcome: true,
   msg_received_ts: true,
   ptiurn: true
 }).extend({
