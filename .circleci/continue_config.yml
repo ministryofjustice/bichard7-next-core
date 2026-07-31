@@ -491,48 +491,48 @@ jobs:
             - images
 
   build_s3_web_proxy_image:
-      machine:
-        image: ubuntu-2204:current
-      resource_class: medium
-      steps:
-        # - unless:
-        #     condition:
-        #       or:
-        #         - << pipeline.parameters.circleci-changes >>
-        #         - << pipeline.parameters.s3-web-proxy-changes >>
-        #     steps:
-        #       - run: circleci-agent step halt
-        - run:
-            name: Install Goss
-            command: |
-              sudo curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
-              sudo chmod +rx /usr/local/bin/goss
-        - checkout
-        - enable_docker_container_image_store
-        - set_docker_tag
-        - run: sudo apt-get update && sudo apt-get install -y pigz
-        - fetch_images:
-            images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-        - build_and_cache_image:
-            image_name: s3-web-proxy
-            dockerfile: packages/s3-web-proxy/Dockerfile
-            cache_key: buildkit-s3-web-proxy
-            context: packages/s3-web-proxy
-        - run:
-            name: Save Docker image
-            command: |
-              mkdir -p images
-              docker image save "s3-web-proxy:${DOCKER_TAG}" | pigz > "images/s3-web-proxy.tar.gz"
-        - run:
-            name: Run Goss tests
-            command: |
-              source $BASH_ENV
-              
-              # 1. Start the container in background
-              docker run -d --name test-container "s3-web-proxy:${DOCKER_TAG}"
-              
-              # 2. Run goss validation directly on the host against the repo's goss.yaml
-              goss --gossfile packages/s3-web-proxy/goss.yaml validate
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      # - unless:
+      #     condition:
+      #       or:
+      #         - << pipeline.parameters.circleci-changes >>
+      #         - << pipeline.parameters.s3-web-proxy-changes >>
+      #     steps:
+      #       - run: circleci-agent step halt
+      - run:
+          name: Install Goss
+          command: |
+            sudo curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
+            sudo chmod +rx /usr/local/bin/goss
+      - checkout
+      - enable_docker_container_image_store
+      - set_docker_tag
+      - run: sudo apt-get update && sudo apt-get install -y pigz
+      - fetch_images:
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
+      - build_and_cache_image:
+          image_name: s3-web-proxy
+          dockerfile: packages/s3-web-proxy/Dockerfile
+          cache_key: buildkit-s3-web-proxy
+          context: packages/s3-web-proxy
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save "s3-web-proxy:${DOCKER_TAG}" | pigz > "images/s3-web-proxy.tar.gz"
+      - run:
+          name: Run Goss tests
+          command: |
+            source $BASH_ENV
+
+            # 1. Start the container in background
+            docker run -d --name test-container "s3-web-proxy:${DOCKER_TAG}"
+
+            # 2. Run goss validation directly on the host against the repo's goss.yaml
+            goss --gossfile packages/s3-web-proxy/goss.yaml validate
 
   build_ui_image:
     machine:
