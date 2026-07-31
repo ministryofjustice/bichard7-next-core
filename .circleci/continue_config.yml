@@ -524,8 +524,14 @@ jobs:
             mkdir -p images
             docker image save "s3-web-proxy:${DOCKER_TAG}" | pigz > "images/s3-web-proxy.tar.gz"
       - run:
-          name: Run Goss tests
-          command: bash -c "docker run --rm --entrypoint '' -v /usr/local/bin/goss:/usr/local/bin/goss -v \$(pwd)/packages/s3-web-proxy:/goss s3-web-proxy:\${DOCKER_TAG} goss --gossfile /goss/goss.yaml validate"
+                name: Run Goss tests
+                command: |
+                  source $BASH_ENV
+                  echo "Testing tag: ${DOCKER_TAG}"
+                  docker run --rm --entrypoint "" \
+                    -v /usr/local/bin/goss:/usr/local/bin/goss \
+                    -v $(pwd)/packages/s3-web-proxy:/goss \
+                    "s3-web-proxy:${DOCKER_TAG}" goss --gossfile /goss/goss.yaml validate
 
   build_ui_image:
     machine:
