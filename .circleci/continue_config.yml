@@ -523,7 +523,7 @@ jobs:
           command: |
             mkdir -p images
             docker image save "s3-web-proxy:${DOCKER_TAG}" | pigz > "images/s3-web-proxy.tar.gz"
-- run:
+      - run:
           name: Run Goss tests
           command: |
             source $BASH_ENV
