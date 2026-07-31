@@ -65,6 +65,7 @@ describe("retrieve a case", () => {
       errorQualityChecked: null,
       errorReport: "HO100304||br7:ArrestSummonsNumber",
       errorStatus: "Unresolved",
+      hearingOutcome: null,
       isUrgent: 1,
       messageReceivedTimestamp: "2025-05-23T00:00:00.000Z",
       notes: [],

@@ -9,6 +9,7 @@ export const CaseRowForWarrantsReportSchema = CaseRowSchema.pick({
   court_name: true,
   defendant_name: true,
   error_id: true,
+  hearing_outcome: true,
   msg_received_ts: true,
   ptiurn: true
 }).extend({
