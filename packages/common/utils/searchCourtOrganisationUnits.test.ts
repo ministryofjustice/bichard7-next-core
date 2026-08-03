@@ -1,11 +1,12 @@
 import searchCourtOrganisationUnits, {
   getFullOrganisationName,
-  getOrganisationCodeAndName
+  getOrganisationCodeAndName,
+  sortedCourtOrganisationUnits
 } from "./searchCourtOrganisationUnits"
 
 describe("searchCourtOrganisationUnits", () => {
-  it("Should return an empty array when search keyword is an empty string", () => {
-    expect(searchCourtOrganisationUnits("")).toEqual([])
+  it("Should return an array with all organisation units when search keyword is an empty string", () => {
+    expect(searchCourtOrganisationUnits("")).toHaveLength(sortedCourtOrganisationUnits.length)
   })
 
   it("Should return one organisation unit when there is an exact match", () => {

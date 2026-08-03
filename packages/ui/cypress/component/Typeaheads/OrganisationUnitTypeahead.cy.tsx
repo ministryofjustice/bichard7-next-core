@@ -87,19 +87,16 @@ describe("OrganisationUnitTypeahead Component", () => {
     cy.get("input#next-hearing-location").should("be.visible").and("have.value", "B01EF00")
   })
 
-  it("triggers network request and sets parent organization lists on load/input", () => {
-    const setOrganisationsSpy = cy.stub().as("setOrganisations")
-
+  it("triggers network request on load/input", () => {
     cy.mount(
       <TestWrapper amendSpy={cy.stub()}>
-        <OrganisationUnitTypeahead resultIndex={0} offenceIndex={1} setOrganisations={setOrganisationsSpy} />
+        <OrganisationUnitTypeahead resultIndex={0} offenceIndex={1} />
       </TestWrapper>
     )
 
     cy.get("input#next-hearing-location").type("Magistrates")
     cy.wait("@fetchOrgUnits")
 
-    cy.get("@setOrganisations").should("have.been.calledWithMatch", [mockOrgUnits[0]])
     cy.get("ul").children("li").should("have.length", 1)
   })
 

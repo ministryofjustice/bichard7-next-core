@@ -9,7 +9,6 @@ interface Props {
   resultIndex: number
   offenceIndex: number
   value?: string
-  setOrganisations?: (OrganisationUnitApiResponse: OrganisationUnitApiResponse) => void
   setChanged?: (changed: boolean) => void
   setSaved?: (changed: boolean) => void
 }
@@ -18,62 +17,65 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
   value,
   resultIndex,
   offenceIndex,
-  setOrganisations,
   setChanged,
   setSaved
 }: Props) => {
   const { amend } = useCourtCase()
   const [inputItems, setInputItems] = useState<OrganisationUnitApiResponse>([])
 
-  const fetchItems = useCallback(
-    async (searchStringParam?: string) => {
-      const query = new URLSearchParams({ search: searchStringParam ?? "" })
+  const fetchItems = useCallback(async (searchStringParam?: string) => {
+    const query = new URLSearchParams({ search: searchStringParam ?? "" })
 
-      const queryString = query.toString()
-      const url = queryString ? `/bichard/api/organisation-units?${queryString}` : `/bichard/api/force-owner`
+    const queryString = query.toString()
+    const url = queryString ? `/bichard/api/organisation-units?${queryString}` : `/bichard/api/organisation-units`
 
-      const organisationUnitsResponse = await fetch(url)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`HTTP Error: ${response.status}`)
-          }
+    const organisationUnitsResponse = await fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP Error: ${response.status}`)
+        }
 
-          return response.json() as Promise<OrganisationUnitApiResponse>
-        })
-        .catch((error) => error as Error)
-
-      if (isError(organisationUnitsResponse)) {
-        return
-      }
-
-      setInputItems(organisationUnitsResponse)
-
-      if (setOrganisations) {
-        setOrganisations(organisationUnitsResponse)
-      }
-    },
-    [setOrganisations]
-  )
-
-  const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue } = useCombobox({
-    items: inputItems,
-
-    onInputValueChange: ({ inputValue }) => {
-      amend("nextSourceOrganisation")({
-        resultIndex: resultIndex,
-        offenceIndex: offenceIndex,
-        value: inputValue
+        return response.json() as Promise<OrganisationUnitApiResponse>
       })
-      if (setChanged) {
-        setChanged(true)
+      .catch((error) => error as Error)
+
+    if (isError(organisationUnitsResponse)) {
+      return
+    }
+
+    setInputItems(organisationUnitsResponse)
+  }, [])
+
+  const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue, setInputValue } =
+    useCombobox({
+      items: inputItems,
+      onInputValueChange: ({ inputValue }) => {
+        const codeToSave = (inputValue || "").split(" - ")[0].trim()
+
+        amend("nextSourceOrganisation")({
+          resultIndex: resultIndex,
+          offenceIndex: offenceIndex,
+          value: codeToSave
+        })
+        if (setChanged) {
+          setChanged(true)
+        }
+        if (setSaved) {
+          setSaved(false)
+        }
+      },
+      initialInputValue: value,
+      itemToString: (item) => (item ? `${item.fullOrganisationCode} - ${item.fullOrganisationName}` : "")
+    })
+
+  useEffect(() => {
+    if (value && inputItems.length > 0 && inputValue === value) {
+      const exactMatch = inputItems.find((i) => i.fullOrganisationCode === value)
+      if (exactMatch) {
+        setInputValue(`${exactMatch.fullOrganisationCode} - ${exactMatch.fullOrganisationName}`)
       }
-      if (setSaved) {
-        setSaved(false)
-      }
-    },
-    initialInputValue: value,
-    itemToString: (item) => item?.fullOrganisationCode ?? ""
-  })
+    }
+  }, [inputItems, value, inputValue, setInputValue])
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -89,8 +91,7 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
         {...getInputProps({
           className: "govuk-input",
           id: "next-hearing-location",
-          name: "next-hearing-location",
-          value
+          name: "next-hearing-location"
         })}
       />
 
@@ -103,8 +104,11 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
                   key={`${item.fullOrganisationCode}-${index}`}
                   {...getItemProps({ item, index })}
                 >
-                  {item.fullOrganisationCode}
-                  <span>{item.fullOrganisationName}</span>
+                  <span>
+                    {item.fullOrganisationCode}
+                    {" - "}
+                    {item.fullOrganisationName}
+                  </span>
                 </li>
               ))
             : null}

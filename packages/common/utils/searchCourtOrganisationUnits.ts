@@ -27,7 +27,7 @@ const courtOrganisationUnits: OrganisationUnit[] = OrganisationUnits.filter(
   (organisationUnit) => organisationUnit.topLevelName !== "Police Service" && /\S/.test(organisationUnit.thirdLevelName)
 )
 
-const sortedCourtOrganisationUnits = sortBy(
+export const sortedCourtOrganisationUnits = sortBy(
   courtOrganisationUnits,
   (organisationUnit) => organisationUnit.thirdLevelName
 )
@@ -39,7 +39,7 @@ const findInSortedCourtOrganisationUnits = (keyword: string) =>
 
 const searchCourtOrganisationUnits = (keyword: string): OrganisationUnit[] => {
   if (keyword === "") {
-    return []
+    return sortedCourtOrganisationUnits
   }
 
   const matched = new RegExp(ORGANISATION_UNIT_REGEX).exec(keyword)
