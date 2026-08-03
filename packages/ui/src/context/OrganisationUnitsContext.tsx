@@ -17,5 +17,7 @@ const useOrganisationUnits = () => {
   return context
 }
 
+OrganisationUnitsContext.displayName = "OrganisationUnitsContext"
+
 export { OrganisationUnitsContext, useOrganisationUnits }
 export type { OrganisationUnitsContextType }
