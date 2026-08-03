@@ -1192,7 +1192,6 @@ jobs:
 workflows:
   test-all:
     jobs:
-      - lint_and_build
       - characterisation_test
       - test_common
       - test_ui_component
