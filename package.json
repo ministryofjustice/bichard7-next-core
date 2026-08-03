@@ -60,8 +60,7 @@
     "packages/message-forwarder",
     "packages/uat-data",
     "packages/ui",
-    "packages/user-service",
-    "packages/s3-web-proxy/s3-server"
+    "packages/user-service"
   ],
   "license": "MIT",
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
