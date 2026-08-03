@@ -3,7 +3,7 @@ FROM ${BUILD_IMAGE} AS base
 
 LABEL maintainer="CJSE"
 
-#########################################################F
+#########################################################
 FROM base AS deps
 
 USER root
@@ -34,6 +34,18 @@ RUN npm run build:api
 
 RUN npm prune --omit=dev --workspaces --include-root
 
+# Find and copy swagger-ui static files to a predictable location for the runner
+RUN if [ -d "/core/packages/api/node_modules/@fastify/swagger-ui/static" ]; then \
+      echo "Found swagger static in workspace..." && \
+      cp -r /core/packages/api/node_modules/@fastify/swagger-ui/static /core/swagger-static-tmp; \
+    elif [ -d "/core/node_modules/@fastify/swagger-ui/static" ]; then \
+      echo "Found swagger static in root..." && \
+      cp -r /core/node_modules/@fastify/swagger-ui/static /core/swagger-static-tmp; \
+    else \
+      echo "ERROR: @fastify/swagger-ui static files not found in either location!" >&2 && \
+      exit 1; \
+    fi
+
 #########################################################
 FROM base AS runner
 
@@ -59,7 +71,7 @@ COPY --from=builder /core/packages/api/node_modules ./packages/api/node_modules
 
 WORKDIR /core/packages/api
 
-COPY --from=builder /core/packages/api/node_modules/@fastify/swagger-ui/static ./static
+COPY --from=builder /core/swagger-static-tmp ./static
 
 RUN chgrp supervisor -R /core && \
     chmod g+rw -R /core
