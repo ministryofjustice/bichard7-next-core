@@ -24,6 +24,7 @@ export async function* domesticViolenceReport(
       el.court_date,
       el.court_name,
       el.annotated_msg,
+      el.hearing_outcome,
       el.defendant_name,
       el.ptiurn,
       el.asn,

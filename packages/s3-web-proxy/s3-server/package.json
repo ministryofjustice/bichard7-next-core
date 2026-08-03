@@ -1,0 +1,14 @@
+{
+  "name": "s3-server",
+  "version": "0.5.0",
+  "main": "./bin/server.js",
+  "bin": {
+    "s3-server": "./bin/server.js"
+  },
+  "scripts": {
+    "build": "exit 0",
+    "lint": "exit 0",
+    "test": "jest --passWithNoTests",
+    "test:goss": "bash ../build.sh"
+  }
+}

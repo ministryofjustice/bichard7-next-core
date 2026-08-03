@@ -1,6 +1,7 @@
 import { z } from "zod"
 
 import { unvalidatedHearingOutcomeSchema } from "../schemas/unvalidatedHearingOutcome"
+import { annotatedHearingOutcomeOrPncUpdateDatasetSchema } from "./AnnotatedHearingOutcomeOrPncUpdateDataset"
 import { CaseAge } from "./CaseAge"
 import { NoteDtoSchema, NoteRowSchema, NoteSchema } from "./Note"
 import { TriggerDtoSchema, TriggerRowSchema, TriggerSchema } from "./Trigger"
@@ -27,6 +28,7 @@ export const CaseRowSchema = z.object({
   error_resolved_by: z.string().max(32).nullable(),
   error_resolved_ts: z.date().nullable(),
   error_status: z.number().nullable(),
+  hearing_outcome: annotatedHearingOutcomeOrPncUpdateDatasetSchema.nullable(), // Once this column has been populated for all existing rows, we make the field required
   is_urgent: z.number(),
   last_pnc_failure_resubmission_ts: z.date().nullable(),
   message_id: z.string(),
@@ -47,6 +49,7 @@ export const CaseRowSchema = z.object({
   trigger_resolved_ts: z.date().nullable(),
   trigger_status: z.number().nullable(),
   triggers: z.array(TriggerRowSchema).optional(),
+  updated_hearing_outcome: annotatedHearingOutcomeOrPncUpdateDatasetSchema.nullable(),
   updated_msg: z.string().nullable(),
   user_updated_flag: z.number()
 })
@@ -73,6 +76,7 @@ export const CaseSchema = z.object({
   errorResolvedAt: z.date().nullable(),
   errorResolvedBy: z.string().max(32).nullable(),
   errorStatus: z.number().nullable(),
+  hearingOutcome: annotatedHearingOutcomeOrPncUpdateDatasetSchema.nullable(), // Once this column has been populated for all existing rows, we make the field required
   isUrgent: z.number(),
   lastPncFailureResubmissionAt: z.date().nullable(),
   messageId: z.string(),
@@ -94,6 +98,7 @@ export const CaseSchema = z.object({
   triggers: z.array(TriggerSchema).optional(),
   triggerStatus: z.number().nullable(),
   updatedAho: z.string().nullable(),
+  updatedHearingOutcome: annotatedHearingOutcomeOrPncUpdateDatasetSchema.nullable(),
   userUpdatedFlag: z.number()
 })
 
@@ -128,6 +133,7 @@ export const CaseDtoSchema = CaseIndexDtoSchema.and(
     aho: unvalidatedHearingOutcomeSchema,
     courtCode: z.string().nullable(),
     courtReference: z.string().optional(),
+    hearingOutcome: annotatedHearingOutcomeOrPncUpdateDatasetSchema.nullable(), // Once this column has been populated for all existing rows, we make the field required
     orgForPoliceFilter: z.string().optional(),
     phase: z.number().optional(),
     updatedHearingOutcome: unvalidatedHearingOutcomeSchema.or(z.null())
