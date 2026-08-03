@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 import traceback
+from datetime import date, datetime, timedelta
 
 import boto3
 import pandas as pd
@@ -15,6 +16,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
 def get_required_env(var_name: str) -> str:
     value = os.getenv(var_name)
     if not value:
@@ -22,7 +24,8 @@ def get_required_env(var_name: str) -> str:
         sys.exit(1)
     return value
 
-def list_s3_files(s3_path: str):
+
+def list_s3_files(s3_path: str) -> list[str]:
     """Parses an s3:// URL and lists all XML files in that prefix."""
     bucket_name, prefix = parse_s3_path(s3_path)
 
@@ -45,6 +48,36 @@ def list_s3_files(s3_path: str):
     except Exception as e:  # noqa: BLE001 # disable ruff warning: catching bare exception is fine for now
         logger.error(f"Failed to list S3 files: {e}")
         return []
+
+
+def get_prefixes_in_date_range(start_date: date, end_date: date) -> list[str]:
+    """
+    Takes start and end dates in datetime.date format, and returns a list of
+    strings in the form YYYY/MM/DD/. This is the partitioning strategy used in
+    the incoming messges s3 bucket.
+    """
+    prefixes = []
+    current_date = start_date
+    while current_date <= end_date:
+        prefixes.append(current_date.strftime("%Y/%m/%d/"))
+        current_date += timedelta(days=1)
+
+    return prefixes
+
+
+def list_s3_files_in_date_range(
+    base_path: str, start_date: str, end_date: str
+) -> list[str]:
+    start_date = datetime.strptime(start_date, "%Y-%m-%d")
+    end_date = datetime.strptime(end_date, "%Y-%m-%d")
+
+    if not base_path.endswith("/"):
+        base_path = base_path + "/"
+
+    files = []
+    for prefix in get_prefixes_in_date_range(start_date, end_date):
+        files.extend(list_s3_files(base_path + prefix))
+    return files
 
 
 def optimise_delta_table(path: str) -> None:
@@ -72,10 +105,11 @@ def main():
     SOURCE_PATH = get_required_env("SPI_TRANSFORM_SOURCE_PATH")
     DEST_PATH = get_required_env("SPI_TRANSFORM_DEST_PATH")
     ERROR_PATH = get_required_env("SPI_TRANSFORM_ERROR_PATH")
+    START_DATE = get_required_env("SPI_TRANSFORM_START_DATE")
+    END_DATE = get_required_env("SPI_TRANSFORM_END_DATE")
 
     # 1. Get the list of XML files
-    xml_files = list_s3_files(SOURCE_PATH)
-
+    xml_files = list_s3_files_in_date_range(SOURCE_PATH, START_DATE, END_DATE)
     if not xml_files:
         logger.warning(f"No XML files found at {SOURCE_PATH}")
         return
