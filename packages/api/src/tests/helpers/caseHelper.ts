@@ -29,6 +29,7 @@ const getDefaultCase = (): Case => ({
   errorResolvedAt: null,
   errorResolvedBy: "",
   errorStatus: 1,
+  hearingOutcome: null,
   isUrgent: 1,
   lastPncFailureResubmissionAt: null,
   messageId: randomUUID(),
@@ -48,6 +49,7 @@ const getDefaultCase = (): Case => ({
   triggerResolvedBy: "",
   triggerStatus: 1,
   updatedAho: null,
+  updatedHearingOutcome: null,
   userUpdatedFlag: 1
 })
 

@@ -40,6 +40,9 @@ parameters:
   characterisation-test-changes:
     type: boolean
     default: false
+  s3-web-proxy-changes:
+    type: boolean
+    default: false
 
 commands:
   fetch_images:
@@ -226,8 +229,12 @@ commands:
           name: Rotate cache for << parameters.image_name >>
           when: always
           command: |
-            rm -rf /tmp/buildx-cache-<< parameters.image_name >>
-            mv /tmp/buildx-cache-<< parameters.image_name >>-new /tmp/buildx-cache-<< parameters.image_name >>
+            if [ -d "/tmp/buildx-cache-<< parameters.image_name >>-new" ]; then
+              rm -rf /tmp/buildx-cache-<< parameters.image_name >>
+              mv /tmp/buildx-cache-<< parameters.image_name >>-new /tmp/buildx-cache-<< parameters.image_name >>
+            else
+              echo "No new cache was generated during build, skipping rotation."
+            fi
       - save_cache:
           name: Save BuildKit cache for << parameters.image_name >>
           key: << parameters.cache_key >>-{{ checksum "<< parameters.dockerfile >>" }}-{{ checksum "<< parameters.lockfile >>" }}-{{ .BuildNum }}
@@ -271,6 +278,7 @@ any_change: &any_change
     - << pipeline.parameters.common-changes >>
     - << pipeline.parameters.core-changes >>
     - << pipeline.parameters.api-changes >>
+    - << pipeline.parameters.s3-web-proxy-changes >>
     - << pipeline.parameters.env-changes >>
     - << pipeline.parameters.conductor-changes >>
     - << pipeline.parameters.message-forwarder-changes >>
@@ -481,6 +489,35 @@ jobs:
           root: .
           paths:
             - images
+
+  build_s3_web_proxy_image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.s3-web-proxy-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - enable_docker_container_image_store
+      - set_docker_tag
+      - run: sudo apt-get update && sudo apt-get install -y pigz
+      - fetch_images:
+          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
+      - build_and_cache_image:
+          image_name: s3-web-proxy
+          dockerfile: packages/s3-web-proxy/Dockerfile
+          cache_key: buildkit-s3-web-proxy
+          context: packages/s3-web-proxy
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save "s3-web-proxy:${DOCKER_TAG}" | pigz > "images/s3-web-proxy.tar.gz"
 
   build_ui_image:
     machine:
@@ -1219,6 +1256,7 @@ workflows:
       - build_ui_image
       - build_user_service_image
       - build_api_image
+      - build_s3_web_proxy_image
       - build_audit_logging_images
 
       - comparison_test:

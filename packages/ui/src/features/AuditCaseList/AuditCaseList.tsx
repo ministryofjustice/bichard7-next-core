@@ -1,9 +1,10 @@
 import type { AuditCaseDto } from "@moj-bichard7/common/types/AuditCase"
 
+import { useAnnouncer } from "@/hooks/useAnnouncer"
+import { useSortOrder } from "@/hooks/useSortOrder"
 import { RefreshButton } from "components/Buttons/RefreshButton"
 import { Table, TableHead } from "components/Table"
-import { useRouter } from "next/router"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import type { QueryOrder } from "types/CaseListQueryParams"
 import { AuditCaseListTableHeader } from "./AuditCaseListTableHeader"
 import { AuditCaseRow } from "./AuditCaseRow"
@@ -15,22 +16,14 @@ interface Props {
 }
 
 const AuditCaseList: React.FC<Props> = ({ auditId, auditCases, order = "asc" }: Props) => {
-  const { query, events } = useRouter()
-  const announcerRef = useRef<HTMLDivElement>(null)
+  const { announce, announcerRef } = useAnnouncer()
+  const sortMessage = useSortOrder()
 
   useEffect(() => {
-    const handleRouteChangeComplete = () => {
-      if (announcerRef.current) {
-        const orderBy = query.orderBy as string
-        const order = query.order as QueryOrder
-        announcerRef.current.textContent = `Sorted by ${orderBy}, ${order}`
-      }
+    if (sortMessage) {
+      announce(sortMessage)
     }
-    events.on("routeChangeComplete", handleRouteChangeComplete)
-    return () => {
-      events.off("routeChangeComplete", handleRouteChangeComplete)
-    }
-  }, [query.orderBy, query.order, events])
+  }, [sortMessage, announce])
 
   if (auditCases.length === 0) {
     return (
