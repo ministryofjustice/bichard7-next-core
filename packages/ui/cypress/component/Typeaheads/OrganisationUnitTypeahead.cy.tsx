@@ -87,6 +87,19 @@ describe("OrganisationUnitTypeahead Component", () => {
     cy.get("input#next-hearing-location").should("be.visible").and("have.value", "B01EF00")
   })
 
+  it("triggers network request on load/input", () => {
+    cy.mount(
+      <TestWrapper amendSpy={cy.stub()}>
+        <OrganisationUnitTypeahead resultIndex={0} offenceIndex={1} />
+      </TestWrapper>
+    )
+
+    cy.get("input#next-hearing-location").type("Magistrates")
+    cy.wait("@fetchOrgUnits")
+
+    cy.get("ul").children("li").should("have.length", 1)
+  })
+
   it("fires amend context updates and UI form state flags sequentially on typing updates", () => {
     const amendSpy = cy.stub().as("amendSpy")
     const setChangedSpy = cy.stub().as("setChanged")
