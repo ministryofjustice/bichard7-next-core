@@ -42,7 +42,7 @@ export const NextHearingLocationField = ({
       return ""
     }
     const matchingOrg = organisationUnits.find((org) => org.fullOrganisationCode === code)
-    return matchingOrg ? `${code} - ${matchingOrg.fullOrganisationName}` : code
+    return matchingOrg ? `${code} - ${matchingOrg.fullOrganisationName}` : `${code} - Unknown`
   }
 
   const rawCode = amendedNextHearingLocation || originalCode || undefined
