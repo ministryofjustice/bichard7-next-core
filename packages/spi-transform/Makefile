@@ -1,7 +1,7 @@
 # Variables
-AWS_ACCOUNT_ID = 439237763202
+# AWS_ACCOUNT_ID = 439237763202
+# VAULT_PROFILE  = bichard7-shared-uat
 REGION         = eu-west-2
-VAULT_PROFILE  = bichard7-shared-uat
 IMAGE_NAME     = spi-transform
 TAG            = latest
 REGISTRY       = $(AWS_ACCOUNT_ID).dkr.ecr.$(REGION).amazonaws.com
