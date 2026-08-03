@@ -1,7 +1,8 @@
 import os
+import random
 import xml.parsers.expat
 from copy import deepcopy
-from datetime import datetime
+from datetime import datetime, time
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -9,6 +10,7 @@ from urllib.parse import urlparse
 import boto3
 import pandas as pd
 import xmltodict
+from deltalake.exceptions import CommitFailedError
 from deltalake.writer import write_deltalake
 
 SPI_NAMESPACE_MAPPING = {
@@ -220,7 +222,9 @@ def merge_dfs(
 
 def drop_sensitive_data(message: dict) -> dict:
     try:
-        message["Case"]["Defendant"]["CourtIndividualDefendant"]["PersonDefendant"].pop("BasePersonDetails", None)
+        message["Case"]["Defendant"]["CourtIndividualDefendant"]["PersonDefendant"].pop(
+            "BasePersonDetails", None
+        )
     except (KeyError, TypeError):
         pass  # no need to do anything if BasePersonDetails doesn't exist (e.g. for a corporate defendant)
     try:
@@ -266,6 +270,36 @@ def write(df: pd.DataFrame, dest_path: str) -> None:
     )
 
 
+def write_with_retries(
+    df: pd.DataFrame, dest_path: str, max_retries: int = 5, initial_delay: float = 0.5
+) -> None:
+    """
+    Retries a delta lake write on CommitFailedError using exponential backoff with jitter.
+    """
+    attempt = 0
+    delay = initial_delay
+
+    while True:
+        try:
+            write(df, dest_path)
+            return
+        except CommitFailedError as e:
+            attempt += 1
+            if attempt > max_retries:
+                raise RuntimeError(
+                    f"Failed to commit to Delta table at '{dest_path}' after {max_retries} retries."
+                ) from e
+
+            current_delay = random.uniform(0, min(delay, 10.0))
+
+            print(
+                f"[Attempt {attempt}/{max_retries}] Delta Lake commit collision on '{dest_path}'. "
+                f"Retrying in {current_delay:.2f}s..."
+            )
+            time.sleep(current_delay)
+            delay *= 2.0
+
+
 def spi_xml_to_delta_table(xml_file_path: str, delta_table_path: str):
     message = extract_session_from_spi(filename=xml_file_path)
     message = drop_sensitive_data(message)
@@ -293,4 +327,4 @@ def spi_xml_to_delta_table(xml_file_path: str, delta_table_path: str):
         df, "Case_Defendant_Offence_Result_Duration_DurationStartDate"
     )
 
-    write(df, delta_table_path)
+    write_with_retries(df, delta_table_path)
