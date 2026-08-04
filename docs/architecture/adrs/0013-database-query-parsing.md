@@ -10,7 +10,7 @@ Accepted
 
 We have found issues where the data types being returned from SQL queries on our Postgres database were not
 matching our expected types. This hasn't lead to any known runtime issues but it reduces confidence in our type checking
-and will lead to a real bug eventually. 
+and will lead to a real bug eventually.
 
 At the moment we simply tell TypeScript what type the query is returned, but this is not actually validated.
 
@@ -22,7 +22,7 @@ In the above example, TypeScript will see the value of `field1` as being of type
 
 ## Decision
 
-Use Zod parsing on all SQL queries to ensure data types are validated at runtime. This should also mean that we get failing tests so 
+Use Zod parsing on all SQL queries to ensure data types are validated at runtime. This should also mean that we get failing tests so
 we should catch these issues at design time.
 
 Example:
