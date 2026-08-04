@@ -10,6 +10,7 @@ requires-python = ">=3.13"
 dependencies = [
     "boto3>=1.43.59",
     "deltalake>=1.6.2",
+    "duckdb>=1.5.5",
     "pandas>=3.0.5",
     "pyarrow>=25.0.0",
     "xmltodict>=1.0.4",

@@ -2,13 +2,20 @@ import logging
 import os
 import sys
 import traceback
+from collections.abc import Generator
 from datetime import date, datetime, timedelta
+from typing import Any
 
 import boto3
+import duckdb
 import pandas as pd
 from deltalake import DeltaTable, write_deltalake
 
-from spi_transform.spi_xml_to_delta_table import parse_s3_path, spi_xml_to_delta_table
+from spi_transform.spi_xml_to_delta_table import (
+    parse_s3_path,
+    spi_xml_to_df,
+    write_with_retries,
+)
 
 # Configure logging
 logging.basicConfig(
@@ -23,6 +30,36 @@ def get_required_env(var_name: str) -> str:
         print(f"FATAL: Environment variable {var_name} is not set.", file=sys.stderr)
         sys.exit(1)
     return value
+
+
+def query_duckdb(sql: str) -> list[tuple[Any, ...]]:
+    with duckdb.connect() as con:
+        con.execute("SET s3_region='eu-west-2';")
+        con.execute(
+            "CREATE OR REPLACE SECRET delta_s1 (TYPE s3, PROVIDER credential_chain);"
+        )
+        return con.execute(sql).fetchall()
+
+
+def yeild_uningested_file_paths(
+    base_path: str, delta_path: str, error_path: str, batch_size: int
+) -> Generator[list[str]]:
+    sql = f"""
+        SELECT raw.file as raw_path
+        FROM glob('{base_path}/**/*.xml') AS raw
+        ANTI JOIN delta_scan('{delta_path}') AS delta
+            ON raw.file = delta._file_uri
+        ANTI JOIN delta_scan('{error_path}') AS error_delta
+            ON raw.file = error_delta._file_uri
+    """
+    rows = query_duckdb(sql)
+    file_list = [row[0] for row in rows]
+    logger.info(f"{len(file_list)} files to process in batches of {batch_size}.")
+    batch_id = 0
+    for i in range(0, len(file_list), batch_size):
+        batch_id += batch_id
+        logger.info(f"Processing batch {batch_id}...")
+        yield file_list[i : i + batch_size]
 
 
 def list_s3_files(s3_path: str) -> list[str]:
@@ -86,8 +123,8 @@ def optimise_delta_table(path: str) -> None:
         {
             # Keep only 24 hours of history for time travel / log files
             "delta.logRetentionDuration": "interval 24 hours",
-            # Keep deleted parquet files for 15 minutes max (safeguard for active readers)
-            "delta.deletedFileRetentionDuration": "interval 15 minutes",
+            # Keep deleted parquet files for a bit as a safeguard for active readers
+            "delta.deletedFileRetentionDuration": "interval 2 hours",
             # Checkpoint every 100 commits (crucial for a 10k/day write volume)
             "delta.checkpointInterval": "100",
         }
@@ -98,51 +135,55 @@ def optimise_delta_table(path: str) -> None:
     logger.info("Compaction complete")
     dt.vacuum(dry_run=False)
     logger.info("Vacuum complete")
-    logger.info("Optimisation complete for '{path}'")
+    logger.info(f"Optimisation complete for '{path}'")
 
 
 def main():
     SOURCE_PATH = get_required_env("SPI_TRANSFORM_SOURCE_PATH")
     DEST_PATH = get_required_env("SPI_TRANSFORM_DEST_PATH")
     ERROR_PATH = get_required_env("SPI_TRANSFORM_ERROR_PATH")
-    START_DATE = get_required_env("SPI_TRANSFORM_START_DATE")
-    END_DATE = get_required_env("SPI_TRANSFORM_END_DATE")
 
-    # 1. Get the list of XML files
-    xml_files = list_s3_files_in_date_range(SOURCE_PATH, START_DATE, END_DATE)
-    if not xml_files:
-        logger.warning(f"No XML files found at {SOURCE_PATH}")
-        return
-
-    logger.info(f"Found {len(xml_files)} XML file(s) to process.")
-
-    # 2. Loop through and process each file
-    for index, file_path in enumerate(xml_files, start=1):
-        logger.info(f"[{index}/{len(xml_files)}] Processing file: {file_path}")
-
-        try:
-            spi_xml_to_delta_table(xml_file_path=file_path, delta_table_path=DEST_PATH)
-            logger.info(f"Successfully processed: {file_path}")
-
-        except Exception as e:
-            error_msg = str(e)
-            logger.exception(f"Failed to process {file_path}")
-
-            # Capture the full traceback as a string
-            full_traceback = traceback.format_exc()
-
-            error_dict = {
-                "file_path": file_path,
-                "error_msg": error_msg,
-                "full_traceback": full_traceback,
-            }
-            error_df = pd.DataFrame([error_dict])
-            write_deltalake(
-                ERROR_PATH,
-                error_df,
-                mode="append",
-                schema_mode="merge",  # Automatically handles missing/new fields
+    for xml_files_batch in yeild_uningested_file_paths(
+        SOURCE_PATH, DEST_PATH, batch_size=1000
+    ):
+        batch_dfs = []
+        for index, file_path in enumerate(xml_files_batch, start=1):
+            logger.info(
+                f"[{index}/{len(xml_files_batch)}] Processing file: {file_path}"
             )
+
+            try:
+                df = spi_xml_to_df(xml_file_path=file_path)
+                if df is not None and not df.empty:
+                    batch_dfs.append(df)
+                    logger.info(f"Successfully processed: {file_path}")
+                else:
+                    raise ValueError(
+                        f"Unable to convert {file_path} to a non-empty df."
+                    )
+
+            except Exception as e:
+                error_msg = str(e)
+                logger.exception(f"Failed to process {file_path}")
+
+                # Capture the full traceback as a string
+                full_traceback = traceback.format_exc()
+
+                error_dict = {
+                    "file_path": file_path,
+                    "error_msg": error_msg,
+                    "full_traceback": full_traceback,
+                }
+                error_df = pd.DataFrame([error_dict])
+                write_deltalake(
+                    ERROR_PATH,
+                    error_df,
+                    mode="append",
+                    schema_mode="merge",  # Automatically handles missing/new fields
+                )
+
+        main_df = pd.concat(batch_dfs, axis=0, ignore_index=True)
+        write_with_retries(main_df, DEST_PATH)
 
     # 3. optimise
     optimise_delta_table(DEST_PATH)

@@ -12,6 +12,7 @@ import pandas as pd
 import xmltodict
 from deltalake.exceptions import CommitFailedError
 from deltalake.writer import write_deltalake
+from pandas import DataFrame
 
 SPI_NAMESPACE_MAPPING = {
     "http://schemas.cjse.gov.uk/common/operations": "ns1",
@@ -300,7 +301,7 @@ def write_with_retries(
             delay *= 2.0
 
 
-def spi_xml_to_delta_table(xml_file_path: str, delta_table_path: str):
+def spi_xml_to_df(xml_file_path: str) -> DataFrame:
     message = extract_session_from_spi(filename=xml_file_path)
     message = drop_sensitive_data(message)
 
@@ -326,5 +327,9 @@ def spi_xml_to_delta_table(xml_file_path: str, delta_table_path: str):
     df = convert_column_to_list(
         df, "Case_Defendant_Offence_Result_Duration_DurationStartDate"
     )
+    return df
 
+
+def spi_xml_to_delta_table(xml_file_path: str, delta_table_path: str):
+    df = spi_xml_to_df(xml_file_path)
     write_with_retries(df, delta_table_path)
