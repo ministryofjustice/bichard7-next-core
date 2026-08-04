@@ -6,6 +6,7 @@ type FormSubmitButtonProps = ComponentProps<typeof Button>
 
 const FormSubmitButton: React.FC<FormSubmitButtonProps> = ({ disabled, ...props }) => {
   const formStatus = useFormStatus()
+
   return <Button {...props} type="submit" disabled={disabled || formStatus.pending} />
 }
 
