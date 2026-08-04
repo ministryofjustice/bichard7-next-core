@@ -9,6 +9,7 @@ from typing import Any
 import boto3
 import duckdb
 import pandas as pd
+import pyarrow as pa
 from deltalake import DeltaTable, write_deltalake
 
 from spi_transform.spi_xml_to_delta_table import (
@@ -55,9 +56,7 @@ def yeild_uningested_file_paths(
     rows = query_duckdb(sql)
     file_list = [row[0] for row in rows]
     logger.info(f"{len(file_list)} files to process in batches of {batch_size}.")
-    batch_id = 0
-    for i in range(0, len(file_list), batch_size):
-        batch_id += batch_id
+    for batch_id, i in enumerate(range(0, len(file_list), batch_size), start=1):
         logger.info(f"Processing batch {batch_id}...")
         yield file_list[i : i + batch_size]
 
@@ -122,20 +121,62 @@ def optimise_delta_table(path: str) -> None:
     dt.alter.set_table_properties(
         {
             # Keep only 24 hours of history for time travel / log files
-            "delta.logRetentionDuration": "interval 24 hours",
+            "delta.logRetentionDuration": "interval 2 hours",
             # Keep deleted parquet files for a bit as a safeguard for active readers
-            "delta.deletedFileRetentionDuration": "interval 2 hours",
+            # "delta.deletedFileRetentionDuration": "interval 1 hours",
             # Checkpoint every 100 commits (crucial for a 10k/day write volume)
             "delta.checkpointInterval": "100",
         }
     )
 
     logger.info(f"Optimising delta table: {path}")
-    dt.optimize.compact()
+    compact_metrics = dt.optimize.compact()
     logger.info("Compaction complete")
-    dt.vacuum(dry_run=False)
+    deleted_file_paths = dt.vacuum(
+        dry_run=False, retention_hours=2, enforce_retention_duration=False
+    )
     logger.info("Vacuum complete")
     logger.info(f"Optimisation complete for '{path}'")
+
+    # print metrics for debugging
+    files_added = compact_metrics.get("numFilesAdded", 0)
+    files_removed = compact_metrics.get("numFilesRemoved", 0)
+    bytes_added = compact_metrics.get("totalFilesSizeAdded", 0)
+    mb_added = bytes_added / (1024 * 1024)
+    files_deleted_count = len(deleted_file_paths)
+    logger.info("Optimisation Summary:")
+    logger.info(
+        f" - Compaction: {files_removed} small files merged into {files_added} file(s) ({mb_added:.2f} MB)"
+    )
+    logger.info(
+        f" - Storage Cleanup: {files_deleted_count} stale files physically purged from storage"
+    )
+
+
+def bootstrap_delta_tables(paths: list[str]) -> None:
+    for path in paths:
+        schema = pa.schema([
+            ("_message_received_date", pa.string()),
+            ("_file_uri", pa.string())
+        ])
+        empty_table = pa.Table.from_batches([], schema=schema)
+        write_deltalake(
+            path,
+            empty_table,
+            mode="ignore",  # Won't overwrite if it already exists
+            partition_by=["_message_received_date"],
+        )
+        dt = DeltaTable(path)
+        dt.alter.set_table_properties(
+            {
+                # Keep only 24 hours of history for time travel / log files
+                "delta.logRetentionDuration": "interval 2 hours",
+                # Keep deleted parquet files for a bit as a safeguard for active readers
+                "delta.deletedFileRetentionDuration": "interval 1 hours",
+                # Checkpoint every 100 commits (crucial for a 10k/day write volume)
+                "delta.checkpointInterval": "100",
+            }
+        )
 
 
 def main():
@@ -143,8 +184,10 @@ def main():
     DEST_PATH = get_required_env("SPI_TRANSFORM_DEST_PATH")
     ERROR_PATH = get_required_env("SPI_TRANSFORM_ERROR_PATH")
 
+    bootstrap_delta_tables([DEST_PATH, ERROR_PATH])
+
     for xml_files_batch in yeild_uningested_file_paths(
-        SOURCE_PATH, DEST_PATH, batch_size=1000
+        SOURCE_PATH, DEST_PATH, ERROR_PATH, batch_size=1000
     ):
         batch_dfs = []
         for index, file_path in enumerate(xml_files_batch, start=1):
@@ -192,3 +235,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # DEST_PATH = get_required_env("SPI_TRANSFORM_DEST_PATH")
+    # optimise_delta_table(DEST_PATH)
