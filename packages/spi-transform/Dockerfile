@@ -43,5 +43,8 @@ ENV PATH="/app/.venv/bin:$PATH" \
 # Copy virtualenv from builder stage
 COPY --from=builder /app/.venv ./.venv
 
+# install required duckdb extensions
+RUN python -c "import duckdb; con = duckdb.connect(); con.execute('INSTALL httpfs; INSTALL aws; INSTALL delta;')"
+
 # Run the entrypoint module
 CMD ["spi-transform"]
