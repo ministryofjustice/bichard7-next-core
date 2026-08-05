@@ -7,7 +7,7 @@ describe("formatUnitOrganisationNameAndCode", () => {
     expect(result).toEqual([])
   })
 
-  it("should format organisation units into combined codes and filtered names", () => {
+  it("should format organisation units into combined codes and filtered names, and sort", () => {
     const mockOrganisationUnits: OrganisationUnit[] = [
       {
         topLevelCode: "C",
@@ -36,12 +36,12 @@ describe("formatUnitOrganisationNameAndCode", () => {
 
     expect(result).toEqual([
       {
-        fullOrganisationCode: "C000100",
-        fullOrganisationName: "Magistrates Courts London Westminster Court 1"
-      },
-      {
         fullOrganisationCode: "B020301",
         fullOrganisationName: "Crown Court Snaresbrook"
+      },
+      {
+        fullOrganisationCode: "C000100",
+        fullOrganisationName: "Magistrates Courts London Westminster Court 1"
       }
     ])
   })
