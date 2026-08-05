@@ -1,5 +1,5 @@
 import { OrganisationUnitsContext } from "@/context/OrganisationUnitsContext"
-import { default as OrganisationUnitNameAndCode } from "@/types/OrganisationUnitNameAndCode"
+import OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
 import { searchOrganisationUnits } from "@/utils/organisationUnitTransformation/searchOrganisationUnitNameAndCode"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCombobox } from "downshift"
