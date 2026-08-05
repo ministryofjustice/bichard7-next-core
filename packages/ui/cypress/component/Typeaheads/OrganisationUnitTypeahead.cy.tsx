@@ -3,6 +3,7 @@ import { Amendments } from "@/types/Amendments"
 import { DisplayFullCourtCase } from "@/types/display/CourtCases"
 import OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
 import { CourtCaseContext, CourtCaseContextType } from "context/CourtCaseContext" // Adjust path to your context file
+import { OrganisationUnitsContext } from "context/OrganisationUnitsContext" // Adjust path to your context file
 import React from "react"
 
 describe("OrganisationUnitTypeahead Component", () => {
@@ -38,24 +39,6 @@ describe("OrganisationUnitTypeahead Component", () => {
     { fullOrganisationCode: "B02GH00", fullOrganisationName: "Crown Court Manchester" }
   ]
 
-  beforeEach(() => {
-    cy.intercept("GET", "/bichard/api/organisation-units*", (req) => {
-      const url = new URL(req.url)
-      const search = url.searchParams.get("search") ?? ""
-
-      const filtered = mockOrgUnits.filter(
-        (unit) =>
-          unit.fullOrganisationCode.toLowerCase().includes(search.toLowerCase()) ||
-          unit.fullOrganisationName.toLowerCase().includes(search.toLowerCase())
-      )
-
-      req.reply({
-        statusCode: 200,
-        body: filtered
-      })
-    }).as("fetchOrgUnits")
-  })
-
   interface TestWrapperProps {
     children: React.ReactNode
     amendSpy: (payload: Amendments) => void
@@ -74,7 +57,13 @@ describe("OrganisationUnitTypeahead Component", () => {
       dispatchMock
     ]
 
-    return <CourtCaseContext.Provider value={mockContextValue}>{children}</CourtCaseContext.Provider>
+    return (
+      <CourtCaseContext.Provider value={mockContextValue}>
+        <OrganisationUnitsContext.Provider value={{ organisationUnits: mockOrgUnits }}>
+          {children}
+        </OrganisationUnitsContext.Provider>
+      </CourtCaseContext.Provider>
+    )
   }
 
   it("renders with an initial value if provided", () => {
@@ -87,7 +76,7 @@ describe("OrganisationUnitTypeahead Component", () => {
     cy.get("input#next-hearing-location").should("be.visible").and("have.value", "B01EF00")
   })
 
-  it("triggers network request on load/input", () => {
+  it("filters organisation units locally from context on typing", () => {
     cy.mount(
       <TestWrapper amendSpy={cy.stub()}>
         <OrganisationUnitTypeahead resultIndex={0} offenceIndex={1} />
@@ -95,9 +84,8 @@ describe("OrganisationUnitTypeahead Component", () => {
     )
 
     cy.get("input#next-hearing-location").type("Magistrates")
-    cy.wait("@fetchOrgUnits")
 
-    cy.get("ul").children("li").should("have.length", 1)
+    cy.get("ul").children("li").should("have.length", 1).and("contain.text", "Magistrates' Court London")
   })
 
   it("fires amend context updates and UI form state flags sequentially on typing updates", () => {

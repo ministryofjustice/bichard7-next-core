@@ -1,5 +1,6 @@
 import { OrganisationUnitsContext } from "@/context/OrganisationUnitsContext"
 import { default as OrganisationUnitNameAndCode } from "@/types/OrganisationUnitNameAndCode"
+import { searchOrganisationUnits } from "@/utils/organisationUnitTransformation/searchOrganisationUnitNameAndCode"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCombobox } from "downshift"
 import { useContext, useEffect, useState } from "react"
@@ -25,17 +26,7 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
   const [inputItems, setInputItems] = useState<OrganisationUnitNameAndCode[]>([])
 
   const filterItems = (searchString?: string) => {
-    if (!searchString) {
-      setInputItems(organisationUnits)
-      return
-    }
-
-    const searchLower = searchString.toLowerCase()
-    const filtered = organisationUnits.filter(
-      (unit) =>
-        unit.fullOrganisationCode.toLowerCase().includes(searchLower) ||
-        unit.fullOrganisationName.toLowerCase().includes(searchLower)
-    )
+    const filtered = searchOrganisationUnits(searchString ?? "", organisationUnits)
     setInputItems(filtered)
   }
 

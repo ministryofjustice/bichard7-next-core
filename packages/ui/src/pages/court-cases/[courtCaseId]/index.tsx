@@ -1,9 +1,9 @@
 import { OrganisationUnitsContext, OrganisationUnitsContextType } from "@/context/OrganisationUnitsContext"
 import apiLogger from "@/services/api/apiLogger"
 import OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
-import { formatUnitOrganisationNameAndCode } from "@/utils/formatUnitOrganisationNameAndCode/formatUnitOrganisationNameAndCode"
+import { formatUnitOrganisationNameAndCode } from "@/utils/organisationUnitTransformation/formatOrganisationUnitNameAndCode"
+import OrganisationUnits from "@moj-bichard7-developers/bichard7-next-data/data/organisation-unit.json"
 import Permission from "@moj-bichard7/common/types/Permission"
-import { sortedCourtOrganisationUnits } from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
 import Layout from "components/Layout"
 import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseContext"
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
@@ -271,8 +271,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       ? (apiCase as DisplayFullCourtCase)
       : courtCaseToDisplayFullCourtCaseDto(courtCase as CourtCase, currentUser)
 
-    const organisationUnits: OrganisationUnitNameAndCode[] =
-      formatUnitOrganisationNameAndCode(sortedCourtOrganisationUnits)
+    const organisationUnits: OrganisationUnitNameAndCode[] = formatUnitOrganisationNameAndCode(OrganisationUnits)
 
     return {
       props: {

@@ -4,11 +4,19 @@ import {
   getFullOrganisationCode,
   getFullOrganisationName
 } from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
+import { sortBy } from "lodash"
 
 export const formatUnitOrganisationNameAndCode = (
   organisationUnits: OrganisationUnit[]
 ): OrganisationUnitNameAndCode[] => {
-  return organisationUnits.map((ou) => ({
+  const filtered = organisationUnits.filter(
+    (organisationUnit) =>
+      organisationUnit.topLevelName !== "Police Service" && /\S/.test(organisationUnit.thirdLevelName ?? "")
+  )
+
+  const sorted = sortBy(filtered, (organisationUnit) => organisationUnit.thirdLevelName)
+
+  return sorted.map((ou) => ({
     fullOrganisationCode: getFullOrganisationCode(ou),
     fullOrganisationName: getFullOrganisationName(ou)
   }))

@@ -1,5 +1,5 @@
 import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-import { formatUnitOrganisationNameAndCode } from "./formatUnitOrganisationNameAndCode"
+import { formatUnitOrganisationNameAndCode } from "./formatOrganisationUnitNameAndCode"
 
 describe("formatUnitOrganisationNameAndCode", () => {
   it("should return an empty array when given an empty array", () => {

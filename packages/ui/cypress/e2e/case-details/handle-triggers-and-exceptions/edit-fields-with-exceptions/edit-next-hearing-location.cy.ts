@@ -1,15 +1,15 @@
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import dummyAho from "../../../../../test/test-data/HO100102_1.json"
 import multipleExceptions from "../../../../../test/test-data/NextHearingDateExceptions.json"
 import nextHearingLocationExceptions from "../../../../../test/test-data/NextHearingLocationExceptions.json"
+import type { TestTrigger } from "../../../../../test/utils/manageTriggers"
 import {
   clickTab,
   loginAndVisit,
+  refreshUntilNotePresent,
   submitAndConfirmExceptions,
-  verifyUpdatedMessage,
-  refreshUntilNotePresent
+  verifyUpdatedMessage
 } from "../../../../support/helpers"
-import type { TestTrigger } from "../../../../../test/utils/manageTriggers"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 
 describe("NextHearingLocation", () => {
   beforeEach(() => {
@@ -210,11 +210,6 @@ describe("NextHearingLocation", () => {
 
     loginAndVisit("/bichard/court-cases/0")
 
-    cy.intercept(
-      `${Cypress.config("baseUrl")}/bichard/api/organisation-units?search=*`,
-      cy.spy().as("fetchOrganisation")
-    )
-
     cy.get("ul.moj-sub-navigation__list").contains("Offences").click()
     cy.get(".govuk-link")
       .contains("Offence with HO100322 - Court has provided an adjournment with no location for the next hearing")
@@ -224,7 +219,6 @@ describe("NextHearingLocation", () => {
     cy.get("#next-hearing-location").type("B")
     cy.get("#next-hearing-location").type("0")
     cy.get("#next-hearing-location").type("1")
-    cy.get("@fetchOrganisation").should("have.been.calledOnce")
   })
 
   it("Should be able to edit multiple next hearing locations", () => {
