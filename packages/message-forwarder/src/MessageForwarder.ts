@@ -2,6 +2,7 @@ import type { ConductorClient } from "@io-orkes/conductor-javascript"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import type { Client, Message, StompSubscription } from "@stomp/stompjs"
+import type { Sql } from "postgres"
 import { WebSocket } from "ws"
 import forwardMessage from "./forwardMessage/forwardMessage"
 Object.assign(global, { WebSocket })
@@ -13,7 +14,8 @@ class MessageForwarder {
 
   constructor(
     private stompClient: Client,
-    private conductorClient: ConductorClient
+    private conductorClient: ConductorClient,
+    private database: Sql
   ) {}
 
   start(): Promise<void> {
@@ -25,7 +27,12 @@ class MessageForwarder {
           async (message: Message) => {
             const tx = this.stompClient.begin()
             try {
-              const forwardMessageResult = await forwardMessage(message.body, this.stompClient, this.conductorClient)
+              const forwardMessageResult = await forwardMessage(
+                message.body,
+                this.stompClient,
+                this.conductorClient,
+                this.database
+              )
               if (isError(forwardMessageResult)) {
                 throw forwardMessageResult
               }
