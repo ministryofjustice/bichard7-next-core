@@ -6,9 +6,9 @@ import searchCourtOrganisationUnits, {
 } from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
 import withApiAuthentication from "middleware/withApiAuthentication/withApiAuthentication"
 
-import type OrganisationUnitApiResponse from "../../types/OrganisationUnitApiResponse"
+import type OrganisationUnitNameAndCode from "../../types/OrganisationUnitNameAndCode"
 
-export default async (request: NextApiRequest, response: NextApiResponse<OrganisationUnitApiResponse>) => {
+export default async (request: NextApiRequest, response: NextApiResponse<OrganisationUnitNameAndCode[]>) => {
   const allowedMethods = ["GET"]
 
   const auth = await withApiAuthentication(request, response, allowedMethods)

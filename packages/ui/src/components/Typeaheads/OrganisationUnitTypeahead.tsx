@@ -1,7 +1,7 @@
+import { default as OrganisationUnitNameAndCode } from "@/types/OrganisationUnitNameAndCode"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCombobox } from "downshift"
 import { useCallback, useEffect, useState } from "react"
-import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
 import { isError } from "types/Result"
 import { ListWrapper } from "./Typeahead.styles"
 
@@ -21,7 +21,7 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
   setSaved
 }: Props) => {
   const { amend } = useCourtCase()
-  const [inputItems, setInputItems] = useState<OrganisationUnitApiResponse>([])
+  const [inputItems, setInputItems] = useState<OrganisationUnitNameAndCode[]>([])
 
   const fetchItems = useCallback(async (searchStringParam?: string) => {
     const query = new URLSearchParams({ search: searchStringParam ?? "" })
@@ -35,7 +35,7 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
           throw new Error(`HTTP Error: ${response.status}`)
         }
 
-        return response.json() as Promise<OrganisationUnitApiResponse>
+        return response.json() as Promise<OrganisationUnitNameAndCode[]>
       })
       .catch((error) => error as Error)
 

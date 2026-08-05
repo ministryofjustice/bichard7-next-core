@@ -1,4 +1,4 @@
-import OrganisationUnitApiResponse from "../../../../src/types/OrganisationUnitApiResponse"
+import OrganisationUnitNameAndCode from "../../../../src/types/OrganisationUnitNameAndCode"
 
 describe("Organisation Units API endpoint", () => {
   beforeEach(() => {
@@ -13,7 +13,7 @@ describe("Organisation Units API endpoint", () => {
     }).then((response) => {
       expect(response.status).to.eq(200)
 
-      const organisationUnitsResponse = response.body as OrganisationUnitApiResponse
+      const organisationUnitsResponse = response.body as OrganisationUnitNameAndCode[]
       expect(organisationUnitsResponse).to.have.length(3)
       expect(organisationUnitsResponse[0].fullOrganisationName).to.equal("Crown Courts London Croydon")
       expect(organisationUnitsResponse[1].fullOrganisationName).to.equal("Magistrates' Courts London Croydon")
@@ -29,7 +29,7 @@ describe("Organisation Units API endpoint", () => {
     }).then((response) => {
       expect(response.status).to.eq(200)
 
-      const organisationUnitsResponse = response.body as OrganisationUnitApiResponse
+      const organisationUnitsResponse = response.body as OrganisationUnitNameAndCode[]
       expect(organisationUnitsResponse).to.have.length(1)
       expect(organisationUnitsResponse[0].fullOrganisationName).to.equal("Magistrates' Courts London Croydon")
     })

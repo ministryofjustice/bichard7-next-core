@@ -1,8 +1,8 @@
+import OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
 import { createContext, useContext } from "react"
-import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
 
 interface OrganisationUnitsContextType {
-  organisationUnits: OrganisationUnitApiResponse
+  organisationUnits: OrganisationUnitNameAndCode[]
 }
 
 const OrganisationUnitsContext = createContext<OrganisationUnitsContextType>({

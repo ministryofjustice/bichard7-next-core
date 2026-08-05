@@ -1,6 +1,6 @@
 import { OrganisationUnitsContext, OrganisationUnitsContextType } from "@/context/OrganisationUnitsContext"
 import apiLogger from "@/services/api/apiLogger"
-import OrganisationUnitApiResponse from "@/types/OrganisationUnitApiResponse"
+import OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
 import Permission from "@moj-bichard7/common/types/Permission"
 import searchCourtOrganisationUnits, {
   getFullOrganisationCode,
@@ -273,7 +273,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       ? (apiCase as DisplayFullCourtCase)
       : courtCaseToDisplayFullCourtCaseDto(courtCase as CourtCase, currentUser)
 
-    const organisationUnits: OrganisationUnitApiResponse = searchCourtOrganisationUnits("").map((ou) => ({
+    const organisationUnits: OrganisationUnitNameAndCode[] = searchCourtOrganisationUnits("").map((ou) => ({
       fullOrganisationCode: getFullOrganisationCode(ou),
       fullOrganisationName: getFullOrganisationName(ou)
     }))
@@ -307,7 +307,7 @@ interface Props {
   previousPath: string
   caseDetailsCookieName: string
   allIssuesCleared: boolean
-  organisationUnits: OrganisationUnitApiResponse
+  organisationUnits: OrganisationUnitNameAndCode[]
 }
 
 const CourtCaseDetailsPage: NextPage<Props> = ({

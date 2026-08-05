@@ -1,9 +1,9 @@
 import OrganisationUnitTypeahead from "@/components/Typeaheads/OrganisationUnitTypeahead"
 import { Amendments } from "@/types/Amendments"
 import { DisplayFullCourtCase } from "@/types/display/CourtCases"
+import OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
 import { CourtCaseContext, CourtCaseContextType } from "context/CourtCaseContext" // Adjust path to your context file
 import React from "react"
-import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
 
 describe("OrganisationUnitTypeahead Component", () => {
   const courtCase = {
@@ -33,7 +33,7 @@ describe("OrganisationUnitTypeahead Component", () => {
     savedAmendments: {}
   }
 
-  const mockOrgUnits: OrganisationUnitApiResponse = [
+  const mockOrgUnits: OrganisationUnitNameAndCode[] = [
     { fullOrganisationCode: "B01EF00", fullOrganisationName: "Magistrates' Court London" },
     { fullOrganisationCode: "B02GH00", fullOrganisationName: "Crown Court Manchester" }
   ]
