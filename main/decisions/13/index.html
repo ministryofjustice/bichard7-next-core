@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Database Query Parsing | Bichard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css" rel="stylesheet">
+    <link href="../../../style.css" rel="stylesheet">
+    <link href="./../../style-branding.css" rel="stylesheet">
+    <script type="text/javascript" src="../../../modal.js"></script>
+    <script type="text/javascript" src="../../../svg-modal.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.2/dist/svg-pan-zoom.min.js"></script>
+  </head>
+  <body>
+    <script type="text/javascript" src="../../../header.js"></script>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand has-site-branding"><a href="../../" class="navbar-item"><span class="has-text-weight-semibold has-site-branding">Bichard</span></a></div>
+      <div class="navbar-menu has-site-branding">
+        <div class="navbar-end">
+          <div class="navbar-item"><input class="input is-small is-rounded" id="search" type="search" size="30" maxlength="50" placeholder="Search..." onkeyup="redirect(event, value, '../../search/')"></div>
+          <div class="navbar-item has-dropdown is-hoverable"><a class="navbar-link has-site-branding">main</a>
+            <div class="navbar-dropdown is-right"><a href="../../../main/" class="navbar-item">main</a>
+              <hr class="navbar-divider">
+              <div class="navbar-item has-text-grey-light"><span>v</span><span>0.0.0</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="site-layout" id="site">
+      <aside class="menu p-3">
+        <p class="menu-label">General</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../" class="">Home</a><a href="../" class="is-active">Decisions</a><a href="../../software-systems/" class="">Software Systems</a><a href="../../transitioning-bichard/" class="">Transitioning Bichard</a><a href="../../schemas/" class="">Schemas</a></li>
+        </ul>
+        <p class="menu-label">Software systems</p>
+        <ul class="menu-list has-site-branding">
+          <li><a href="../../bichard/" class="">Bichard</a><a href="../../cjsm/" class="">CJSM</a><a href="../../common-platform/" class="">Common Platform</a><a href="../../exiss/" class="">ExISS</a><a href="../../leds/" class="">LEDS</a><a href="../../libra/" class="">Libra</a><a href="../../niam/" class="">NIAM</a><a href="../../pagerduty/" class="">PagerDuty</a><a href="../../pnc/" class="">PNC</a><a href="../../psn-proxy/" class="">PSN Proxy</a><a href="../../slack/" class="">Slack</a></li>
+        </ul>
+      </aside>
+      <div class="container is-fluid">
+        <div class="content p-3">
+          <div><h1>13. Database Query Parsing</h1>
+<p>Date: 2026-08-04</p>
+<h2>Status</h2>
+<p>Accepted</p>
+<h2>Context</h2>
+<p>We have found issues where the data types being returned from SQL queries on our Postgres database were not matching our expected types. This hasn't lead to any known runtime issues but it reduces confidence in our type checking and will lead to a real bug eventually.</p>
+<p>At the moment we simply tell TypeScript what type the query is returned, but this is not actually validated.</p>
+<pre><code class="language-typescript">const results = sql&lt;{ field1: number }[]&gt;`SELECT 'hello' as field1 FROM my_table`
+</code></pre>
+<p>In the above example, TypeScript will see the value of <code>field1</code> as being of type <code>number</code> but at runtime it will be a <code>string</code>.</p>
+<h2>Decision</h2>
+<p>Use Zod parsing on all SQL queries to ensure data types are validated at runtime. This should also mean that we get failing tests so we should catch these issues at design time.</p>
+<p>Example:</p>
+<pre><code class="language-typescript">import { z } from "zod"
+
+const MyTableSchema = z.object({ field1: z.string() })
+
+const results = sql`SELECT 'hello' as field1 FROM my_table`
+
+const parsedResults = z.array(MyTableSchema).safeParse(results)
+if (!parsedResults.success) {
+  return new Error("Schema validation failed for query")
+}
+
+parsedResults // This will be inferred as type `{ field1: string }[]`
+</code></pre>
+<h2>Consequences</h2>
+<ul>
+ <li>Ensures greater confidence in our type checking</li>
+ <li>Allows us to catch subtle bugs in our database queries before they end up in production</li>
+ <li>Marginal overhead added to database calls now that we are parsing all of the data being returned. On large result sets we could potentially have some performance issues</li>
+</ul></div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="../../../reformat-mermaid.js"></script>
+    <script type="module">import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.15.0/dist/mermaid.esm.min.mjs';</script>
+  </body>
+</html>
