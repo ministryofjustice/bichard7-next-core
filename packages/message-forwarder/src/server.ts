@@ -7,14 +7,14 @@ import createStompClient from "./createStompClient"
 
 const stompClient = createStompClient()
 const conductorClient = createConductorClient()
-const databasebConfig = createDbConfig(true)
-const database = postgres(databasebConfig)
+const databaseConfig = createDbConfig(true)
+const database = postgres(databaseConfig)
 
 const messageForwarder = new MessageForwarder(stompClient, conductorClient, database)
 
-const signalHandler = (signal: string) => {
+const signalHandler = async (signal: string): Promise<void> => {
   logger.info(`${signal} signal received.`)
-  messageForwarder.stop()
+  await messageForwarder.stop()
 }
 
 process.on("SIGINT", signalHandler)

@@ -55,9 +55,10 @@ class MessageForwarder {
     })
   }
 
-  stop() {
+  async stop(): Promise<void> {
     this.subscription.unsubscribe()
-    this.stompClient.deactivate()
+    await this.stompClient.deactivate()
+    await this.database.end()
   }
 }
 
