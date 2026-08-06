@@ -1,7 +1,7 @@
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import lookupOrganisationUnitByCode from "@moj-bichard7/common/aho/dataLookup/lookupOrganisationUnitByCode"
-import { getFullOrganisationName } from "@moj-bichard7/common/utils/getCourtOrganisationUnitNames"
+import { getFullOrganisationName } from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
 
 import { formatDate } from "./formatDate"
 

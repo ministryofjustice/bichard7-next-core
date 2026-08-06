@@ -7,7 +7,7 @@ describe("convertOrganisationUnits", () => {
     expect(result).toEqual([])
   })
 
-  it("should format organisation units into combined codes and filtered names, and sort", () => {
+  it("should format organisation units into combined codes and names", () => {
     const mockOrganisationUnits: OrganisationUnit[] = [
       {
         topLevelCode: "C",

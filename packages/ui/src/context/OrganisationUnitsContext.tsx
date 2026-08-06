@@ -1,8 +1,8 @@
-import OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
+import { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import { createContext, useContext } from "react"
 
 interface OrganisationUnitsContextType {
-  organisationUnits: OrganisationUnitNameAndCode[]
+  organisationUnits: OrganisationUnit[]
 }
 
 const OrganisationUnitsContext = createContext<OrganisationUnitsContextType>({

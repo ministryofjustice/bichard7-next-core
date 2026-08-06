@@ -1,9 +1,9 @@
 import { OrganisationUnitsContext, OrganisationUnitsContextType } from "@/context/OrganisationUnitsContext"
 import apiLogger from "@/services/api/apiLogger"
-import OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
-import { convertOrganisationUnits } from "@/utils/organisationUnitTransformation/convertOrganisationUnits"
 import OrganisationUnits from "@moj-bichard7-developers/bichard7-next-data/data/organisation-unit.json"
+import { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import Permission from "@moj-bichard7/common/types/Permission"
+import { sortCourtOrganisationUnits } from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
 import Layout from "components/Layout"
 import { CourtCaseContext, useCourtCaseContextState } from "context/CourtCaseContext"
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
@@ -271,7 +271,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       ? (apiCase as DisplayFullCourtCase)
       : courtCaseToDisplayFullCourtCaseDto(courtCase as CourtCase, currentUser)
 
-    const organisationUnits: OrganisationUnitNameAndCode[] = convertOrganisationUnits(OrganisationUnits)
+    const organisationUnits: OrganisationUnit[] = sortCourtOrganisationUnits(OrganisationUnits)
 
     return {
       props: {
@@ -302,7 +302,7 @@ interface Props {
   previousPath: string
   caseDetailsCookieName: string
   allIssuesCleared: boolean
-  organisationUnits: OrganisationUnitNameAndCode[]
+  organisationUnits: OrganisationUnit[]
 }
 
 const CourtCaseDetailsPage: NextPage<Props> = ({

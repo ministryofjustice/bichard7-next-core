@@ -1,6 +1,7 @@
 import { OrganisationUnitsContext } from "@/context/OrganisationUnitsContext"
 import OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
-import { searchOrganisationUnits } from "@/utils/organisationUnitTransformation/searchOrganisationUnits"
+import { convertOrganisationUnits } from "@/utils/organisationUnitTransformation/convertOrganisationUnits"
+import searchCourtOrganisationUnits from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCombobox } from "downshift"
 import { useContext, useEffect, useState } from "react"
@@ -26,8 +27,8 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
   const [inputItems, setInputItems] = useState<OrganisationUnitNameAndCode[]>([])
 
   const filterItems = (searchString?: string) => {
-    const filtered = searchOrganisationUnits(searchString ?? "", organisationUnits)
-    setInputItems(filtered)
+    const filtered = searchCourtOrganisationUnits(searchString || "", organisationUnits)
+    setInputItems(convertOrganisationUnits(filtered))
   }
 
   const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue, setInputValue } =

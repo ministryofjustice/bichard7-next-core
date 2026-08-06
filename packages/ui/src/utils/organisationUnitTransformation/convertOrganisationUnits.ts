@@ -3,18 +3,10 @@ import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-da
 import {
   getFullOrganisationCode,
   getFullOrganisationName
-} from "@moj-bichard7/common/utils/getCourtOrganisationUnitNames"
-import { sortBy } from "lodash"
+} from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
 
 export const convertOrganisationUnits = (organisationUnits: OrganisationUnit[]): OrganisationUnitNameAndCode[] => {
-  const filtered = organisationUnits.filter(
-    (organisationUnit) =>
-      organisationUnit.topLevelName !== "Police Service" && /\S/.test(organisationUnit.thirdLevelName ?? "")
-  )
-
-  const sorted = sortBy(filtered, (organisationUnit) => organisationUnit.thirdLevelName)
-
-  return sorted.map((ou) => ({
+  return organisationUnits.map((ou) => ({
     fullOrganisationCode: getFullOrganisationCode(ou),
     fullOrganisationName: getFullOrganisationName(ou)
   }))
