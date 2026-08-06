@@ -2,8 +2,8 @@ import OrganisationUnitTypeahead from "@/components/Typeaheads/OrganisationUnitT
 import { Amendments } from "@/types/Amendments"
 import { DisplayFullCourtCase } from "@/types/display/CourtCases"
 import { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-import { CourtCaseContext, CourtCaseContextType } from "context/CourtCaseContext" // Adjust path to your context file
-import { OrganisationUnitsContext } from "context/OrganisationUnitsContext" // Adjust path to your context file
+import { CourtCaseContext, CourtCaseContextType } from "context/CourtCaseContext"
+import { OrganisationUnitsContext } from "context/OrganisationUnitsContext"
 import React from "react"
 
 describe("OrganisationUnitTypeahead Component", () => {
