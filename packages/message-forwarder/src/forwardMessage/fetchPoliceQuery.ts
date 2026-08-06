@@ -14,7 +14,7 @@ const fetchPoliceQuery = async (db: Sql<{}>, messageId: string): Promise<PoliceQ
   }
 
   if (caseRowResult.length === 0) {
-    return Error(`Case with message ID ${messageId} not found in the database`)
+    return new Error(`Case with message ID ${messageId} not found in the database`)
   }
 
   const parsedCaseRowResult = caseRowResultSchema.safeParse(caseRowResult)
