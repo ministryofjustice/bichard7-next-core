@@ -39,7 +39,7 @@ if (!parsedResults.success) {
   return new Error("Schema validation failed for query")
 }
 
-parsedResults // This will be inferred as type `{ field1: string }[]`
+parsedResults.data // This will be inferred as type `{ field1: string }[]`
 ```
 
 ## Consequences

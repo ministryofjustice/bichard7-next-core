@@ -6,7 +6,7 @@ import type { Sql } from "postgres"
 import dummyAhoXml from "../fixtures/AnnotatedHO1.json"
 
 const ahoXml = dummyAhoXml.hearingOutcomeXml
-const aho = parseAhoXml(ahoXml) as AnnotatedHearingOutcome
+export const generateAho = () => parseAhoXml(ahoXml) as AnnotatedHearingOutcome
 
 const getDefaultCase = (): Omit<CaseRow, "court_name_upper" | "defendant_name_upper"> => ({
   annotated_msg: ahoXml,
@@ -28,7 +28,7 @@ const getDefaultCase = (): Omit<CaseRow, "court_name_upper" | "defendant_name_up
   error_resolved_ts: null,
   error_resolved_by: "",
   error_status: 1,
-  hearing_outcome: aho,
+  hearing_outcome: generateAho(),
   is_urgent: 1,
   last_pnc_failure_resubmission_ts: null,
   message_id: randomUUID(),

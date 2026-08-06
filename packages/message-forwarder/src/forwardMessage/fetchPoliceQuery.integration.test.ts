@@ -2,11 +2,12 @@ import "../test/setup/setEnvironmentVariables"
 
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
 import type { Sql } from "postgres"
 import postgres from "postgres"
-import { clearTables, insertCase } from "../test/setup/database"
+import { clearTables, generateAho, insertCase } from "../test/setup/database"
 import fetchPoliceQuery from "./fetchPoliceQuery"
 
 const dbConfig = createDbConfig()
@@ -23,16 +24,18 @@ describe("fetchPoliceQuery", () => {
   })
 
   it("should return police query when hearing outcome JSON column has value", async () => {
+    const aho = generateAho()
+    aho.PncQuery!.checkName = "JSON COLUMN"
     const messageId = randomUUID()
     await insertCase(db, {
       message_id: messageId,
-      hearing_outcome: { PncQuery: { dummy: "json" } } as unknown as AnnotatedHearingOutcome
+      hearing_outcome: aho as unknown as AnnotatedHearingOutcome
     })
 
     const policeQueryResult = await fetchPoliceQuery(db, messageId)
 
     expect(isError(policeQueryResult)).toBe(false)
-    expect(policeQueryResult).toEqual({ dummy: "json" })
+    expect((policeQueryResult as PoliceQueryResult).checkName).toBe("JSON COLUMN")
   })
 
   it("should return null when hearing outcome JSON column is null", async () => {
@@ -61,11 +64,12 @@ describe("fetchPoliceQuery", () => {
     expect(policeQueryResult).toBeUndefined()
   })
 
-  it("should return undefined when police query in hearing outcome JSON column is null", async () => {
+  it("should return undefined when police query in hearing outcome JSON column is not set", async () => {
+    const aho = { ...generateAho(), PncQuery: undefined }
     const messageId = randomUUID()
     await insertCase(db, {
       message_id: messageId,
-      hearing_outcome: { PncQuery: null } as unknown as AnnotatedHearingOutcome
+      hearing_outcome: aho as unknown as AnnotatedHearingOutcome
     })
 
     const policeQueryResult = await fetchPoliceQuery(db, messageId)
