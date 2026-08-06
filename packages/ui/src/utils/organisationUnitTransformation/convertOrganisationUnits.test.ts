@@ -1,9 +1,9 @@
 import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-import { formatUnitOrganisationNameAndCode } from "./formatOrganisationUnitNameAndCode"
+import { convertOrganisationUnits } from "./convertOrganisationUnits"
 
-describe("formatUnitOrganisationNameAndCode", () => {
+describe("convertOrganisationUnits", () => {
   it("should return an empty array when given an empty array", () => {
-    const result = formatUnitOrganisationNameAndCode([])
+    const result = convertOrganisationUnits([])
     expect(result).toEqual([])
   })
 
@@ -32,7 +32,7 @@ describe("formatUnitOrganisationNameAndCode", () => {
       }
     ]
 
-    const result = formatUnitOrganisationNameAndCode(mockOrganisationUnits)
+    const result = convertOrganisationUnits(mockOrganisationUnits)
 
     expect(result).toEqual([
       {

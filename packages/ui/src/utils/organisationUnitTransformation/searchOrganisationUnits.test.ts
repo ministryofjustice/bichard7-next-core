@@ -1,5 +1,5 @@
 import type OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
-import { searchOrganisationUnits } from "./searchOrganisationUnitNameAndCode"
+import { searchOrganisationUnits } from "./searchOrganisationUnits"
 
 describe("searchOrganisationUnitNameAndCode", () => {
   const mockUnits: OrganisationUnitNameAndCode[] = [

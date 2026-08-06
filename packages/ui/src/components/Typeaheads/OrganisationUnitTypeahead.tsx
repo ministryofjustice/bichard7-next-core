@@ -1,6 +1,6 @@
 import { OrganisationUnitsContext } from "@/context/OrganisationUnitsContext"
 import OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
-import { searchOrganisationUnits } from "@/utils/organisationUnitTransformation/searchOrganisationUnitNameAndCode"
+import { searchOrganisationUnits } from "@/utils/organisationUnitTransformation/searchOrganisationUnits"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCombobox } from "downshift"
 import { useContext, useEffect, useState } from "react"

@@ -1,7 +1,7 @@
 import { OrganisationUnitsContext, OrganisationUnitsContextType } from "@/context/OrganisationUnitsContext"
 import apiLogger from "@/services/api/apiLogger"
 import OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
-import { formatUnitOrganisationNameAndCode } from "@/utils/organisationUnitTransformation/formatOrganisationUnitNameAndCode"
+import { formatUnitOrganisationNameAndCode } from "@/utils/organisationUnitTransformation/convertOrganisationUnits"
 import OrganisationUnits from "@moj-bichard7-developers/bichard7-next-data/data/organisation-unit.json"
 import Permission from "@moj-bichard7/common/types/Permission"
 import Layout from "components/Layout"

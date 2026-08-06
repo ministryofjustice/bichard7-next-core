@@ -6,9 +6,7 @@ import {
 } from "@moj-bichard7/common/utils/getCourtOrganisationUnitNames"
 import { sortBy } from "lodash"
 
-export const formatUnitOrganisationNameAndCode = (
-  organisationUnits: OrganisationUnit[]
-): OrganisationUnitNameAndCode[] => {
+export const convertOrganisationUnits = (organisationUnits: OrganisationUnit[]): OrganisationUnitNameAndCode[] => {
   const filtered = organisationUnits.filter(
     (organisationUnit) =>
       organisationUnit.topLevelName !== "Police Service" && /\S/.test(organisationUnit.thirdLevelName ?? "")
