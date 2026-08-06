@@ -1,6 +1,6 @@
+import FormSubmitButton from "@/components/Buttons/FormSubmitButton"
 import { exceptionQualityValues } from "@moj-bichard7/common/types/ExceptionQuality"
 import { triggerQualityValues } from "@moj-bichard7/common/types/TriggerQuality"
-import { Button } from "components/Buttons/Button"
 import { Card } from "components/Card"
 import { NoteTextArea } from "components/NoteTextArea"
 import { MAX_NOTE_LENGTH } from "config"
@@ -9,7 +9,6 @@ import { useCsrfToken } from "context/CsrfTokenContext"
 import { InfoRow } from "features/CourtCaseDetails/Tabs/Panels/InfoRow"
 import { useRouter } from "next/router"
 import { useActionState, useState, type FormEvent } from "react"
-import { useFormStatus } from "react-dom"
 import type { DisplayFullCourtCase } from "types/display/CourtCases"
 import { ExceptionQualityDropdown } from "./ExceptionQualityDropdown"
 import { ButtonContainer, DropdownContainer } from "./QualityStatusForm.styles"
@@ -150,20 +149,10 @@ export const QualityStatusForm = ({ hasTriggers, hasExceptions }: Props) => {
             name={"quality-status-note"}
           />
           <ButtonContainer>
-            <SubmitButton />
+            <FormSubmitButton id="quality-status-submit">{"Submit Audit"}</FormSubmitButton>
           </ButtonContainer>
         </fieldset>
       </form>
     </Card>
-  )
-}
-
-const SubmitButton = () => {
-  const { pending } = useFormStatus()
-
-  return (
-    <Button id="quality-status-submit" type="submit" disabled={pending}>
-      {"Submit Audit"}
-    </Button>
   )
 }
