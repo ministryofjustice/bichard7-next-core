@@ -1,7 +1,7 @@
 import OrganisationUnitTypeahead from "@/components/Typeaheads/OrganisationUnitTypeahead"
 import { Amendments } from "@/types/Amendments"
 import { DisplayFullCourtCase } from "@/types/display/CourtCases"
-import OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
+import { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import { CourtCaseContext, CourtCaseContextType } from "context/CourtCaseContext" // Adjust path to your context file
 import { OrganisationUnitsContext } from "context/OrganisationUnitsContext" // Adjust path to your context file
 import React from "react"
@@ -34,9 +34,28 @@ describe("OrganisationUnitTypeahead Component", () => {
     savedAmendments: {}
   }
 
-  const mockOrgUnits: OrganisationUnitNameAndCode[] = [
-    { fullOrganisationCode: "B01EF00", fullOrganisationName: "Magistrates' Court London" },
-    { fullOrganisationCode: "B02GH00", fullOrganisationName: "Crown Court Manchester" }
+  const mockOrgUnits: OrganisationUnit[] = [
+    {
+      topLevelCode: "B",
+      topLevelName: "Magistrates' Court",
+      secondLevelCode: "01",
+      secondLevelName: "London",
+      thirdLevelCode: "EF",
+      thirdLevelName: "",
+      thirdLevelPsaCode: "",
+      bottomLevelCode: "00",
+      bottomLevelName: ""
+    },
+    {
+      topLevelCode: "B",
+      topLevelName: "Crown Court",
+      secondLevelCode: "02",
+      secondLevelName: "Manchester",
+      thirdLevelCode: "GH",
+      thirdLevelName: "",
+      thirdLevelPsaCode: "5678",
+      bottomLevelCode: "00"
+    }
   ]
 
   interface TestWrapperProps {
