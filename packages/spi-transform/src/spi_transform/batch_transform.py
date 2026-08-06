@@ -53,6 +53,7 @@ def yeild_uningested_file_paths(
         ANTI JOIN delta_scan('{error_path}') AS error_delta
             ON raw.file = error_delta._file_uri
     """
+    logger.info(f"Getting list of files to process under {base_path}")
     rows = query_duckdb(sql)
     file_list = [row[0] for row in rows]
     logger.info(f"{len(file_list)} files to process in batches of {batch_size}.")
