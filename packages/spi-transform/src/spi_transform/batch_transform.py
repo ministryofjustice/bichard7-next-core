@@ -193,10 +193,6 @@ def main():
     ):
         batch_dfs = []
         for index, file_path in enumerate(xml_files_batch, start=1):
-            logger.info(
-                f"[{index}/{len(xml_files_batch)}] Processing file: {file_path}"
-            )
-
             try:
                 df = spi_xml_to_df(xml_file_path=file_path)
                 if df is not None and not df.empty:
@@ -206,6 +202,10 @@ def main():
                     raise ValueError(
                         f"Unable to convert {file_path} to a non-empty df."
                     )
+
+                if index % 100 == 0:
+                    logger.info(f"[{index}/{len(xml_files_batch)}] files processed")
+
 
             except Exception as e:
                 error_msg = str(e)
@@ -228,7 +228,9 @@ def main():
                 )
 
         main_df = pd.concat(batch_dfs, axis=0, ignore_index=True)
+        logger.info("Writing batch to delta...")
         write_with_retries(main_df, DEST_PATH)
+        logger.info("Batch written")
 
     # 3. optimise
     optimise_delta_table(DEST_PATH)
