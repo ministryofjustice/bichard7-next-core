@@ -327,6 +327,13 @@ def spi_xml_to_df(xml_file_path: str) -> DataFrame:
     df = convert_column_to_list(
         df, "Case_Defendant_Offence_Result_Duration_DurationStartDate"
     )
+
+    # drop any columns that are unnecessary or cause problems with reading (i.e. Null columns)
+    cols_to_drop = [
+        "Case_Defendant_Offence_BaseOffenceDetails_OffenceWording",
+        "Case_Defendant_Offence_BaseOffenceDetails_OffenceWording_br"
+    ]
+    df.drop(columns=cols_to_drop, inplace=True)
     return df
 
 
