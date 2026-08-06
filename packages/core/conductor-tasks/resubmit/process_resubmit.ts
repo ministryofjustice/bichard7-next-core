@@ -45,7 +45,7 @@ const caseRowResultSchema = CaseRowSchema.pick({
   phase: true,
   updated_msg: true,
   hearing_outcome: true
-}).array()
+})
 
 const handleCaseResubmission = async (
   sql: TransactionSql,
@@ -56,7 +56,7 @@ const handleCaseResubmission = async (
   lockId?: string
 ): PromiseResult<ResubmitResult> => {
   const caseRowResult =
-    await sql`SELECT error_id, phase, updated_msg, hearing_outcome FROM br7own.error_list el WHERE el.message_id = ${s3TaskData.messageId}`.catch(
+    await sql`SELECT ${sql(Object.keys(caseRowResultSchema.shape))} FROM br7own.error_list el WHERE el.message_id = ${s3TaskData.messageId}`.catch(
       (error: Error) => error
     )
 
@@ -64,7 +64,7 @@ const handleCaseResubmission = async (
     throw new Error(`Couldn't find Case with messageId: ${s3TaskData.messageId}`)
   }
 
-  const parsedCaseRowResult = caseRowResultSchema.safeParse(caseRowResult)
+  const parsedCaseRowResult = z.array(caseRowResultSchema).safeParse(caseRowResult)
   if (!parsedCaseRowResult.success) {
     return new Error("Schema validation failed for error_list SELECT query")
   }

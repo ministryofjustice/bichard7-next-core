@@ -4,6 +4,7 @@ import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/Annotat
 import type { NoteRow } from "@moj-bichard7/common/types/Note"
 
 import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3"
+import { parseAhoXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
@@ -144,8 +145,9 @@ describe("process_resubmit", () => {
 
   it("completes the task and uses police query in hearing outcome json column", async () => {
     const caseDb = await setupCase(sql)
-    const dummyHearingOutcome = { PncQuery: { dummy: "value" } }
-    await sql`UPDATE br7own.error_list SET hearing_outcome = ${sql.json(dummyHearingOutcome)} WHERE message_id = ${caseDb.message_id};`
+    const hearingOutcome = parseAhoXml(caseDb.annotated_msg) as AnnotatedHearingOutcome
+    hearingOutcome.PncQuery!.checkName = "JSON COLUMN"
+    await sql`UPDATE br7own.error_list SET hearing_outcome = ${sql.json(hearingOutcome)} WHERE message_id = ${caseDb.message_id};`
     const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id, events: [], autoResubmit: false }
     const s3TaskDataPath = `${s3Data.messageId}.json`
     await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
@@ -156,7 +158,25 @@ describe("process_resubmit", () => {
     expect(result.outputData).toHaveProperty("s3TaskDataPath", `${caseDb.message_id}.json`)
 
     const taskResultData = await getJsonFromS3<AnnotatedHearingOutcome>(s3TaskDataPath)
-    expect(taskResultData.PncQuery).toEqual(dummyHearingOutcome.PncQuery)
+    expect(taskResultData.PncQuery).toEqual(JSON.parse(JSON.stringify(hearingOutcome.PncQuery)))
+  })
+
+  it("returns an error when database result does not match the schema", async () => {
+    const caseDb = await setupCase(sql)
+    await sql`UPDATE br7own.error_list SET hearing_outcome = ${sql.json({ dummy: "invalid schema" })} WHERE message_id = ${caseDb.message_id};`
+    const s3Data = { errorLockedByUsername: "bob", messageId: caseDb.message_id, events: [], autoResubmit: false }
+    const s3TaskDataPath = `${s3Data.messageId}.json`
+    await putFileToS3(JSON.stringify(s3Data), s3TaskDataPath, bucket, s3Config)
+
+    const result = await processResubmit.execute({ inputData: { s3TaskDataPath } })
+
+    expect(result.status).toBe("FAILED")
+    expect(result.logs).toEqual([
+      {
+        createdTime: expect.any(Number),
+        log: "Error: Schema validation failed for error_list SELECT query"
+      }
+    ])
   })
 
   it("if the transaction fails, it will not create a note", async () => {

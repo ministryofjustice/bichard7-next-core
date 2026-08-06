@@ -96,4 +96,14 @@ describe("fetchPoliceQuery", () => {
     expect(isError(policeQueryResult)).toBe(true)
     expect((policeQueryResult as Error).message).toBe("Dummy database error")
   })
+
+  it("should return an error when database result does not match the schema", async () => {
+    const fakeDb = jest.fn().mockResolvedValue({ hearing_outcome: { dummy: "invalid schema" } })
+    const messageId = randomUUID()
+
+    const policeQueryResult = await fetchPoliceQuery(fakeDb as unknown as Sql, messageId)
+
+    expect(isError(policeQueryResult)).toBe(true)
+    expect((policeQueryResult as Error).message).toBe("Schema validation failed for error_list SELECT query")
+  })
 })
