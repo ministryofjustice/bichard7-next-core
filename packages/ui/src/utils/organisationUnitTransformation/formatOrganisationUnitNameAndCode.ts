@@ -3,7 +3,7 @@ import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-da
 import {
   getFullOrganisationCode,
   getFullOrganisationName
-} from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
+} from "@moj-bichard7/common/utils/getCourtOrganisationUnitNames"
 import { sortBy } from "lodash"
 
 export const formatUnitOrganisationNameAndCode = (

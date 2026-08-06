@@ -1,5 +1,7 @@
 import type OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
 
+// This regex matches the whole Organisation Unit Code and only takes the first part of
+// E.g. B06OJ08 -> B06OJ
 const ORGANISATION_UNIT_REGEX = /([a-z]\d{2}[a-z]{2})(?:\d{2})?/i
 
 const filterOrganisationUnits = (keyword: string, organisationUnits: OrganisationUnitNameAndCode[]) =>

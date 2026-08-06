@@ -46,7 +46,7 @@ describe("searchOrganisationUnitNameAndCode", () => {
     ])
   })
 
-  it("should extract and match using the REGEX capture group (5-character code)", () => {
+  it("should extract and match using the REGEX capture group", () => {
     const result = searchOrganisationUnits("b01ef00", mockUnits)
 
     expect(result).toEqual([
@@ -58,7 +58,7 @@ describe("searchOrganisationUnitNameAndCode", () => {
   })
 
   it("should match regex pattern even with surrounding text or extra digits", () => {
-    const result = searchOrganisationUnits("Test c02ab99 test", mockUnits)
+    const result = searchOrganisationUnits("Test c02ab99 test filler non-matching 123", mockUnits)
 
     expect(result).toEqual([
       {
