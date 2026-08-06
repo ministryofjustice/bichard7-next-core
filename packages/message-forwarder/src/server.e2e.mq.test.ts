@@ -17,6 +17,7 @@ const stompClient = createStompClient()
 const mqConfig = createMqConfig()
 const conductorClient = createConductorClient()
 const database = jest.fn() as unknown as Sql
+Object.assign(database, { end: jest.fn() })
 
 const resubmittedAho = fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml").toString()
 
