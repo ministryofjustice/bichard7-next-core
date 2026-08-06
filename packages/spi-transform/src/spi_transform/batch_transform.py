@@ -130,6 +130,8 @@ def optimise_delta_table(path: str) -> None:
     )
 
     logger.info(f"Optimising delta table: {path}")
+    dt.cleanup_metadata()
+    logger.info("Metadata cleanup complete")
     compact_metrics = dt.optimize.compact()
     logger.info("Compaction complete")
     deleted_file_paths = dt.vacuum(
