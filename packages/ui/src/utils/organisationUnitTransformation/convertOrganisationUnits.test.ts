@@ -36,12 +36,12 @@ describe("convertOrganisationUnits", () => {
 
     expect(result).toEqual([
       {
-        fullOrganisationCode: "B020301",
-        fullOrganisationName: "Crown Court Snaresbrook"
-      },
-      {
         fullOrganisationCode: "C000100",
         fullOrganisationName: "Magistrates Courts London Westminster Court 1"
+      },
+      {
+        fullOrganisationCode: "B020301",
+        fullOrganisationName: "Crown Court Snaresbrook"
       }
     ])
   })
