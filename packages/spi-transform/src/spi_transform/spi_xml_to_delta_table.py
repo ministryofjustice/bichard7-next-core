@@ -333,7 +333,7 @@ def spi_xml_to_df(xml_file_path: str) -> DataFrame:
         "Case_Defendant_Offence_BaseOffenceDetails_OffenceWording",
         "Case_Defendant_Offence_BaseOffenceDetails_OffenceWording_br"
     ]
-    df.drop(columns=cols_to_drop, inplace=True)
+    df.drop(columns=cols_to_drop, inplace=True, errors='ignore')
     return df
 
 
