@@ -197,7 +197,6 @@ def main():
                 df = spi_xml_to_df(xml_file_path=file_path)
                 if df is not None and not df.empty:
                     batch_dfs.append(df)
-                    logger.info(f"Successfully processed: {file_path}")
                 else:
                     raise ValueError(
                         f"Unable to convert {file_path} to a non-empty df."
