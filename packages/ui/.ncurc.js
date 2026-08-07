@@ -6,8 +6,6 @@
     - v5 contains breaking changes
   - @faker-js/faker
     - v10 has breaking change with Jest
-  - next
-    - v16 doesn't load the sass files from @ministryofjustice/frontend
   - undici
     - v6 supports node v20. Higher versions need > node v20
 
@@ -18,7 +16,7 @@
       - v4 breaks our CI
 */
 
-const pinned = ["cookie", "cookies-next", "@faker-js/faker", "next", "undici"]
+const pinned = ["cookie", "cookies-next", "@faker-js/faker", "undici"]
 const ignored = ["cypress-circleci-reporter", "raw-body"]
 const skipped = [{ package: "next", version: "13.4.13" }]
 
