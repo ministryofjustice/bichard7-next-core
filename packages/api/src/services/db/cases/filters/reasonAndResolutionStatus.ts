@@ -2,9 +2,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
-import Permission from "@moj-bichard7/common/types/Permission"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
-import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { Filters } from "../../../../types/CaseIndexQuerystring"
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
@@ -87,7 +85,7 @@ const filterIfResolved = (
     }
   }
 
-  if (filters.resolvedByUsername || !userAccess(user)[Permission.ListAllCases]) {
+  if (filters.resolvedByUsername) {
     const username = filters.resolvedByUsername ?? user.username
 
     if (reasonFilterOnlyIncludesTriggers(filters.reason)) {
