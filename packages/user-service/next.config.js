@@ -1,3 +1,5 @@
+import { join } from "path"
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   basePath: "/users",
@@ -5,7 +7,9 @@ const nextConfig = {
   output: "standalone",
   reactStrictMode: true,
   sassOptions: {
-    quietDeps: true
+    quietDeps: true,
+    loadPaths: [join(process.cwd())],
+    includePaths: ["./styles/**/*.scss"]
   },
   compiler: {
     styledComponents: true
@@ -28,4 +32,4 @@ const nextConfig = {
   }
 }
 
-module.exports = nextConfig
+export default nextConfig
