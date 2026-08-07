@@ -82,6 +82,8 @@ const convertResultToErrorListRecord = (result: PhaseResult): ErrorListRecord =>
     is_urgent: caseElem.Urgent?.urgent ? 1 : 0,
     asn: caseElem.HearingDefendant.ArrestSummonsNumber.slice(0, 21),
     court_code: hearing.CourtHearingLocation.OrganisationUnitCode?.slice(0, 7),
+    hearing_outcome: hearingOutcome,
+    updated_hearing_outcome: hearingOutcome,
     annotated_msg: annotatedMessageXml,
     updated_msg: updatedMessageXml,
     error_report: errorReport.slice(0, 1000),

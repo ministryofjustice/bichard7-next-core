@@ -1,11 +1,13 @@
+import { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import { ExceptionQuality } from "@moj-bichard7/common/types/ExceptionQuality"
+import Permission from "@moj-bichard7/common/types/Permission"
+import { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+import { TriggerQuality } from "@moj-bichard7/common/types/TriggerQuality"
 import type { Relation } from "typeorm"
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from "typeorm"
 
 import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
-import type { ExceptionQuality } from "@moj-bichard7/common/types/ExceptionQuality"
-import type { TriggerQuality } from "@moj-bichard7/common/types/TriggerQuality"
 
-import Permission from "@moj-bichard7/common/types/Permission"
 import Note from "./Note"
 import Trigger from "./Trigger"
 import User from "./User"
@@ -47,6 +49,12 @@ export default class CourtCase {
 
   @Column({ name: "court_code", type: "varchar", nullable: true })
   courtCode!: string | null
+
+  @Column({ name: "hearing_outcome", type: "jsonb" })
+  hearingOutcomeJson!: AnnotatedHearingOutcome | PncUpdateDataset | null
+
+  @Column({ name: "updated_hearing_outcome", type: "jsonb" })
+  updatedHearingOutcomeJson!: AnnotatedHearingOutcome | PncUpdateDataset | null
 
   @Column({ name: "annotated_msg", type: "varchar" })
   hearingOutcome!: string

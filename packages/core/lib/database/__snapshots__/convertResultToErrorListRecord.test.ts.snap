@@ -17,6 +17,7 @@ exports[`convertResultToErrorListRecord Phase1 should generate the error list re
   "error_reason": "HO100100",
   "error_report": "HO100100||br7:ArrestSummonsNumber",
   "error_status": 1,
+  "hearing_outcome": Any<Object>,
   "is_urgent": 0,
   "message_id": Any<String>,
   "msg_received_ts": Any<Date>,
@@ -29,6 +30,7 @@ exports[`convertResultToErrorListRecord Phase1 should generate the error list re
   "trigger_quality_checked": 1,
   "trigger_reason": "TRPR0001",
   "trigger_status": 1,
+  "updated_hearing_outcome": Any<Object>,
   "updated_msg": Any<String>,
   "user_updated_flag": 0,
 }
@@ -51,6 +53,7 @@ exports[`convertResultToErrorListRecord Phase2 should generate the error list re
   "error_reason": "HO200100",
   "error_report": "HO200100||br7:ArrestSummonsNumber",
   "error_status": 1,
+  "hearing_outcome": Any<Object>,
   "is_urgent": 0,
   "message_id": Any<String>,
   "msg_received_ts": Any<Date>,
@@ -63,6 +66,7 @@ exports[`convertResultToErrorListRecord Phase2 should generate the error list re
   "trigger_quality_checked": 1,
   "trigger_reason": "TRPS0002",
   "trigger_status": 1,
+  "updated_hearing_outcome": Any<Object>,
   "updated_msg": Any<String>,
   "user_updated_flag": 0,
 }
