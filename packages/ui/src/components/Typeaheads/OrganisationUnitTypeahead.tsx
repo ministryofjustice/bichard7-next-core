@@ -1,8 +1,10 @@
+import { OrganisationUnitsContext } from "@/context/OrganisationUnitsContext"
+import OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
+import { convertOrganisationUnits } from "@/utils/organisationUnitTransformation/convertOrganisationUnits"
+import searchCourtOrganisationUnits from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
 import { useCourtCase } from "context/CourtCaseContext"
 import { useCombobox } from "downshift"
-import { useCallback, useEffect, useState } from "react"
-import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
-import { isError } from "types/Result"
+import { useContext, useEffect, useState } from "react"
 import { ListWrapper } from "./Typeahead.styles"
 
 interface Props {
@@ -21,30 +23,13 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
   setSaved
 }: Props) => {
   const { amend } = useCourtCase()
-  const [inputItems, setInputItems] = useState<OrganisationUnitApiResponse>([])
+  const { organisationUnits } = useContext(OrganisationUnitsContext)
+  const [inputItems, setInputItems] = useState<OrganisationUnitNameAndCode[]>([])
 
-  const fetchItems = useCallback(async (searchStringParam?: string) => {
-    const query = new URLSearchParams({ search: searchStringParam ?? "" })
-
-    const queryString = query.toString()
-    const url = queryString ? `/bichard/api/organisation-units?${queryString}` : `/bichard/api/organisation-units`
-
-    const organisationUnitsResponse = await fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP Error: ${response.status}`)
-        }
-
-        return response.json() as Promise<OrganisationUnitApiResponse>
-      })
-      .catch((error) => error as Error)
-
-    if (isError(organisationUnitsResponse)) {
-      return
-    }
-
-    setInputItems(organisationUnitsResponse)
-  }, [])
+  const filterItems = (searchString?: string) => {
+    const filtered = searchCourtOrganisationUnits(searchString || "", organisationUnits)
+    setInputItems(convertOrganisationUnits(filtered))
+  }
 
   const { isOpen, getMenuProps, getInputProps, highlightedIndex, getItemProps, inputValue, setInputValue } =
     useCombobox({
@@ -79,11 +64,11 @@ const OrganisationUnitTypeahead: React.FC<Props> = ({
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      fetchItems(inputValue)
+      filterItems(inputValue)
     }, 250)
 
     return () => clearTimeout(delayDebounceFn)
-  }, [fetchItems, inputValue])
+  }, [filterItems, inputValue])
 
   return (
     <div>

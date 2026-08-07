@@ -1,11 +1,12 @@
 import { useOrganisationUnits } from "@/context/OrganisationUnitsContext"
+import { convertOrganisationUnits } from "@/utils/organisationUnitTransformation/convertOrganisationUnits"
 import { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import AutoSave from "components/EditableFields/AutoSave"
 import EditableFieldRow from "components/EditableFields/EditableFieldRow"
 import ErrorMessage from "components/EditableFields/ErrorMessage"
 import OrganisationUnitTypeahead from "components/Typeaheads/OrganisationUnitTypeahead"
 import { useCourtCase } from "context/CourtCaseContext"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { Exception } from "types/exceptions"
 import getNextHearingLocationValue from "utils/amendments/getAmendmentValues/getNextHearingLocationValue"
 import hasNextHearingLocationException from "utils/exceptions/hasNextHearingLocationException"
@@ -28,20 +29,21 @@ export const NextHearingLocationField = ({
 }: NextHearingLocationFieldProps) => {
   const { amendments } = useCourtCase()
   const { organisationUnits } = useOrganisationUnits()
+  const organisationUnitsNameAndCode = useMemo(() => convertOrganisationUnits(organisationUnits), [organisationUnits])
   const amendedNextHearingLocation = getNextHearingLocationValue(amendments, offenceIndex, resultIndex) ?? ""
   const [isNhlSaved, setIsNhlSaved] = useState<boolean>(false)
   const [isNhlChanged, setIsNhlChanged] = useState<boolean>(false)
 
   const originalCode = result.NextResultSourceOrganisation?.OrganisationUnitCode
 
-  const isValidNhl = isValidNextHearingLocation(amendedNextHearingLocation, organisationUnits)
+  const isValidNhl = isValidNextHearingLocation(amendedNextHearingLocation, organisationUnitsNameAndCode)
   const isEditable = isCaseEditable && hasNextHearingLocationException(exceptions)
 
   const getDisplayValue = (code?: string | null) => {
     if (!code) {
       return ""
     }
-    const matchingOrg = organisationUnits.find((org) => org.fullOrganisationCode === code)
+    const matchingOrg = organisationUnitsNameAndCode.find((org) => org.fullOrganisationCode === code)
     return matchingOrg ? `${code} - ${matchingOrg.fullOrganisationName}` : `${code} - Unknown`
   }
 

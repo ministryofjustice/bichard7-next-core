@@ -1,8 +1,8 @@
-import type OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
+import type OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
 
 const isValidNextHearingLocation = (
   amendedNextHearingLocation: string | undefined,
-  organisations: OrganisationUnitApiResponse
+  organisations: OrganisationUnitNameAndCode[]
 ): boolean => {
   if (!amendedNextHearingLocation) {
     return false
