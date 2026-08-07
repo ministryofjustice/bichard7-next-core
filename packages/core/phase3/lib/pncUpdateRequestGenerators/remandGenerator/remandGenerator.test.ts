@@ -95,8 +95,6 @@ describe("remandGenerator", () => {
 
     expect(result).toStrictEqual({
       operation: "NEWREM",
-      personId: "e5919e75-86ec-415b-806f-c424ce9f9da2",
-      reportId: "e8c7d5fc-0872-4074-8175-2c849273a1f7",
       request: expectedRequest
     })
   })
