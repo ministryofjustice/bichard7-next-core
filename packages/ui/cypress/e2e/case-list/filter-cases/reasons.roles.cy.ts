@@ -24,6 +24,7 @@ describe("Reasons filters", () => {
   it("should not render the reasons component for exception handlers", () => {
     loginAndVisit("ExceptionHandler")
 
+    cy.get("#filter-panel").should("exist")
     cy.get("#filter-panel .reasons").should("not.exist")
     cy.get("#filter-panel .trigger-groups-fieldset").should("not.exist")
   })
@@ -31,8 +32,8 @@ describe("Reasons filters", () => {
   it("should not render the reasons component for trigger handlers", () => {
     loginAndVisit("TriggerHandler")
 
-    cy.get("#filter-panel .reasons").should("not.exist")
     cy.get("#filter-panel .trigger-groups-fieldset").should("exist")
+    cy.get("#filter-panel .reasons").should("not.exist")
   })
 
   it("should render the correct reasons if a user has conflicting groups", () => {
