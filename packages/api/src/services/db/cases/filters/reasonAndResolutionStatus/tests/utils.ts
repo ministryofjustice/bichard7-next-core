@@ -1,3 +1,4 @@
+import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
@@ -5,13 +6,16 @@ import type { FastifyInstance } from "fastify"
 import { ResolutionStatus, ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { randomUUID } from "crypto"
+import { sortBy } from "lodash"
 
 import type { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
+import type { Filters, Pagination } from "../../../../../../types/CaseIndexQuerystring"
 
 import { createCase } from "../../../../../../tests/helpers/caseHelper"
 import { createExceptionOnCase } from "../../../../../../tests/helpers/exceptionHelper"
 import { createTriggers } from "../../../../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../../../../tests/helpers/userHelper"
+import fetchCasesAndFilter from "../../../../../../useCases/cases/getCases/fetchCasesAndFilter"
 import { resolutionStatusCodeByText } from "../../../../../../useCases/dto/convertResolutionStatus"
 import * as Utils from "./utils"
 
@@ -329,4 +333,15 @@ export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: Fastif
     supervisor,
     triggerHandler
   }
+}
+
+export const applyFilter = async (filters: Filters, user: () => User, helper: SetupAppEnd2EndHelper) => {
+  const defaultQuery: Pagination = { maxPerPage: 25, pageNum: 1 }
+  const result = (await fetchCasesAndFilter(
+    helper.postgres.readonly,
+    { ...filters, ...defaultQuery },
+    user()
+  )) as CaseIndexMetadata
+
+  return sortBy(result.cases, "defendantName").map((c) => c.defendantName)
 }
