@@ -4,6 +4,7 @@ const { TextEncoder } = require("util")
 const config = {
   preset: "ts-jest",
   testEnvironment: "jsdom",
+  setupFiles: ["<rootDir>/jest.setup.ts"],
   transform: {
     "\\.[jt]sx?$": "@swc/jest"
   },

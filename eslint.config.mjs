@@ -96,7 +96,7 @@ export default [
       "packages/user-service/.next/*",
       "packages/user-service/cypress.config.js",
       "packages/user-service/next.config.js",
-      "packages/user-servicr/next-env.d.ts"
+      "packages/user-service/next-env.d.ts"
     ]
   },
   {
