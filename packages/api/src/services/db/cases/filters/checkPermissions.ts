@@ -37,5 +37,5 @@ export const shouldFilterForTriggers = (user: User, reason: Reason): boolean =>
   ((!userAccess(user)[Permission.Exceptions] && !reasonFilterOnlyIncludesExceptions(reason)) ||
     reasonFilterOnlyIncludesTriggers(reason))
 
-export const canSeeTriggersAndException = (user: User, reason: Reason): boolean =>
+export const canSeeTriggersAndExceptions = (user: User, reason: Reason): boolean =>
   userAccess(user)[Permission.Exceptions] && userAccess(user)[Permission.Triggers] && reason === Reason.All

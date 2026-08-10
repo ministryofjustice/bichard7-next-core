@@ -9,7 +9,7 @@ import type { DatabaseConnection } from "../../../../../types/DatabaseGateway"
 
 import { resolutionStatusCodeByText } from "../../../../../useCases/dto/convertResolutionStatus"
 import {
-  canSeeTriggersAndException,
+  canSeeTriggersAndExceptions,
   reasonCodesAreExceptionsOnly,
   reasonCodesAreTriggersOnly,
   reasonFilterOnlyIncludesExceptions,
@@ -32,7 +32,7 @@ const filterIfUnresolved = (
     query.push(
       database.connection`AND el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted})`
     )
-  } else if (canSeeTriggersAndException(user, filters.reason)) {
+  } else if (canSeeTriggersAndExceptions(user, filters.reason)) {
     if (reasonCodesAreExceptionsOnly(reasonCodes)) {
       query.push(
         database.connection`AND el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted})`
@@ -67,7 +67,7 @@ const filterIfResolved = (
     query.push(database.connection`AND el.trigger_resolved_ts IS NOT NULL`)
   } else if (shouldFilterForExceptions(user, filters.reason)) {
     query.push(database.connection`AND el.error_status = ${resolutionStatus}`)
-  } else if (canSeeTriggersAndException(user, filters.reason)) {
+  } else if (canSeeTriggersAndExceptions(user, filters.reason)) {
     if (reasonCodesAreExceptionsOnly(reasonCodes)) {
       query.push(database.connection`AND el.error_status = ${resolutionStatus}`)
     } else if (reasonCodesAreTriggersOnly(reasonCodes)) {
