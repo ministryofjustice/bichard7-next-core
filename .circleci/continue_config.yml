@@ -514,8 +514,7 @@ jobs:
             #!/bin/bash -eo pipefail
             source $BASH_ENV
 
-            sudo curl -L https://github.com/goss-org/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
-            sudo chmod +rx /usr/local/bin/goss
+            sudo curl -fsSL https://goss.rocks/install | sudo sh
 
             docker run -d --name test-container "s3-web-proxy:${DOCKER_TAG}"
             goss --gossfile packages/s3-web-proxy/goss.yaml validate
