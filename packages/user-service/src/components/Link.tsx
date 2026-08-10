@@ -1,5 +1,4 @@
 import { ReactNode } from "react"
-import nextConfig from "../../next.config"
 
 interface Props {
   children: ReactNode
@@ -12,6 +11,11 @@ interface Props {
   title?: string
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
   target?: string
+}
+
+const applyBasePath = (href: string): string => {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ""
+  return href.startsWith("/") ? `${basePath}${href}` : href
 }
 
 const Link = ({
@@ -28,7 +32,7 @@ const Link = ({
 }: Props) => (
   <a
     data-test={dataTest}
-    href={basePath ? `${nextConfig.basePath}/${href}` : href}
+    href={basePath ? applyBasePath(href) : href}
     className={className || "govuk-link"}
     id={id}
     rel={rel}
