@@ -37,7 +37,7 @@ const shouldFilterForTriggers = (user: User, reason?: Reason): boolean =>
   (user.hasAccessTo[Permission.Triggers] && !user.hasAccessTo[Permission.Exceptions]) ||
   (user.hasAccessTo[Permission.Triggers] && reasonFilterOnlyIncludesTriggers(reason))
 
-const canSeeTriggersAndException = (user: User, reason?: Reason): boolean =>
+const canSeeTriggersAndExceptions = (user: User, reason?: Reason): boolean =>
   user.hasAccessTo[Permission.Exceptions] &&
   user.hasAccessTo[Permission.Triggers] &&
   reason !== Reason.Triggers &&
@@ -57,7 +57,7 @@ const filterIfUnresolved = (
         qb.where({ errorStatus: "Unresolved" }).orWhere({ errorStatus: "Submitted" })
       })
     )
-  } else if (canSeeTriggersAndException(user, reason)) {
+  } else if (canSeeTriggersAndExceptions(user, reason)) {
     if (reasonCodes && reasonCodesAreExceptionsOnly(reasonCodes)) {
       query.andWhere(
         new Brackets((qb) => {
@@ -93,7 +93,7 @@ const filterIfResolved = (
     query.andWhere({ triggerResolvedTimestamp: Not(IsNull()) })
   } else if (shouldFilterForExceptions(user, reason)) {
     query.andWhere({ errorStatus: "Resolved" })
-  } else if (canSeeTriggersAndException(user, reason)) {
+  } else if (canSeeTriggersAndExceptions(user, reason)) {
     if (reasonCodes && reasonCodesAreExceptionsOnly(reasonCodes)) {
       query.andWhere({ errorStatus: "Resolved" })
     } else if (reasonCodes && reasonCodesAreTriggersOnly(reasonCodes)) {
