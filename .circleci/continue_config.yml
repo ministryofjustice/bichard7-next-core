@@ -517,6 +517,7 @@ jobs:
             sudo curl -fsSL https://goss.rocks/install | sudo sh
 
             export GOSS_FILE=packages/s3-web-proxy/goss.yaml
+            export GOSS_SLEEP=5
             dgoss run -e S3_BUCKET_NAME="test-bucket" "s3-web-proxy:${DOCKER_TAG}"
   build_ui_image:
     machine:
