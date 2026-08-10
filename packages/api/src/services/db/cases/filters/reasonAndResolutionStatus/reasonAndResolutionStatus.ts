@@ -4,10 +4,10 @@ import type { Row } from "postgres"
 
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 
-import type { Filters } from "../../../../types/CaseIndexQuerystring"
-import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
+import type { Filters } from "../../../../../types/CaseIndexQuerystring"
+import type { DatabaseConnection } from "../../../../../types/DatabaseGateway"
 
-import { resolutionStatusCodeByText } from "../../../../useCases/dto/convertResolutionStatus"
+import { resolutionStatusCodeByText } from "../../../../../useCases/dto/convertResolutionStatus"
 import {
   canSeeTriggersAndException,
   reasonCodesAreExceptionsOnly,
@@ -16,7 +16,7 @@ import {
   reasonFilterOnlyIncludesTriggers,
   shouldFilterForExceptions,
   shouldFilterForTriggers
-} from "./checkPermissions"
+} from "../checkPermissions"
 
 const filterIfUnresolved = (
   database: DatabaseConnection,
