@@ -14,6 +14,8 @@ const generateUpdateFields = (result: PhaseResult): Partial<ErrorListRecord> => 
     asn: record.asn,
     ptiurn: record.ptiurn,
     org_for_police_filter: record.org_for_police_filter,
+    hearing_outcome: record.hearing_outcome,
+    updated_hearing_outcome: record.updated_hearing_outcome,
     annotated_msg: record.annotated_msg,
     updated_msg: record.updated_msg,
     user_updated_flag: record.user_updated_flag

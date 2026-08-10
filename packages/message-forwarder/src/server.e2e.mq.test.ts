@@ -9,12 +9,15 @@ import createConductorClient from "@moj-bichard7/common/conductor/createConducto
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 import fs from "fs"
+import type { Sql } from "postgres"
 import MessageForwarder from "./MessageForwarder"
 import createStompClient from "./createStompClient"
 
 const stompClient = createStompClient()
 const mqConfig = createMqConfig()
 const conductorClient = createConductorClient()
+const database = jest.fn() as unknown as Sql
+Object.assign(database, { end: jest.fn() })
 
 const resubmittedAho = fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml").toString()
 
@@ -22,7 +25,7 @@ describe("Server in MQ mode", () => {
   let messageForwarder: MessageForwarder
 
   beforeAll(async () => {
-    messageForwarder = new MessageForwarder(stompClient, conductorClient)
+    messageForwarder = new MessageForwarder(stompClient, conductorClient, database)
     await messageForwarder.start()
   })
 

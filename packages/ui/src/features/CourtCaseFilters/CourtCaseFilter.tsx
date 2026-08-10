@@ -133,9 +133,15 @@ const CourtCaseFilter: React.FC<Props> = ({
           <ConditionalRender isRendered={currentUser.hasAccessTo[Permission.Triggers]}>
             <Divider />
             <TriggerGroups dispatch={dispatch} reasonCodes={state.reasonCodes} />
+          </ConditionalRender>
+
+          <ConditionalRender
+            isRendered={currentUser.hasAccessTo[Permission.Triggers] && currentUser.hasAccessTo[Permission.Exceptions]}
+          >
             <Divider />
             <ReasonFilter reason={state.reasonFilter.value} reasonOptions={reasonOptions} dispatch={dispatch} />
           </ConditionalRender>
+
           <Divider />
 
           <CourtDateFilter
