@@ -23,10 +23,7 @@ WHERE Case_Defendant_Offence_Result_ResultCode = '1116';
 
 3. Alternatively execute an existing sql file: `.read ./sql/describe.sql`
 
-
-3. `ctrl+D` to exit the shell
-
-
+4. `ctrl+D` to exit the shell
 
 ### Athena
 
