@@ -2,7 +2,6 @@
   "name": "@moj-bichard7/user-service",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "predev": "./scripts/symlink-node-modules.sh",
     "dev": "COOKIES_SECURE=false BASE_URL=http://localhost:3000 next dev",
