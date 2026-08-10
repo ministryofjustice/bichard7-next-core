@@ -38,7 +38,7 @@ describe("Filter cases by resolution status using supervisor user", () => {
   }[] = [
     {
       description:
-        "Should see all cases with resolved TRPR0010 triggers when user is a supervisor and searches for TRPR0010",
+        "Should see resolved TRPR0010 triggers when searching for reason code TRPR0010 and resolution status set to resolved, reason set to all",
       expectedCases: [
         "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
         "No exceptions/Bails Trigger Resolved by generalHandler",
@@ -54,7 +54,7 @@ describe("Filter cases by resolution status using supervisor user", () => {
     },
     {
       description:
-        "Should see all cases with resolved HO100300 exceptions when user is a supervisor and searches for HO100300",
+        "Should see resolved HO100300 exceptions when searching for reason code HO100300 and resolution status set to resolved, reason set to all",
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
         "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
@@ -73,7 +73,7 @@ describe("Filter cases by resolution status using supervisor user", () => {
     },
     {
       description:
-        "Should see all cases with unresolved triggers or unresolved exceptions when user is a supervisor and unresolved filter applied",
+        "Should see unresolved triggers or unresolved exceptions when resolution status set to unresolved and reason set to all",
       expectedCases: [
         "Exceptions Unresolved/Trigger Resolved by someoneElse",
         "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
@@ -91,7 +91,7 @@ describe("Filter cases by resolution status using supervisor user", () => {
     },
     {
       description:
-        "Should see all cases with triggers and exceptions, resolved by anyone when user is a supervisor and resolved filter applied",
+        "Should see resolved triggers and exceptions when resolution status set to resolved and reason set to all",
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
         "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler",
@@ -112,8 +112,7 @@ describe("Filter cases by resolution status using supervisor user", () => {
       user: () => users.supervisor
     },
     {
-      description:
-        "Should see all cases with unresolved triggers and exceptions when case state is not set as a supervisor",
+      description: "Should see unresolved triggers and exceptions when case state is not set, and reason set to all",
       expectedCases: [
         "Exceptions Unresolved/Trigger Resolved by someoneElse",
         "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
