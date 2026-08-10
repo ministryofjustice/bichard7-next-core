@@ -1,5 +1,5 @@
-import { addBasePath } from "next/dist/client/add-base-path"
 import { ReactNode } from "react"
+import nextConfig from "../../next.config"
 
 interface Props {
   children: ReactNode
@@ -28,7 +28,7 @@ const Link = ({
 }: Props) => (
   <a
     data-test={dataTest}
-    href={basePath ? addBasePath(href) : href}
+    href={basePath ? `${nextConfig.basePath}/${href}` : href}
     className={className || "govuk-link"}
     id={id}
     rel={rel}
