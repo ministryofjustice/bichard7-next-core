@@ -1,11 +1,13 @@
 import type { ConductorClient } from "@io-orkes/conductor-javascript"
-import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
-import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
 import parsePncUpdateDataSetXml from "@moj-bichard7/common/aho/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
+import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
+import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+import Phase from "@moj-bichard7/core/types/Phase"
 import type { Client } from "@stomp/stompjs"
+import type { Sql } from "postgres"
+import fetchPoliceQuery from "./fetchPoliceQuery"
 import { sendToResubmissionQueue } from "./sendToResubmissionQueue/sendToResubmissionQueue"
 import { startBichardProcess } from "./startBichardProcess/startBichardProcess"
-import Phase from "@moj-bichard7/core/types/Phase"
 
 enum DestinationType {
   MQ = "mq",
@@ -21,7 +23,8 @@ const conductorWorkflows: Record<string, Phase> = {
 const forwardMessage = async (
   message: string,
   stompClient: Client,
-  conductorClient: ConductorClient
+  conductorClient: ConductorClient,
+  database: Sql
 ): PromiseResult<void> => {
   const destinationType: DestinationType = (process.env.DESTINATION_TYPE ?? "auto") as DestinationType
   if (!Object.values(DestinationType).includes(destinationType)) {
@@ -57,6 +60,15 @@ const forwardMessage = async (
   const workflowExists = workflows && workflows.length > 0
   if (destinationType === DestinationType.AUTO && !workflowExists) {
     return sendToResubmissionQueue(stompClient, message, correlationId, phase)
+  }
+
+  const policeQuery = await fetchPoliceQuery(database, correlationId)
+  if (isError(policeQuery)) {
+    return policeQuery
+  }
+
+  if (policeQuery) {
+    ahoOrPncUpdateDataset.PncQuery = policeQuery
   }
 
   return startBichardProcess(conductorWorkflow, ahoOrPncUpdateDataset, correlationId, conductorClient, phase)

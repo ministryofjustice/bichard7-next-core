@@ -1,7 +1,7 @@
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type User from "services/entities/User"
 import type { DataSource } from "typeorm"
@@ -258,7 +258,7 @@ describe("Update lock status to locked", () => {
       })
 
       const actualCourtCase = await getCourtCase(dataSource, inputCourtCase.errorId)
-      expect(actualCourtCase).toMatchObject(expectedCourtCase)
+      expect(actualCourtCase).toStrictEqual(expectedCourtCase)
       expect(events).toStrictEqual(expectedEvents)
     }
   )

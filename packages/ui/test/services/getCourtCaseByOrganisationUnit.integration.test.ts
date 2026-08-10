@@ -280,7 +280,7 @@ describe("getCourtCaseByOrganisationUnits", () => {
     } as Partial<User> as User)
 
     expect(isError(result)).toBe(false)
-    expect(result as CourtCase).toStrictEqual(inputCourtCase)
+    expect(result).toStrictEqual(inputCourtCase)
   })
 
   it("Should return null if the court case doesn't exist", async () => {

@@ -1,5 +1,4 @@
 import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-import type { CaseRow } from "@moj-bichard7/common/types/Case"
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { TransactionSql } from "postgres"
 
@@ -11,6 +10,7 @@ import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { auditLogEventSchema } from "@moj-bichard7/common/schemas/auditLogEvent"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import { CaseRowSchema } from "@moj-bichard7/common/types/Case"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import postgres from "postgres"
@@ -40,6 +40,13 @@ type ResubmitResult = {
   s3TaskDataPath: string
 }
 
+const caseRowResultSchema = CaseRowSchema.pick({
+  error_id: true,
+  phase: true,
+  updated_msg: true,
+  hearing_outcome: true
+})
+
 const handleCaseResubmission = async (
   sql: TransactionSql,
   s3TaskData: InputData,
@@ -49,7 +56,7 @@ const handleCaseResubmission = async (
   lockId?: string
 ): PromiseResult<ResubmitResult> => {
   const caseRowResult =
-    await sql`SELECT * FROM br7own.error_list el WHERE el.message_id = ${s3TaskData.messageId}`.catch(
+    await sql`SELECT ${sql(Object.keys(caseRowResultSchema.shape))} FROM br7own.error_list el WHERE el.message_id = ${s3TaskData.messageId}`.catch(
       (error: Error) => error
     )
 
@@ -57,7 +64,12 @@ const handleCaseResubmission = async (
     throw new Error(`Couldn't find Case with messageId: ${s3TaskData.messageId}`)
   }
 
-  const caseRow = caseRowResult[0] as CaseRow
+  const parsedCaseRowResult = z.array(caseRowResultSchema).safeParse(caseRowResult)
+  if (!parsedCaseRowResult.success) {
+    return new Error("Schema validation failed for error_list SELECT query")
+  }
+
+  const caseRow = parsedCaseRowResult.data[0]
 
   if (caseRow.updated_msg === null) {
     throw new Error("Missing updated_msg")
@@ -89,6 +101,11 @@ const handleCaseResubmission = async (
 
   if (isError(message)) {
     throw message
+  }
+
+  // Remove this once the code has been migrated to use the hearing outcome JSON columns instead of the XML columns
+  if (caseRow.hearing_outcome) {
+    message.PncQuery = caseRow.hearing_outcome.PncQuery
   }
 
   const tags: Record<string, string> = lockId ? { [lockKey]: lockId } : {}

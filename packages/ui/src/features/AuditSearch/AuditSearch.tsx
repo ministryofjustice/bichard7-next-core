@@ -1,3 +1,4 @@
+import FormSubmitButton from "@/components/Buttons/FormSubmitButton"
 import ResolveByFilter from "@/components/SearchFilters/ResolvedByFilter"
 import Checkbox from "components/Checkbox/Checkbox"
 import { FormGroup } from "components/FormGroup"
@@ -11,7 +12,6 @@ import submitForm from "services/audit/submitForm"
 import { FormState } from "types/audit/FormState"
 import AuditResolvedBy from "types/AuditResolvedBy"
 import { FormButtonRow, IncludeRow } from "./AuditSearch.styles"
-import AuditSearchSubmitButton from "./AuditSearchSubmitButton"
 
 const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string[] }> = (props) => {
   const { resolvers, triggerTypes } = props
@@ -181,7 +181,9 @@ const AuditSearch: React.FC<{ resolvers: AuditResolvedBy[]; triggerTypes: string
                   <span className="govuk-visually-hidden">{"Error:"}</span> {currentFormState.errorMessage}
                 </p>
               ) : null}
-              <AuditSearchSubmitButton formValid={formValid}>{"Search cases"}</AuditSearchSubmitButton>
+              <FormSubmitButton name="audit-search-button" disabled={!formValid}>
+                {"Search cases"}
+              </FormSubmitButton>
               <p className="govuk-body">
                 <a href="/bichard/audit/search" className="govuk-link govuk-link--no-visited-state">
                   {"Clear search"}

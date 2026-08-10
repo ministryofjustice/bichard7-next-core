@@ -2,23 +2,28 @@ import "../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "auto" // has to be done prior to module imports
 process.env.CONDUCTOR_WORKFLOW = "bichard_phase_1"
 
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 import { uploadPncMock } from "@moj-bichard7/common/test/pnc/uploadPncMock"
 import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncomingMessageToS3"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "crypto"
 import fs from "fs"
+import postgres from "postgres"
 import createStompClient from "../createStompClient"
 import successExceptionsAHOFixture from "../test/fixtures/success-exceptions-aho.json"
 import successExceptionsPNCMock from "../test/fixtures/success-exceptions-aho.pnc.json"
+import { clearTables, insertCase } from "../test/setup/database"
 import forwardMessage from "./forwardMessage"
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
-import { isError } from "@moj-bichard7/common/types/Result"
 
 const mq = createMqConfig()
 const stompClient = createStompClient()
 const conductorClient = createConductorClient()
+const database = postgres(createDbConfig(true))
+const testDatabase = postgres(createDbConfig())
 
 describe("forwardMessage", () => {
   let mqListener: MqListener
@@ -43,6 +48,7 @@ describe("forwardMessage", () => {
     successExceptionsAHO = JSON.stringify(successExceptionsAHOFixture).replace("CORRELATION_ID", correlationId)
 
     await createAuditLogRecord(correlationId)
+    await clearTables(testDatabase)
   })
 
   afterEach(() => {
@@ -53,6 +59,8 @@ describe("forwardMessage", () => {
   afterAll(async () => {
     mqListener.stop()
     await stompClient.deactivate()
+    await database.end()
+    await testDatabase.end()
   })
 
   it("sends the message to the resubmission queue if the destination type is auto and no conductor workflow exists", async () => {
@@ -60,7 +68,7 @@ describe("forwardMessage", () => {
       "CORRELATION_ID",
       correlationId
     )
-    await forwardMessage(incomingMessage, stompClient, conductorClient)
+    await forwardMessage(incomingMessage, stompClient, conductorClient, database)
     const message = await mqListener.waitForMessage()
 
     expect(mqListener.messages).toHaveLength(1)
@@ -82,8 +90,9 @@ describe("forwardMessage", () => {
     const resubmittedMessage = String(
       fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml")
     ).replace("CORRELATION_ID", correlationId)
+    await insertCase(testDatabase, { message_id: correlationId })
 
-    await forwardMessage(resubmittedMessage, stompClient, conductorClient)
+    await forwardMessage(resubmittedMessage, stompClient, conductorClient, database)
 
     workflows = await conductorClient.workflowResource.getWorkflows1("bichard_phase_1", correlationId, true)
     expect(workflows).toHaveLength(2)

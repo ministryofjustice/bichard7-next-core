@@ -119,7 +119,6 @@ const mapXmlCxe01ToAho = (cxe: Cxe01 | undefined) => {
     }
 
     courtCases = cxe.CourtCases?.CourtCase.map((courtCase) => ({
-      ...(courtCase["@_CourtCaseId"] && { courtCaseId: courtCase["@_CourtCaseId"] }),
       courtCaseReference: courtCase.CCR["@_CourtCaseRefNo"],
       offences: mapXmlOffencesToAho(courtCase.Offences.Offence as AhoXmlPncOffence[])
     }))
@@ -148,9 +147,7 @@ const mapXmlCxe01ToAho = (cxe: Cxe01 | undefined) => {
     courtCases,
     forceStationCode: cxe.FSC["@_FSCode"],
     penaltyCases,
-    pncId: cxe.IDS["@_PNCID"],
-    ...(cxe.IDS["@_PersonId"] ? { personId: cxe.IDS["@_PersonId"] } : {}),
-    ...(cxe.IDS["@_ReportId"] ? { reportId: cxe.IDS["@_ReportId"] } : {})
+    pncId: cxe.IDS["@_PNCID"]
   }
   return result
 }

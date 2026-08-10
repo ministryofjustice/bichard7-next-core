@@ -1,9 +1,10 @@
 import OrganisationUnitTypeahead from "@/components/Typeaheads/OrganisationUnitTypeahead"
 import { Amendments } from "@/types/Amendments"
 import { DisplayFullCourtCase } from "@/types/display/CourtCases"
-import { CourtCaseContext, CourtCaseContextType } from "context/CourtCaseContext" // Adjust path to your context file
+import { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import { CourtCaseContext, CourtCaseContextType } from "context/CourtCaseContext"
+import { OrganisationUnitsContext } from "context/OrganisationUnitsContext"
 import React from "react"
-import OrganisationUnitApiResponse from "types/OrganisationUnitApiResponse"
 
 describe("OrganisationUnitTypeahead Component", () => {
   const courtCase = {
@@ -33,28 +34,29 @@ describe("OrganisationUnitTypeahead Component", () => {
     savedAmendments: {}
   }
 
-  const mockOrgUnits: OrganisationUnitApiResponse = [
-    { fullOrganisationCode: "B01EF00", fullOrganisationName: "Magistrates' Court London" },
-    { fullOrganisationCode: "B02GH00", fullOrganisationName: "Crown Court Manchester" }
+  const mockOrgUnits: OrganisationUnit[] = [
+    {
+      topLevelCode: "B",
+      topLevelName: "Magistrates' Court",
+      secondLevelCode: "01",
+      secondLevelName: "London",
+      thirdLevelCode: "EF",
+      thirdLevelName: "",
+      thirdLevelPsaCode: "",
+      bottomLevelCode: "00",
+      bottomLevelName: ""
+    },
+    {
+      topLevelCode: "B",
+      topLevelName: "Crown Court",
+      secondLevelCode: "02",
+      secondLevelName: "Manchester",
+      thirdLevelCode: "GH",
+      thirdLevelName: "",
+      thirdLevelPsaCode: "5678",
+      bottomLevelCode: "00"
+    }
   ]
-
-  beforeEach(() => {
-    cy.intercept("GET", "/bichard/api/organisation-units*", (req) => {
-      const url = new URL(req.url)
-      const search = url.searchParams.get("search") ?? ""
-
-      const filtered = mockOrgUnits.filter(
-        (unit) =>
-          unit.fullOrganisationCode.toLowerCase().includes(search.toLowerCase()) ||
-          unit.fullOrganisationName.toLowerCase().includes(search.toLowerCase())
-      )
-
-      req.reply({
-        statusCode: 200,
-        body: filtered
-      })
-    }).as("fetchOrgUnits")
-  })
 
   interface TestWrapperProps {
     children: React.ReactNode
@@ -74,7 +76,13 @@ describe("OrganisationUnitTypeahead Component", () => {
       dispatchMock
     ]
 
-    return <CourtCaseContext.Provider value={mockContextValue}>{children}</CourtCaseContext.Provider>
+    return (
+      <CourtCaseContext.Provider value={mockContextValue}>
+        <OrganisationUnitsContext.Provider value={{ organisationUnits: mockOrgUnits }}>
+          {children}
+        </OrganisationUnitsContext.Provider>
+      </CourtCaseContext.Provider>
+    )
   }
 
   it("renders with an initial value if provided", () => {
@@ -87,20 +95,16 @@ describe("OrganisationUnitTypeahead Component", () => {
     cy.get("input#next-hearing-location").should("be.visible").and("have.value", "B01EF00")
   })
 
-  it("triggers network request and sets parent organization lists on load/input", () => {
-    const setOrganisationsSpy = cy.stub().as("setOrganisations")
-
+  it("filters organisation units locally from context on typing", () => {
     cy.mount(
       <TestWrapper amendSpy={cy.stub()}>
-        <OrganisationUnitTypeahead resultIndex={0} offenceIndex={1} setOrganisations={setOrganisationsSpy} />
+        <OrganisationUnitTypeahead resultIndex={0} offenceIndex={1} />
       </TestWrapper>
     )
 
     cy.get("input#next-hearing-location").type("Magistrates")
-    cy.wait("@fetchOrgUnits")
 
-    cy.get("@setOrganisations").should("have.been.calledWithMatch", [mockOrgUnits[0]])
-    cy.get("ul").children("li").should("have.length", 1)
+    cy.get("ul").children("li").should("have.length", 1).and("contain.text", "Magistrates' Court London")
   })
 
   it("fires amend context updates and UI form state flags sequentially on typing updates", () => {
