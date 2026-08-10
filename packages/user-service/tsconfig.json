@@ -33,7 +33,7 @@
     },
     "types": ["jest"]
   },
-  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"],
   "rootDir": ["./src", "./testFixtures"]
 }
