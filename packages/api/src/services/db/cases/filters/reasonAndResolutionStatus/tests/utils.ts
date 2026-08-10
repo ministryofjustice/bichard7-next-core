@@ -1,7 +1,6 @@
 import type { CaseIndexMetadata } from "@moj-bichard7/common/types/Case"
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
-import type { FastifyInstance } from "fastify"
 
 import { ResolutionStatus, ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
@@ -22,6 +21,7 @@ import * as Utils from "./utils"
 export type CreateReasonCaseProps = {
   caseId: number
   exception?: {
+    exceptionCode: string
     exceptionResolvedBy?: string
   }
   trigger?: {
@@ -122,9 +122,10 @@ export interface DummyDataUsers {
 
 export const dummyTriggerCode = "TRPR0001"
 export const bailsTriggerCode = "TRPR0010"
-export const dummyExceptionCode = "HO100300"
+export const dummyExceptionCode1 = "HO100300"
+export const dummyExceptionCode2 = "H0100332"
 
-export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: FastifyInstance): Promise<DummyDataUsers> => {
+export const insertDummyData = async (helper: SetupAppEnd2EndHelper): Promise<DummyDataUsers> => {
   await helper.postgres.clearDb()
   await helper.dynamo.clearDynamo()
 
@@ -153,8 +154,8 @@ export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: Fastif
       await createExceptionOnCase(
         helper.postgres,
         args.caseId,
-        "HO100300",
-        "HO100300||b7.errorReport",
+        args.exception.exceptionCode,
+        `${args.exception.exceptionCode}||b7.errorReport`,
         args.exception.exceptionResolvedBy ? ResolutionStatus.Resolved : ResolutionStatus.Unresolved,
         args.exception.exceptionResolvedBy
       )
@@ -199,6 +200,7 @@ export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: Fastif
   await insertTestCaseWithTriggersAndExceptions({
     caseId: 0,
     exception: {
+      exceptionCode: dummyExceptionCode1,
       exceptionResolvedBy: undefined
     },
     trigger: {
@@ -208,6 +210,7 @@ export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: Fastif
   await insertTestCaseWithTriggersAndExceptions({
     caseId: 1,
     exception: {
+      exceptionCode: dummyExceptionCode1,
       exceptionResolvedBy: exceptionHandler.username
     },
     trigger: {
@@ -217,6 +220,7 @@ export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: Fastif
   await insertTestCaseWithTriggersAndExceptions({
     caseId: 2,
     exception: {
+      exceptionCode: dummyExceptionCode1,
       exceptionResolvedBy: exceptionHandler.username
     },
     trigger: {
@@ -226,6 +230,7 @@ export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: Fastif
   await insertTestCaseWithTriggersAndExceptions({
     caseId: 3,
     exception: {
+      exceptionCode: dummyExceptionCode1,
       exceptionResolvedBy: anotherUserName
     },
     trigger: {
@@ -235,6 +240,7 @@ export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: Fastif
   await insertTestCaseWithTriggersAndExceptions({
     caseId: 4,
     exception: {
+      exceptionCode: dummyExceptionCode1,
       exceptionResolvedBy: generalHandler.username
     },
     trigger: {
@@ -244,6 +250,7 @@ export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: Fastif
   await insertTestCaseWithTriggersAndExceptions({
     caseId: 5,
     exception: {
+      exceptionCode: dummyExceptionCode1,
       exceptionResolvedBy: generalHandler.username
     },
     trigger: {
@@ -253,6 +260,7 @@ export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: Fastif
   await insertTestCaseWithTriggersAndExceptions({
     caseId: 6,
     exception: {
+      exceptionCode: dummyExceptionCode1,
       exceptionResolvedBy: undefined
     },
     trigger: {
@@ -286,6 +294,7 @@ export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: Fastif
   await insertTestCaseWithTriggersAndExceptions({
     caseId: 10,
     exception: {
+      exceptionCode: dummyExceptionCode1,
       exceptionResolvedBy: undefined
     },
     trigger: undefined
@@ -293,6 +302,7 @@ export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: Fastif
   await insertTestCaseWithTriggersAndExceptions({
     caseId: 11,
     exception: {
+      exceptionCode: dummyExceptionCode1,
       exceptionResolvedBy: generalHandler.username
     },
     trigger: undefined
@@ -308,6 +318,7 @@ export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: Fastif
   await insertTestCaseWithTriggersAndExceptions({
     caseId: 13,
     exception: {
+      exceptionCode: dummyExceptionCode1,
       exceptionResolvedBy: generalHandler.username
     },
     trigger: {
@@ -318,12 +329,21 @@ export const insertDummyData = async (helper: SetupAppEnd2EndHelper, app: Fastif
   await insertTestCaseWithTriggersAndExceptions({
     caseId: 14,
     exception: {
+      exceptionCode: dummyExceptionCode1,
       exceptionResolvedBy: undefined
     },
     trigger: {
       bailsTrigger: true,
       triggerResolvedBy: undefined
     }
+  })
+  await insertTestCaseWithTriggersAndExceptions({
+    caseId: 15,
+    exception: {
+      exceptionCode: dummyExceptionCode2,
+      exceptionResolvedBy: undefined
+    },
+    trigger: undefined
   })
 
   return {

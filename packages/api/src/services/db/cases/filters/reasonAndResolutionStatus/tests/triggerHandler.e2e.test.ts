@@ -23,7 +23,7 @@ describe("Filter cases by resolution status", () => {
     await helper.postgres.clearDb()
     await helper.dynamo.clearDynamo()
 
-    users = await Utils.insertDummyData(helper, app)
+    users = await Utils.insertDummyData(helper)
   })
 
   afterAll(async () => {
@@ -39,7 +39,7 @@ describe("Filter cases by resolution status", () => {
   }[] = [
     {
       description:
-        "Should see cases with unresolved triggers when user is a trigger handler and unresolved filter applied",
+        "Should see all cases with unresolved triggers when user is a trigger handler and unresolved filter applied",
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
         "Exceptions Unresolved/Trigger Unresolved",
@@ -53,16 +53,34 @@ describe("Filter cases by resolution status", () => {
       user: () => users.triggerHandler
     },
     {
-      description: "Should see cases with unresolved triggers when user is a trigger handler and searches for TRPR0010",
+      description:
+        "Should see all cases with unresolved TRPR0010 triggers when user is a trigger handler and searches for TRPR0010",
       expectedCases: ["Exceptions Unresolved/Bails Trigger Unresolved", "No exceptions/Bails Trigger Unresolved"],
       filters: {
         reason: Reason.All,
-        reasonCodes: ["TRPR0010"]
+        reasonCodes: [Utils.bailsTriggerCode]
       },
       user: () => users.triggerHandler
     },
     {
-      description: "Should see cases with resolved triggers when user is a trigger handler and resolved filter applied",
+      description:
+        "Should see all cases with resolved TRPR0010 triggers when user is a trigger handler and searches for TRPR0010",
+      expectedCases: [
+        "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
+        "No exceptions/Bails Trigger Resolved by generalHandler",
+        "No exceptions/Bails Trigger Resolved by someoneElse",
+        "No exceptions/Bails Trigger Resolved by triggerHandler"
+      ],
+      filters: {
+        caseState: ResolutionStatus.Resolved,
+        reason: Reason.All,
+        reasonCodes: [Utils.bailsTriggerCode]
+      },
+      user: () => users.triggerHandler
+    },
+    {
+      description:
+        "Should see all cases with resolved triggers when user is a trigger handler and resolved filter applied",
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
         "No exceptions/Bails Trigger Resolved by triggerHandler",
@@ -95,21 +113,6 @@ describe("Filter cases by resolution status", () => {
       filters: {
         caseState: ResolutionStatus.Unresolved,
         reason: Reason.Exceptions
-      },
-      user: () => users.triggerHandler
-    },
-    {
-      description: "Should see all resolved  bails triggers when searching a bails trigger code as a trigger handler",
-      expectedCases: [
-        "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
-        "No exceptions/Bails Trigger Resolved by generalHandler",
-        "No exceptions/Bails Trigger Resolved by someoneElse",
-        "No exceptions/Bails Trigger Resolved by triggerHandler"
-      ],
-      filters: {
-        caseState: ResolutionStatus.Resolved,
-        reason: Reason.All,
-        reasonCodes: [Utils.bailsTriggerCode]
       },
       user: () => users.triggerHandler
     },

@@ -23,7 +23,7 @@ describe("Filter cases by resolution status using supervisor user", () => {
     await helper.postgres.clearDb()
     await helper.dynamo.clearDynamo()
 
-    users = await Utils.insertDummyData(helper, app)
+    users = await Utils.insertDummyData(helper)
   })
 
   afterAll(async () => {
@@ -37,7 +37,8 @@ describe("Filter cases by resolution status using supervisor user", () => {
     user: () => User
   }[] = [
     {
-      description: "Should see cases with resolved triggers when user is a supervisor and searches for TRPR0010",
+      description:
+        "Should see all cases with resolved TRPR0010 triggers when user is a supervisor and searches for TRPR0010",
       expectedCases: [
         "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
         "No exceptions/Bails Trigger Resolved by generalHandler",
@@ -47,12 +48,13 @@ describe("Filter cases by resolution status using supervisor user", () => {
       filters: {
         caseState: ResolutionStatus.Resolved,
         reason: Reason.All,
-        reasonCodes: ["TRPR0010"]
+        reasonCodes: [Utils.bailsTriggerCode]
       },
       user: () => users.supervisor
     },
     {
-      description: "Should see cases with resolved exceptions when user is a supervisor and searches for HO100300",
+      description:
+        "Should see all cases with resolved HO100300 exceptions when user is a supervisor and searches for HO100300",
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
         "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
@@ -65,7 +67,7 @@ describe("Filter cases by resolution status using supervisor user", () => {
       filters: {
         caseState: ResolutionStatus.Resolved,
         reason: Reason.All,
-        reasonCodes: [Utils.dummyExceptionCode]
+        reasonCodes: [Utils.dummyExceptionCode1]
       },
       user: () => users.supervisor
     },
@@ -76,6 +78,7 @@ describe("Filter cases by resolution status using supervisor user", () => {
         "Exceptions Unresolved/Trigger Resolved by someoneElse",
         "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
         "Exceptions Unresolved/Trigger Unresolved",
+        "Exceptions Unresolved/No triggers",
         "No exceptions/Bails Trigger Unresolved",
         "Exceptions Unresolved/No triggers",
         "Exceptions Unresolved/Bails Trigger Unresolved"
@@ -116,6 +119,7 @@ describe("Filter cases by resolution status using supervisor user", () => {
         "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
         "Exceptions Unresolved/Trigger Unresolved",
         "No exceptions/Bails Trigger Unresolved",
+        "Exceptions Unresolved/No triggers",
         "Exceptions Unresolved/No triggers",
         "Exceptions Unresolved/Bails Trigger Unresolved"
       ],

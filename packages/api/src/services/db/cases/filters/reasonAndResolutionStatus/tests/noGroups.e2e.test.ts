@@ -21,7 +21,7 @@ describe("Filter cases by resolution status using no groups user", () => {
     await helper.postgres.clearDb()
     await helper.dynamo.clearDynamo()
 
-    users = await Utils.insertDummyData(helper, app)
+    users = await Utils.insertDummyData(helper)
   })
 
   afterAll(async () => {

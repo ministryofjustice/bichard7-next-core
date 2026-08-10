@@ -22,7 +22,7 @@ describe("Filter cases by resolution status", () => {
     await helper.postgres.clearDb()
     await helper.dynamo.clearDynamo()
 
-    users = await Utils.insertDummyData(helper, app)
+    users = await Utils.insertDummyData(helper)
   })
 
   afterAll(async () => {
@@ -42,6 +42,7 @@ describe("Filter cases by resolution status", () => {
       expectedCases: [
         "Exceptions Unresolved/Trigger Resolved by someoneElse",
         "Exceptions Unresolved/Trigger Unresolved",
+        "Exceptions Unresolved/No triggers",
         "Exceptions Unresolved/No triggers",
         "Exceptions Unresolved/Bails Trigger Unresolved"
       ],
@@ -80,7 +81,7 @@ describe("Filter cases by resolution status", () => {
       ],
       filters: {
         reason: Reason.All,
-        reasonCodes: [Utils.dummyExceptionCode]
+        reasonCodes: [Utils.dummyExceptionCode1]
       },
       user: () => users.exceptionHandler
     },
@@ -117,7 +118,7 @@ describe("Filter cases by resolution status", () => {
       filters: {
         caseState: ResolutionStatus.Resolved,
         reason: Reason.All,
-        reasonCodes: [Utils.dummyExceptionCode]
+        reasonCodes: [Utils.dummyExceptionCode1]
       },
       user: () => users.exceptionHandler
     },
@@ -153,6 +154,7 @@ describe("Filter cases by resolution status", () => {
         "Exceptions Unresolved/Trigger Resolved by someoneElse",
         "Exceptions Unresolved/Trigger Unresolved",
         "Exceptions Unresolved/No triggers",
+        "Exceptions Unresolved/No triggers",
         "Exceptions Unresolved/Bails Trigger Unresolved"
       ],
       filters: {
@@ -166,9 +168,6 @@ describe("Filter cases by resolution status", () => {
     const defendantNames = await Utils.applyFilter(filters, user, helper)
 
     const sortedExpectedCases = sortStringAsc(expectedCases)
-
-    console.log(defendantNames)
-    console.log(sortedExpectedCases)
 
     expect(defendantNames).toStrictEqual(sortedExpectedCases)
   })
