@@ -46,6 +46,7 @@ run-local:
 
 # Start a duckdb interactive shell with preconfigured credentials
 # Example query `SELECT * FROM delta_scan('s3://bucket/path/to/table) LIMIT 10;`
+# Example query `.read ./sql/describe.sql`
 query-delta:
 	aws-vault exec $(VAULT_PROFILE) -- bash -c '\
 			uvx --from duckdb-cli duckdb -cmd "INSTALL delta; LOAD delta; CREATE OR REPLACE SECRET delta_s1 (TYPE s3, PROVIDER credential_chain);"'

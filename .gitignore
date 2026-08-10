@@ -6,6 +6,7 @@ __pycache__
 
 
 # misc
+packages/spi-transform/sql/*.csv
 build
 node_modules
 .eslintcache
