@@ -91,10 +91,12 @@ export default [
       "packages/e2e-test/scripts",
       "packages/ui/cypress.config.ts",
       "packages/ui/next.config.js",
+      "packages/ui/next-env.d.ts",
       "packages/ui/.next/*",
       "packages/user-service/.next/*",
       "packages/user-service/cypress.config.js",
-      "packages/user-service/next.config.js"
+      "packages/user-service/next.config.js",
+      "packages/user-servicr/next-env.d.ts"
     ]
   },
   {
