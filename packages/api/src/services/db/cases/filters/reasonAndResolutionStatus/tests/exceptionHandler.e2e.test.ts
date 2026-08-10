@@ -37,7 +37,7 @@ describe("Filter cases by resolution status", () => {
     user: () => User
   }[] = [
     {
-      description: "Should see cases with unresolved exceptions when unresolved filter applied",
+      description: "Should see unresolved exceptions when resolution status set to unresolved and reason set to all",
       expectedCases: [
         "Exceptions Unresolved/Trigger Resolved by someoneElse",
         "Exceptions Unresolved/Trigger Unresolved",
@@ -52,7 +52,7 @@ describe("Filter cases by resolution status", () => {
       user: () => users.exceptionHandler
     },
     {
-      description: "Should see cases with resolved exceptions when resolved filter applied",
+      description: "Should see resolved exceptions when resolution status set to resolved and reason set to all",
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
         "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
@@ -69,7 +69,8 @@ describe("Filter cases by resolution status", () => {
       user: () => users.exceptionHandler
     },
     {
-      description: "Should see cases with unresolved HO100300 exception when searching with reason code HO100300",
+      description:
+        "Should see unresolved HO100300 exception when searching with reason code HO100300 and reason set to all",
       expectedCases: [
         "Exceptions Unresolved/Bails Trigger Unresolved",
         "Exceptions Unresolved/No triggers",
@@ -101,7 +102,8 @@ describe("Filter cases by resolution status", () => {
       user: () => users.exceptionHandler
     },
     {
-      description: "Should see resolved HO100300 exceptions when searching with reason code HO100300",
+      description:
+        "Should see resolved HO100300 exceptions when searching with reason code HO100300, resolution status set to resolved and reason set to all",
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
         "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
@@ -119,7 +121,8 @@ describe("Filter cases by resolution status", () => {
       user: () => users.exceptionHandler
     },
     {
-      description: "Should see unresolved exceptions when searching with reason code TRPR0001 and TRPR0010",
+      description:
+        "Should see unresolved exceptions when searching with reason code TRPR0001 and TRPR0010, resolution status set to unresolved and reason set to all",
       expectedCases: ["Exceptions Unresolved/Trigger Unresolved", "Exceptions Unresolved/Bails Trigger Unresolved"],
       filters: {
         caseState: ResolutionStatus.Unresolved,
@@ -129,7 +132,8 @@ describe("Filter cases by resolution status", () => {
       user: () => users.exceptionHandler
     },
     {
-      description: "Should see resolved exceptions when searching with reason code TRPR0001",
+      description:
+        "Should see resolved exceptions when searching with reason code TRPR0001, resolution status set to resolved and reason set to all",
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
         "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
@@ -144,7 +148,7 @@ describe("Filter cases by resolution status", () => {
       user: () => users.exceptionHandler
     },
     {
-      description: "Should see unresolved exceptions when case state is not set",
+      description: "Should see unresolved exceptions when case state is not set, reason set to all",
       expectedCases: [
         "Exceptions Unresolved/Trigger Resolved by someoneElse",
         "Exceptions Unresolved/Trigger Unresolved",
