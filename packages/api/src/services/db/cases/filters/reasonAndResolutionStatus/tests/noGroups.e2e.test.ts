@@ -7,7 +7,7 @@ import type { Filters } from "../../../../../../types/CaseIndexQuerystring"
 
 import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppEnd2EndHelper"
 import { sortStringAsc } from "../../../../../../tests/helpers/sort"
-import * as Utils from "./utils"
+import * as Utils from "./utils.test"
 
 describe("Filter cases by resolution status using no groups user", () => {
   let helper: SetupAppEnd2EndHelper

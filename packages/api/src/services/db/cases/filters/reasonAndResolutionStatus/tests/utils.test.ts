@@ -16,7 +16,7 @@ import { createTriggers } from "../../../../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../../../../tests/helpers/userHelper"
 import fetchCasesAndFilter from "../../../../../../useCases/cases/getCases/fetchCasesAndFilter"
 import { resolutionStatusCodeByText } from "../../../../../../useCases/dto/convertResolutionStatus"
-import * as Utils from "./utils"
+import * as Utils from "./utils.test"
 
 export type CreateReasonCaseProps = {
   caseId: number
