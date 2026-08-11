@@ -1,11 +1,20 @@
+import { join } from "path"
+
+const BASE_PATH = "/users"
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: "/users",
+  basePath: BASE_PATH,
+  env: {
+    NEXT_PUBLIC_BASE_PATH: BASE_PATH
+  },
   poweredByHeader: false,
   output: "standalone",
   reactStrictMode: true,
   sassOptions: {
-    quietDeps: true
+    quietDeps: true,
+    loadPaths: [join(process.cwd())],
+    includePaths: ["./styles/**/*.scss"]
   },
   compiler: {
     styledComponents: true
@@ -28,4 +37,4 @@ const nextConfig = {
   }
 }
 
-module.exports = nextConfig
+export default nextConfig

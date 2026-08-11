@@ -30,7 +30,14 @@ describe("changePassword", () => {
   it("should change password when current password is correct", async () => {
     await insertIntoTable(users)
     const newPassword = "NewPassword"
-    const result = await changePassword(connection, fakeAuditLogger, "bichard01@example.com", "password", newPassword)
+    const result = await changePassword(
+      connection,
+      fakeAuditLogger,
+      "bichard01@example.com",
+      "password",
+      newPassword,
+      "/"
+    )
 
     expect(isError(result)).toBe(false)
 
@@ -51,7 +58,8 @@ describe("changePassword", () => {
       fakeAuditLogger,
       "bichard01@example.com",
       "IncorrectPassword",
-      "NewPassword"
+      "NewPassword",
+      "/"
     )
 
     expect(isError(result)).toBe(true)

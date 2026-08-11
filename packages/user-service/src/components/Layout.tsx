@@ -3,7 +3,6 @@ import Header from "components/Header"
 import { ReactNode } from "react"
 import User from "types/User"
 import { UserServiceAccess } from "useCases/getUserServiceAccess"
-import { basePath } from "../../next.config"
 import NavBar from "./NavBar"
 import PageTemplate from "./PageTemplate"
 import PhaseBanner from "./PhaseBanner"
@@ -22,7 +21,7 @@ const FakeAssetForNoJsStatsGathering = () => (
   </noscript>
 )
 
-const ScreenSizeStats = () => <script src={`${basePath}/js/grabScreenSize.js`} async />
+const ScreenSizeStats = () => <script src={`${process.env.NEXT_PUBLIC_BASE_PATH}/js/grabScreenSize.js`} async />
 
 /* eslint-enable jsx-a11y/alt-text, @next/next/no-img-element */
 const Layout = ({ children, user, hasAccessTo, showPhaseBanner = true }: Props) => (

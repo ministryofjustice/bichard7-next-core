@@ -1,7 +1,7 @@
 interface Props {
   label: string
   value: string
-  dataTest: string
+  dataTest?: string
 }
 
 const SummaryItem = ({ label, value, dataTest }: Props) => (
