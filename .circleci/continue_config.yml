@@ -480,19 +480,21 @@ jobs:
       image: ubuntu-2204:current
     resource_class: medium
     steps:
-      # - unless:
-      #     condition:
-      #       or:
-      #         - << pipeline.parameters.circleci-changes >>
-      #         - << pipeline.parameters.s3-web-proxy-changes >>
-      #     steps:
-      #       - run: circleci-agent step halt
+      - unless:
+          condition:
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.s3-web-proxy-changes >>
+          steps:
+            - run: circleci-agent step halt
+      - checkout
       - run:
           name: Install Goss
+          # put the insta-goss.sh in here
           command: |
-            sudo curl -L https://github.com/aelsabbahy/goss/releases/latest/download/goss-linux-amd64 -o /usr/local/bin/goss
-            sudo chmod +rx /usr/local/bin/goss
-      - checkout
+            sudo bash ./scripts/install-goss.sh
+            echo 'export GOSS_PATH="/usr/local/bin/goss"' >> $BASH_ENV
+     
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -520,6 +522,7 @@ jobs:
             export GOSS_SLEEP=5
 
             dgoss run -e S3_BUCKET_NAME="test-bucket" "s3-web-proxy:${DOCKER_TAG}"
+  
   build_ui_image:
     machine:
       image: ubuntu-2204:current
