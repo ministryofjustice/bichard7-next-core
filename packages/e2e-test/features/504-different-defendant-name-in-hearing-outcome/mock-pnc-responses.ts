@@ -4,7 +4,7 @@ export default (ncm: string, { policeApi }: Bichard) => [
   policeApi.mockEnquiryFromNcm(ncm),
   policeApi.mockUpdate("CXU02", {
     expectedRequest: {
-      pncCheckName: "SEXOFFENCE",
+      pncCheckName: "BROWN",
       croNumber: "",
       crimeOffenceReferenceNumber: "",
       ownerCode: "01YZ",
@@ -17,8 +17,8 @@ export default (ncm: string, { policeApi }: Bichard) => [
       dateOfConviction: "2011-09-26",
       defendant: {
         defendantType: "individual",
-        defendantFirstNames: ["TRPRFOUR"],
-        defendantLastName: "SEXOFFENCE"
+        defendantFirstNames: ["PAUL"],
+        defendantLastName: "SMITH"
       },
       offences: [
         {
