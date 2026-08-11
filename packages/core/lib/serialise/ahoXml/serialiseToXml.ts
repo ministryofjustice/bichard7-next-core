@@ -438,7 +438,6 @@ const mapOffenceADJ = (adjudication: PoliceAdjudication): Adj => ({
 
 const mapOffenceDIS = (disposals: PoliceDisposal[]): DISList => ({
   DIS: disposals.map((d) => ({
-    ...(d.disposalId ? { "@_DisposalId": d.disposalId } : {}),
     "@_IntfcUpdateType": "I",
     "@_QtyDate": d.qtyDate ?? "",
     "@_QtyDuration": d.qtyDuration ?? "",
@@ -472,7 +471,6 @@ const mapAhoHearingToXml = (hearing: Hearing): Br7Hearing => ({
 const mapAhoPncOffencesToXml = (offences: PoliceOffence[]): AhoXmlPncOffence[] =>
   offences.map((offence) => ({
     COF: {
-      ...(offence.offence.offenceId ? { "@_OffenceId": offence.offence.offenceId } : {}),
       "@_ACPOOffenceCode": offence.offence.acpoOffenceCode ?? "",
       "@_CJSOffenceCode": offence.offence.cjsOffenceCode,
       "@_IntfcUpdateType": "K",
@@ -495,15 +493,12 @@ const mapAhoCXE01ToXml = (pncQuery: PoliceQueryResult): Cxe01 => ({
     "@_CRONumber": pncQuery.croNumber ?? "",
     "@_Checkname": pncQuery.checkName,
     "@_IntfcUpdateType": "K",
-    "@_PNCID": pncQuery.pncId,
-    ...(pncQuery.personId ? { "@_PersonId": pncQuery.personId } : {}),
-    ...(pncQuery.reportId ? { "@_ReportId": pncQuery.reportId } : {})
+    "@_PNCID": pncQuery.pncId
   },
   CourtCases:
     pncQuery.courtCases && pncQuery.courtCases.length > 0
       ? {
           CourtCase: pncQuery.courtCases?.map((c) => ({
-            ...(c.courtCaseId ? { "@_CourtCaseId": c.courtCaseId } : {}),
             CCR: { "@_CourtCaseRefNo": c.courtCaseReference, "@_CrimeOffenceRefNo": "", "@_IntfcUpdateType": "K" },
             Offences: {
               Offence: mapAhoPncOffencesToXml(c.offences)

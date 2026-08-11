@@ -1645,9 +1645,7 @@ exports[`parseAhoXml converts AnnotatedHO3-LEDS XML to Aho 1`] = `
     ],
     "forceStationCode": "01ZD",
     "penaltyCases": undefined,
-    "personId": "8228735c-f4c4-4fe9-8eb5-f5e248e6df8a",
     "pncId": "2000/0448754K",
-    "reportId": "d9a2dcd9-fa90-417c-b116-a3e46eb83da2",
   },
   "PncQueryDate": 2022-03-22T00:00:00.000Z,
 }
