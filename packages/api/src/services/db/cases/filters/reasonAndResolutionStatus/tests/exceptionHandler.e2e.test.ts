@@ -10,7 +10,7 @@ import { SetupAppEnd2EndHelper } from "../../../../../../tests/helpers/setupAppE
 import { sortStringAsc } from "../../../../../../tests/helpers/sort"
 import * as Utils from "./utils.test"
 
-describe("Filter cases by resolution status", () => {
+describe("Filter cases by resolution status for exceptionHandler user", () => {
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
   let users: Utils.DummyDataUsers
