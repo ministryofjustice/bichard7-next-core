@@ -516,8 +516,6 @@ jobs:
             #!/bin/bash -eo pipefail
             source $BASH_ENV
 
-            sudo curl -fsSL https://goss.rocks/install | sudo sh
-
             export GOSS_FILE=packages/s3-web-proxy/goss.yaml
             export GOSS_SLEEP=5
 
