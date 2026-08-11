@@ -49,6 +49,7 @@ describe("AccountSetup", () => {
     const user = users
       .filter((u) => u.username === "Bichard02")
       .map((u) => ({
+        id: 999,
         username: u.username,
         forenames: u.forenames,
         emailAddress: u.email,

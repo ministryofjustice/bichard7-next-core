@@ -1,5 +1,4 @@
 import PasswordInput from "./PasswordInput"
-import React from "react"
 
 interface ResetPasswordFormGroupProps {
   passwordMismatch: boolean | undefined
