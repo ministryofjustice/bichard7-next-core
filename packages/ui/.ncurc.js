@@ -18,7 +18,7 @@
 
 const pinned = ["cookie", "cookies-next", "@faker-js/faker", "undici"]
 const ignored = ["cypress-circleci-reporter", "raw-body"]
-const skipped = [{ package: "next", version: "13.4.13" }]
+const skipped = []
 
 module.exports = {
   filter: (pkg) => {

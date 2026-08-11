@@ -3,7 +3,6 @@ import { JssProvider, SheetsRegistry, createGenerateId } from "react-jss"
 import { ServerStyleSheet } from "styled-components"
 import generateCsp from "utils/generateCsp"
 import generateNonce from "utils/generateNonce"
-import nextConfig from "../../next.config"
 import React from "react"
 
 const GovUkMetadata = () => (
@@ -17,28 +16,38 @@ const GovUkMetadata = () => (
     <link
       rel="shortcut icon"
       sizes="16x16 32x32 48x48"
-      href={`${nextConfig.basePath}/govuk_assets/images/favicon.ico`}
+      href={`${process.env.NEXT_PUBLIC_BASE_PATH}/govuk_assets/images/favicon.ico`}
       type="image/x-icon"
     />
-    <link rel="mask-icon" href={`${nextConfig.basePath}/govuk_assets/images/govuk-mask-icon.svg`} color="#0b0c0c" />
+    <link
+      rel="mask-icon"
+      href={`${process.env.NEXT_PUBLIC_BASE_PATH}/govuk_assets/images/govuk-mask-icon.svg`}
+      color="#0b0c0c"
+    />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href={`${nextConfig.basePath}/govuk_assets/images/govuk-apple-touch-icon-180x180.png`}
+      href={`${process.env.NEXT_PUBLIC_BASE_PATH}/govuk_assets/images/govuk-apple-touch-icon-180x180.png`}
     />
     <link
       rel="apple-touch-icon"
       sizes="167x167"
-      href={`${nextConfig.basePath}/govuk_assets/images/govuk-apple-touch-icon-167x167.png`}
+      href={`${process.env.NEXT_PUBLIC_BASE_PATH}/govuk_assets/images/govuk-apple-touch-icon-167x167.png`}
     />
     <link
       rel="apple-touch-icon"
       sizes="152x152"
-      href={`${nextConfig.basePath}/govuk_assets/images/govuk-apple-touch-icon-152x152.png`}
+      href={`${process.env.NEXT_PUBLIC_BASE_PATH}/govuk_assets/images/govuk-apple-touch-icon-152x152.png`}
     />
-    <link rel="apple-touch-icon" href={`${nextConfig.basePath}/govuk_assets/images/govuk-apple-touch-icon.png`} />
+    <link
+      rel="apple-touch-icon"
+      href={`${process.env.NEXT_PUBLIC_BASE_PATH}/govuk_assets/images/govuk-apple-touch-icon.png`}
+    />
 
-    <meta property="og:image" content={`${nextConfig.basePath}/govuk_assets/images/govuk-opengraph-image.png`} />
+    <meta
+      property="og:image"
+      content={`${process.env.NEXT_PUBLIC_BASE_PATH}/govuk_assets/images/govuk-opengraph-image.png`}
+    />
   </>
 )
 

@@ -9,7 +9,7 @@
     "dev:api": "./scripts/run-dev-with-api.sh",
     "prebuild": "./scripts/symlink-node-modules.sh",
     "build": "next build --webpack",
-    "build:analyse": "ANALYZE=true npm run build --webpack",
+    "build:analyse": "ANALYZE=true npm run build",
     "build:docker": "cd ../.. && bash scripts/build-ui-docker.sh",
     "start": "next start -p 4080",
     "prelint": "./scripts/symlink-node-modules.sh",
@@ -72,7 +72,7 @@
   "devDependencies": {
     "@faker-js/faker": "^9.9.0",
     "@jest/globals": "^30.4.1",
-    "@next/bundle-analyzer": "^16.2.12",
+    "@next/bundle-analyzer": "^16.3.0",
     "@stdlib/random-base-exponential": "^0.2.2",
     "@stdlib/random-sample": "^0.2.2",
     "@swc/core": "^1.15.47",

@@ -4,11 +4,11 @@ import type { AuthenticationTokenPayload } from "lib/token/authenticationToken"
 import { decodeAuthenticationToken, generateAuthenticationToken, storeTokenId } from "lib/token/authenticationToken"
 import { isError } from "types/Result"
 import type User from "types/User"
+import type UserAuthBichard from "types/UserAuthBichard"
 import type UserCredentials from "types/UserCredentials"
+import type { UserGroupResult } from "types/UserGroup"
 import type Database from "types/Database"
 import { randomUUID } from "node:crypto"
-import type UserAuthBichard from "@/types/UserAuthBichard"
-import type { UserGroupResult } from "@/types/UserGroup"
 
 const user: User & UserCredentials = {
   id: 1,
