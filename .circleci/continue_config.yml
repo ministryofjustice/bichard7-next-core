@@ -518,6 +518,17 @@ jobs:
 
             export GOSS_FILE=packages/s3-web-proxy/goss.yaml
             export GOSS_SLEEP=5
+
+            echo "--- DEBUG: Starting container to check logs ---"
+            docker run -d --name debug-container -e S3_BUCKET_NAME="test-bucket" "s3-web-proxy:${DOCKER_TAG}"
+            sleep 5
+            echo "--- DEBUG: Supervisor status ---"
+            docker exec debug-container supervisorctl status || true
+            echo "--- DEBUG: Container logs ---"
+            docker logs debug-container
+            docker rm -f debug-container
+            echo "--- END DEBUG BLOCK ---"
+
             dgoss run -e S3_BUCKET_NAME="test-bucket" "s3-web-proxy:${DOCKER_TAG}"
   build_ui_image:
     machine:
