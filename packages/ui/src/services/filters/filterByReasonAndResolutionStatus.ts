@@ -110,7 +110,7 @@ const filterIfResolved = (
     }
   }
 
-  if (resolvedByUsername || !user.hasAccessTo[Permission.ListAllCases]) {
+  if (resolvedByUsername) {
     query.andWhere(
       new Brackets((qb) => {
         if (reasonFilterOnlyIncludesTriggers(reason)) {
