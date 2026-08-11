@@ -10,5 +10,8 @@
     "lint": "exit 0",
     "test": "jest --passWithNoTests",
     "test:goss": "bash ../build.sh"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
   }
 }
