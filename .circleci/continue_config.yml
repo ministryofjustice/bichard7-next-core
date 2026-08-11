@@ -490,7 +490,6 @@ jobs:
       - checkout
       - run:
           name: Install Goss
-          # put the insta-goss.sh in here
           command: |
             sudo bash ./scripts/install-goss.sh
             echo 'export GOSS_PATH="/usr/local/bin/goss"' >> $BASH_ENV
