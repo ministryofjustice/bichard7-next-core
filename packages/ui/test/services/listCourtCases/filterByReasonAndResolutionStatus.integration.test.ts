@@ -328,7 +328,12 @@ describe("Filter cases by resolution status", () => {
         user: exceptionHandler,
         expectedCases: [
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
-          "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler"
+          "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
+          "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
+          "Exceptions Resolved by generalHandler/No triggers",
+          "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
+          "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
+          "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler"
         ]
       },
       {
@@ -423,12 +428,17 @@ describe("Filter cases by resolution status", () => {
         },
         user: generalHandler,
         expectedCases: [
+          "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
+          "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
           "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
           "Exceptions Resolved by generalHandler/No triggers",
           "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
           "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
           "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler",
-          "No exceptions/Bails Trigger Resolved by generalHandler"
+          "Exceptions Unresolved/Trigger Resolved by someoneElse",
+          "No exceptions/Bails Trigger Resolved by generalHandler",
+          "No exceptions/Bails Trigger Resolved by someoneElse",
+          "No exceptions/Bails Trigger Resolved by triggerHandler"
         ]
       },
       {
@@ -440,6 +450,8 @@ describe("Filter cases by resolution status", () => {
         },
         user: generalHandler,
         expectedCases: [
+          "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
+          "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
           "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
           "Exceptions Resolved by generalHandler/No triggers",
           "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
@@ -456,7 +468,9 @@ describe("Filter cases by resolution status", () => {
         user: generalHandler,
         expectedCases: [
           "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
-          "No exceptions/Bails Trigger Resolved by generalHandler"
+          "No exceptions/Bails Trigger Resolved by generalHandler",
+          "No exceptions/Bails Trigger Resolved by someoneElse",
+          "No exceptions/Bails Trigger Resolved by triggerHandler"
         ]
       },
       {
@@ -500,6 +514,13 @@ describe("Filter cases by resolution status", () => {
         user: triggerHandler,
         expectedCases: [
           "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
+          "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
+          "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
+          "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
+          "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler",
+          "Exceptions Unresolved/Trigger Resolved by someoneElse",
+          "No exceptions/Bails Trigger Resolved by generalHandler",
+          "No exceptions/Bails Trigger Resolved by someoneElse",
           "No exceptions/Bails Trigger Resolved by triggerHandler"
         ]
       },
@@ -527,12 +548,17 @@ describe("Filter cases by resolution status", () => {
         },
         user: generalHandler,
         expectedCases: [
-          "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler",
-          "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
-          "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
+          "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
+          "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
+          "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
           "Exceptions Resolved by generalHandler/No triggers",
+          "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
+          "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
+          "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler",
+          "Exceptions Unresolved/Trigger Resolved by someoneElse",
           "No exceptions/Bails Trigger Resolved by generalHandler",
-          "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse"
+          "No exceptions/Bails Trigger Resolved by someoneElse",
+          "No exceptions/Bails Trigger Resolved by triggerHandler"
         ]
       },
       {
@@ -596,9 +622,15 @@ describe("Filter cases by resolution status", () => {
         },
         user: generalHandler,
         expectedCases: [
-          "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler",
+          "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
+          "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
           "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
-          "No exceptions/Bails Trigger Resolved by generalHandler"
+          "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
+          "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler",
+          "Exceptions Unresolved/Trigger Resolved by someoneElse",
+          "No exceptions/Bails Trigger Resolved by generalHandler",
+          "No exceptions/Bails Trigger Resolved by someoneElse",
+          "No exceptions/Bails Trigger Resolved by triggerHandler"
         ]
       },
       {
@@ -625,10 +657,13 @@ describe("Filter cases by resolution status", () => {
         },
         user: generalHandler,
         expectedCases: [
-          "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
-          "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
+          "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
+          "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
+          "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
           "Exceptions Resolved by generalHandler/No triggers",
-          "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse"
+          "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
+          "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
+          "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler"
         ]
       },
       {
@@ -641,19 +676,13 @@ describe("Filter cases by resolution status", () => {
         expectedCases: []
       },
       {
-        description:
-          "Should only see cases with unresolved triggers when filtering for unresolved exceptions as a trigger handler",
+        description: "Should see no cases when filtering for unresolved exceptions as a trigger handler",
         filters: {
           caseState: "Unresolved",
           reason: Reason.Exceptions
         },
         user: triggerHandler,
-        expectedCases: [
-          "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
-          "Exceptions Unresolved/Trigger Unresolved",
-          "Exceptions Unresolved/Bails Trigger Unresolved",
-          "No exceptions/Bails Trigger Unresolved"
-        ]
+        expectedCases: []
       },
       {
         description: "Should see no cases when filtering for resolved triggers as a exception handler",
@@ -665,33 +694,30 @@ describe("Filter cases by resolution status", () => {
         expectedCases: []
       },
       {
-        description:
-          "Should only see cases with unresolved exceptions when filtering for unresolved triggers as a exception handler",
+        description: "Should see no cases when filtering for unresolved triggers as a exception handler",
         filters: {
           caseState: "Unresolved",
           reason: Reason.Triggers
         },
         user: exceptionHandler,
-        expectedCases: [
-          "Exceptions Unresolved/Trigger Unresolved",
-          "Exceptions Unresolved/No triggers",
-          "Exceptions Unresolved/Trigger Resolved by someoneElse",
-          "Exceptions Unresolved/Bails Trigger Unresolved"
-        ]
+        expectedCases: []
       },
       {
-        description:
-          "Should only see trigger that is resolved by themselves when searching a bails trigger code as a trigger handler",
+        description: "Should see resolved TRPR0010 triggers when searching a bails trigger code as a trigger handler",
         filters: {
           caseState: "Resolved",
           reasonCodes: [bailsTriggerCode]
         },
         user: triggerHandler,
-        expectedCases: ["No exceptions/Bails Trigger Resolved by triggerHandler"]
+        expectedCases: [
+          "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
+          "No exceptions/Bails Trigger Resolved by generalHandler",
+          "No exceptions/Bails Trigger Resolved by someoneElse",
+          "No exceptions/Bails Trigger Resolved by triggerHandler"
+        ]
       },
       {
-        description:
-          "Should only see exception that is resolved by themselves when searching an exception code as an exception handler",
+        description: "Should see resolved HO100300 exceptions when searching an exception code as an exception handler",
         filters: {
           caseState: "Resolved",
           reasonCodes: ["HO100300"]
@@ -699,7 +725,12 @@ describe("Filter cases by resolution status", () => {
         user: exceptionHandler,
         expectedCases: [
           "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
-          "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler"
+          "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
+          "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
+          "Exceptions Resolved by generalHandler/No triggers",
+          "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
+          "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
+          "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler"
         ]
       },
       {
@@ -714,13 +745,18 @@ describe("Filter cases by resolution status", () => {
       },
       {
         description:
-          "Should only see exception that has exception resolved by themselves when searching a trigger code as an exception handler",
+          "Should only see exceptions that belong to a case which have a TRPR0001 trigger, when searching for trigger code TRPR0001 as an exception handler",
         filters: {
           caseState: "Resolved",
           reasonCodes: ["TRPR0001"]
         },
         user: exceptionHandler,
-        expectedCases: ["Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler"]
+        expectedCases: [
+          "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
+          "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
+          "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
+          "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler"
+        ]
       },
       {
         description: "Should only see unresolved triggers when case state is not set as a trigger handler",

@@ -79,6 +79,9 @@ const filterIfUnresolved = (
         })
       )
     }
+  } else {
+    query.andWhere("FALSE")
+    return query
   }
 
   return query
@@ -110,6 +113,9 @@ const filterIfResolved = (
         )
       )
     }
+  } else {
+    query.andWhere("FALSE")
+    return query
   }
 
   if (resolvedByUsername) {
