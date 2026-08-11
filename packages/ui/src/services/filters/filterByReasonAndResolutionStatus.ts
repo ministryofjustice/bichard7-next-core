@@ -30,12 +30,14 @@ const reasonCodesAreTriggersOnly = (reasonCodes: string[] | undefined): boolean 
 }
 
 const shouldFilterForExceptions = (user: User, reason?: Reason): boolean =>
-  (user.hasAccessTo[Permission.Exceptions] && !user.hasAccessTo[Permission.Triggers]) ||
-  (user.hasAccessTo[Permission.Exceptions] && reasonFilterOnlyIncludesExceptions(reason))
+  user.hasAccessTo[Permission.Exceptions] &&
+  ((!user.hasAccessTo[Permission.Triggers] && !reasonFilterOnlyIncludesTriggers(reason)) ||
+    reasonFilterOnlyIncludesExceptions(reason))
 
 const shouldFilterForTriggers = (user: User, reason?: Reason): boolean =>
-  (user.hasAccessTo[Permission.Triggers] && !user.hasAccessTo[Permission.Exceptions]) ||
-  (user.hasAccessTo[Permission.Triggers] && reasonFilterOnlyIncludesTriggers(reason))
+  user.hasAccessTo[Permission.Triggers] &&
+  ((!user.hasAccessTo[Permission.Exceptions] && !reasonFilterOnlyIncludesExceptions(reason)) ||
+    reasonFilterOnlyIncludesTriggers(reason))
 
 const canSeeTriggersAndExceptions = (user: User, reason?: Reason): boolean =>
   user.hasAccessTo[Permission.Exceptions] &&
