@@ -12,7 +12,7 @@
     "test:goss": "bash ../build.sh"
   },
   "dependencies": {
-    "aws-sdk": "^2.1500.0",
+    "aws-sdk": "^2.1400.0",
     "express": "^4.21.0",
     "minimist": "^1.2.8",
     "mustache": "^4.2.0"
