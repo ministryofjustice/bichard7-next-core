@@ -17,12 +17,12 @@ import {
   hasAccessToNone,
   supervisorHasAccessTo,
   triggerHandlerHasAccessTo
-} from "../../helpers/hasAccessTo"
-import deleteFromEntity from "../../utils/deleteFromEntity"
-import { insertCourtCasesWithFields } from "../../utils/insertCourtCases"
-import insertException from "../../utils/manageExceptions"
-import type { TestTrigger } from "../../utils/manageTriggers"
-import { insertTriggers } from "../../utils/manageTriggers"
+} from "../../../helpers/hasAccessTo"
+import deleteFromEntity from "../../../utils/deleteFromEntity"
+import { insertCourtCasesWithFields } from "../../../utils/insertCourtCases"
+import insertException from "../../../utils/manageExceptions"
+import type { TestTrigger } from "../../../utils/manageTriggers"
+import { insertTriggers } from "../../../utils/manageTriggers"
 
 describe("Filter cases by resolution status", () => {
   let dataSource: DataSource
