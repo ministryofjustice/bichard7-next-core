@@ -493,7 +493,7 @@ jobs:
           command: |
             sudo bash ./scripts/install-goss.sh
             echo 'export GOSS_PATH="/usr/local/bin/goss"' >> $BASH_ENV
-     
+
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -519,7 +519,7 @@ jobs:
             export GOSS_SLEEP=5
 
             dgoss run -e S3_BUCKET_NAME="test-bucket" "s3-web-proxy:${DOCKER_TAG}"
-  
+
   build_ui_image:
     machine:
       image: ubuntu-2204:current
