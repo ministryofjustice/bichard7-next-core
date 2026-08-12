@@ -169,7 +169,10 @@ services:
         condition: service_healthy
 
   conductor:
-    image: api:${DOCKER_TAG:-latest}
+    image: conductor:latest
+    build:
+      dockerfile: ./Dockerfile
+      context: conductor
     environment:
       AWS_ACCESS_KEY_ID: FAKE
       AWS_REGION: eu-west-2
