@@ -511,8 +511,6 @@ jobs:
       - run:
           name: Run Goss Tests
           command: |
-            #!/bin/bash -eo pipefail
-            source $BASH_ENV
 
             cd packages/s3-web-proxy
             make goss
