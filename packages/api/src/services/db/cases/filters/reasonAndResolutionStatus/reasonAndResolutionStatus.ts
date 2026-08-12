@@ -60,7 +60,6 @@ const filterIfUnresolved = (
   } else if (target === "BOTH") {
     return database.connection`
         AND (el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted}) OR el.trigger_status = ${ResolutionStatusNumber.Unresolved})
-        AND (el.trigger_status = ${ResolutionStatusNumber.Unresolved} OR el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted}))
       `
   }
 
