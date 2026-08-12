@@ -71,6 +71,12 @@ commands:
           paths:
             - ~/.npm
 
+  install_goss:
+    steps:
+      - run:
+          name: Install Goss
+          command: sudo bash ./scripts/install-goss.sh
+
   build_common:
     steps:
       - run:
@@ -488,11 +494,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
-      - run:
-          name: Install Goss
-          command: |
-            sudo bash ./scripts/install-goss.sh
-
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -510,10 +512,8 @@ jobs:
             docker image save "s3-web-proxy:${DOCKER_TAG}" | pigz > "images/s3-web-proxy.tar.gz"
       - run:
           name: Run Goss Tests
-          command: |
-
-            cd packages/s3-web-proxy
-            make goss
+          working_directory: packages/s3-web-proxy
+          command: make goss
 
   build_ui_image:
     machine:
