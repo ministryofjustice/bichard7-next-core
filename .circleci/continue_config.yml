@@ -488,6 +488,11 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - run:
+          name: Install Goss
+          command: |
+            sudo bash ./scripts/install-goss.sh
+
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -503,6 +508,12 @@ jobs:
           command: |
             mkdir -p images
             docker image save "s3-web-proxy:${DOCKER_TAG}" | pigz > "images/s3-web-proxy.tar.gz"
+      - run:
+          name: Run Goss Tests
+          command: |
+
+            cd packages/s3-web-proxy
+            make goss
 
   build_ui_image:
     machine:
