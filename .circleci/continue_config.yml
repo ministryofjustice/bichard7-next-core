@@ -492,7 +492,6 @@ jobs:
           name: Install Goss
           command: |
             sudo bash ./scripts/install-goss.sh
-            echo 'export GOSS_PATH="/usr/local/bin/goss"' >> $BASH_ENV
 
       - enable_docker_container_image_store
       - set_docker_tag
@@ -515,10 +514,8 @@ jobs:
             #!/bin/bash -eo pipefail
             source $BASH_ENV
 
-            export GOSS_FILE=packages/s3-web-proxy/goss.yaml
-            export GOSS_SLEEP=5
-
-            dgoss run -e S3_BUCKET_NAME="test-bucket" "s3-web-proxy:${DOCKER_TAG}"
+            cd packages/s3-web-proxy
+            make test_goss
 
   build_ui_image:
     machine:
