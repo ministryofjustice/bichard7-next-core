@@ -123,7 +123,13 @@ describe("Filter cases by resolution status for exceptionHandler user", () => {
     {
       description:
         "Should see unresolved exceptions when searching with reason code TRPR0001 and TRPR0010, resolution status set to unresolved and reason set to all",
-      expectedCases: ["Exceptions Unresolved/Trigger Unresolved", "Exceptions Unresolved/Bails Trigger Unresolved"],
+      expectedCases: [
+        "Exceptions Unresolved/Bails Trigger Unresolved",
+        "Exceptions Unresolved/No triggers",
+        "Exceptions Unresolved/No triggers",
+        "Exceptions Unresolved/Trigger Resolved by someoneElse",
+        "Exceptions Unresolved/Trigger Unresolved"
+      ],
       filters: {
         caseState: ResolutionStatus.Unresolved,
         reason: Reason.All,
@@ -136,6 +142,9 @@ describe("Filter cases by resolution status for exceptionHandler user", () => {
         "Should see resolved exceptions when searching with reason code TRPR0001, resolution status set to resolved and reason set to all",
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
+        "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
+        "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
+        "Exceptions Resolved by generalHandler/No triggers",
         "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
         "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
         "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler"
