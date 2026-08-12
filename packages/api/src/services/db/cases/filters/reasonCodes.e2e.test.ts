@@ -120,4 +120,84 @@ describe("fetchCasesAndFilter filtering by reason codes e2e", () => {
     expect(caseMetadata.totalCases).toBe(3)
     expect(caseMetadata.returnCases).toBe(3)
   })
+
+  it("will return triggers when trigger codes are provided and triggers is the reason", async () => {
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
+      { reasonCodes: [TriggerCode.TRPR0010, TriggerCode.TRPR0012], ...defaultQuery, reason: Reason.Triggers },
+      user
+    )) as CaseIndexMetadata
+
+    expect(caseMetadata.cases).toHaveLength(2)
+    expect(caseMetadata.totalCases).toBe(2)
+    expect(caseMetadata.returnCases).toBe(2)
+  })
+
+  it("will return exceptions when exception codes are provided and exceptions is the reason", async () => {
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
+      { reasonCodes: ["HO100300", "HO100322", "HO100323"], ...defaultQuery, reason: Reason.Exceptions },
+      user
+    )) as CaseIndexMetadata
+
+    expect(caseMetadata.cases).toHaveLength(2)
+    expect(caseMetadata.totalCases).toBe(2)
+    expect(caseMetadata.returnCases).toBe(2)
+  })
+
+  it("will return triggers when triggers and exceptions codes are provided, and triggers is the reason", async () => {
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
+      {
+        reasonCodes: ["HO100300", "HO100322", "HO100323", TriggerCode.TRPR0010, TriggerCode.TRPR0012],
+        ...defaultQuery,
+        reason: Reason.Triggers
+      },
+      user
+    )) as CaseIndexMetadata
+
+    expect(caseMetadata.cases).toHaveLength(2)
+    expect(caseMetadata.totalCases).toBe(2)
+    expect(caseMetadata.returnCases).toBe(2)
+  })
+
+  it("will return exceptions when triggers and exceptions codes are provided, and exceptions is the reason", async () => {
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
+      {
+        reasonCodes: ["HO100300", "HO100322", "HO100323", TriggerCode.TRPR0010, TriggerCode.TRPR0012],
+        ...defaultQuery,
+        reason: Reason.Exceptions
+      },
+      user
+    )) as CaseIndexMetadata
+
+    expect(caseMetadata.cases).toHaveLength(2)
+    expect(caseMetadata.totalCases).toBe(2)
+    expect(caseMetadata.returnCases).toBe(2)
+  })
+
+  it("will return empty array when trigger codes are provided but exceptions is the reason", async () => {
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
+      { reasonCodes: [TriggerCode.TRPR0010, TriggerCode.TRPR0012], ...defaultQuery, reason: Reason.Exceptions },
+      user
+    )) as CaseIndexMetadata
+
+    expect(caseMetadata.cases).toHaveLength(0)
+    expect(caseMetadata.totalCases).toBe(0)
+    expect(caseMetadata.returnCases).toBe(0)
+  })
+
+  it("will return empty array when exception codes are provided but triggers is the reason", async () => {
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
+      { reasonCodes: ["HO100300", "HO100322", "HO100323"], ...defaultQuery, reason: Reason.Triggers },
+      user
+    )) as CaseIndexMetadata
+
+    expect(caseMetadata.cases).toHaveLength(0)
+    expect(caseMetadata.totalCases).toBe(0)
+    expect(caseMetadata.returnCases).toBe(0)
+  })
 })

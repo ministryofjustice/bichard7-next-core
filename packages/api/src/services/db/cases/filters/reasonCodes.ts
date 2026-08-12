@@ -1,6 +1,7 @@
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
+import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import {
   filterReasonCodesForExceptions,
   filterReasonCodesForTriggers
@@ -21,11 +22,11 @@ export const filterByReasonCodes = (database: DatabaseConnection, filters: Filte
   const triggerCodes = filterReasonCodesForTriggers(reasonCodes).map((rc) => getLongTriggerCode(rc)) ?? []
   const exceptionCodes = filterReasonCodesForExceptions(reasonCodes).map((rc) => `%${rc}%`) ?? []
 
-  if (!isEmpty(triggerCodes)) {
+  if (!isEmpty(triggerCodes) && filters.reason !== Reason.Exceptions) {
     queries.push(database.connection`elt.trigger_code ILIKE ANY(${triggerCodes})`)
   }
 
-  if (!isEmpty(exceptionCodes)) {
+  if (!isEmpty(exceptionCodes) && filters.reason !== Reason.Triggers) {
     queries.push(database.connection`el.error_report ILIKE ANY(${exceptionCodes})`)
   }
 
