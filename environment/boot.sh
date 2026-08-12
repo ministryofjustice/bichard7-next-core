@@ -17,7 +17,7 @@ IMAGES_TO_PULL=()
 ALL_ECR_IMAGES=(beanconnect pncemulator)
 PLATFORM=$(uname -m)
 if [[ $PLATFORM != "arm64" ]]; then
-    ALL_ECR_IMAGES+=(bichard7-liberty conductor nginx-auth-proxy ui)
+    ALL_ECR_IMAGES+=(bichard7-liberty nginx-auth-proxy ui)
 fi
 
 if [[ ${#SERVICES_TO_RUN[@]} -eq 0 ]]; then
