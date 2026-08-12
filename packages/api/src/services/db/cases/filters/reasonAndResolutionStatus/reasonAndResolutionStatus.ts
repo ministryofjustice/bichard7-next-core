@@ -1,3 +1,4 @@
+import type { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 import type { Row } from "postgres"
@@ -18,40 +19,52 @@ import {
   shouldFilterForTriggers
 } from "../checkPermissions"
 
+type FilterTarget = "BOTH" | "EXCEPTIONS" | "NONE" | "TRIGGERS"
+
+const getFilterTarget = (user: User, reason: Reason, reasonCodes: string[]): FilterTarget => {
+  if (shouldFilterForTriggers(user, reason)) {
+    return "TRIGGERS"
+  }
+
+  if (shouldFilterForExceptions(user, reason)) {
+    return "EXCEPTIONS"
+  }
+
+  if (canSeeTriggersAndExceptions(user, reason)) {
+    if (reasonCodesAreExceptionsOnly(reasonCodes)) {
+      return "EXCEPTIONS"
+    }
+
+    if (reasonCodesAreTriggersOnly(reasonCodes)) {
+      return "TRIGGERS"
+    }
+
+    return "BOTH"
+  }
+
+  return "NONE"
+}
+
 const filterIfUnresolved = (
   database: DatabaseConnection,
   user: User,
   filters: Filters,
   reasonCodes: string[]
 ): postgres.PendingQuery<postgres.Row[]> | postgres.PendingQuery<postgres.Row[]>[] => {
-  const query = []
+  const target = getFilterTarget(user, filters.reason, reasonCodes)
 
-  if (shouldFilterForTriggers(user, filters.reason)) {
-    query.push(database.connection`AND el.trigger_status = ${ResolutionStatusNumber.Unresolved}`)
-  } else if (shouldFilterForExceptions(user, filters.reason)) {
-    query.push(
-      database.connection`AND el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted})`
-    )
-  } else if (canSeeTriggersAndExceptions(user, filters.reason)) {
-    if (reasonCodesAreExceptionsOnly(reasonCodes)) {
-      query.push(
-        database.connection`AND el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted})`
-      )
-    } else if (reasonCodesAreTriggersOnly(reasonCodes)) {
-      query.push(database.connection`AND el.trigger_status = ${ResolutionStatusNumber.Unresolved}`)
-    } else {
-      query.push(database.connection`
+  if (target === "TRIGGERS") {
+    return database.connection`AND el.trigger_status = ${ResolutionStatusNumber.Unresolved}`
+  } else if (target === "EXCEPTIONS") {
+    return database.connection`AND el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted})`
+  } else if (target === "BOTH") {
+    return database.connection`
         AND (el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted}) OR el.trigger_status = ${ResolutionStatusNumber.Unresolved})
         AND (el.trigger_status = ${ResolutionStatusNumber.Unresolved} OR el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted}))
-      `)
-    }
+      `
   }
 
-  if (query.length === 0) {
-    return database.connection`AND FALSE`
-  }
-
-  return query.map((q) => database.connection`${q}`)
+  return database.connection`AND FALSE`
 }
 
 const filterIfResolved = (
@@ -62,27 +75,22 @@ const filterIfResolved = (
   reasonCodes: string[]
 ): postgres.PendingQuery<postgres.Row[]> | postgres.PendingQuery<postgres.Row[]>[] => {
   const query = []
+  const target = getFilterTarget(user, filters.reason, reasonCodes)
 
-  if (shouldFilterForTriggers(user, filters.reason)) {
+  if (target === "TRIGGERS") {
     query.push(database.connection`AND el.trigger_resolved_ts IS NOT NULL`)
-  } else if (shouldFilterForExceptions(user, filters.reason)) {
+  } else if (target === "EXCEPTIONS") {
     query.push(database.connection`AND el.error_status = ${resolutionStatus}`)
-  } else if (canSeeTriggersAndExceptions(user, filters.reason)) {
-    if (reasonCodesAreExceptionsOnly(reasonCodes)) {
-      query.push(database.connection`AND el.error_status = ${resolutionStatus}`)
-    } else if (reasonCodesAreTriggersOnly(reasonCodes)) {
-      query.push(database.connection`AND el.trigger_resolved_ts IS NOT NULL`)
-    } else {
-      query.push(
-        database.connection`
+  } else if (target === "BOTH") {
+    query.push(
+      database.connection`
           AND (
             el.error_resolved_ts IS NOT NULL
             OR el.error_status = ${resolutionStatus}
             OR el.trigger_resolved_ts IS NOT NULL
           )
         `
-      )
-    }
+    )
   }
 
   if (filters.resolvedByUsername) {
