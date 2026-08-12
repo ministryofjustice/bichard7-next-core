@@ -4,7 +4,9 @@ import type { AuthenticationTokenPayload } from "lib/token/authenticationToken"
 import { decodeAuthenticationToken, generateAuthenticationToken, storeTokenId } from "lib/token/authenticationToken"
 import { isError } from "types/Result"
 import type User from "types/User"
+import type UserAuthBichard from "types/UserAuthBichard"
 import type UserCredentials from "types/UserCredentials"
+import type { UserGroupResult } from "types/UserGroup"
 import type Database from "types/Database"
 import { randomUUID } from "node:crypto"
 
@@ -18,21 +20,24 @@ const user: User & UserCredentials = {
   forenames: "Bichard User",
   surname: "01",
   emailAddress: "bichard01@example.com",
-  groups: ["B7Supervisor"],
+  groups: ["B7Supervisor" as unknown as UserGroupResult],
   password: "$shiro1$SHA-256$500000$foo$bar",
   verificationCode: "123456",
   emailVerificationCode: "",
-  migratedPassword: ""
+  migratedPassword: "",
+  visibleCourts: "",
+  visibleForces: "",
+  excludedTriggers: ""
 }
 
 describe("generateAuthenticationToken()", () => {
   it("should return a string that looks like a token", () => {
-    const result = generateAuthenticationToken(user, randomUUID())
+    const result = generateAuthenticationToken(user as unknown as Partial<UserAuthBichard>, randomUUID())
     expect(result).toEqual(expect.stringMatching(/^[a-z0-9]+\.[a-z0-9]+\.[a-z0-9_-]+$/i))
   })
 
   it("should return a token that can be successfully decoded and verified", () => {
-    const token = generateAuthenticationToken(user, randomUUID())
+    const token = generateAuthenticationToken(user as unknown as Partial<UserAuthBichard>, randomUUID())
     const payload = jwt.verify(token, config.tokenSecret, { issuer: config.tokenIssuer })
 
     const expectedPayload = {
@@ -47,7 +52,7 @@ describe("generateAuthenticationToken()", () => {
   })
 
   it("should return a token only containing the minimum information", () => {
-    const token = generateAuthenticationToken(user, randomUUID())
+    const token = generateAuthenticationToken(user as unknown as Partial<UserAuthBichard>, randomUUID())
     const payload = jwt.decode(token)
 
     expect(payload).not.toHaveProperty("endorsedBy")
@@ -61,7 +66,7 @@ describe("generateAuthenticationToken()", () => {
 
 describe("decodePasswordResetToken()", () => {
   it("should return decoded token when payload is provided", () => {
-    const token = generateAuthenticationToken(user, randomUUID()) as string
+    const token = generateAuthenticationToken(user as unknown as Partial<UserAuthBichard>, randomUUID()) as string
     const result = decodeAuthenticationToken(token)
 
     expect(result).toBeDefined()

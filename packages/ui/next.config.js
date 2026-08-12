@@ -1,4 +1,5 @@
 const webpack = require("webpack")
+const { join } = require("path")
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -29,6 +30,11 @@ const nextConfig = {
   },
   typescript: {
     tsconfigPath: "./tsconfig.build.json"
+  },
+  sassOptions: {
+    quietDeps: true,
+    loadPaths: [join(process.cwd())],
+    includePaths: ["./styles/**/*.scss"]
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {

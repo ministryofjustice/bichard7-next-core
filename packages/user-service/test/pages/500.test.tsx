@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react"
-import Custom500 from "pages/500"
+import Custom500 from "../../src/pages/500"
 import { MockNextRouter } from "../MockNextRouter"
 
 it("should render the component and match the snapshot", () => {

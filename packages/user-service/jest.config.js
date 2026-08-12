@@ -3,6 +3,7 @@ const { TextEncoder } = require("util")
 /** @type {import('@jest/types').Config.InitialOptions} */
 const config = {
   preset: "ts-jest",
+  testEnvironment: "jsdom",
   transform: {
     "\\.[jt]sx?$": "@swc/jest"
   },

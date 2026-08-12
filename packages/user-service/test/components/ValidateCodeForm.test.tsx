@@ -7,6 +7,7 @@ describe("ValidateCodeForm", () => {
     emailAddress: "bichard01@example.com",
     validationCode: "123456",
     validationCodeError: undefined,
+    invalidCodeError: undefined,
     stageValue: "validateCode" as const,
     sendAgainUrl: "/send-code-again"
   }

@@ -2,7 +2,6 @@ import { forces, triggerDefinitions } from "@moj-bichard7-developers/bichard7-ne
 import CheckboxMultiSelect from "components/CheckboxMultiSelect"
 import Details from "components/Details"
 import TextInput from "components/TextInput"
-import React from "react"
 import { UserGroupResult } from "types/UserGroup"
 
 interface Props {
