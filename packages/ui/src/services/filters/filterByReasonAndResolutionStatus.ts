@@ -45,46 +45,61 @@ const canSeeTriggersAndExceptions = (user: User, reason?: Reason): boolean =>
   reason !== Reason.Triggers &&
   reason !== Reason.Exceptions
 
+type FilterTarget = "BOTH" | "EXCEPTIONS" | "NONE" | "TRIGGERS"
+
+const getFilterTarget = (user: User, reason: Reason | undefined, reasonCodes: string[] | undefined): FilterTarget => {
+  if (shouldFilterForTriggers(user, reason)) {
+    return "TRIGGERS"
+  }
+
+  if (shouldFilterForExceptions(user, reason)) {
+    return "EXCEPTIONS"
+  }
+
+  if (canSeeTriggersAndExceptions(user, reason)) {
+    if (reasonCodesAreExceptionsOnly(reasonCodes)) {
+      return "EXCEPTIONS"
+    }
+
+    if (reasonCodesAreTriggersOnly(reasonCodes)) {
+      return "TRIGGERS"
+    }
+
+    return "BOTH"
+  }
+
+  return "NONE"
+}
+
 const filterIfUnresolved = (
   query: SelectQueryBuilder<CourtCase>,
   user: User,
   reason?: Reason,
   reasonCodes?: string[]
 ): SelectQueryBuilder<CourtCase> => {
-  if (shouldFilterForTriggers(user, reason)) {
-    query.andWhere({ triggerStatus: "Unresolved" })
-  } else if (shouldFilterForExceptions(user, reason)) {
-    query.andWhere(
+  const target = getFilterTarget(user, reason, reasonCodes)
+
+  if (target === "TRIGGERS") {
+    return query.andWhere({ triggerStatus: "Unresolved" })
+  } else if (target === "EXCEPTIONS") {
+    return query.andWhere(
       new Brackets((qb) => {
         qb.where({ errorStatus: "Unresolved" }).orWhere({ errorStatus: "Submitted" })
       })
     )
-  } else if (canSeeTriggersAndExceptions(user, reason)) {
-    if (reasonCodes && reasonCodesAreExceptionsOnly(reasonCodes)) {
-      query.andWhere(
-        new Brackets((qb) => {
-          qb.where({ errorStatus: "Unresolved" }).orWhere({ errorStatus: "Submitted" })
-        })
-      )
-    } else if (reasonCodes && reasonCodesAreTriggersOnly(reasonCodes)) {
-      query.andWhere({ triggerStatus: "Unresolved" })
-    } else {
-      query.andWhere(
-        new Brackets((qb) => {
-          qb.where({ triggerStatus: "Unresolved" }).orWhere(
-            new Brackets((qb2) => {
-              qb2.where({ errorStatus: "Unresolved" }).orWhere({ errorStatus: "Submitted" })
-            })
-          )
-        })
-      )
-    }
-  } else {
-    query.andWhere("FALSE")
-    return query
+  } else if (target === "BOTH") {
+    return query.andWhere(
+      new Brackets((qb) => {
+        qb.where({ triggerStatus: "Unresolved" }).orWhere(
+          new Brackets((qb2) => {
+            qb2.where({ errorStatus: "Unresolved" }).orWhere({ errorStatus: "Submitted" })
+          })
+        )
+      })
+    )
   }
 
-  return query
+  return query.andWhere("FALSE")
 }
 
 const filterIfResolved = (
@@ -94,28 +109,23 @@ const filterIfResolved = (
   reasonCodes?: string[],
   resolvedByUsername?: string
 ) => {
-  if (shouldFilterForTriggers(user, reason)) {
+  const target = getFilterTarget(user, reason, reasonCodes)
+
+  if (target === "TRIGGERS") {
     query.andWhere({ triggerResolvedTimestamp: Not(IsNull()) })
-  } else if (shouldFilterForExceptions(user, reason)) {
+  } else if (target === "EXCEPTIONS") {
     query.andWhere({ errorStatus: "Resolved" })
-  } else if (canSeeTriggersAndExceptions(user, reason)) {
-    if (reasonCodes && reasonCodesAreExceptionsOnly(reasonCodes)) {
-      query.andWhere({ errorStatus: "Resolved" })
-    } else if (reasonCodes && reasonCodesAreTriggersOnly(reasonCodes)) {
-      query.andWhere({ triggerResolvedTimestamp: Not(IsNull()) })
-    } else {
-      query.andWhere(
-        new Brackets((qb) =>
-          qb
-            .where({ errorResolvedTimestamp: Not(IsNull()) })
-            .orWhere({ errorStatus: "Resolved" })
-            .orWhere({ triggerResolvedTimestamp: Not(IsNull()) })
-        )
+  } else if (target === "BOTH") {
+    query.andWhere(
+      new Brackets((qb) =>
+        qb
+          .where({ errorResolvedTimestamp: Not(IsNull()) })
+          .orWhere({ errorStatus: "Resolved" })
+          .orWhere({ triggerResolvedTimestamp: Not(IsNull()) })
       )
-    }
+    )
   } else {
-    query.andWhere("FALSE")
-    return query
+    return query.andWhere("FALSE")
   }
 
   if (resolvedByUsername) {
@@ -123,21 +133,21 @@ const filterIfResolved = (
       new Brackets((qb) => {
         if (reasonFilterOnlyIncludesTriggers(reason)) {
           qb.where({
-            triggerResolvedBy: resolvedByUsername ?? user.username
+            triggerResolvedBy: resolvedByUsername
           })
         } else if (reasonFilterOnlyIncludesExceptions(reason)) {
           qb.where({
-            errorResolvedBy: resolvedByUsername ?? user.username
+            errorResolvedBy: resolvedByUsername
           })
         } else {
           qb.where({
-            errorResolvedBy: resolvedByUsername ?? user.username
+            errorResolvedBy: resolvedByUsername
           })
             .orWhere({
-              triggerResolvedBy: resolvedByUsername ?? user.username
+              triggerResolvedBy: resolvedByUsername
             })
             .orWhere("trigger.resolvedBy = :triggerResolver", {
-              triggerResolver: resolvedByUsername ?? user.username
+              triggerResolver: resolvedByUsername
             })
         }
       })
