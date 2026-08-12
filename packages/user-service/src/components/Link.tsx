@@ -1,4 +1,3 @@
-import { addBasePath } from "next/dist/client/add-base-path"
 import { ReactNode } from "react"
 
 interface Props {
@@ -12,6 +11,11 @@ interface Props {
   title?: string
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
   target?: string
+}
+
+const applyBasePath = (href: string): string => {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ""
+  return href.startsWith("/") ? `${basePath}${href}` : href
 }
 
 const Link = ({
@@ -28,7 +32,7 @@ const Link = ({
 }: Props) => (
   <a
     data-test={dataTest}
-    href={basePath ? addBasePath(href) : href}
+    href={basePath ? applyBasePath(href) : href}
     className={className || "govuk-link"}
     id={id}
     rel={rel}

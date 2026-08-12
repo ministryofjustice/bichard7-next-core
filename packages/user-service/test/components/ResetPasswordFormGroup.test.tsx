@@ -4,11 +4,7 @@ import ResetPasswordFormGroup from "components/Login/ResetPasswordFormGroup"
 describe("ResetPasswordFormGroup", () => {
   it("should render correctly without any errors", () => {
     const { container } = render(
-      <ResetPasswordFormGroup
-        passwordMismatch={false}
-        passwordsMismatchError={undefined}
-        newPasswordError={undefined}
-      />
+      <ResetPasswordFormGroup passwordMismatch={false} passwordsMismatchError={""} newPasswordError={undefined} />
     )
 
     expect(container).toMatchSnapshot()

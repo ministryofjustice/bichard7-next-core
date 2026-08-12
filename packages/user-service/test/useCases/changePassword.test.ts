@@ -17,7 +17,14 @@ it("should return error when new password does not meet complexity requirements"
   const mockedPasswordSecurityCheck = passwordSecurityCheck as jest.MockedFunction<typeof passwordSecurityCheck>
   mockedPasswordSecurityCheck.mockReturnValue(expectedError)
 
-  const result = await changePassword(connection, fakeAuditLogger, "DummyEmail", "DummyPassword", "DummyNewPassword")
+  const result = await changePassword(
+    connection,
+    fakeAuditLogger,
+    "DummyEmail",
+    "DummyPassword",
+    "DummyNewPassword",
+    "/"
+  )
 
   expect(isError(result)).toBe(true)
 
