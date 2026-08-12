@@ -589,6 +589,8 @@ jobs:
       - install_goss
       - enable_docker_container_image_store
       - run: sudo apt-get update && sudo apt-get install -y pigz
+      - fetch_images:
+          images: amazon-linux2023-base
       - build_and_cache_image:
           image_name: conductor
           dockerfile: environment/conductor/Dockerfile
