@@ -2,7 +2,7 @@ ARG BUILD_IMAGE="amazon-linux2023-base"
 
 FROM node:20-alpine AS ui-builder
 
-ARG CONDUCTOR_VERSION
+ARG CONDUCTOR_VERSION="v3.21.14"
 
 RUN apk add git && \
     git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor
