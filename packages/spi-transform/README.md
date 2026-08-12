@@ -8,11 +8,13 @@ Transforms SPIResults xml messages and writes to a deltalake table
 
 Data can be queried locally using duckdb:
 
-1. Navigate to the spi-transform directory in you terminal and run `make query-delta`
+1. Install uv if needed `brew install uv`
+
+2. Navigate to the spi-transform directory in you terminal and run `make query-delta`
 
 You can overwrite environment variables if needed e.g. `make query-delta VAULT_PROFILE=qsolution-production AWS_ACCOUNT_ID=x`
 
-2. You will now be in a duckdb interactive shell. Type an sql query ending in a semi-colon and hit enter to see the results (type `.last` and use the arrow keys if needed to paginate). An example query is below:
+3. You will now be in a duckdb interactive shell. Type an sql query ending in a semi-colon and hit enter to see the results (type `.last` and use the arrow keys if needed to paginate). An example query is below:
 
 ```sql
 SELECT COUNT(DISTINCT _file_uuid)
@@ -21,9 +23,9 @@ WHERE Case_Defendant_Offence_Result_ResultCode = '1116';
 
 ```
 
-3. Alternatively execute an existing sql file: `.read ./sql/describe.sql`
+4. Alternatively execute an existing sql file: `.read ./sql/describe.sql`
 
-4. `ctrl+D` to exit the shell
+5. `ctrl+D` to exit the shell
 
 ### Athena
 
