@@ -575,6 +575,40 @@ jobs:
           paths:
             - images
 
+  build_conductor_image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            <<: *any_change
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - install_goss
+      - enable_docker_container_image_store
+      - run: sudo apt-get update && sudo apt-get install -y pigz
+      - build_and_cache_image:
+          image_name: conductor
+          dockerfile: environment/conductor/Dockerfile
+          cache_key: buildkit-conductor
+          image_tag: latest
+          context: environment/conductor
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save "conductor:latest" | pigz > "images/conductor.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: environment/conductor
+          command: make goss
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
+
   test_core:
     machine:
       image: ubuntu-2204:current
@@ -1253,6 +1287,7 @@ workflows:
       - build_api_image
       - build_s3_web_proxy_image
       - build_audit_logging_images
+      - build_conductor_image
 
       - comparison_test:
           requires:
