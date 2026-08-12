@@ -114,7 +114,40 @@ describe("Filter cases by resolution status for triggerHandler user", () => {
       user: () => users.triggerHandler
     },
     {
-      description: "Should see unresolved triggers when case state is not set",
+      description:
+        "Should see unresolved triggers when searching with reason codes HO100300 and H0100332, resolution status set to unresolved and reason set to all",
+      expectedCases: [
+        "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
+        "Exceptions Unresolved/Bails Trigger Unresolved",
+        "Exceptions Unresolved/Trigger Unresolved"
+      ],
+      filters: {
+        caseState: ResolutionStatus.Unresolved,
+        reason: Reason.All,
+        reasonCodes: [Utils.dummyExceptionCode1, Utils.dummyExceptionCode2]
+      },
+      user: () => users.triggerHandler
+    },
+    {
+      description:
+        "Should see resolved triggers when searching with reason codes HO100300 and H0100332, resolution status set to resolved and reason set to all",
+      expectedCases: [
+        "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
+        "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
+        "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
+        "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
+        "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler",
+        "Exceptions Unresolved/Trigger Resolved by someoneElse"
+      ],
+      filters: {
+        caseState: ResolutionStatus.Resolved,
+        reason: Reason.All,
+        reasonCodes: [Utils.dummyExceptionCode1, Utils.dummyExceptionCode2]
+      },
+      user: () => users.triggerHandler
+    },
+    {
+      description: "Should see unresolved triggers when case state is not set and reason set to all",
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
         "Exceptions Unresolved/Trigger Unresolved",
