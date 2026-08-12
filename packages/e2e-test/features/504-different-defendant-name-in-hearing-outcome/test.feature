@@ -1,4 +1,4 @@
-Feature: {001} R3_BR7_TR_003_TRPR0004
+Feature: {504} 504-different-defendant-name-in-hearing-outcome
 
 			"""
 			MadeTech Definition:
