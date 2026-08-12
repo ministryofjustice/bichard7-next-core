@@ -18,7 +18,7 @@ RUN npm install --legacy-peer-deps && \
 # ===========================================================================================================
 FROM eclipse-temurin:17-jdk-jammy AS builder
 
-ARG CONDUCTOR_VERSION
+ARG CONDUCTOR_VERSION="v3.21.14"
 
 RUN apt-get update && apt-get install -y --no-install-recommends git && \
     git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor && \
@@ -42,7 +42,7 @@ RUN ./gradlew --version && \
 
 FROM ${BUILD_IMAGE}
 
-ARG CONDUCTOR_VERSION
+ARG CONDUCTOR_VERSION="v3.21.14"
 
 LABEL org.opencontainers.image.authors="CJSE"
 LABEL conductor_version=$CONDUCTOR_VERSION
