@@ -515,7 +515,7 @@ jobs:
             source $BASH_ENV
 
             cd packages/s3-web-proxy
-            make test_goss
+            make goss
 
   build_ui_image:
     machine:
