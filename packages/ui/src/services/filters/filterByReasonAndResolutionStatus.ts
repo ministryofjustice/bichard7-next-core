@@ -14,7 +14,7 @@ const reasonFilterOnlyIncludesTriggers = (reason?: Reason): boolean => reason ==
 const reasonFilterOnlyIncludesExceptions = (reason?: Reason): boolean => reason === Reason.Exceptions
 
 const reasonCodesAreExceptionsOnly = (reasonCodes: string[] | undefined): boolean => {
-  if (reasonCodes?.length === 0) {
+  if (!reasonCodes || reasonCodes.length === 0) {
     return false
   }
 
@@ -22,7 +22,7 @@ const reasonCodesAreExceptionsOnly = (reasonCodes: string[] | undefined): boolea
 }
 
 const reasonCodesAreTriggersOnly = (reasonCodes: string[] | undefined): boolean => {
-  if (reasonCodes?.length === 0) {
+  if (!reasonCodes || reasonCodes.length === 0) {
     return false
   }
 
