@@ -139,7 +139,7 @@ describe("Filter cases by resolution status for exceptionHandler user", () => {
     },
     {
       description:
-        "Should ignore trigger reason codes and see all resolved exceptions when searching with reason codes TRPR0001, resolution status set to unresolved and reason set to all",
+        "Should ignore trigger reason codes and see all resolved exceptions when searching with reason codes TRPR0001 and TRPR0010, resolution status set to unresolved and reason set to all",
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
         "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
@@ -152,7 +152,7 @@ describe("Filter cases by resolution status for exceptionHandler user", () => {
       filters: {
         caseState: ResolutionStatus.Resolved,
         reason: Reason.All,
-        reasonCodes: [Utils.dummyTriggerCode]
+        reasonCodes: [Utils.dummyTriggerCode, Utils.bailsTriggerCode]
       },
       user: () => users.exceptionHandler
     },
