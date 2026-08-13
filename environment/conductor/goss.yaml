@@ -1,0 +1,168 @@
+---
+file:
+  /app/config/config.properties:
+    exists: true
+    owner: appuser
+    group: appuser
+    filetype: file
+    contains: []
+  /app/libs/conductor-server.jar:
+    exists: true
+    owner: appuser
+    group: appuser
+    filetype: file
+    contains: []
+  /etc/nginx/nginx.conf:
+    exists: true
+    owner: appuser
+    group: appuser
+    filetype: file
+    contains: []
+  /etc/nginx/conf.d/conductor.https.conf:
+    exists: true
+    owner: appuser
+    group: appuser
+    filetype: file
+    contains: []
+  /etc/nginx/conf.d/conductor.http.conf:
+    exists: true
+    owner: appuser
+    group: appuser
+    filetype: file
+    contains: []
+  /var/log/nginx:
+    exists: true
+    filetype: directory
+    owner: appuser
+    group: appuser
+  /var/cache/nginx:
+    exists: true
+    filetype: directory
+    owner: appuser
+    group: appuser
+  /etc/supervisord.conf:
+    exists: true
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+  /var/log/supervisor:
+    exists: true
+    filetype: directory
+    owner: appuser
+    group: appuser
+  /certs:
+    exists: true
+    owner: appuser
+    group: appuser
+    filetype: directory
+    contains: []
+  /certs/server.crt:
+    exists: true
+    owner: appuser
+    group: appuser
+    size: 2394
+    filetype: file
+    contains: []
+  /certs/server.key:
+    exists: true
+    owner: appuser
+    group: appuser
+    filetype: file
+    size:
+      and:
+        - lt: 3300
+        - gt: 3267
+    contains: []
+  /etc/passwd:
+    exists: true
+    mode: "0644"
+    owner: root
+    group: root
+    filetype: file
+    contains: []
+  /tmp:
+    exists: true
+    filetype: directory
+  /tmp/openssl.cnf:
+    exists: false
+    contains: []
+port:
+  tcp:4000:
+    listening: true
+  tcp:5000:
+    listening: true
+  tcp:8080:
+    listening: true
+  tcp:80:
+    listening: false
+process:
+  nginx:
+    running: true
+  supervisord:
+    running: true
+  java:
+    running: true
+http:
+  http://127.0.0.1:8080/health:
+    status: 200
+  http://bichard:password@127.0.0.1:4000/health:
+    status: 200
+command:
+  check_running_user:
+    exec: "whoami"
+    exit-status: 0
+    stdout:
+      - "appuser"
+  java --version:
+    exit-status: 0
+    stdout:
+      - /openjdk 17[\.\d]+ \d{4}-\d{2}-\d{2} LTS/
+    timeout: 1000
+  nginx_package_source:
+    exec: "yum list installed nginx"
+    exit-status: 0
+    stdout:
+      - "@nginx-mainline"
+package:
+  nginx:
+    installed: true
+  httpd-tools:
+    installed: true
+user:
+  dbus:
+    exists: true
+    uid: 81
+    gid: 81
+    groups:
+      - dbus
+    home: /
+    shell: /sbin/nologin
+  nginx:
+    exists: true
+    groups:
+      - nginx
+    home: /var/cache/nginx
+    shell: /sbin/nologin
+  nobody:
+    exists: true
+    uid: 65534
+    gid: 65534
+    groups:
+      - nobody
+    home: /
+    shell: /sbin/nologin
+  systemd-network:
+    exists: true
+    uid: 192
+    gid: 192
+    groups:
+      - systemd-network
+    home: /
+    shell: /usr/sbin/nologin
+  appuser:
+    exists: true
+    groups:
+      - appuser
+    shell: /bin/bash
+    home: /home/appuser

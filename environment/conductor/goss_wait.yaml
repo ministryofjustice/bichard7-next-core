@@ -1,0 +1,16 @@
+---
+port:
+  tcp:4000:
+    listening: true
+  tcp:5000:
+    listening: true
+  tcp:8080:
+    listening: true
+process:
+  java:
+    running: true
+http:
+  http://127.0.0.1:8080/health:
+    status: 200
+  http://bichard:password@127.0.0.1:4000/health:
+    status: 200
