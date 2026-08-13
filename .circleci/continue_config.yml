@@ -746,6 +746,7 @@ jobs:
       - load_user_service_image
       - load_api_image
       - load_audit_logging_image
+      - load_conductor_image
       - load_leds_image
       - node/install
       - node_install_packages
@@ -784,6 +785,7 @@ jobs:
       - load_user_service_image
       - load_api_image
       - load_audit_logging_image
+      - load_conductor_image
       - node/install
       - node_install_packages
       - build_core
