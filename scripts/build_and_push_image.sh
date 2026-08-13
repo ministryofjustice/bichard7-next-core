@@ -2,16 +2,15 @@
 
 set -ex
 
-# Dynamically calculate the script's directory and repo root
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-REPO_ROOT="$( cd "${SCRIPT_DIR}/.." &> /dev/null && pwd )"
-
 ## Build image steps
 export readonly REPOSITORY="${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com"
 export readonly DOCKER_IMAGE_PREFIX="${REPOSITORY}/${REPOSITORY_NAME}"
 export readonly SOURCE_IMAGE_PREFIX="${REPOSITORY}/${SOURCE_REPOSITORY_NAME}"
 export readonly DOCKER_IMAGE="${REPOSITORY_NAME}:latest"
 
+# Dynamically calculate the script's directory and repo root
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+REPO_ROOT="$( cd "${SCRIPT_DIR}/.." &> /dev/null && pwd )"
 CONTEXT_DIR="${REPO_ROOT}/${CONTEXT_DIR}"
 
 if [ -z "$DOCKERFILE" ]; then
