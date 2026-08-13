@@ -119,7 +119,8 @@ describe("Filter cases by resolution status for triggerHandler user", () => {
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
         "Exceptions Unresolved/Bails Trigger Unresolved",
-        "Exceptions Unresolved/Trigger Unresolved"
+        "Exceptions Unresolved/Trigger Unresolved",
+        "No exceptions/Bails Trigger Unresolved"
       ],
       filters: {
         caseState: ResolutionStatus.Unresolved,
@@ -137,7 +138,10 @@ describe("Filter cases by resolution status for triggerHandler user", () => {
         "Exceptions Resolved by generalHandler/Trigger Resolved by generalHandler",
         "Exceptions Resolved by generalHandler/Trigger Resolved by someoneElse",
         "Exceptions Resolved by someoneElse/Trigger Resolved by generalHandler",
-        "Exceptions Unresolved/Trigger Resolved by someoneElse"
+        "Exceptions Unresolved/Trigger Resolved by someoneElse",
+        "No exceptions/Bails Trigger Resolved by generalHandler",
+        "No exceptions/Bails Trigger Resolved by someoneElse",
+        "No exceptions/Bails Trigger Resolved by triggerHandler"
       ],
       filters: {
         caseState: ResolutionStatus.Resolved,

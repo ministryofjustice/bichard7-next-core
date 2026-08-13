@@ -123,7 +123,7 @@ export interface DummyDataUsers {
 export const dummyTriggerCode = "TRPR0001"
 export const bailsTriggerCode = "TRPR0010"
 export const dummyExceptionCode1 = "HO100300"
-export const dummyExceptionCode2 = "H0100332"
+export const dummyExceptionCode2 = "HO100332"
 
 export const insertDummyData = async (helper: SetupAppEnd2EndHelper): Promise<DummyDataUsers> => {
   await helper.postgres.clearDb()
