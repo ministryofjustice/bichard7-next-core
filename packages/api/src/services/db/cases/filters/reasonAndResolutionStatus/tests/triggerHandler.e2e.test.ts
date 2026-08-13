@@ -115,7 +115,7 @@ describe("Filter cases by resolution status for triggerHandler user", () => {
     },
     {
       description:
-        "Should see unresolved triggers when searching with reason codes HO100300 and H0100332, resolution status set to unresolved and reason set to all",
+        "Should ignore exception reason codes and see all unresolved triggers when searching with reason codes HO100300 and H0100332, resolution status set to unresolved and reason set to all",
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Unresolved",
         "Exceptions Unresolved/Bails Trigger Unresolved",
@@ -131,7 +131,7 @@ describe("Filter cases by resolution status for triggerHandler user", () => {
     },
     {
       description:
-        "Should see resolved triggers when searching with reason codes HO100300 and H0100332, resolution status set to resolved and reason set to all",
+        "Should ignore exception reason codes and see all resolved triggers when searching with reason codes HO100300 and H0100332, resolution status set to resolved and reason set to all",
       expectedCases: [
         "Exceptions Resolved by exceptionHandler/Trigger Resolved by triggerHandler",
         "Exceptions Resolved by generalHandler/Bails Trigger Resolved by someoneElse",
