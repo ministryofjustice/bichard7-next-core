@@ -5,6 +5,7 @@ env:
   variables:
     REPOSITORY_NAME: "conductor"
     SOURCE_REPOSITORY_NAME: "amazon-linux2023-base"
+    CONTEXT_DIR: environment/conductor
   exported-variables:
     - CONDUCTOR_IMAGE_HASH
 
@@ -12,5 +13,4 @@ phases:
   build:
     commands:
       - ./scripts/install-goss.sh
-      - cd environment/conductor
-      - ../../scripts/build_and_push_image.sh
+      - . ./scripts/build_and_push_image.sh
