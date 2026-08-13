@@ -5,6 +5,6 @@ set -e
 export readonly REPOSITORY_NAME="conductor"
 export readonly DOCKER_IMAGE="conductor"
 
-bash ../../scripts/install_goss.sh
+bash ../../../scripts/install_goss.sh
 make -C ../ Conductor
-bash ../../scripts/push_image.sh
+bash ../../../scripts/push_image.sh
