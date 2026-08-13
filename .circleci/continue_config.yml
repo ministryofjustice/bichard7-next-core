@@ -156,6 +156,12 @@ commands:
           name: Load event handler image
           command: docker image load < "images/event-handler.tar.gz"
 
+  load_conductor_image:
+    steps:
+      - run:
+          name: Load conductor image
+          command: docker image load < "images/conductor.tar.gz"
+
   start_services:
     parameters:
       ARGS:
@@ -632,6 +638,7 @@ jobs:
       - load_postgres_image
       - load_api_image
       - load_audit_logging_image
+      - load_conductor_image
       - node/install
       - node_install_packages
       - build_common
@@ -823,6 +830,7 @@ jobs:
       - load_api_image
       - load_leds_image
       - load_audit_logging_image
+      - load_conductor_image
       - node_install_packages
       - build_core
       - run:
@@ -1141,11 +1149,12 @@ jobs:
           condition:
             equal: [true, << parameters.api >>]
           steps:
-            run:
-              name: Boot Conductor
-              environment:
-                <<: *ui_envs
-              command: bash .circleci/scripts/run-infrastructure.sh "ui user-service api" conductor
+            - load_conductor_image
+            - run:
+                name: Boot Conductor
+                environment:
+                  <<: *ui_envs
+                command: bash .circleci/scripts/run-infrastructure.sh "ui user-service api" conductor
       - run:
           name: Run UI tests
           command: bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
@@ -1208,6 +1217,7 @@ jobs:
       - load_api_image
       - load_leds_image
       - load_audit_logging_image
+      - load_conductor_image
       - when:
           condition: << parameters.use-leds >>
           steps:
