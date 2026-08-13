@@ -29,7 +29,7 @@ export const generateFilters = (
     filterByCourtName(database, filters.courtName),
     filterByPtiurn(database, filters.ptiurn),
     filterByAsn(database, filters.asn),
-    filterByReasonCodes(database, filters),
+    filterByReasonCodes(database, filters, user),
     filterByCourtDate(database, filters),
     filterByCaseAge(database, filters.caseAge),
     filterByResolvedByUsername(database, filters.resolvedByUsername),

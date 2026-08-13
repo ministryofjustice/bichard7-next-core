@@ -177,27 +177,27 @@ describe("fetchCasesAndFilter filtering by reason codes e2e", () => {
     expect(caseMetadata.returnCases).toBe(2)
   })
 
-  it("will return empty array when trigger codes are provided but exceptions is the reason", async () => {
+  it("will ignore reason codes when trigger codes are provided, but exceptions is the reason", async () => {
     const caseMetadata = (await fetchCasesAndFilter(
       helper.postgres.readonly,
       { reasonCodes: [TriggerCode.TRPR0010, TriggerCode.TRPR0012], ...defaultQuery, reason: Reason.Exceptions },
       user
     )) as CaseIndexMetadata
 
-    expect(caseMetadata.cases).toHaveLength(0)
-    expect(caseMetadata.totalCases).toBe(0)
-    expect(caseMetadata.returnCases).toBe(0)
+    expect(caseMetadata.cases).toHaveLength(3)
+    expect(caseMetadata.totalCases).toBe(3)
+    expect(caseMetadata.returnCases).toBe(3)
   })
 
-  it("will return empty array when exception codes are provided but triggers is the reason", async () => {
+  it("will ignore reason codes when exception codes are provided, but triggers is the reason", async () => {
     const caseMetadata = (await fetchCasesAndFilter(
       helper.postgres.readonly,
       { reasonCodes: ["HO100300", "HO100322", "HO100323"], ...defaultQuery, reason: Reason.Triggers },
       user
     )) as CaseIndexMetadata
 
-    expect(caseMetadata.cases).toHaveLength(0)
-    expect(caseMetadata.totalCases).toBe(0)
-    expect(caseMetadata.returnCases).toBe(0)
+    expect(caseMetadata.cases).toHaveLength(3)
+    expect(caseMetadata.totalCases).toBe(3)
+    expect(caseMetadata.returnCases).toBe(3)
   })
 })
