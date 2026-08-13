@@ -1,0 +1,12 @@
+---
+version: 0.2
+
+env:
+  exported-variables:
+    - CONDUCTOR_IMAGE_HASH
+
+phases:
+  build:
+    commands:
+      - set -ev
+      - /bin/bash ./environment/conductor/scripts/build_docker.sh
