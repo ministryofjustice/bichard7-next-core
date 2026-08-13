@@ -12,5 +12,12 @@ env:
 phases:
   build:
     commands:
+      - ./scripts/build-image.sh
+  test:
+    commands:
       - ./scripts/install-goss.sh
-      - . ./scripts/build_and_push_image.sh
+      - cd environment/conductor
+      - make goss
+  push:
+    commands:
+      - . ./scripts/push-image.sh
