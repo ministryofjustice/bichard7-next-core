@@ -20,7 +20,7 @@ describe("convertResultToErrorListRecord", () => {
       const convertedResult = convertResultToErrorListRecord(phase1Result)
 
       expect(convertedResult.hearing_outcome).toEqual(phase1Result.hearingOutcome)
-      expect(convertedResult.updated_hearing_outcome).toEqual(phase1Result.hearingOutcome)
+      expect(convertedResult.updated_hearing_outcome).toEqual({ ...phase1Result.hearingOutcome, Exceptions: [] })
       expect(convertedResult).toMatchSnapshot({
         trigger_insert_ts: expect.any(Date),
         msg_received_ts: expect.any(Date),
@@ -99,7 +99,7 @@ describe("convertResultToErrorListRecord", () => {
       const convertedResult = convertResultToErrorListRecord(phase2Result)
 
       expect(convertedResult.hearing_outcome).toEqual(phase2Result.outputMessage)
-      expect(convertedResult.updated_hearing_outcome).toEqual(phase2Result.outputMessage)
+      expect(convertedResult.updated_hearing_outcome).toEqual({ ...phase2Result.outputMessage, Exceptions: [] })
       expect(convertedResult).toMatchSnapshot({
         trigger_insert_ts: expect.any(Date),
         msg_received_ts: expect.any(Date),

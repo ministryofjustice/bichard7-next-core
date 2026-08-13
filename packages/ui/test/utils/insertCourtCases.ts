@@ -50,10 +50,14 @@ const getDummyCourtCase = async (overrides?: Partial<CourtCase>): Promise<CourtC
     overrides?.hearingOutcome ??
     (overrides?.phase === 2 ? getAnnotatedPncUpdateDatasetXml() : DummyMultipleOffencesAho.hearingOutcomeXml)
   const hearingOutcomeJson = JSON.parse(JSON.stringify(parseHearingOutcome(hearingOutcome)))
+  const updatedHearingOutcomeJson = overrides?.updatedHearingOutcome
+    ? JSON.parse(JSON.stringify(parseHearingOutcome(overrides.updatedHearingOutcome)))
+    : null
 
   return (await getDataSource()).getRepository(CourtCase).create({
     ...DummyCourtCase,
     hearingOutcome,
+    updatedHearingOutcomeJson,
     hearingOutcomeJson,
     errorCount: 1,
     errorReason: "HO100102",
