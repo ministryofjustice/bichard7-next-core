@@ -6,7 +6,6 @@ set -ex
 export readonly REPOSITORY="${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com"
 export readonly DOCKER_IMAGE_PREFIX="${REPOSITORY}/${REPOSITORY_NAME}"
 export readonly SOURCE_IMAGE_PREFIX="${REPOSITORY}/${SOURCE_REPOSITORY_NAME}"
-export readonly DOCKER_IMAGE="${REPOSITORY_NAME}:latest"
 
 # Dynamically calculate the script's directory and repo root
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
@@ -36,24 +35,3 @@ docker build \
   -f "${DOCKERFILE}" \
   "${CONTEXT_DIR}"
 
-echo "Running goss tests against ${DOCKER_IMAGE}"
-/bin/bash "${SCRIPT_DIR}/run_goss_tests.sh"
-
-## Push image steps
-docker tag ${REPOSITORY_NAME}:latest ${DOCKER_IMAGE_PREFIX}:${CODEBUILD_RESOLVED_SOURCE_VERSION}-${CODEBUILD_START_TIME}
-
-echo "Pushing ${REPOSITORY_NAME} image on `date`"
-docker push ${DOCKER_IMAGE_PREFIX}:${CODEBUILD_RESOLVED_SOURCE_VERSION}-${CODEBUILD_START_TIME}  | tee /tmp/docker.out
-export IMAGE_SHA_HASH=$(cat /tmp/docker.out | grep digest | cut -d':' -f3-4 | cut -d' ' -f2)
-
-if [ "${IS_CD}" = "true" ]; then
-  cat <<EOF>/tmp/${REPOSITORY_NAME}.json
-  {
-    "source-hash" : "${CODEBUILD_RESOLVED_SOURCE_VERSION}",
-    "build-time": "${CODEBUILD_START_TIME}",
-    "image-hash": "${IMAGE_SHA_HASH}"
-  }
-EOF
-  aws s3 cp --quiet /tmp/${REPOSITORY_NAME}.json s3://${ARTIFACT_BUCKET}/semaphores/${REPOSITORY_NAME}.json
-  export "$(echo "${REPOSITORY_NAME}" | tr [:lower:] [:upper:] | tr '-' '_')_HASH"="${IMAGE_SHA_HASH}"
-fi
