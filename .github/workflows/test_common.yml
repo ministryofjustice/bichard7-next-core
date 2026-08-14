@@ -4,8 +4,6 @@ on:
   workflow_dispatch:
   push:
 
-  # Investigate run condition based on pipeline changes
-
 jobs:
   changes:
     runs-on: ubuntu-latest
@@ -21,7 +19,7 @@ jobs:
     steps: 
       - name: Checkout repository
         uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
-        
+
       - name: Path Filtering
         uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
         id: paths-filter
