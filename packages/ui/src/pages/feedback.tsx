@@ -6,6 +6,7 @@ import RadioButton from "components/Radios/RadioButton"
 import { RadioGroups } from "components/Radios/RadioGroup"
 import { MAX_FEEDBACK_LENGTH } from "config"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
+import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -13,19 +14,11 @@ import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { FormEventHandler, useState } from "react"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
-import SurveyFeedback from "services/entities/SurveyFeedback"
-import getDataSource from "services/getDataSource"
-import insertSurveyFeedback from "services/insertSurveyFeedback"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
-import { isError } from "types/Result"
-import { SurveyFeedbackResponse, SurveyFeedbackType } from "types/SurveyFeedback"
 import { DisplayFullUser } from "types/display/Users"
-import { isPost } from "utils/http"
-import redirectTo from "utils/redirectTo"
 import Form from "../components/Form"
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
-import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 
 enum FeedbackExperienceKey {
   verySatisfied,
@@ -47,54 +40,15 @@ export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
-    const { currentUser, query, req, csrfToken, formData } = context as AuthenticationServerSidePropsContext &
+    const { currentUser, query, csrfToken } = context as AuthenticationServerSidePropsContext &
       CsrfServerSidePropsContext
     const { previousPath } = query as { previousPath: string }
-
-    const dataSource = await getDataSource()
 
     const props = {
       csrfToken,
       user: userToDisplayFullUserDto(currentUser),
       previousPath,
       canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser)
-    }
-
-    if (isPost(req)) {
-      const { isAnonymous, experience, feedback } = formData as {
-        isAnonymous: string
-        experience: string
-        feedback: string
-      }
-
-      if (isAnonymous && experience && feedback) {
-        const result = await insertSurveyFeedback(dataSource, {
-          feedbackType: SurveyFeedbackType.General,
-          userId: isAnonymous === "no" ? currentUser.id : null,
-          response: {
-            isAnonymous,
-            experience: +experience,
-            comment: feedback
-          } as SurveyFeedbackResponse
-        } as SurveyFeedback)
-
-        if (!isError(result)) {
-          return redirectTo(previousPath)
-        } else {
-          throw result
-        }
-      }
-
-      return {
-        props: {
-          ...props,
-          fields: {
-            isAnonymous: { hasError: !isAnonymous, value: isAnonymous ?? null },
-            experience: { hasError: !experience, value: experience ?? null },
-            feedback: { hasError: !feedback, value: feedback }
-          }
-        }
-      }
     }
 
     return { props }
@@ -105,38 +59,49 @@ interface Props {
   csrfToken: string
   user: DisplayFullUser
   previousPath: string
-  fields?: {
-    isAnonymous: {
-      hasError: boolean
-      value: string
-    }
-    experience: {
-      hasError: boolean
-      value: string
-    }
-    feedback: {
-      hasError: boolean
-      value: string
-    }
-  }
   canUseTriggerAndExceptionQualityAuditing: boolean
 }
 
 const FeedbackPage: NextPage<Props> = ({
   user,
   previousPath,
-  fields,
   csrfToken,
   canUseTriggerAndExceptionQualityAuditing
 }: Props) => {
   const [remainingFeedbackLength, setRemainingFeedbackLength] = useState(MAX_FEEDBACK_LENGTH)
+  const [isAnonymous, setIsAnonymous] = useState<string | null>(null)
+  const [experience, setExperience] = useState<string | null>(null)
+  const [feedback, setFeedback] = useState<string>("")
+  const [hasSubmitted, setHasSubmitted] = useState(false)
+
   const router = useRouter()
+  const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
 
   const handleFeedbackOnChange: FormEventHandler<HTMLTextAreaElement> = (event) => {
-    setRemainingFeedbackLength(MAX_FEEDBACK_LENGTH - event.currentTarget.value.length)
+    const value = event.currentTarget.value
+    setFeedback(value)
+    setRemainingFeedbackLength(MAX_FEEDBACK_LENGTH - value.length)
   }
 
-  const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
+  const emailSubject = "Bichard7 | General feedback"
+
+  const experienceText = experience ? FeedbackExperienceOptions[experience as unknown as FeedbackExperienceKey] : ""
+
+  const emailBody = `Experience: ${experienceText}\nHappy to be contacted: ${isAnonymous === "no" ? "Yes" : "No"}\nFeedback: ${feedback}`
+
+  const emailHref = `mailto:moj-bichard7@madetech.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
+
+  const handleSendEmailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    setHasSubmitted(true)
+
+    if (!isAnonymous || !experience || !feedback.trim()) {
+      return
+    }
+
+    window.location.assign(emailHref)
+    window.location.assign(`${router.basePath}${previousPath}`)
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUserContext}>
@@ -174,19 +139,21 @@ const FeedbackPage: NextPage<Props> = ({
             id="isAnonymous"
             legendText="After submitting, if we have any enquiries we would like to be able to contact you. If you would like your feedback to be anonymous please opt-out below."
             errorMessage="Select one of the below options"
-            hasError={fields?.isAnonymous.hasError}
+            hasError={hasSubmitted && !isAnonymous}
           >
             <RadioButton
               name={"isAnonymous"}
               id={"isAnonymous-no"}
-              defaultChecked={fields?.isAnonymous.value === "no"}
+              checked={isAnonymous === "no"}
+              onChange={(e) => setIsAnonymous(e.target.value)}
               value={"no"}
               label={"Yes, I am happy to be contacted about this feedback."}
             />
             <RadioButton
               name={"isAnonymous"}
               id={"isAnonymous-yes"}
-              defaultChecked={fields?.isAnonymous.value === "yes"}
+              checked={isAnonymous === "yes"}
+              onChange={(e) => setIsAnonymous(e.target.value)}
               value={"yes"}
               label={"No, I would like to opt-out, which will mean my feedback will be anonymous"}
             />
@@ -196,12 +163,13 @@ const FeedbackPage: NextPage<Props> = ({
             id="experience"
             legendText="Rate your experience of using the new version of Bichard"
             errorMessage="Select one of the below options"
-            hasError={fields?.experience.hasError}
+            hasError={hasSubmitted && !experience}
           >
             {Object.keys(FeedbackExperienceOptions).map((experienceKey) => (
               <RadioButton
                 id={experienceKey}
-                defaultChecked={experienceKey === fields?.experience.value}
+                checked={experienceKey === experience}
+                onChange={(e) => setExperience(e.target.value)}
                 label={FeedbackExperienceOptions[experienceKey as unknown as FeedbackExperienceKey]}
                 key={experienceKey}
                 name={"experience"}
@@ -216,15 +184,16 @@ const FeedbackPage: NextPage<Props> = ({
             labelText={"Tell us why you gave this rating"}
             labelSize={"s"}
             id={"feedback"}
-            defaultValue={fields?.feedback.value}
-            showError={fields?.feedback.hasError}
             name={"feedback"}
             maxLength={MAX_FEEDBACK_LENGTH}
             errorMessage={"Input message into the text box"}
+            showError={hasSubmitted && !feedback.trim()}
           />
 
           <FormGroup>
-            <Button type="submit">{"Send feedback and continue"}</Button>
+            <Button type="button" onClick={handleSendEmailClick}>
+              {"Send feedback and continue"}
+            </Button>
           </FormGroup>
         </Form>
       </Layout>
