@@ -71,6 +71,12 @@ commands:
           paths:
             - ~/.npm
 
+  install_goss:
+    steps:
+      - run:
+          name: Install Goss
+          command: sudo bash ./scripts/install-goss.sh
+
   build_common:
     steps:
       - run:
@@ -149,6 +155,12 @@ commands:
       - run:
           name: Load event handler image
           command: docker image load < "images/event-handler.tar.gz"
+
+  load_conductor_image:
+    steps:
+      - run:
+          name: Load conductor image
+          command: docker image load < "images/conductor.tar.gz"
 
   start_services:
     parameters:
@@ -488,6 +500,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -503,6 +516,10 @@ jobs:
           command: |
             mkdir -p images
             docker image save "s3-web-proxy:${DOCKER_TAG}" | pigz > "images/s3-web-proxy.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/s3-web-proxy
+          command: make goss
 
   build_ui_image:
     machine:
@@ -564,6 +581,42 @@ jobs:
           paths:
             - images
 
+  build_conductor_image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            <<: *any_change
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - install_goss
+      - enable_docker_container_image_store
+      - run: sudo apt-get update && sudo apt-get install -y pigz
+      - fetch_images:
+          images: amazon-linux2023-base
+      - build_and_cache_image:
+          image_name: conductor
+          dockerfile: environment/conductor/Dockerfile
+          cache_key: buildkit-conductor
+          image_tag: latest
+          context: environment/conductor
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save "conductor:latest" | pigz > "images/conductor.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: environment/conductor
+          command: make goss
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
+
   test_core:
     machine:
       image: ubuntu-2204:current
@@ -585,6 +638,7 @@ jobs:
       - load_postgres_image
       - load_api_image
       - load_audit_logging_image
+      - load_conductor_image
       - node/install
       - node_install_packages
       - build_common
@@ -692,6 +746,7 @@ jobs:
       - load_user_service_image
       - load_api_image
       - load_audit_logging_image
+      - load_conductor_image
       - load_leds_image
       - node/install
       - node_install_packages
@@ -730,6 +785,7 @@ jobs:
       - load_user_service_image
       - load_api_image
       - load_audit_logging_image
+      - load_conductor_image
       - node/install
       - node_install_packages
       - build_core
@@ -776,6 +832,7 @@ jobs:
       - load_api_image
       - load_leds_image
       - load_audit_logging_image
+      - load_conductor_image
       - node_install_packages
       - build_core
       - run:
@@ -1094,11 +1151,12 @@ jobs:
           condition:
             equal: [true, << parameters.api >>]
           steps:
-            run:
-              name: Boot Conductor
-              environment:
-                <<: *ui_envs
-              command: bash .circleci/scripts/run-infrastructure.sh "ui user-service api" conductor
+            - load_conductor_image
+            - run:
+                name: Boot Conductor
+                environment:
+                  <<: *ui_envs
+                command: bash .circleci/scripts/run-infrastructure.sh "ui user-service api" conductor
       - run:
           name: Run UI tests
           command: bash .circleci/scripts/ui-scripts/run-cypress-e2e-tests.sh
@@ -1161,6 +1219,7 @@ jobs:
       - load_api_image
       - load_leds_image
       - load_audit_logging_image
+      - load_conductor_image
       - when:
           condition: << parameters.use-leds >>
           steps:
@@ -1242,6 +1301,7 @@ workflows:
       - build_api_image
       - build_s3_web_proxy_image
       - build_audit_logging_images
+      - build_conductor_image
 
       - comparison_test:
           requires:
@@ -1267,6 +1327,7 @@ workflows:
             - build_postgres_image
             - build_api_image
             - build_audit_logging_images
+            - build_conductor_image
 
       - test_message_forwarder:
           requires:
@@ -1277,6 +1338,7 @@ workflows:
             - build_user_service_image
             - build_api_image
             - build_audit_logging_images
+            - build_conductor_image
 
       - test_api:
           requires:
@@ -1294,6 +1356,7 @@ workflows:
             - build_api_image
             - build_audit_logging_images
             - build_leds_image
+            - build_conductor_image
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
@@ -1320,6 +1383,7 @@ workflows:
             - build_leds_image
             - build_audit_logging_images
             - build_worker_image
+            - build_conductor_image
 
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
@@ -1332,6 +1396,7 @@ workflows:
             - build_api_image
             - build_leds_image
             - build_audit_logging_images
+            - build_conductor_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_leds
           use-leds: true
@@ -1344,6 +1409,7 @@ workflows:
             - build_user_service_image
             - build_api_image
             - build_audit_logging_images
+            - build_conductor_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
           api: true
@@ -1360,6 +1426,7 @@ workflows:
             - build_api_image
             - build_leds_image
             - build_audit_logging_images
+            - build_conductor_image
 
       - cucumber_e2e_legacy_tests:
           requires:
@@ -1371,6 +1438,7 @@ workflows:
             - build_ui_image
             - build_audit_logging_images
             - build_leds_image
+            - build_conductor_image
 
       - zap_scanner:
           requires:

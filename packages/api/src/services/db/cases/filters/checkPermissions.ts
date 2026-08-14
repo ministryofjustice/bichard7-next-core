@@ -28,12 +28,14 @@ export const reasonCodesAreTriggersOnly = (reasonCodes: string[]): boolean => {
 }
 
 export const shouldFilterForExceptions = (user: User, reason: Reason): boolean =>
-  (userAccess(user)[Permission.Exceptions] && !userAccess(user)[Permission.Triggers]) ||
-  (userAccess(user)[Permission.Exceptions] && reasonFilterOnlyIncludesExceptions(reason))
+  userAccess(user)[Permission.Exceptions] &&
+  ((!userAccess(user)[Permission.Triggers] && !reasonFilterOnlyIncludesTriggers(reason)) ||
+    reasonFilterOnlyIncludesExceptions(reason))
 
 export const shouldFilterForTriggers = (user: User, reason: Reason): boolean =>
-  (userAccess(user)[Permission.Triggers] && !userAccess(user)[Permission.Exceptions]) ||
-  (userAccess(user)[Permission.Triggers] && reasonFilterOnlyIncludesTriggers(reason))
+  userAccess(user)[Permission.Triggers] &&
+  ((!userAccess(user)[Permission.Exceptions] && !reasonFilterOnlyIncludesExceptions(reason)) ||
+    reasonFilterOnlyIncludesTriggers(reason))
 
-export const canSeeTriggersAndException = (user: User, reason: Reason): boolean =>
+export const canSeeTriggersAndExceptions = (user: User, reason: Reason): boolean =>
   userAccess(user)[Permission.Exceptions] && userAccess(user)[Permission.Triggers] && reason === Reason.All

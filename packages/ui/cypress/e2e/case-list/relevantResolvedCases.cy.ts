@@ -1,7 +1,7 @@
 import { subHours } from "date-fns"
-import CourtCase from "../../../../../../src/services/entities/CourtCase"
 import { confirmMultipleFieldsDisplayed, confirmMultipleFieldsNotDisplayed, loginAndVisit } from "../../support/helpers"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import CourtCase from "@/services/entities/CourtCase"
 
 describe("Only shows relevant resolved cases to the user", () => {
   beforeEach(() => {
@@ -42,7 +42,7 @@ describe("Only shows relevant resolved cases to the user", () => {
     confirmMultipleFieldsNotDisplayed(["Case00002", "Case00003", "Case00004", "Case00005"])
   })
 
-  it("shows handlers resolved cases that only they resolved exceptions for", () => {
+  it("shows handlers all resolved exception cases from their force", () => {
     const casesConfig = [
       { force: "011111", resolved: true, resolvedBy: "Supervisor" },
       { force: "011111", resolved: true, resolvedBy: "GeneralHandler" },
@@ -71,11 +71,11 @@ describe("Only shows relevant resolved cases to the user", () => {
     cy.get(`label[for="resolved"]`).click()
     cy.get("#search").click()
 
-    confirmMultipleFieldsDisplayed(["Case00001", "Case00006"])
-    confirmMultipleFieldsNotDisplayed(["Case00000", "Case00002", "Case00003", "Case00004", "Case00005"])
+    confirmMultipleFieldsDisplayed(["Case00000", "Case00001", "Case00006"])
+    confirmMultipleFieldsNotDisplayed(["Case00002", "Case00003", "Case00004", "Case00005"])
   })
 
-  it("shows handlers resolved cases that only they resolved triggers for", () => {
+  it("shows handlers all resolved trigger cases from their force", () => {
     const casesConfig = [
       { force: "01", resolved: true, resolvedBy: "Supervisor" },
       { force: "01", resolved: true, resolvedBy: "GeneralHandler" },
@@ -121,7 +121,7 @@ describe("Only shows relevant resolved cases to the user", () => {
     cy.get(`label[for="resolved"]`).click()
     cy.get("#search").click()
 
-    confirmMultipleFieldsDisplayed(["Case00001", "Case00006"])
-    confirmMultipleFieldsNotDisplayed(["Case00000", "Case00002", "Case00003", "Case00004", "Case00005"])
+    confirmMultipleFieldsDisplayed(["Case00000", "Case00001", "Case00006"])
+    confirmMultipleFieldsNotDisplayed(["Case00002", "Case00003", "Case00004", "Case00005"])
   })
 })

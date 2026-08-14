@@ -69,6 +69,7 @@ const convertResultToErrorListRecord = (result: PhaseResult): ErrorListRecord =>
   const updatedMessageXml = isPncUpdateDataset(hearingOutcome)
     ? serialiseToPncUpdateDatasetXml(hearingOutcome, generateFalseHasErrorAttributes, false)
     : serialiseToAhoXml(hearingOutcome, false, generateFalseHasErrorAttributes)
+  const updatedHearingOutcome: AnnotatedHearingOutcome = { ...hearingOutcome, Exceptions: [] }
 
   return {
     message_id: hearing.SourceReference.UniqueID,
@@ -83,7 +84,7 @@ const convertResultToErrorListRecord = (result: PhaseResult): ErrorListRecord =>
     asn: caseElem.HearingDefendant.ArrestSummonsNumber.slice(0, 21),
     court_code: hearing.CourtHearingLocation.OrganisationUnitCode?.slice(0, 7),
     hearing_outcome: hearingOutcome,
-    updated_hearing_outcome: hearingOutcome,
+    updated_hearing_outcome: updatedHearingOutcome,
     annotated_msg: annotatedMessageXml,
     updated_msg: updatedMessageXml,
     error_report: errorReport.slice(0, 1000),
