@@ -83,7 +83,7 @@ const FeedbackPage: NextPage<Props> = ({
     setRemainingFeedbackLength(MAX_FEEDBACK_LENGTH - value.length)
   }
 
-  const emailSubject = "Bichard7 | General feedback"
+  const emailSubject = "Bichard7 general feedback"
 
   const experienceText = experience ? FeedbackExperienceOptions[experience as unknown as FeedbackExperienceKey] : ""
 
