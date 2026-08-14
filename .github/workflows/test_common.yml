@@ -24,7 +24,6 @@ jobs:
         uses: ministryofjustice/devsecops-actions/sca/slsa@805c9da24fe7083e24b8435a626463b25951d278 # v1.4.0
 
       - name: Install dependencies
-        working-directory: ./bichard7-next-reporting
         run: npm ci --ignore-scripts
 
       - name: Run Unit Test Common
