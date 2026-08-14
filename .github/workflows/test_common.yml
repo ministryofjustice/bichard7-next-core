@@ -1,0 +1,31 @@
+name: Test Common
+
+on:
+  workflow_dispatch:
+  push:
+
+  # Investigate run condition based on pipeline changes
+
+jobs:
+  build_and_test:
+    name: Test Common
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
+
+      - name: Setup node version
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
+        with:
+          node-version-file: .nvmrc
+
+      - name: ⛓️ SLSA Supply Chain Security
+        uses: ministryofjustice/devsecops-actions/sca/slsa@805c9da24fe7083e24b8435a626463b25951d278 # v1.4.0
+
+      - name: Install dependencies
+        working-directory: ./bichard7-next-reporting
+        run: npm ci --ignore-scripts
+
+      - name: Run Unit Test Common
+        run: npm run test -w packages/common
