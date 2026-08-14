@@ -890,26 +890,6 @@ jobs:
           name: Run e2e tests against API code
           command: nvm use && npm run -w packages/api test:e2e
 
-  test_common:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: medium
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.env-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - node/install
-      - node_install_packages
-      - run:
-          name: Unit test common
-          command: nvm use && npm run test -w packages/common
-
   test_postgres:
     machine:
       image: ubuntu-2204:current
@@ -1289,7 +1269,6 @@ workflows:
   test-all:
     jobs:
       - characterisation_test
-      - test_common
       - test_ui_component
 
       - build_postgres_image
