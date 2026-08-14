@@ -11,8 +11,7 @@ const unlockCourtCase = async (
   dataSource: DataSource,
   courtCaseId: number,
   user: User,
-  unlockReason: UnlockReason,
-  usingApiResubmit?: boolean
+  unlockReason: UnlockReason
 ): Promise<UpdateResult | Error | undefined> => {
   return await dataSource.transaction(async (entityManager) => {
     const events: AuditLogEvent[] = []
@@ -27,14 +26,7 @@ const unlockCourtCase = async (
       throw new Error("Failed to unlock: Case not found")
     }
 
-    const unlockResult = await updateLockStatusToUnlocked(
-      entityManager,
-      courtCase,
-      user,
-      unlockReason,
-      events,
-      usingApiResubmit
-    )
+    const unlockResult = await updateLockStatusToUnlocked(entityManager, courtCase, user, unlockReason, events)
 
     if (isError(unlockResult)) {
       throw unlockResult
