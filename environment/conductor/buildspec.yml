@@ -2,11 +2,25 @@
 version: 0.2
 
 env:
+  variables:
+    REPOSITORY_NAME: "conductor"
+    SOURCE_REPOSITORY_NAME: "amazon-linux2023-base"
+    CONTEXT_DIR: "environment/conductor"
   exported-variables:
     - CONDUCTOR_IMAGE_HASH
 
 phases:
-  build:
+  install:
+    on-failure: ABORT
     commands:
-      - set -ev
-      - /bin/bash ./environment/conductor/scripts/build_docker.sh
+      - ./scripts/install-goss.sh
+
+  build:
+    on-failure: ABORT
+    commands:
+      - ./scripts/build-image.sh
+      - (cd "$CONTEXT_DIR" && make goss)
+
+  post_build:
+    commands:
+      - . ./scripts/push-image.sh
