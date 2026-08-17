@@ -11,10 +11,12 @@ env:
 
 phases:
   install:
+    on-failure: ABORT
     commands:
       - ./scripts/install-goss.sh
 
   build:
+    on-failure: ABORT
     commands:
       - ./scripts/build-image.sh
       - (cd "$CONTEXT_DIR" && make goss)
