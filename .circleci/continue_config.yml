@@ -274,12 +274,7 @@ ui_params: &ui_params
     default: false
 
 ui_envs: &ui_envs
-  USE_API: << parameters.api >>
-  FORCES_WITH_API_ENABLED: << parameters.forces-with-api-enabled >>
   FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: << parameters.forces-with-court-date-received-date-mismatch-enabled >>
-  USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
-  USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
-  USE_API_CASE_RESUBMIT_ENDPOINT: << parameters.api-case-resubmit >>
 
 any_change: &any_change
   or:
