@@ -3,7 +3,9 @@ name: Test Characterisation
 on:
   workflow_dispatch:
   push:
-# To Do - Check to see if test charactisation is run when npm run update is triggered
+  pull_request:
+      types: [opened, synchronize, reopened]
+      
 jobs:
   changes:
     runs-on: ubuntu-latest
