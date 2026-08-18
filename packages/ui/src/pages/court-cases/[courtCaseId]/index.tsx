@@ -23,8 +23,6 @@ import { useEffect, useState } from "react"
 import addNote from "services/addNote"
 import ApiClient from "services/api/ApiClient"
 import BichardApiV1 from "services/api/BichardApiV1"
-import { canUseApiEndpoint } from "services/api/canUseApi/canUseEndpoint"
-import { ApiEndpoints } from "services/api/types"
 import { canReallocate, canResolveOrSubmit } from "services/case"
 import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
@@ -83,16 +81,8 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     const loadLockedBy = true
 
-    const useApiForCaseDetails = canUseApiEndpoint(
-      ApiEndpoints.CaseDetails,
-      currentUser.visibleForces,
-      currentUser.email
-    )
-    const useApiForCaseResubmit = canUseApiEndpoint(
-      ApiEndpoints.CaseResubmit,
-      currentUser.visibleForces,
-      currentUser.email
-    )
+    const useApiForCaseDetails = true
+    const useApiForCaseResubmit = true
 
     let apiGateway: BichardApiV1 | undefined = undefined
     let apiClientTraceId: string | undefined = undefined
