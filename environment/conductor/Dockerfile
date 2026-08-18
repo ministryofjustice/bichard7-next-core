@@ -31,10 +31,8 @@ WORKDIR /conductor
 RUN sed -i 's/^subprojects {$/ext["tomcat.version"] = "10.1.55"\n\n&/' build.gradle && \
     sed -i "s/revRedisson = '3\.13\.3'/revRedisson = '3.22.0'/" dependencies.gradle
 
-#This will cache the downloaded gradle so repeated runs are faster
 RUN ./gradlew --version && \
-    ./gradlew build -x test && \
-    rm -rf /root/.gradle
+    ./gradlew build --no-daemon -x test
 
 # ===========================================================================================================
 # 1. Bin stage
