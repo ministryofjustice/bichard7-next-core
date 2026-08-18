@@ -88,7 +88,6 @@ export const getServerSideProps = withMultipleServerSideProps(
         return {
           props: {
             ...props,
-            errorMessage: "There was a problem sending your feedback. Please try again.",
             fields: {
               isAnonymous: { hasError: false, value: isAnonymous },
               experience: { hasError: false, value: experience },
@@ -108,7 +107,6 @@ interface Props {
   user: DisplayFullUser
   previousPath: string
   canUseTriggerAndExceptionQualityAuditing: boolean
-  errorMessage?: string
   fields?: {
     isAnonymous: {
       hasError: boolean
