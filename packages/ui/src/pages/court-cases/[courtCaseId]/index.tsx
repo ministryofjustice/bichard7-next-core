@@ -83,11 +83,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     const loadLockedBy = true
 
-    const useApiForCaseDetails = canUseApiEndpoint(
-      ApiEndpoints.CaseDetails,
-      currentUser.visibleForces,
-      currentUser.email
-    )
+    const useApiForCaseDetails = true
     const useApiForCaseResubmit = canUseApiEndpoint(
       ApiEndpoints.CaseResubmit,
       currentUser.visibleForces,
@@ -97,10 +93,12 @@ export const getServerSideProps = withMultipleServerSideProps(
     let apiGateway: BichardApiV1 | undefined = undefined
     let apiClientTraceId: string | undefined = undefined
 
-    const jwt = req.cookies[".AUTH"] as string
-    const apiClient = new ApiClient(jwt)
-    apiClientTraceId = apiClient.traceId
-    apiGateway = new BichardApiV1(apiClient)
+    if (useApiForCaseDetails || useApiForCaseResubmit) {
+      const jwt = req.cookies[".AUTH"] as string
+      const apiClient = new ApiClient(jwt)
+      apiClientTraceId = apiClient.traceId
+      apiGateway = new BichardApiV1(apiClient)
+    }
 
     let courtCase
     if (!useApiForCaseDetails) {
@@ -156,7 +154,7 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     if (isPost(req) && resubmitCase === "true") {
-      if (useApiForCaseResubmit && apiGateway) {
+      if (apiGateway) {
         const logger = apiLogger(apiClientTraceId, req.url)
         logger.info(`Resubmitting court case ${courtCaseId}`)
         const resubmitResult = await apiGateway.resubmitCase(Number(courtCaseId))
