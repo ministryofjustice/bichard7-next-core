@@ -2,6 +2,6 @@ $govuk-assets-path: "/bichard/govuk_assets/";
 $moj-assets-path: "/bichard/moj_assets/";
 
 @import "node_modules/govuk-frontend/dist/govuk/index";
-@import "node_modules/@ministryofjustice/frontend/moj/all";
+@import "~@ministryofjustice/frontend/moj/all";
 @import "page";
 @import "form";

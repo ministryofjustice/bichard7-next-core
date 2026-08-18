@@ -1,3 +1,4 @@
+import sendFeedbackEmail from "@/services/sendEmailFeedback"
 import { Button } from "components/Buttons/Button"
 import { FormGroup } from "components/FormGroup"
 import Layout from "components/Layout"
@@ -15,7 +16,10 @@ import { ParsedUrlQuery } from "querystring"
 import { FormEventHandler, useState } from "react"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
+import { isError } from "types/Result"
 import { DisplayFullUser } from "types/display/Users"
+import { isPost } from "utils/http"
+import redirectTo from "utils/redirectTo"
 import Form from "../components/Form"
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
@@ -40,7 +44,7 @@ export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
   async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
-    const { currentUser, query, csrfToken } = context as AuthenticationServerSidePropsContext &
+    const { currentUser, query, req, csrfToken, formData } = context as AuthenticationServerSidePropsContext &
       CsrfServerSidePropsContext
     const { previousPath } = query as { previousPath: string }
 
@@ -49,6 +53,50 @@ export const getServerSideProps = withMultipleServerSideProps(
       user: userToDisplayFullUserDto(currentUser),
       previousPath,
       canUseTriggerAndExceptionQualityAuditing: canUseTriggerAndExceptionQualityAuditing(currentUser)
+    }
+
+    if (isPost(req)) {
+      const { isAnonymous, experience, feedback } = formData as {
+        isAnonymous: string
+        experience: string
+        feedback: string
+      }
+
+      const isAnonymousHasError = !isAnonymous
+      const experienceHasError = !experience
+      const feedbackHasError = !feedback
+
+      if (isAnonymousHasError || experienceHasError || feedbackHasError) {
+        return {
+          props: {
+            ...props,
+            fields: {
+              isAnonymous: { hasError: isAnonymousHasError, value: isAnonymous ?? null },
+              experience: { hasError: experienceHasError, value: experience ?? null },
+              feedback: { hasError: feedbackHasError, value: feedback ?? "" }
+            }
+          }
+        }
+      }
+
+      const experienceText = FeedbackExperienceOptions[experience as unknown as FeedbackExperienceKey]
+      const feedbackResult = await sendFeedbackEmail(isAnonymous, experienceText, feedback)
+
+      if (!isError(feedbackResult)) {
+        return redirectTo(previousPath)
+      } else {
+        return {
+          props: {
+            ...props,
+            errorMessage: "There was a problem sending your feedback. Please try again.",
+            fields: {
+              isAnonymous: { hasError: false, value: isAnonymous },
+              experience: { hasError: false, value: experience },
+              feedback: { hasError: false, value: feedback }
+            }
+          }
+        }
+      }
     }
 
     return { props }
@@ -60,48 +108,38 @@ interface Props {
   user: DisplayFullUser
   previousPath: string
   canUseTriggerAndExceptionQualityAuditing: boolean
+  errorMessage?: string
+  fields?: {
+    isAnonymous: {
+      hasError: boolean
+      value: string
+    }
+    experience: {
+      hasError: boolean
+      value: string
+    }
+    feedback: {
+      hasError: boolean
+      value: string
+    }
+  }
 }
 
 const FeedbackPage: NextPage<Props> = ({
   user,
   previousPath,
+  fields,
   csrfToken,
   canUseTriggerAndExceptionQualityAuditing
 }: Props) => {
   const [remainingFeedbackLength, setRemainingFeedbackLength] = useState(MAX_FEEDBACK_LENGTH)
-  const [isAnonymous, setIsAnonymous] = useState<string | null>(null)
-  const [experience, setExperience] = useState<string | null>(null)
-  const [feedback, setFeedback] = useState<string>("")
-  const [hasSubmitted, setHasSubmitted] = useState(false)
-
   const router = useRouter()
-  const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
 
   const handleFeedbackOnChange: FormEventHandler<HTMLTextAreaElement> = (event) => {
-    const value = event.currentTarget.value
-    setFeedback(value)
-    setRemainingFeedbackLength(MAX_FEEDBACK_LENGTH - value.length)
+    setRemainingFeedbackLength(MAX_FEEDBACK_LENGTH - event.currentTarget.value.length)
   }
 
-  const emailSubject = "Bichard7 general feedback"
-
-  const experienceText = experience ? FeedbackExperienceOptions[experience as unknown as FeedbackExperienceKey] : ""
-
-  const emailBody = `Experience: ${experienceText}\nHappy to be contacted: ${isAnonymous === "no" ? "Yes" : "No"}\nFeedback: ${feedback}`
-
-  const emailHref = `mailto:moj-bichard7@madetech.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`
-
-  const handleSendEmailClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    setHasSubmitted(true)
-
-    if (!isAnonymous || !experience || !feedback.trim()) {
-      return
-    }
-
-    window.location.assign(emailHref)
-    window.location.assign(`${router.basePath}${previousPath}`)
-  }
+  const [currentUserContext] = useState<CurrentUserContextType>({ currentUser: user })
 
   return (
     <CurrentUserContext.Provider value={currentUserContext}>
@@ -139,21 +177,19 @@ const FeedbackPage: NextPage<Props> = ({
             id="isAnonymous"
             legendText="After submitting, if we have any enquiries we would like to be able to contact you. If you would like your feedback to be anonymous please opt-out below."
             errorMessage="Select one of the below options"
-            hasError={hasSubmitted && !isAnonymous}
+            hasError={fields?.isAnonymous.hasError}
           >
             <RadioButton
               name={"isAnonymous"}
               id={"isAnonymous-no"}
-              checked={isAnonymous === "no"}
-              onChange={(e) => setIsAnonymous(e.target.value)}
+              defaultChecked={fields?.isAnonymous.value === "no"}
               value={"no"}
               label={"Yes, I am happy to be contacted about this feedback."}
             />
             <RadioButton
               name={"isAnonymous"}
               id={"isAnonymous-yes"}
-              checked={isAnonymous === "yes"}
-              onChange={(e) => setIsAnonymous(e.target.value)}
+              defaultChecked={fields?.isAnonymous.value === "yes"}
               value={"yes"}
               label={"No, I would like to opt-out, which will mean my feedback will be anonymous"}
             />
@@ -163,13 +199,12 @@ const FeedbackPage: NextPage<Props> = ({
             id="experience"
             legendText="Rate your experience of using the new version of Bichard"
             errorMessage="Select one of the below options"
-            hasError={hasSubmitted && !experience}
+            hasError={fields?.experience.hasError}
           >
             {Object.keys(FeedbackExperienceOptions).map((experienceKey) => (
               <RadioButton
                 id={experienceKey}
-                checked={experienceKey === experience}
-                onChange={(e) => setExperience(e.target.value)}
+                defaultChecked={experienceKey === fields?.experience.value}
                 label={FeedbackExperienceOptions[experienceKey as unknown as FeedbackExperienceKey]}
                 key={experienceKey}
                 name={"experience"}
@@ -184,16 +219,15 @@ const FeedbackPage: NextPage<Props> = ({
             labelText={"Tell us why you gave this rating"}
             labelSize={"s"}
             id={"feedback"}
+            defaultValue={fields?.feedback.value}
+            showError={fields?.feedback.hasError}
             name={"feedback"}
             maxLength={MAX_FEEDBACK_LENGTH}
             errorMessage={"Input message into the text box"}
-            showError={hasSubmitted && !feedback.trim()}
           />
 
           <FormGroup>
-            <Button type="button" onClick={handleSendEmailClick}>
-              {"Send feedback and continue"}
-            </Button>
+            <Button type="submit">{"Send feedback and continue"}</Button>
           </FormGroup>
         </Form>
       </Layout>
