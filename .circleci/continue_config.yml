@@ -1370,7 +1370,6 @@ workflows:
             - build_conductor_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
-          api: true
           forces-with-api-enabled: "01"
           api-case-details: true
           api-case-list: true
