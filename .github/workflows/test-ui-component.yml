@@ -72,7 +72,7 @@ jobs:
         with:
           install: false
           start: npm run cypress:run
-          wait-on: 'http://localhost:3000'
+          wait-on: 'http://localhost:4080'
           component: true
           working-directory: packages/ui
 
