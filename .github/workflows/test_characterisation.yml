@@ -37,7 +37,7 @@ jobs:
   test_characterisation:
     name: Test Characterisation
     needs: changes
-    if: ${{ needs.changes.outputs.github == 'true' || needs.changes.outputs.common == 'true' || needs.changes.outputs.core == True }}
+    if: ${{ needs.changes.outputs.github == 'true' || needs.changes.outputs.common == 'true' || needs.changes.outputs.core == 'true' }}
     runs-on: ubuntu-latest
 
     steps:
