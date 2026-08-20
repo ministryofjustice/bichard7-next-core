@@ -7,7 +7,10 @@ const createConductorClient = async (): Promise<ConductorClient> => {
 
   const customFetch: typeof fetch = (input, init) => {
     const headers = new Headers(init?.headers)
+
+    headers.set("Content-Type", "application/json")
     headers.set("Authorization", `Basic ${credentials}`)
+
     return fetch(input, { ...init, headers })
   }
 
