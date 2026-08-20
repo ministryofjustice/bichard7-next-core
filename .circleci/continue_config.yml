@@ -518,7 +518,7 @@ jobs:
             docker image save "s3-web-proxy:${DOCKER_TAG}" | pigz > "images/s3-web-proxy.tar.gz"
       - run:
           name: Run Goss Tests
-          working_directory: environment/s3-web-proxy
+          working_directory: environment/s3-web-build
           command: make goss
 
   build_ui_image:
