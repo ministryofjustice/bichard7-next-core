@@ -61,6 +61,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6 
         with:
+          install: false
           start: npm run cypress:run
           wait-on: 'http://localhost:3000'
           component: true
