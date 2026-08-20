@@ -1,7 +1,6 @@
 import "../../tests/helpers/setEnvironmentVariables"
 
-import type { ConductorClient } from "@io-orkes/conductor-javascript"
-
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
@@ -44,7 +43,8 @@ const sendToPhase3 = async (canaryRatio: string | undefined, inputData: Record<s
   process.env.PHASE3_CORE_CANARY_RATIO = canaryRatio
 
   const conductorClient = await createConductorClient()
-  const worker = createSendToPhase3Worker(conductorClient)
+  const workflowExecutor = new WorkflowExecutor(conductorClient)
+  const worker = createSendToPhase3Worker(workflowExecutor)
 
   return worker.execute({ inputData })
 }
@@ -147,13 +147,9 @@ describe("sendToPhase3", () => {
     })
 
     it("should return failed status when it fails to start the Conductor workflow", async () => {
-      const fakeConductorClient = {
-        workflowResource: {
-          startWorkflow1: jest.fn().mockRejectedValue(new Error("Dummy Conductor error"))
-        }
-      } as unknown as ConductorClient
-
-      const worker = sendToPhase3Worker(fakeConductorClient)
+      const worker = createSendToPhase3Worker({
+        startWorkflow: jest.fn().mockRejectedValue(new Error("Dummy Conductor error"))
+      } as unknown as WorkflowExecutor)
 
       const { phase2Result, parsedPhase2Result, s3TaskDataPath } = getPhase2Result()
 

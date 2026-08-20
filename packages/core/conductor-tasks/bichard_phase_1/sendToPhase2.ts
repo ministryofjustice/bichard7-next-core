@@ -1,6 +1,5 @@
-import type { ConductorClient, ConductorWorker } from "@io-orkes/conductor-javascript"
+import type { ConductorWorker, WorkflowExecutor } from "@io-orkes/conductor-javascript"
 
-import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
@@ -53,7 +52,7 @@ const getDestination = (phase2CanaryRatio?: number): Destination => {
   return Destination.MQ
 }
 
-export const createSendToPhase2Worker = (conductorClient: ConductorClient): ConductorWorker => ({
+export const createSendToPhase2Worker = (workflowExecutor: WorkflowExecutor): ConductorWorker => ({
   taskDefName: "send_to_phase2",
   execute: s3TaskDataFetcher<Phase1Result>(phase1ResultSchema, async (task) => {
     const { s3TaskData, s3TaskDataPath, options } = task.inputData
@@ -89,8 +88,7 @@ export const createSendToPhase2Worker = (conductorClient: ConductorClient): Cond
         return failed("Could not put file to S3", s3Result.message)
       }
 
-      const executor = new WorkflowExecutor(conductorClient)
-      const workflowId = await executor
+      const workflowId = await workflowExecutor
         .startWorkflow({
           correlationId,
           input: { s3TaskDataPath: phase2S3TaskDataPath },

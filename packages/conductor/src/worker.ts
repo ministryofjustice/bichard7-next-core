@@ -1,4 +1,4 @@
-import { TaskManager } from "@io-orkes/conductor-javascript"
+import { TaskManager, WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import logger from "@moj-bichard7/common/utils/logger"
 import persistPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_phase_1/persistPhase1"
@@ -23,6 +23,8 @@ import { configureWorker, defaultConcurrency, defaultPollInterval } from "./conf
 
 async function initializeWorker(): Promise<void> {
   const client = await createConductorClient()
+  const workflowExecutor = new WorkflowExecutor(client)
+
   const tasks = [
     alertCommonPlatform,
     convertSpiToAho,
@@ -35,8 +37,8 @@ async function initializeWorker(): Promise<void> {
     processPhase1,
     processPhase2,
     processPhase3,
-    createSendToPhase2Worker(client),
-    createSendToPhase3Worker(client),
+    createSendToPhase2Worker(workflowExecutor),
+    createSendToPhase3Worker(workflowExecutor),
     storeAuditLogEvents,
     checkDb,
     processResubmit
