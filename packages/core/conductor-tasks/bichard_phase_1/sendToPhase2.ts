@@ -1,5 +1,6 @@
-import { ConductorClient, ConductorWorker, WorkflowExecutor } from "@io-orkes/conductor-javascript"
+import type { ConductorClient, ConductorWorker } from "@io-orkes/conductor-javascript"
 
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
