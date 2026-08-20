@@ -1,8 +1,7 @@
 ARG BUILD_IMAGE="amazon-linux2023-base"
+ARG CONDUCTOR_VERSION="v3.32.1"
 
 FROM node:20-alpine AS ui-builder
-
-ARG CONDUCTOR_VERSION="v3.21.14"
 
 RUN apk add git && \
     git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor
@@ -17,8 +16,6 @@ RUN npm install --legacy-peer-deps && \
 # 0. Builder stage
 # ===========================================================================================================
 FROM eclipse-temurin:17-jdk-jammy AS builder
-
-ARG CONDUCTOR_VERSION="v3.32.1"
 
 RUN apt-get update && apt-get install -y --no-install-recommends git && \
     git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor && \
@@ -38,8 +35,6 @@ RUN ./gradlew --version && \
 # ===========================================================================================================
 
 FROM ${BUILD_IMAGE}
-
-ARG CONDUCTOR_VERSION="v3.21.14"
 
 LABEL org.opencontainers.image.authors="CJSE"
 LABEL conductor_version=$CONDUCTOR_VERSION
