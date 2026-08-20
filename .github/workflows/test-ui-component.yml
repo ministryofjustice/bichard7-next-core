@@ -71,7 +71,7 @@ jobs:
         uses: cypress-io/github-action@v6 
         with:
           install: false
-          start: npm run start -w packages/ui -- -p 4080
+          start: npm run start -- -p 4080
           wait-on: 'http://localhost:4080'
           wait-on-timeout: 120
           component: true
