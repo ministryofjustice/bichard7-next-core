@@ -510,7 +510,7 @@ jobs:
           image_name: s3-web-proxy
           dockerfile: environment/s3-web-build/Dockerfile
           cache_key: buildkit-s3-web-proxy
-          context: environment/s3-web-build
+          context: environment/s3-web-proxy
       - run:
           name: Save Docker image
           command: |
