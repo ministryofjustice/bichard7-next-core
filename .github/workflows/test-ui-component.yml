@@ -71,17 +71,18 @@ jobs:
         uses: cypress-io/github-action@v6 
         with:
           install: false
-          start: npm run cypress:run
+          start: npm run start -w packages/ui -- -p 4080
           wait-on: 'http://localhost:4080'
+          wait-on-timeout: 120
           component: true
           working-directory: packages/ui
 
-      # - name: Run UI component tests
-      #   run: npx cypress run --component --spec "packages/ui/cypress/component/**/*.cy.tsx" 
-      #   env:
-      #     UI_IS_HTTPS: "true"
-      #     TZ: "Europe/London"
-      #   working-directory: packages/ui
+      - name: Run UI component tests
+        run: npx cypress run --component --spec "packages/ui/cypress/component/**/*.cy.tsx" 
+        env:
+          UI_IS_HTTPS: "true"
+          TZ: "Europe/London"
+        working-directory: packages/ui
 
       - name: Publish Cypress Test Report
         uses: dorny/test-reporter@v1 
