@@ -69,8 +69,9 @@ describe("forwardMessage", () => {
       correlationId
     )
     const conductorClient = await createConductorClient()
+    const workflowExecutor = new WorkflowExecutor(conductorClient)
 
-    await forwardMessage(incomingMessage, stompClient, conductorClient, database)
+    await forwardMessage(incomingMessage, stompClient, workflowExecutor, database)
     const message = await mqListener.waitForMessage()
 
     expect(mqListener.messages).toHaveLength(1)
@@ -82,9 +83,9 @@ describe("forwardMessage", () => {
     await uploadPncMock(successExceptionsPNCMock)
 
     const conductorClient = await createConductorClient()
-    const executor = new WorkflowExecutor(conductorClient)
+    const workflowExecutor = new WorkflowExecutor(conductorClient)
 
-    const startWorkflowResult = await executor
+    const startWorkflowResult = await workflowExecutor
       .startWorkflow({
         name: "bichard_phase_1",
         input: { s3TaskDataPath },
@@ -93,27 +94,27 @@ describe("forwardMessage", () => {
       .catch((e) => e as Error)
     expect(isError(startWorkflowResult)).toBeFalsy()
 
-    let workflows = await executor.search(
+    let workflows = await workflowExecutor.search(
       0,
       10,
       `workflowType = 'bichard_phase_1' AND correlationId = '${correlationId}'`,
       "*"
     )
-    expect(workflows).toHaveLength(1)
+    expect(workflows.results).toHaveLength(1)
 
     const resubmittedMessage = String(
       fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml")
     ).replace("CORRELATION_ID", correlationId)
     await insertCase(testDatabase, { message_id: correlationId })
 
-    await forwardMessage(resubmittedMessage, stompClient, conductorClient, database)
+    await forwardMessage(resubmittedMessage, stompClient, workflowExecutor, database)
 
-    workflows = await executor.search(
+    workflows = await workflowExecutor.search(
       0,
       10,
       `workflowType = 'bichard_phase_1' AND correlationId = '${correlationId}'`,
       "*"
     )
-    expect(workflows).toHaveLength(2)
+    expect(workflows.results).toHaveLength(2)
   })
 })
