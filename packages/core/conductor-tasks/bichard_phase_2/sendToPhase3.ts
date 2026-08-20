@@ -1,5 +1,4 @@
-import type { ConductorWorker } from "@io-orkes/conductor-javascript"
-
+import { type ConductorClient, type ConductorWorker, WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
@@ -52,7 +51,7 @@ const getDestination = (phase3CanaryRatio?: number): Destination => {
   return Destination.MQ
 }
 
-export const createSendToPhase3Worker = (client = conductorClient): ConductorWorker => ({
+export const createSendToPhase3Worker = (conductorClient: ConductorClient): ConductorWorker => ({
   taskDefName: "send_to_phase3",
   execute: s3TaskDataFetcher<Phase2Result>(phase2ResultSchema, async (task) => {
     const { s3TaskData, s3TaskDataPath, options } = task.inputData
@@ -88,8 +87,13 @@ export const createSendToPhase3Worker = (client = conductorClient): ConductorWor
         return failed("Could not put file to S3", s3Result.message)
       }
 
-      const workflowId = await client.workflowResource
-        .startWorkflow1(phase3WorkflowName, { s3TaskDataPath: phase3S3TaskDataPath }, undefined, correlationId)
+      const executor = new WorkflowExecutor(conductorClient)
+      const workflowId = await executor
+        .startWorkflow({
+          correlationId,
+          input: { s3TaskDataPath: phase3S3TaskDataPath },
+          name: phase3WorkflowName
+        })
         .catch((e: Error) => e)
 
       if (isError(workflowId)) {

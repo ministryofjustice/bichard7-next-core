@@ -18,6 +18,7 @@ import successExceptionsAHOFixture from "../test/fixtures/success-exceptions-aho
 import successExceptionsPNCMock from "../test/fixtures/success-exceptions-aho.pnc.json"
 import { clearTables, insertCase } from "../test/setup/database"
 import forwardMessage from "./forwardMessage"
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 
 const mq = createMqConfig()
 const stompClient = createStompClient()
@@ -81,13 +82,23 @@ describe("forwardMessage", () => {
     await uploadPncMock(successExceptionsPNCMock)
 
     const conductorClient = await createConductorClient()
+    const executor = new WorkflowExecutor(conductorClient)
 
-    const startWorkflowResult = await conductorClient.workflowResource
-      .startWorkflow1("bichard_phase_1", { s3TaskDataPath }, undefined, correlationId)
+    const startWorkflowResult = await executor
+      .startWorkflow({
+        name: "bichard_phase_1",
+        input: { s3TaskDataPath },
+        correlationId
+      })
       .catch((e) => e as Error)
     expect(isError(startWorkflowResult)).toBeFalsy()
 
-    let workflows = await conductorClient.workflowResource.getWorkflows1("bichard_phase_1", correlationId, true)
+    let workflows = await executor.search(
+      0,
+      10,
+      `workflowType = 'bichard_phase_1' AND correlationId = '${correlationId}'`,
+      "*"
+    )
     expect(workflows).toHaveLength(1)
 
     const resubmittedMessage = String(
@@ -97,7 +108,12 @@ describe("forwardMessage", () => {
 
     await forwardMessage(resubmittedMessage, stompClient, conductorClient, database)
 
-    workflows = await conductorClient.workflowResource.getWorkflows1("bichard_phase_1", correlationId, true)
+    workflows = await executor.search(
+      0,
+      10,
+      `workflowType = 'bichard_phase_1' AND correlationId = '${correlationId}'`,
+      "*"
+    )
     expect(workflows).toHaveLength(2)
   })
 })

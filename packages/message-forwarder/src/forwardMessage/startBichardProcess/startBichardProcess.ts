@@ -1,4 +1,4 @@
-import type { ConductorClient } from "@io-orkes/conductor-javascript"
+import { type ConductorClient, WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -29,8 +29,13 @@ export const startBichardProcess = async (
     return putResult
   }
 
-  const workflowId = await conductorClient.workflowResource
-    .startWorkflow1(workflowName, { s3TaskDataPath }, undefined, correlationId)
+  const executor = new WorkflowExecutor(conductorClient)
+  const workflowId = await executor
+    .startWorkflow({
+      correlationId,
+      input: { s3TaskDataPath },
+      name: workflowName
+    })
     .catch((e) => e as Error)
   if (isError(workflowId)) {
     return workflowId

@@ -1,3 +1,4 @@
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
 const startWorkflow = async (
@@ -6,7 +7,13 @@ const startWorkflow = async (
   correlationId: string
 ): Promise<string> => {
   const conductorClient = await createConductorClient()
-  return await conductorClient.workflowResource.startWorkflow1(workflowName, requestBody, undefined, correlationId)
+  const executor = new WorkflowExecutor(conductorClient)
+
+  return await executor.startWorkflow({
+    correlationId,
+    input: requestBody,
+    name: workflowName
+  })
 }
 
 export default startWorkflow

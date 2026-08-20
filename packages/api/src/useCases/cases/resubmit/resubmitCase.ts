@@ -1,6 +1,7 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import { isError } from "@moj-bichard7/common/types/Result"
 
@@ -39,11 +40,14 @@ export const resubmitCase = async (
       }
 
       const conductorClient = await createConductorClient()
-      const resubmitWorkflowName = "resubmit"
-      const workflowParams = { autoResubmit, messageId }
+      const executor = new WorkflowExecutor(conductorClient)
 
-      const conductorResult = await conductorClient.workflowResource
-        .startWorkflow1(resubmitWorkflowName, workflowParams, undefined, messageId)
+      const conductorResult = await executor
+        .startWorkflow({
+          correlationId: messageId,
+          input: { autoResubmit, messageId },
+          name: "resubmit"
+        })
         .catch((error: Error) => error)
 
       if (isError(conductorResult)) {
