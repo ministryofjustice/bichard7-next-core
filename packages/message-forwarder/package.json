@@ -34,7 +34,7 @@
     "ts-node": "^10.9.2"
   },
   "dependencies": {
-    "@io-orkes/conductor-javascript": "~2.1.5",
+    "@io-orkes/conductor-javascript": "^4.0.0",
     "@stomp/stompjs": "^7.3.0",
     "node-fetch": "^3.3.2",
     "ws": "^8.21.3"
