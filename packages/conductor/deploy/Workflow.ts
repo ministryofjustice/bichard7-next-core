@@ -13,7 +13,6 @@ if (!commitHash) {
 
 class Workflow {
   private localWorkflow: WorkflowDef
-
   private localWorkflowHash: string
 
   constructor(
@@ -32,14 +31,14 @@ class Workflow {
     if (!remoteWorkflow) {
       console.log(`Creating new workflow for '${this.localWorkflow.name}'`)
       this.localWorkflow.version = 1
-      this.conductor.putWorkflow(this.localWorkflow)
+      await this.conductor.putWorkflow(this.localWorkflow)
     }
 
     if (remoteWorkflow) {
       if (this.workflowNeedsUpdating(remoteWorkflow)) {
-        this.localWorkflow.version = remoteWorkflow.version + 1
+        this.localWorkflow.version = (remoteWorkflow.version ?? 0) + 1
         console.log(`Updating workflow '${this.localWorkflow.name}' to version ${this.localWorkflow.version}`)
-        this.conductor.putWorkflow(this.localWorkflow)
+        await this.conductor.putWorkflow(this.localWorkflow)
       } else {
         console.log(`Workflow '${this.localWorkflow.name}' does not need updating`)
       }
