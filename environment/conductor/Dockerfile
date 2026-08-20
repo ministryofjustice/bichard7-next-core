@@ -28,8 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends git && \
 
 WORKDIR /conductor
 
-RUN sed -i 's/^subprojects {$/ext["tomcat.version"] = "10.1.55"\n\n&/' build.gradle && \
-    sed -i "s/revRedisson = '3\.13\.3'/revRedisson = '3.22.0'/" dependencies.gradle
+RUN sed -i 's/^subprojects {$/ext["tomcat.version"] = "10.1.55"\n\n&/' build.gradle
 
 RUN ./gradlew --version && \
     ./gradlew build --no-daemon -x test
