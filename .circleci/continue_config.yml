@@ -254,32 +254,12 @@ commands:
             - /tmp/buildx-cache-<< parameters.image_name >>
 
 ui_params: &ui_params
-  api:
-    type: boolean
-    default: false
-  forces-with-api-enabled:
-    type: string
-    default: ""
   forces-with-court-date-received-date-mismatch-enabled:
     type: string
     default: "01"
-  api-case-details:
-    type: boolean
-    default: false
-  api-case-list:
-    type: boolean
-    default: false
-  api-case-resubmit:
-    type: boolean
-    default: false
 
 ui_envs: &ui_envs
-  USE_API: << parameters.api >>
-  FORCES_WITH_API_ENABLED: << parameters.forces-with-api-enabled >>
   FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: << parameters.forces-with-court-date-received-date-mismatch-enabled >>
-  USE_API_CASE_ENDPOINT: << parameters.api-case-details >>
-  USE_API_CASES_INDEX_ENDPOINT: << parameters.api-case-list >>
-  USE_API_CASE_RESUBMIT_ENDPOINT: << parameters.api-case-resubmit >>
 
 any_change: &any_change
   or:
@@ -1330,11 +1310,6 @@ workflows:
             - build_conductor_image
 
       - cypress_e2e_tests_api:
-          api: true
-          forces-with-api-enabled: "01"
-          api-case-details: true
-          api-case-list: true
-          api-case-resubmit: true
           requires:
             - build_postgres_image
             - build_ui_image
@@ -1345,18 +1320,6 @@ workflows:
             - build_worker_image
             - build_conductor_image
 
-      - cucumber_e2e_tests:
-          name: cucumber_e2e_tests
-          requires:
-            - build_postgres_image
-            - build_message_forwarder_image
-            - build_worker_image
-            - build_ui_image
-            - build_user_service_image
-            - build_api_image
-            - build_leds_image
-            - build_audit_logging_images
-            - build_conductor_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_leds
           use-leds: true
@@ -1370,13 +1333,9 @@ workflows:
             - build_api_image
             - build_audit_logging_images
             - build_conductor_image
+
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
-          api: true
-          forces-with-api-enabled: "01"
-          api-case-details: true
-          api-case-list: true
-          api-case-resubmit: true
           requires:
             - build_postgres_image
             - build_message_forwarder_image
