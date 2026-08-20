@@ -3,6 +3,7 @@ process.env.DESTINATION_TYPE = "conductor"
 const sourceQueue = "TEST_SOURCE_QUEUE"
 process.env.SOURCE_QUEUE = sourceQueue
 
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
@@ -32,7 +33,8 @@ describe("Server in conductor mode", () => {
 
   beforeAll(async () => {
     const conductorClient = await createConductorClient()
-    messageForwarder = new MessageForwarder(stompClient, conductorClient, database)
+    const workflowExecutor = new WorkflowExecutor(conductorClient)
+    messageForwarder = new MessageForwarder(stompClient, workflowExecutor, database)
     await messageForwarder.start()
   })
 
