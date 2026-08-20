@@ -11,7 +11,6 @@ import createStompClient from "../createStompClient"
 import forwardMessage from "./forwardMessage"
 
 const stompClient = createStompClient()
-const conductorClient = createConductorClient()
 const database = jest.fn().mockResolvedValue([{}]) as unknown as Sql
 
 const incomingMessage = String(fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml")).replace(
@@ -57,6 +56,7 @@ describe("forwardMessage", () => {
 
   it("returns an error if getWorkflows1 returns an error", async () => {
     process.env.CONDUCTOR_WORKFLOW = "bichard_phase_1"
+    const conductorClient = await createConductorClient()
 
     jest.spyOn(conductorClient.workflowResource, "getWorkflows1").mockRejectedValue(new Error("Mock error"))
 

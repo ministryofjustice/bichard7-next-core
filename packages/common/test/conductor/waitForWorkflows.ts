@@ -2,8 +2,6 @@ import promisePoller from "promise-poller"
 
 import createConductorClient from "../../conductor/createConductorClient"
 
-const conductorClient = createConductorClient()
-
 export type WorkflowSearchParams = {
   count?: number
   freeText?: string
@@ -24,6 +22,7 @@ const searchWorkflows = async (params: WorkflowSearchParams) => {
     .join(" AND ")
   const query = queryString !== "" ? queryString : undefined
 
+  const conductorClient = await createConductorClient()
   const response = await conductorClient.workflowResource.search1(
     undefined,
     undefined,

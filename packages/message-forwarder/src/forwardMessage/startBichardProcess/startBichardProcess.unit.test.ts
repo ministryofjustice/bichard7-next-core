@@ -8,14 +8,13 @@ import ignoredAHOFixture from "../../test/fixtures/ignored-aho.json"
 import { startBichardProcess } from "./startBichardProcess"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
-const conductorClient = createConductorClient()
-
 describe("forwardMessage", () => {
   afterEach(() => {
     jest.resetAllMocks()
   })
 
   it("throws an exception if it can't write to S3", async () => {
+    const conductorClient = await createConductorClient()
     jest.spyOn(putFileToS3, "default").mockReturnValue(Promise.resolve(new Error("Mock error")))
 
     const result = await startBichardProcess(

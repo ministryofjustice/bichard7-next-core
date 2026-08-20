@@ -38,7 +38,7 @@ export const resubmitCase = async (
         throw messageId
       }
 
-      const conductorClient = createConductorClient()
+      const conductorClient = await createConductorClient()
       const resubmitWorkflowName = "resubmit"
       const workflowParams = { autoResubmit, messageId }
 

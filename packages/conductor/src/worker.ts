@@ -3,7 +3,7 @@ import createConductorClient from "@moj-bichard7/common/conductor/createConducto
 import logger from "@moj-bichard7/common/utils/logger"
 import persistPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_phase_1/persistPhase1"
 import processPhase1 from "@moj-bichard7/core/conductor-tasks/bichard_phase_1/processPhase1"
-import sendToPhase2 from "@moj-bichard7/core/conductor-tasks/bichard_phase_1/sendToPhase2"
+import { createSendToPhase2Worker } from "@moj-bichard7/core/conductor-tasks/bichard_phase_1/sendToPhase2"
 import persistPhase2 from "@moj-bichard7/core/conductor-tasks/bichard_phase_2/persistPhase2"
 import processPhase2 from "@moj-bichard7/core/conductor-tasks/bichard_phase_2/processPhase2"
 import sendToPhase3 from "@moj-bichard7/core/conductor-tasks/bichard_phase_2/sendToPhase3"
@@ -21,46 +21,50 @@ import processResubmit from "@moj-bichard7/core/conductor-tasks/resubmit/process
 import { captureWorkerExceptions } from "./captureWorkerExceptions"
 import { configureWorker, defaultConcurrency, defaultPollInterval } from "./configureWorker"
 
-const client = createConductorClient()
-const tasks = [
-  alertCommonPlatform,
-  convertSpiToAho,
-  createAuditLogRecord,
-  deleteS3File,
-  lockS3File,
-  persistPhase1,
-  persistPhase2,
-  persistPhase3,
-  processPhase1,
-  processPhase2,
-  processPhase3,
-  sendToPhase2,
-  sendToPhase3,
-  storeAuditLogEvents,
-  checkDb,
-  processResubmit
-]
-  .map(captureWorkerExceptions)
-  .map(configureWorker)
+async function initializeWorker(): Promise<void> {
+  const client = await createConductorClient()
+  const tasks = [
+    alertCommonPlatform,
+    convertSpiToAho,
+    createAuditLogRecord,
+    deleteS3File,
+    lockS3File,
+    persistPhase1,
+    persistPhase2,
+    persistPhase3,
+    processPhase1,
+    processPhase2,
+    processPhase3,
+    createSendToPhase2Worker(client),
+    sendToPhase3,
+    storeAuditLogEvents,
+    checkDb,
+    processResubmit
+  ]
+    .map(captureWorkerExceptions)
+    .map(configureWorker)
 
-const taskManager = new TaskManager(client, tasks, {
-  logger,
-  options: { concurrency: defaultConcurrency(), pollInterval: defaultPollInterval() }
-})
+  const taskManager = new TaskManager(client, tasks, {
+    logger,
+    options: { concurrency: defaultConcurrency(), pollInterval: defaultPollInterval() }
+  })
 
-logger.info("Starting polling...")
+  logger.info("Starting polling...")
 
-const signalHandler = (signal: string) => {
-  logger.info(`${signal} signal received.`)
-  taskManager.stopPolling()
+  const signalHandler = (signal: string) => {
+    logger.info(`${signal} signal received.`)
+    taskManager.stopPolling()
+  }
+
+  process.on("SIGINT", signalHandler)
+  process.on("SIGTERM", signalHandler)
+  process.on("SIGQUIT", signalHandler)
+
+  process.on("exit", (code) => {
+    logger.info("Exiting gracefully with code: %d", code)
+  })
+
+  taskManager.startPolling()
 }
 
-process.on("SIGINT", signalHandler)
-process.on("SIGTERM", signalHandler)
-process.on("SIGQUIT", signalHandler)
-
-process.on("exit", (code) => {
-  logger.info("Exiting gracefully with code: %d", code)
-})
-
-taskManager.startPolling()
+initializeWorker()

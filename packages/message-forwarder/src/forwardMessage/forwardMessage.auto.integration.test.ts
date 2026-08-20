@@ -21,7 +21,6 @@ import forwardMessage from "./forwardMessage"
 
 const mq = createMqConfig()
 const stompClient = createStompClient()
-const conductorClient = createConductorClient()
 const database = postgres(createDbConfig(true))
 const testDatabase = postgres(createDbConfig())
 
@@ -68,6 +67,8 @@ describe("forwardMessage", () => {
       "CORRELATION_ID",
       correlationId
     )
+    const conductorClient = await createConductorClient()
+
     await forwardMessage(incomingMessage, stompClient, conductorClient, database)
     const message = await mqListener.waitForMessage()
 
@@ -78,6 +79,8 @@ describe("forwardMessage", () => {
   it("starts another workflow if the correlation ID already exists", async () => {
     await putIncomingMessageToS3(successExceptionsAHO, s3TaskDataPath, correlationId)
     await uploadPncMock(successExceptionsPNCMock)
+
+    const conductorClient = await createConductorClient()
 
     const startWorkflowResult = await conductorClient.workflowResource
       .startWorkflow1("bichard_phase_1", { s3TaskDataPath }, undefined, correlationId)

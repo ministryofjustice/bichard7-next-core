@@ -15,7 +15,6 @@ import forwardMessage from "./forwardMessage"
 
 const mq = createMqConfig()
 const stompClient = createStompClient()
-const conductorClient = createConductorClient()
 const database = jest.fn() as unknown as Sql
 
 describe("forwardMessage", () => {
@@ -50,6 +49,8 @@ describe("forwardMessage", () => {
       "CORRELATION_ID",
       correlationId
     )
+    const conductorClient = await createConductorClient()
+
     await forwardMessage(incomingMessage, stompClient, conductorClient, database)
     const message = await mqListener.waitForMessage()
 

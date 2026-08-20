@@ -149,7 +149,7 @@ describe("Incoming message handler", () => {
     const correlationId = workflows[0].correlationId
 
     // Start workflow again with the same correlation ID
-    const conductorClient = createConductorClient()
+    const conductorClient = await createConductorClient()
     const newWorkflowId = await conductorClient.workflowResource.startWorkflow({
       correlationId,
       input: { s3Path },

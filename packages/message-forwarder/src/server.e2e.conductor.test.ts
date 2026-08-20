@@ -20,7 +20,6 @@ import { clearTables, insertCase } from "./test/setup/database"
 
 const stompClient = createStompClient()
 const mqConfig = createMqConfig()
-const conductorClient = createConductorClient()
 const database = postgres(createDbConfig(true))
 const testDatabase = postgres(createDbConfig())
 
@@ -32,6 +31,7 @@ describe("Server in conductor mode", () => {
   let messageForwarder: MessageForwarder
 
   beforeAll(async () => {
+    const conductorClient = await createConductorClient()
     messageForwarder = new MessageForwarder(stompClient, conductorClient, database)
     await messageForwarder.start()
   })

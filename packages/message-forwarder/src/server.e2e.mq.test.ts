@@ -15,7 +15,6 @@ import createStompClient from "./createStompClient"
 
 const stompClient = createStompClient()
 const mqConfig = createMqConfig()
-const conductorClient = createConductorClient()
 const database = jest.fn() as unknown as Sql
 Object.assign(database, { end: jest.fn() })
 
@@ -25,6 +24,7 @@ describe("Server in MQ mode", () => {
   let messageForwarder: MessageForwarder
 
   beforeAll(async () => {
+    const conductorClient = await createConductorClient()
     messageForwarder = new MessageForwarder(stompClient, conductorClient, database)
     await messageForwarder.start()
   })

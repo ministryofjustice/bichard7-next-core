@@ -1,9 +1,8 @@
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import { delay } from "../utils/puppeteer-utils"
 
-const client = createConductorClient()
-
 const findRunningConductorWorkflowIds = async (): Promise<string[]> => {
+  const client = await createConductorClient()
   const searchResult = await client.workflowResource.search1(
     undefined,
     0,
@@ -30,6 +29,7 @@ export const areAllWorkflowsCompleted = async (): Promise<boolean> => {
 }
 
 export const terminateConductorWorkflows = async () => {
+  const client = await createConductorClient()
   const idsToTerminate = await findRunningConductorWorkflowIds()
   await Promise.all(idsToTerminate.map((id) => client.workflowResource.terminate1(id, "Termination by test script")))
 }
