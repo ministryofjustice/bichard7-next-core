@@ -103,10 +103,5 @@
   "optionalDependencies": {
     "@esbuild/linux-arm64": "^0.28.2",
     "@esbuild/linux-x64": "^0.28.2"
-  },
-  "overrides": {
-    "@io-orkes/conductor-javascript": {
-      "zod": "$zod"
-    }
   }
 }
