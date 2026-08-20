@@ -37,8 +37,8 @@ jobs:
             core:
               - 'packages/core/**'
 
-  test_common:
-    name: Test Common
+  test_ui_component:
+    name: Test UI Component
     needs: changes
     if: ${{ needs.changes.outputs.github == 'true' || needs.changes.outputs.common == 'true'  || needs.changes.outputs.ui == 'true'  || needs.changes.outputs.core == 'true' }}
     runs-on: ubuntu-latest
@@ -63,7 +63,7 @@ jobs:
         with:
           start: npm run cypress:run
           wait-on: 'http://localhost:3000'
-          testing-type: component
+          component: true
           working-directory: packages/ui
 
       - name: Install GOV.UK Assets
