@@ -65,7 +65,9 @@ jobs:
         run: npm run -w packages/ui install:assets
         
       - name: Build core
-        run: npm run build:core
+        run: |
+          npm run build:core
+          npm run build -w packages/ui
 
       - name: Cypress run
         uses: cypress-io/github-action@v6 
