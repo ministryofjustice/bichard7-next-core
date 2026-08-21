@@ -1,12 +1,12 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import Permission from "@moj-bichard7/common/types/Permission"
 import getAuditLogEvent from "@moj-bichard7/core/lib/auditLog/getAuditLogEvent"
 import type { EntityManager, Repository, UpdateResult } from "typeorm"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
 import { AUDIT_LOG_EVENT_SOURCE } from "../config"
-import Permission from "@moj-bichard7/common/types/Permission"
 import CourtCase from "./entities/CourtCase"
 import type User from "./entities/User"
 
@@ -60,8 +60,7 @@ const updateLockStatusToUnlocked = async (
   courtCase: CourtCase,
   user: User,
   unlockReason: UnlockReason,
-  events: AuditLogEvent[],
-  usingApiResubmit: boolean = false
+  events: AuditLogEvent[]
 ): Promise<UpdateResult | Error | undefined> => {
   if (!courtCase) {
     throw new Error("Failed to unlock: Case not found")
@@ -93,11 +92,7 @@ const updateLockStatusToUnlocked = async (
   const canUnlockExistingTrigger = hasTriggerPerm && hasTriggerLock
 
   if (!canUnlockExistingException && !canUnlockExistingTrigger) {
-    if (usingApiResubmit) {
-      return undefined
-    }
-
-    return new Error("User does not have permission to unlock this specific case")
+    return undefined
   }
 
   let result: UpdateResult | Error | undefined
