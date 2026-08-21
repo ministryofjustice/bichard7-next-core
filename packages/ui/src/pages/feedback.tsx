@@ -80,7 +80,9 @@ export const getServerSideProps = withMultipleServerSideProps(
       }
 
       const experienceText = FeedbackExperienceOptions[experience as unknown as FeedbackExperienceKey]
-      const feedbackResult = await sendFeedbackEmail(isAnonymous, experienceText, feedback)
+      const userEmail = isAnonymous === "no" ? currentUser.email : null
+
+      const feedbackResult = await sendFeedbackEmail(experienceText, feedback, userEmail)
 
       if (!isError(feedbackResult)) {
         return redirectTo(previousPath)

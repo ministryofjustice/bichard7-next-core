@@ -24,10 +24,18 @@ describe("General Feedback Form", () => {
     cy.findByText("feedback").click()
     cy.get("#share-feedback").contains("Share your feedback").should("exist")
 
+    cy.intercept("POST", "**/feedback*").as("postFeedback")
+
     cy.get("[name=isAnonymous]").check("yes", { force: true })
     cy.get("[name=experience]").check("0", { force: true })
-    cy.get("[name=feedback]").type("Something feedback.")
+    cy.get("[name=feedback]").type("This feedback is anonymous")
     cy.findByText("Send feedback and continue").click()
+
+    cy.wait("@postFeedback").then(({ request }) => {
+      expect(request.body).to.include("isAnonymous=yes")
+      expect(request.body).to.include("experience=0")
+      expect(request.body).to.include("feedback=This+feedback+is+anonymous")
+    })
 
     cy.url().should("match", /\/bichard/)
     cy.get("H1").should("have.text", "Case list")
@@ -35,7 +43,16 @@ describe("General Feedback Form", () => {
 
   it("Should be able to submit feedback that is not anonymous", () => {
     cy.visit("/bichard")
+
+    cy.intercept("POST", "**/feedback*").as("postFeedback")
+
     submitFeedback()
+
+    cy.wait("@postFeedback").then(({ request }) => {
+      expect(request.body).to.include("isAnonymous=no")
+      expect(request.body).to.include("experience=0")
+      expect(request.body).to.include("feedback=This+feedback+is+not+anonymous")
+    })
 
     cy.url().should("match", /\/bichard/)
     cy.get("H1").should("have.text", "Case list")
@@ -66,7 +83,6 @@ describe("General Feedback Form", () => {
     cy.contains("Input message into the text box").should("exist")
 
     cy.get("[name=feedback]").type("This feedback is not anonymous")
-
     cy.findByText("Send feedback and continue").click()
 
     cy.url().should("match", /\/bichard/)

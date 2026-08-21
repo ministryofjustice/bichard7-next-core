@@ -3,15 +3,24 @@ import type PromiseResult from "@/types/PromiseResult"
 import logger from "utils/logger"
 import getEmailer from "./getEmailer"
 
-const sendFeedbackEmail = (isAnonymous: string, experienceRating: string, feedback: string): PromiseResult<void> => {
+const sendFeedbackEmail = (
+  experienceRating: string,
+  feedback: string,
+  userEmail?: string | null
+): PromiseResult<void> => {
   const sendFeedbackTo = supportCJSMEmail
 
   const emailer = getEmailer(sendFeedbackTo)
 
+  const contactPreference = userEmail ? `Yes, ${userEmail}` : "No"
+
   const emailContent = {
     subject: "Bichard7 General Feedback",
     html: "",
-    text: `Happy to be contacted: ${isAnonymous === "no" ? "Yes" : "No"}\nRating: '${experienceRating}\nFeedback: '${feedback}''`
+    text: `Happy to be contacted: ${contactPreference}
+    Rating: ${experienceRating}
+    Feedback: ${feedback}
+    `
   }
 
   return emailer
