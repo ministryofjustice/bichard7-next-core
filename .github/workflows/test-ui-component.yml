@@ -1,0 +1,98 @@
+name: Test UI Component
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: read
+    
+    outputs:
+      github: ${{ steps.paths-filter.outputs.github }}
+      common: ${{ steps.paths-filter.outputs.common }}
+      ui: ${{ steps.paths-filter.outputs.ui }}
+      core: ${{ steps.paths-filter.outputs.core }}
+
+    steps: 
+      - name: Checkout repository
+        uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
+
+      - name: Path Filtering
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: paths-filter
+        with:
+          filters: |
+            github:
+              - '.github/**'
+            common:
+              - 'packages/common/**'
+            ui:
+              - 'packages/ui/**'
+            core:
+              - 'packages/core/**'
+
+  test_ui_component:
+    name: Test UI Component
+    needs: changes
+    if: ${{ needs.changes.outputs.github == 'true' || needs.changes.outputs.common == 'true'  || needs.changes.outputs.ui == 'true'  || needs.changes.outputs.core == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
+
+      - name: Setup node version
+        uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
+        with:
+          node-version-file: .nvmrc
+
+      - name: ⛓️ SLSA Supply Chain Security
+        uses: ministryofjustice/devsecops-actions/sca/slsa@805c9da24fe7083e24b8435a626463b25951d278 # v1.4.0
+      
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run cypress:run
+          wait-on: 'http://localhost:3000'
+          component: true
+          working-directory: packages/ui
+
+      - name: Install GOV.UK Assets
+        run: npm run -w packages/ui install:assets
+
+      - name: Build core
+        run: npm run build:core
+      
+      - name: Run UI component tests
+        run: npx cypress run --component --spec "packages/ui/cypress/component/**/*.cy.tsx"
+        env:
+          UI_IS_HTTPS: "true"
+          TZ: "Europe/London"
+        working-directory: packages/ui
+
+      - name: Publish Cypress Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: UI Component Tests               
+          path: 'packages/ui/cypress/results/**/*.xml'
+          reporter: java-junit                    
+          fail-on-error: true                    
+
+      - name: Upload Cypress Artifacts (Videos & Screenshots)
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-artifacts
+          path: |
+            packages/ui/cypress/videos
+            packages/ui/cypress/screenshots
