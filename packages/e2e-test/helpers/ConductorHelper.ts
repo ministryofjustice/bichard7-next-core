@@ -1,17 +1,12 @@
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import { delay } from "../utils/puppeteer-utils"
 
-const client = createConductorClient()
-
 const findRunningConductorWorkflowIds = async (): Promise<string[]> => {
-  const searchResult = await client.workflowResource.search1(
-    undefined,
-    0,
-    100,
-    "startTime:DESC",
-    undefined,
-    "status='RUNNING'"
-  )
+  const client = await createConductorClient()
+  const executor = new WorkflowExecutor(client)
+  const searchResult = await executor.search(0, 100, "status='RUNNING'", "*", "startTime:DESC")
+  console.log({ searchResult })
 
   return searchResult.results?.map((workflow) => workflow.workflowId!) || []
 }
@@ -30,6 +25,8 @@ export const areAllWorkflowsCompleted = async (): Promise<boolean> => {
 }
 
 export const terminateConductorWorkflows = async () => {
+  const client = await createConductorClient()
+  const executor = new WorkflowExecutor(client)
   const idsToTerminate = await findRunningConductorWorkflowIds()
-  await Promise.all(idsToTerminate.map((id) => client.workflowResource.terminate1(id, "Termination by test script")))
+  await Promise.all(idsToTerminate.map((id) => executor.terminate(id, "Termination by test script")))
 }

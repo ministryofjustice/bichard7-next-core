@@ -29,7 +29,6 @@ const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
-const conductorClient = createConductorClient()
 
 describe("bichard_phase_3 workflow", () => {
   let correlationId: string
@@ -118,6 +117,7 @@ describe("bichard_phase_3 workflow", () => {
     await startWorkflow("bichard_phase_3", { s3TaskDataPath }, correlationId)
     await waitForCompletedWorkflow(s3TaskDataPath, "FAILED", 60000, "bichard_phase_3")
 
+    const conductorClient = await createConductorClient()
     const { results: tasks } = await conductorClient.taskResource.search(
       undefined,
       undefined,

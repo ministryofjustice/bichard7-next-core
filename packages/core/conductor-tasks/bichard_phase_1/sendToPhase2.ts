@@ -1,6 +1,5 @@
-import type { ConductorWorker } from "@io-orkes/conductor-javascript"
+import type { ConductorWorker, WorkflowExecutor } from "@io-orkes/conductor-javascript"
 
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import completed from "@moj-bichard7/common/conductor/helpers/completed"
 import failed from "@moj-bichard7/common/conductor/helpers/failed"
 import s3TaskDataFetcher from "@moj-bichard7/common/conductor/middleware/s3TaskDataFetcher"
@@ -11,7 +10,7 @@ import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
-import path from "path"
+import path from "node:path"
 
 import type Phase1Result from "../../phase1/types/Phase1Result"
 
@@ -20,7 +19,6 @@ import serialiseToXml from "../../lib/serialise/ahoXml/serialiseToXml"
 import { phase1ResultSchema } from "../../phase1/schemas/phase1Result"
 
 const s3Config = createS3Config()
-const conductorClient = createConductorClient()
 const phase2WorkflowName = "bichard_phase_2"
 
 const mqQueue = process.env.PHASE_2_QUEUE_NAME || "HEARING_OUTCOME_PNC_UPDATE_QUEUE"
@@ -54,7 +52,7 @@ const getDestination = (phase2CanaryRatio?: number): Destination => {
   return Destination.MQ
 }
 
-export const sendToPhase2Worker = (client = conductorClient): ConductorWorker => ({
+export const createSendToPhase2Worker = (workflowExecutor: WorkflowExecutor): ConductorWorker => ({
   taskDefName: "send_to_phase2",
   execute: s3TaskDataFetcher<Phase1Result>(phase1ResultSchema, async (task) => {
     const { s3TaskData, s3TaskDataPath, options } = task.inputData
@@ -90,8 +88,12 @@ export const sendToPhase2Worker = (client = conductorClient): ConductorWorker =>
         return failed("Could not put file to S3", s3Result.message)
       }
 
-      const workflowId = await client.workflowResource
-        .startWorkflow1(phase2WorkflowName, { s3TaskDataPath: phase2S3TaskDataPath }, undefined, correlationId)
+      const workflowId = await workflowExecutor
+        .startWorkflow({
+          correlationId,
+          input: { s3TaskDataPath: phase2S3TaskDataPath },
+          name: phase2WorkflowName
+        })
         .catch((e: Error) => e)
 
       if (isError(workflowId)) {
@@ -120,5 +122,3 @@ export const sendToPhase2Worker = (client = conductorClient): ConductorWorker =>
     return completed({ auditLogEvents: [auditLog] }, `Sent to Phase 2 via ${destination}`)
   })
 })
-
-export default sendToPhase2Worker()

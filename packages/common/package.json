@@ -39,9 +39,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1110.0",
-    "@io-orkes/conductor-javascript": "~2.1.5",
+    "@io-orkes/conductor-javascript": "^4.0.0",
     "@stomp/stompjs": "^7.3.0",
-    "@types/nodemailer": "^8.0.1",
     "date-fns": "^4.4.0",
     "fast-xml-parser": "5.7.2",
     "jsonwebtoken": "^9.0.3",
@@ -59,6 +58,7 @@
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/nodemailer": "^8.0.1",
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
     "jest": "^30.4.2",

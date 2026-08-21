@@ -12,10 +12,10 @@ import createConductorClient from "@moj-bichard7/common/conductor/createConducto
 import type { Sql } from "postgres"
 import createStompClient from "../createStompClient"
 import forwardMessage from "./forwardMessage"
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 
 const mq = createMqConfig()
 const stompClient = createStompClient()
-const conductorClient = createConductorClient()
 const database = jest.fn() as unknown as Sql
 
 describe("forwardMessage", () => {
@@ -50,7 +50,10 @@ describe("forwardMessage", () => {
       "CORRELATION_ID",
       correlationId
     )
-    await forwardMessage(incomingMessage, stompClient, conductorClient, database)
+    const conductorClient = await createConductorClient()
+    const workflowExecutor = new WorkflowExecutor(conductorClient)
+
+    await forwardMessage(incomingMessage, stompClient, workflowExecutor, database)
     const message = await mqListener.waitForMessage()
 
     expect(mqListener.messages).toHaveLength(1)

@@ -1,11 +1,20 @@
 ARG BUILD_IMAGE="amazon-linux2023-base"
+ARG CONDUCTOR_VERSION="v3.32.1"
 
+# ===========================================================================================================
+# 0. Source stage
+# ===========================================================================================================
+FROM alpine/git@sha256:a299a963fbe31628ab481ca42907bcf0691d004f86734c02638abdf513691d42 AS src
+ARG CONDUCTOR_VERSION
+
+RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor
+
+# ===========================================================================================================
+# 1. UI Builder stage
+# ===========================================================================================================
 FROM node:20-alpine AS ui-builder
 
-ARG CONDUCTOR_VERSION="v3.21.14"
-
-RUN apk add git && \
-    git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor
+COPY --from=src /conductor/ui /conductor/ui
 
 WORKDIR /conductor/ui
 
@@ -14,33 +23,24 @@ RUN npm install --legacy-peer-deps && \
     npm run build
 
 # ===========================================================================================================
-# 0. Builder stage
+# 2. Java Builder stage
 # ===========================================================================================================
-FROM eclipse-temurin:17-jdk-jammy AS builder
+FROM eclipse-temurin:21-jdk-jammy AS builder
 
-ARG CONDUCTOR_VERSION="v3.21.14"
-
-RUN apt-get update && apt-get install -y --no-install-recommends git && \
-    git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor && \
-    rm -rf /var/lib/apt/lists/*
-
-# Build the server
+COPY --from=src /conductor /conductor
 
 WORKDIR /conductor
 
-RUN sed -i 's/^subprojects {$/ext["tomcat.version"] = "10.1.55"\n\n&/' build.gradle && \
-    sed -i "s/revRedisson = '3\.13\.3'/revRedisson = '3.22.0'/" dependencies.gradle
+RUN sed -i 's/^subprojects {$/ext["tomcat.version"] = "10.1.55"\n\n&/' build.gradle
 
 RUN ./gradlew --version && \
     ./gradlew build --no-daemon -x test
 
 # ===========================================================================================================
-# 1. Bin stage
+# 3. Runner stage
 # ===========================================================================================================
-
-FROM ${BUILD_IMAGE}
-
-ARG CONDUCTOR_VERSION="v3.21.14"
+FROM ${BUILD_IMAGE} AS runner
+ARG CONDUCTOR_VERSION
 
 LABEL org.opencontainers.image.authors="CJSE"
 LABEL conductor_version=$CONDUCTOR_VERSION
@@ -48,11 +48,10 @@ LABEL conductor_version=$CONDUCTOR_VERSION
 USER root
 
 COPY files/openssl.cnf /tmp/openssl.cnf
-
 COPY files/nginx.repo /etc/yum.repos.d/nginx.repo
 
 RUN mkdir -p /certs /var/log/supervisor && \
-    yum install -y --setopt=install_weak_deps=False nginx httpd-tools gettext java-17-amazon-corretto && \
+    yum install -y --setopt=install_weak_deps=False nginx httpd-tools gettext java-21-amazon-corretto && \
     yum clean all && \
     rm -rf /var/cache/yum && \
     pip install --no-cache-dir supervisor && \
