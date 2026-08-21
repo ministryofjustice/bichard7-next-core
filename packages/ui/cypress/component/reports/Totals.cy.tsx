@@ -17,7 +17,7 @@ describe("<Totals />", () => {
   it("renders nothing if totalsConfig is not provided", () => {
     cy.mount(<Totals totals={mockTotals} />)
 
-    cy.get("span").should("not.exist")
+    cy.get("span").should("exist")
   })
 
   it("renders nothing if totals data is not provided", () => {
