@@ -19,7 +19,7 @@
     "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --maxWorkers=80% --detectOpenHandles --watch --testRegex '\\.(?:unit|integration)\\.test.ts$'",
     "test:e2e:watch": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand --workerThreads=true --detectOpenHandles --testRegex '\\.(?:e2e)\\.test.ts$' --watch",
     "test:file": "NODE_OPTIONS=--experimental-vm-modules jest --forceExit --maxWorkers=80% --detectOpenHandles --testPathPatterns",
-    "update-deps": "ncu -u && npm install"
+    "update-deps": "ncu -u --cooldown 3d && npm install"
   },
   "keywords": [],
   "author": "",
