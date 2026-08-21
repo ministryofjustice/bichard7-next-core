@@ -508,7 +508,7 @@ jobs:
           images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
       - build_and_cache_image:
           image_name: s3-web-proxy
-          dockerfile: environment/s3-web-build/Dockerfile
+          dockerfile: packages/s3-web-build/Dockerfile
           cache_key: buildkit-s3-web-proxy
           context: packages/s3-web-proxy
       - run:
@@ -518,7 +518,7 @@ jobs:
             docker image save "s3-web-proxy:${DOCKER_TAG}" | pigz > "images/s3-web-proxy.tar.gz"
       - run:
           name: Run Goss Tests
-          working_directory: environment/s3-web-build
+          working_directory: packages/s3-web-build
           command: make goss
 
   build_ui_image:
