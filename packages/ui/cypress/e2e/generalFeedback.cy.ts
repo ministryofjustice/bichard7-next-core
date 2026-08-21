@@ -1,11 +1,18 @@
 import { loginAndVisit } from "../support/helpers"
 
-const submitFeedback = () => {
-  cy.findByText("feedback").click()
-  cy.get(`[name=isAnonymous]`).check("no", { force: true })
-  cy.get("[name=experience]").check("0", { force: true })
-  cy.get("[name=feedback]").type("This feedback is not anonymous")
+const clickFeedbackLink = () => cy.findByText("feedback").click()
+
+const submitFeedback = ({ isAnonymous = "no", experience = "0", message = "This feedback is not anonymous" } = {}) => {
+  cy.get(`[name=isAnonymous]`).check(isAnonymous, { force: true })
+  cy.get("[name=experience]").check(experience, { force: true })
+  cy.get("[name=feedback]").type(message)
+
   cy.findByText("Send feedback and continue").click()
+}
+
+const assertOnCaseList = () => {
+  cy.url().should("match", /\/bichard/)
+  cy.get("H1").should("have.text", "Case list")
 }
 
 describe("General Feedback Form", () => {
@@ -20,16 +27,12 @@ describe("General Feedback Form", () => {
   })
 
   it("Should be able to submit a feedback that is anonymous", () => {
-    cy.visit("/bichard")
-    cy.findByText("feedback").click()
+    clickFeedbackLink()
     cy.get("#share-feedback").contains("Share your feedback").should("exist")
 
     cy.intercept("POST", "**/feedback*").as("postFeedback")
 
-    cy.get("[name=isAnonymous]").check("yes", { force: true })
-    cy.get("[name=experience]").check("0", { force: true })
-    cy.get("[name=feedback]").type("This feedback is anonymous")
-    cy.findByText("Send feedback and continue").click()
+    submitFeedback({ isAnonymous: "yes", experience: "0", message: "This feedback is anonymous" })
 
     cy.wait("@postFeedback").then(({ request }) => {
       expect(request.body).to.include("isAnonymous=yes")
@@ -37,12 +40,11 @@ describe("General Feedback Form", () => {
       expect(request.body).to.include("feedback=This+feedback+is+anonymous")
     })
 
-    cy.url().should("match", /\/bichard/)
-    cy.get("H1").should("have.text", "Case list")
+    assertOnCaseList()
   })
 
   it("Should be able to submit feedback that is not anonymous", () => {
-    cy.visit("/bichard")
+    clickFeedbackLink()
 
     cy.intercept("POST", "**/feedback*").as("postFeedback")
 
@@ -54,13 +56,11 @@ describe("General Feedback Form", () => {
       expect(request.body).to.include("feedback=This+feedback+is+not+anonymous")
     })
 
-    cy.url().should("match", /\/bichard/)
-    cy.get("H1").should("have.text", "Case list")
+    assertOnCaseList()
   })
 
   it("Should display error if form is not complete", () => {
-    cy.visit("/bichard")
-    cy.findByText("feedback").click()
+    clickFeedbackLink()
 
     cy.findByText("Send feedback and continue").click()
 
@@ -85,21 +85,19 @@ describe("General Feedback Form", () => {
     cy.get("[name=feedback]").type("This feedback is not anonymous")
     cy.findByText("Send feedback and continue").click()
 
-    cy.url().should("match", /\/bichard/)
-    cy.get("H1").should("have.text", "Case list")
+    assertOnCaseList()
   })
 
   it("Should go back to the case list page when I press the back button", () => {
-    cy.visit("/bichard")
-    cy.findByText("feedback").click()
+    clickFeedbackLink()
     cy.contains("Back").click()
 
-    cy.url().should("match", /\/bichard/)
-    cy.get("H1").should("have.text", "Case list")
+    assertOnCaseList()
   })
 
   it("Should redirect back to case details page after submitting", () => {
     cy.visit("/bichard/court-cases/0")
+    clickFeedbackLink()
     submitFeedback()
 
     cy.url().should("match", /\/court-cases\/\d+/)
@@ -107,7 +105,7 @@ describe("General Feedback Form", () => {
 
   it("Should go back to the case details page when I press the back button", () => {
     cy.visit("/bichard/court-cases/0")
-    cy.findByText("feedback").click()
+    clickFeedbackLink()
     cy.contains("Back").click()
 
     cy.url().should("match", /\/court-cases\/\d+/)
