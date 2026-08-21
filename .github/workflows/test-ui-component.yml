@@ -80,14 +80,14 @@ jobs:
           UI_IS_HTTPS: "true"
           TZ: "Europe/London"
 
-      - name: Publish Cypress Test Report
-        uses: dorny/test-reporter@v1 
-        if: always()
-        with:
-          name: UI Component Tests               
-          path: 'packages/ui/cypress/results/**/*.xml'
-          reporter: java-junit                    
-          fail-on-error: true                    
+      # - name: Publish Cypress Test Report
+      #   uses: dorny/test-reporter@v1 
+      #   if: always()
+      #   with:
+      #     name: UI Component Tests               
+      #     path: 'packages/ui/cypress/results/**/*.xml'
+      #     reporter: java-junit                    
+      #     fail-on-error: true                    
 
       - name: Upload Cypress Artifacts (Videos & Screenshots)
         uses: actions/upload-artifact@v4
