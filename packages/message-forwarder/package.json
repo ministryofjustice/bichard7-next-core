@@ -10,7 +10,7 @@
     "lint:fix": "eslint --fix .",
     "start": "ts-node src/server.ts",
     "esbuild": "node build.js",
-    "update-deps": "ncu -u && npm install",
+    "update-deps": "ncu -u --cooldown 3d && npm install",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --runInBand"
   },
   "license": "MIT",
@@ -37,10 +37,10 @@
     "@io-orkes/conductor-javascript": "~2.1.5",
     "@stomp/stompjs": "^7.3.0",
     "node-fetch": "^3.3.2",
-    "ws": "^8.21.2"
+    "ws": "^8.21.3"
   },
   "optionalDependencies": {
-    "@esbuild/linux-arm64": "^0.28.1",
-    "@esbuild/linux-x64": "^0.28.1"
+    "@esbuild/linux-arm64": "^0.28.2",
+    "@esbuild/linux-x64": "^0.28.2"
   }
 }

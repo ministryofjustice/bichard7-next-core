@@ -7,7 +7,7 @@
     "watch": "tsc --project tsconfig.build.json --watch",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "update-deps": "ncu -u && npm install",
+    "update-deps": "ncu -u --cooldown 3d && npm install",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --workerThreads=true",
     "setup": "GIT_COMMIT_HASH=$(git rev-parse --short HEAD) npx ts-node -P ./deploy/tsconfig.deploy.json -T ./deploy/deploy.ts",
     "worker": ". ../../environment/local-conductor-worker.env && . ../../environment/leds-environment-variable.sh && npm run worker-noenv",
@@ -38,15 +38,15 @@
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.1105.0",
-    "@aws-sdk/client-s3": "^3.1105.0",
-    "@aws-sdk/lib-dynamodb": "^3.1105.0",
+    "@aws-sdk/client-dynamodb": "^3.1110.0",
+    "@aws-sdk/client-s3": "^3.1110.0",
+    "@aws-sdk/lib-dynamodb": "^3.1110.0",
     "@io-orkes/conductor-javascript": "~2.1.5",
     "lodash.ismatch": "^4.4.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@aws-sdk/client-sqs": "^3.1105.0",
+    "@aws-sdk/client-sqs": "^3.1110.0",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.412",
     "@stomp/stompjs": "^7.3.0",
     "esbuild": "~0.28.1",
@@ -56,10 +56,10 @@
     "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
     "wait-for-expect": "^4.0.0",
-    "ws": "^8.21.2"
+    "ws": "^8.21.3"
   },
   "optionalDependencies": {
-    "@esbuild/linux-arm64": "^0.28.1",
-    "@esbuild/linux-x64": "^0.28.1"
+    "@esbuild/linux-arm64": "^0.28.2",
+    "@esbuild/linux-x64": "^0.28.2"
   }
 }

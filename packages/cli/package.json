@@ -13,7 +13,7 @@
     "install:watch": "rm -rf dist && npx tsc-watch -p ./tsconfig.build.json --onFirstSuccess \"sh -c 'chmod -v +x dist/index.js && mkdir -p dist/commands/user-comms/ && cp -r commands/user-comms/templates dist/commands/user-comms/'\" --onSuccess \"npm i -g .\" && npm i",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "update-deps": "ncu -u && npm install"
+    "update-deps": "ncu -u --cooldown 3d && npm install"
   },
   "keywords": [],
   "author": "",
@@ -24,14 +24,14 @@
     "inquirer": "^14.0.2",
     "notifications-node-client": "^8.4.0",
     "nunjucks": "^3.2.4",
-    "pg": "^8.22.0"
+    "pg": "^8.23.0"
   },
   "devDependencies": {
     "@inquirer/prompts": "^7.10.1",
     "@types/cli-color": "^2.0.6",
     "@types/inquirer": "^9.0.10",
     "@types/jest": "^30.0.0",
-    "@types/node": "^26.1.2",
+    "@types/node": "^26.2.0",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
