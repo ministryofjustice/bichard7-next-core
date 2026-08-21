@@ -1,8 +1,23 @@
----
 version: 0.2
+
+env:
+  variables:
+    REPOSITORY_NAME: "conductor"
+    SOURCE_REPOSITORY_NAME: "amazon-linux2023-base"
+    CONTEXT_DIR: "environment/s3-web-proxy"
+  exported-variables:
+    - S3_WEB_PROXY_IMAGE_HASH
+
 phases:
+  install:
+    commands:
+      - ./scripts/install-goss.sh
+
   build:
     commands:
-      - set -ev
-      - cd ./S3_Web_Proxy
-      - /bin/bash ./scripts/build_docker.sh
+      - ./scripts/build-image.sh
+      - (cd "$CONTEXT_DIR" && make goss)
+
+  post_build:
+    commands:
+      - . ./scripts/push-image.sh
