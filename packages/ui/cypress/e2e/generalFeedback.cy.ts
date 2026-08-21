@@ -7,8 +7,10 @@ const submitFeedback = ({ isAnonymous = "no", experience = "0", message = "This 
   cy.get("[name=experience]").check(experience, { force: true })
   cy.get("[name=feedback]").type(message)
 
-  cy.findByText("Send feedback and continue").click()
+  submitFeedbackForm()
 }
+
+const submitFeedbackForm = () => cy.findByText("Send feedback and continue").click()
 
 const assertOnCaseList = () => {
   cy.url().should("match", /\/bichard/)
@@ -62,28 +64,28 @@ describe("General Feedback Form", () => {
   it("Should display error if form is not complete", () => {
     clickFeedbackLink()
 
-    cy.findByText("Send feedback and continue").click()
+    submitFeedbackForm()
 
     cy.get("#isAnonymous").contains("Select one of the below options")
     cy.get("#experience").contains("Select one of the below options")
     cy.contains("Input message into the text box").should("exist")
 
     cy.get("[name=isAnonymous]").check("no", { force: true })
-    cy.findByText("Send feedback and continue").click()
+    submitFeedbackForm()
 
     cy.get("#isAnonymous").contains("Select one of the below options").should("not.exist")
     cy.get("#experience").contains("Select one of the below options")
     cy.contains("Input message into the text box").should("exist")
 
     cy.get("[name=experience]").check("0", { force: true })
-    cy.findByText("Send feedback and continue").click()
+    submitFeedbackForm()
 
     cy.get("#isAnonymous").contains("Select one of the below options").should("not.exist")
     cy.get("#experience").contains("Select one of the below options").should("not.exist")
     cy.contains("Input message into the text box").should("exist")
 
     cy.get("[name=feedback]").type("This feedback is not anonymous")
-    cy.findByText("Send feedback and continue").click()
+    submitFeedbackForm()
 
     assertOnCaseList()
   })
