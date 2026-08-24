@@ -21,8 +21,6 @@ const semver = new RegExp(
     - ignored at v0.18.16 because v0.18.17 doesn't run the postinstall script properly.
   - @cucumber/cucumber
     - from tests repo migration, version was pinned to v9
-  - @io-orkes/conductor-javascript
-    - Breaking changes for how to use the Client, workflows etc
   - @typescript-eslint/eslint-plugin
     - Breaks dependency tree for eslint-config-next
   - cypress-circleci-reporter
@@ -38,7 +36,6 @@ const ignored = [
   "@cucumber/cucumber",
   "@cucumber/pretty-formatter",
   "http-status",
-  "@io-orkes/conductor-javascript",
   "@typescript-eslint/eslint-plugin",
   "cypress-circleci-reporter",
   "fast-xml-parser"
