@@ -1,5 +1,5 @@
 import { SMTP } from "@/config"
-import getFormattedDateForEmailHeader from "@/utils/getFormattedDateForEmailHeader"
+import getFormattedDateForEmailHeader from "@moj-bichard7/common/utils/getFormattedDateForEmailHeader"
 import type Email from "@moj-bichard7/common/email/Email"
 import type Emailer from "@moj-bichard7/common/email/Emailer"
 import nodemailer from "nodemailer"
