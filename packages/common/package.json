@@ -38,14 +38,14 @@
     "*.{js,ts,tsx}": "eslint"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1110.0",
+    "@aws-sdk/client-s3": "^3.1115.0",
     "@io-orkes/conductor-javascript": "^4.0.0",
     "@stomp/stompjs": "^7.3.0",
     "date-fns": "^4.4.0",
     "fast-xml-parser": "5.7.2",
     "jsonwebtoken": "^9.0.3",
     "nodemailer": "^9.0.5",
-    "pg-promise": "^12.7.0",
+    "pg-promise": "^12.7.1",
     "pino": "^10.3.1",
     "postgres": "3.4.9",
     "promise-poller": "^1.9.1",
