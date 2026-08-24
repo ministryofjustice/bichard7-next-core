@@ -71,7 +71,7 @@
     "mailhog": "^4.16.0",
     "mockdate": "^3.0.5",
     "nunjucks": "^3.2.4",
-    "pg-promise": "^12.7.0",
+    "pg-promise": "^12.7.1",
     "promise-poller": "^1.9.1",
     "ts-command-line-args": "^2.5.1",
     "ts-jest": "^29.4.12",
@@ -79,8 +79,8 @@
     "tsconfig-paths": "^4.2.0"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.1110.0",
-    "@aws-sdk/client-s3": "^3.1110.0",
+    "@aws-sdk/client-dynamodb": "^3.1115.0",
+    "@aws-sdk/client-s3": "^3.1115.0",
     "@io-orkes/conductor-javascript": "~2.1.5",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.412",
     "@types/lodash.ismatch": "^4.4.9",
