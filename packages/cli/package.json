@@ -21,7 +21,7 @@
   "dependencies": {
     "cli-color": "^2.0.4",
     "commander": "^15.0.0",
-    "inquirer": "^14.0.2",
+    "inquirer": "^14.1.0",
     "notifications-node-client": "^8.4.0",
     "nunjucks": "^3.2.4",
     "pg": "^8.23.0"
