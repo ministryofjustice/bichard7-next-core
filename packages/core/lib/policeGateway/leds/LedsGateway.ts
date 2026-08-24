@@ -94,6 +94,7 @@ export default class LedsGateway implements PoliceGateway {
 
     const asnQueryUrl = this.generateUrl(endpoints.asnQuery)
     const requestHeaders = generateRequestHeaders(correlationId, LedsActionCode.QueryByAsn, authToken)
+    const startTime = Date.now()
     const apiResponse = await axios
       .post(asnQueryUrl, requestBody, {
         headers: requestHeaders,
@@ -103,6 +104,18 @@ export default class LedsGateway implements PoliceGateway {
         transformResponse: [jsonTransformer]
       })
       .catch((error: AxiosError<ErrorResponse>) => error)
+
+    const durationMs = Date.now() - startTime
+
+    console.log(
+      JSON.stringify({
+        event: "leds_api_query",
+        endpoint: endpoints.asnQuery,
+        duration_ms: durationMs,
+        correlationId,
+        success: !isError(apiResponse) && apiResponse.status === HttpStatusCode.Ok
+      })
+    )
 
     this.auditLogger.info(
       EventCode.PncResponseReceived,
@@ -196,6 +209,7 @@ export default class LedsGateway implements PoliceGateway {
     const updateUrl = this.generateUrl(endpoint)
     const body = cleanObjectStrings(requestBody)
     const requestHeaders = generateRequestHeaders(correlationId, actionCode, authToken)
+    const startTime = Date.now()
     const apiResponse = await axios
       .post(updateUrl, body, {
         headers: requestHeaders,
@@ -205,6 +219,21 @@ export default class LedsGateway implements PoliceGateway {
         transformResponse: [jsonTransformer]
       })
       .catch((error: AxiosError<ErrorResponse>) => error)
+
+    const durationMs = Date.now() - startTime
+
+    console.log(
+      JSON.stringify({
+        event: "leds_api_update",
+        endpoint,
+        operation: request.operation,
+        duration_ms: durationMs,
+        correlationId,
+        success:
+          !isError(apiResponse) &&
+          (apiResponse.status === HttpStatusCode.Created || apiResponse.status === HttpStatusCode.Ok)
+      })
+    )
 
     this.auditLogger.info(
       EventCode.PncResponseReceived,
