@@ -14,8 +14,6 @@ const semver = new RegExp(
     - v6 supports node v20. Higher versions need > node v20
 
   Ignored:
-  - bichard7-next-data-x.x.x
-    - ncu updates all of them to the latest version, very unhelpful
   - p-limit
   - esbuild
     - ignored at v0.18.16 because v0.18.17 doesn't run the postinstall script properly.
@@ -32,7 +30,6 @@ const semver = new RegExp(
 */
 const pinned = ["chalk", "@types/diff", "@faker-js/faker", "eslint", "eslint-plugin-perfectionist", "undici"]
 const ignored = [
-  `bichard7-next-data-(${semver.source})`,
   "p-limit",
   "esbuild",
   "@cucumber/cucumber",
