@@ -31,7 +31,7 @@ describe("forwardMessage", () => {
   it("returns an error if AHO is invalid", async () => {
     process.env.CONDUCTOR_WORKFLOW = "bichard_phase_1"
 
-    const result = await forwardMessage("<>", expect.any(Client), expect.any(Object), database)
+    const result = await forwardMessage("<>", expect.any(Client), expect.any(WorkflowExecutor), database)
 
     expect(isError(result)).toBeTruthy()
     expect(result).toHaveProperty("message", "Could not parse AHO XML")
@@ -40,7 +40,7 @@ describe("forwardMessage", () => {
   it("returns an error if PncUpdateDataset is invalid", async () => {
     process.env.CONDUCTOR_WORKFLOW = "bichard_phase_2"
 
-    const result = await forwardMessage("<>", expect.any(Client), expect.any(Object), database)
+    const result = await forwardMessage("<>", expect.any(Client), expect.any(WorkflowExecutor), database)
 
     expect(isError(result)).toBeTruthy()
     expect(result).toHaveProperty("message", "Could not parse PNC update dataset XML")
