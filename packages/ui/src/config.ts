@@ -56,7 +56,7 @@ export const SMTP = {
   tls: process.env.SMTP_TLS === "true"
 }
 export const supportCJSMEmail = process.env.SUPPORT_CJSM_EMAIL ?? "moj-bichard7@madetech.cjsm.net"
-export const emailFrom = `Bichard7 <${process.env.EMAIL_FROM ?? "bichard@cjse.org"}>`
+export const emailFrom = `Bichard7 <${process.env.EMAIL_FROM ?? "moj-bichard7@madetech.com"}>`
 
 export const DATE_FNS = {
   dateInFuture: 1,
