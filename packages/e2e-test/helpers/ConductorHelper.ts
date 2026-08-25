@@ -1,23 +1,31 @@
-import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
+import { WorkflowExecutor, type WorkflowSummary } from "@io-orkes/conductor-javascript"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import { delay } from "../utils/puppeteer-utils"
 
-const findRunningConductorWorkflowIds = async (): Promise<string[]> => {
+const findRunningConductorWorkflows = async (): Promise<WorkflowSummary[]> => {
   const client = await createConductorClient()
   const executor = new WorkflowExecutor(client)
   const searchResult = await executor.search(0, 100, "status='RUNNING'", "*")
 
-  return searchResult.results?.map((workflow) => workflow.workflowId!) || []
+  return searchResult.results || []
 }
 
 export const areAllWorkflowsCompleted = async (): Promise<boolean> => {
-  for (let counter = 0; counter < 5; counter++) {
-    await delay(counter)
+  const maxTimeoutSeconds = 30
+  const pollIntervalSeconds = 2
 
-    const runningWorkflowIds = await findRunningConductorWorkflowIds()
-    if (runningWorkflowIds.length === 0) {
+  await delay(1)
+
+  const startTime = Date.now()
+  const timeoutMs = maxTimeoutSeconds * 1000
+
+  while (Date.now() - startTime < timeoutMs) {
+    const runningWorkflows = await findRunningConductorWorkflows()
+    if (runningWorkflows.length === 0) {
       return true
     }
+
+    await delay(pollIntervalSeconds)
   }
 
   return false
@@ -28,11 +36,17 @@ export const terminateConductorWorkflows = async () => {
   const executor = new WorkflowExecutor(client)
 
   while (true) {
-    const idsToTerminate = await findRunningConductorWorkflowIds()
-    if (idsToTerminate.length === 0) {
+    const runningWorkflows = await findRunningConductorWorkflows()
+    if (runningWorkflows.length === 0) {
       break
     }
 
-    await Promise.all(idsToTerminate.map((id) => executor.terminate(id, "Termination by test script")))
+    await Promise.all(
+      runningWorkflows.map(async (workflow) => {
+        if (workflow.workflowId) {
+          await executor.terminate(workflow.workflowId, "Termination by test script")
+        }
+      })
+    )
   }
 }
