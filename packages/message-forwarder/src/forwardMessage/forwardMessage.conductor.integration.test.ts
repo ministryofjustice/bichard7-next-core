@@ -1,4 +1,6 @@
 import "../test/setup/setEnvironmentVariables"
+process.env.DESTINATION_TYPE = "conductor" // has to be done prior to module imports
+
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
@@ -12,8 +14,6 @@ import createStompClient from "../createStompClient"
 import { clearTables, insertCase } from "../test/setup/database"
 import forwardMessage from "./forwardMessage"
 import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
-
-process.env.DESTINATION_TYPE = "conductor" // has to be done prior to module imports
 
 const stompClient = createStompClient()
 const database = postgres(createDbConfig(true))
