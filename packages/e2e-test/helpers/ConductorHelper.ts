@@ -5,7 +5,7 @@ import { delay } from "../utils/puppeteer-utils"
 const findRunningConductorWorkflowIds = async (): Promise<string[]> => {
   const client = await createConductorClient()
   const executor = new WorkflowExecutor(client)
-  const searchResult = await executor.search(0, 10000, "status='RUNNING'", "*")
+  const searchResult = await executor.search(0, 100, "status='RUNNING'", "*")
 
   return searchResult.results?.map((workflow) => workflow.workflowId!) || []
 }
@@ -26,6 +26,13 @@ export const areAllWorkflowsCompleted = async (): Promise<boolean> => {
 export const terminateConductorWorkflows = async () => {
   const client = await createConductorClient()
   const executor = new WorkflowExecutor(client)
-  const idsToTerminate = await findRunningConductorWorkflowIds()
-  await Promise.all(idsToTerminate.map((id) => executor.terminate(id, "Termination by test script")))
+
+  while (true) {
+    const idsToTerminate = await findRunningConductorWorkflowIds()
+    if (idsToTerminate.length === 0) {
+      break
+    }
+
+    await Promise.all(idsToTerminate.map((id) => executor.terminate(id, "Termination by test script")))
+  }
 }
