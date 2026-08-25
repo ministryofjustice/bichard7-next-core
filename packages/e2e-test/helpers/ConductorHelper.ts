@@ -6,14 +6,13 @@ const findRunningConductorWorkflowIds = async (): Promise<string[]> => {
   const client = await createConductorClient()
   const executor = new WorkflowExecutor(client)
   const searchResult = await executor.search(0, 100, "status='RUNNING'", "*", "startTime:DESC")
-  console.log({ searchResult })
 
   return searchResult.results?.map((workflow) => workflow.workflowId!) || []
 }
 
 export const areAllWorkflowsCompleted = async (): Promise<boolean> => {
   for (let counter = 0; counter < 5; counter++) {
-    delay(counter)
+    await delay(counter)
 
     const runningWorkflowIds = await findRunningConductorWorkflowIds()
     if (runningWorkflowIds.length === 0) {
