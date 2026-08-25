@@ -5,7 +5,7 @@ import { delay } from "../utils/puppeteer-utils"
 const findRunningConductorWorkflowIds = async (): Promise<string[]> => {
   const client = await createConductorClient()
   const executor = new WorkflowExecutor(client)
-  const searchResult = await executor.search(0, 100, "status='RUNNING'", "*")
+  const searchResult = await executor.search(0, 10000, "status='RUNNING'", "*")
 
   return searchResult.results?.map((workflow) => workflow.workflowId!) || []
 }
