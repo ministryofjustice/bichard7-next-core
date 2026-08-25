@@ -48,6 +48,16 @@ export const EXCEPTION_PATH_PROPERTY_INDEXES = {
   resultIndex: 7
 }
 
+export const SMTP = {
+  host: process.env.SMTP_HOST ?? "console",
+  user: process.env.SMTP_USER ?? "bichard",
+  password: process.env.SMTP_PASSWORD ?? "password",
+  port: Number.parseInt(process.env.SMTP_PORT ?? "587", 10),
+  tls: process.env.SMTP_TLS === "true"
+}
+export const supportCJSMEmail = process.env.SUPPORT_CJSM_EMAIL ?? "moj-bichard7@madetech.cjsm.net"
+export const emailFrom = `Bichard7 <${process.env.EMAIL_FROM ?? "moj-bichard7@madetech.com"}>`
+
 export const DATE_FNS = {
   dateInFuture: 1,
   currentDate: 0,

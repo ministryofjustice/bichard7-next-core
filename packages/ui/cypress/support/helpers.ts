@@ -1,4 +1,3 @@
-import type SurveyFeedback from "services/entities/SurveyFeedback"
 import type { CaseDetailsTab } from "types/CaseDetailsTab"
 import type CourtCase from "../../src/services/entities/CourtCase"
 import users from "../fixtures/users"
@@ -93,13 +92,6 @@ export const confirmReasonDisplayed = (reason: string) => {
 
 export const confirmReasonNotDisplayed = (reason: string) => {
   cy.get("tbody.caseListEntry").find("td").contains(reason).should("not.exist")
-}
-
-export const expectToHaveNumberOfFeedbacks = (number: number) => {
-  cy.task("getAllFeedbacksFromDatabase").then((result) => {
-    const feedbackResults = result as SurveyFeedback[]
-    expect(feedbackResults.length).equal(number)
-  })
 }
 
 export const verifyUpdatedMessage = (args: {
