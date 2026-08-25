@@ -2,8 +2,8 @@
  * @jest-environment node
  */
 
+import type EmailContent from "@moj-bichard7/common/email/EmailContent"
 import type Database from "types/Database"
-import type EmailContent from "types/EmailContent"
 import { isError } from "types/Result"
 import createNewUserEmail from "useCases/createNewUserEmail"
 import createUser from "useCases/createUser"

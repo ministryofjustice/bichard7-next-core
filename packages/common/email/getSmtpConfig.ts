@@ -1,4 +1,4 @@
-const getSmptpConfig = () => ({
+const getSmtpConfig = () => ({
   debug: process.env.SMTP_DEBUG === "true",
   host: process.env.SMTP_HOST ?? "console",
   password: process.env.SMTP_PASSWORD ?? "password",
@@ -7,4 +7,4 @@ const getSmptpConfig = () => ({
   user: process.env.SMTP_USER ?? "bichard"
 })
 
-export default getSmptpConfig
+export default getSmtpConfig
