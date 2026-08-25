@@ -4,6 +4,7 @@ import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryRe
 import type { AxiosError, AxiosResponse } from "axios"
 
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import { LogEvents } from "@moj-bichard7/common/types/LogEvents"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
 import axios, { HttpStatusCode } from "axios"
@@ -27,6 +28,7 @@ import convertAsnToLedsFormat from "./convertAsnToLedsFormat"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
+import logApiMetric from "./logApiMetric"
 import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
 import { normalDisposal } from "./processors/normalDisposal"
 import { remand } from "./processors/remand"
@@ -94,6 +96,7 @@ export default class LedsGateway implements PoliceGateway {
 
     const asnQueryUrl = this.generateUrl(endpoints.asnQuery)
     const requestHeaders = generateRequestHeaders(correlationId, LedsActionCode.QueryByAsn, authToken)
+    const startTime = performance.now()
     const apiResponse = await axios
       .post(asnQueryUrl, requestBody, {
         headers: requestHeaders,
@@ -103,6 +106,10 @@ export default class LedsGateway implements PoliceGateway {
         transformResponse: [jsonTransformer]
       })
       .catch((error: AxiosError<ErrorResponse>) => error)
+
+    const durationMs = performance.now() - startTime
+
+    logApiMetric(LogEvents.LEDS_API_QUERY, asnQueryUrl, durationMs, correlationId, apiResponse.status)
 
     this.auditLogger.info(
       EventCode.PncResponseReceived,
@@ -196,6 +203,7 @@ export default class LedsGateway implements PoliceGateway {
     const updateUrl = this.generateUrl(endpoint)
     const body = cleanObjectStrings(requestBody)
     const requestHeaders = generateRequestHeaders(correlationId, actionCode, authToken)
+    const startTime = performance.now()
     const apiResponse = await axios
       .post(updateUrl, body, {
         headers: requestHeaders,
@@ -205,6 +213,10 @@ export default class LedsGateway implements PoliceGateway {
         transformResponse: [jsonTransformer]
       })
       .catch((error: AxiosError<ErrorResponse>) => error)
+
+    const durationMs = performance.now() - startTime
+
+    logApiMetric(LogEvents.LEDS_API_UPDATE, updateUrl, durationMs, correlationId, apiResponse.status, request.operation)
 
     this.auditLogger.info(
       EventCode.PncResponseReceived,
