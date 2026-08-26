@@ -11,7 +11,6 @@ USER root
 WORKDIR /core
 
 COPY package*.json ./
-COPY packages/core/package.json ./packages/core/package.json
 COPY packages/common/package.json ./packages/common/package.json
 COPY packages/user-service/package.json ./packages/user-service/package.json
 COPY packages/user-service/scripts ./packages/user-service/scripts
@@ -32,7 +31,6 @@ WORKDIR /core
 COPY --from=deps ./core ./
 
 COPY tsconfig*.json ./
-COPY packages/core ./packages/core
 COPY packages/common ./packages/common
 COPY packages/user-service ./packages/user-service
 
