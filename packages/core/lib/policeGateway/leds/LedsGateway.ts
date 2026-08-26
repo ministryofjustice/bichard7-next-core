@@ -17,7 +17,7 @@ import type { ErrorResponse } from "../../../types/leds/ErrorResponse"
 import type LedsApiConfig from "../../../types/leds/LedsApiConfig"
 import type { RemandRequest } from "../../../types/leds/RemandRequest"
 import type { SubsequentDisposalResultsRequest } from "../../../types/leds/SubsequentDisposalResultsRequest"
-import type LedsRequestType from "../../../types/LedsOperation"
+import type LedsOperation from "../../../types/LedsOperation"
 import type PoliceGateway from "../../../types/PoliceGateway"
 
 import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
@@ -44,7 +44,7 @@ const jsonTransformer = (data: string): unknown => {
 }
 
 const generateAuditLogAttributes = (
-  requestType: LedsRequestType,
+  requestType: LedsOperation,
   url: string,
   headers: Record<string, unknown>,
   body: Record<string, unknown>,
