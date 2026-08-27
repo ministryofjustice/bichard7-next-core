@@ -18,10 +18,10 @@ import successExceptionsAHOFixture from "../test/fixtures/success-exceptions-aho
 import successExceptionsPNCMock from "../test/fixtures/success-exceptions-aho.pnc.json"
 import { clearTables, insertCase } from "../test/setup/database"
 import forwardMessage from "./forwardMessage"
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 
 const mq = createMqConfig()
 const stompClient = createStompClient()
-const conductorClient = createConductorClient()
 const database = postgres(createDbConfig(true))
 const testDatabase = postgres(createDbConfig())
 
@@ -68,7 +68,10 @@ describe("forwardMessage", () => {
       "CORRELATION_ID",
       correlationId
     )
-    await forwardMessage(incomingMessage, stompClient, conductorClient, database)
+    const conductorClient = await createConductorClient()
+    const workflowExecutor = new WorkflowExecutor(conductorClient)
+
+    await forwardMessage(incomingMessage, stompClient, workflowExecutor, database)
     const message = await mqListener.waitForMessage()
 
     expect(mqListener.messages).toHaveLength(1)
@@ -79,22 +82,39 @@ describe("forwardMessage", () => {
     await putIncomingMessageToS3(successExceptionsAHO, s3TaskDataPath, correlationId)
     await uploadPncMock(successExceptionsPNCMock)
 
-    const startWorkflowResult = await conductorClient.workflowResource
-      .startWorkflow1("bichard_phase_1", { s3TaskDataPath }, undefined, correlationId)
+    const conductorClient = await createConductorClient()
+    const workflowExecutor = new WorkflowExecutor(conductorClient)
+
+    const startWorkflowResult = await workflowExecutor
+      .startWorkflow({
+        name: "bichard_phase_1",
+        input: { s3TaskDataPath },
+        correlationId
+      })
       .catch((e) => e as Error)
     expect(isError(startWorkflowResult)).toBeFalsy()
 
-    let workflows = await conductorClient.workflowResource.getWorkflows1("bichard_phase_1", correlationId, true)
-    expect(workflows).toHaveLength(1)
+    let workflows = await workflowExecutor.search(
+      0,
+      10,
+      `workflowType = 'bichard_phase_1' AND correlationId = '${correlationId}'`,
+      "*"
+    )
+    expect(workflows.results).toHaveLength(1)
 
     const resubmittedMessage = String(
       fs.readFileSync("src/test/fixtures/success-exceptions-aho-resubmitted.xml")
     ).replace("CORRELATION_ID", correlationId)
     await insertCase(testDatabase, { message_id: correlationId })
 
-    await forwardMessage(resubmittedMessage, stompClient, conductorClient, database)
+    await forwardMessage(resubmittedMessage, stompClient, workflowExecutor, database)
 
-    workflows = await conductorClient.workflowResource.getWorkflows1("bichard_phase_1", correlationId, true)
-    expect(workflows).toHaveLength(2)
+    workflows = await workflowExecutor.search(
+      0,
+      10,
+      `workflowType = 'bichard_phase_1' AND correlationId = '${correlationId}'`,
+      "*"
+    )
+    expect(workflows.results).toHaveLength(2)
   })
 })

@@ -1,7 +1,7 @@
 import "../../tests/helpers/setEnvironmentVariables"
 
-import type { ConductorClient } from "@io-orkes/conductor-javascript"
-
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
+import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
@@ -16,7 +16,7 @@ import connectAndSendMessage from "../../lib/mq/connectAndSendMessage"
 import createMqConfig from "../../lib/mq/createMqConfig"
 import TestMqGateway from "../../lib/mq/TestMqGateway"
 import serialiseToXml from "../../lib/serialise/pncUpdateDatasetXml/serialiseToXml"
-import { default as sendToPhase3Fn, sendToPhase3Worker } from "./sendToPhase3"
+import { createSendToPhase3Worker } from "./sendToPhase3"
 
 jest.mock("../../lib/mq/connectAndSendMessage")
 jest.mock("@moj-bichard7/common/s3/putFileToS3")
@@ -39,10 +39,14 @@ const getPhase2Result = () => {
   return { phase2Result, parsedPhase2Result, s3TaskDataPath }
 }
 
-const sendToPhase3 = (canaryRatio: string | undefined, inputData: Record<string, unknown>) => {
+const sendToPhase3 = async (canaryRatio: string | undefined, inputData: Record<string, unknown>) => {
   process.env.PHASE3_CORE_CANARY_RATIO = canaryRatio
 
-  return sendToPhase3Fn.execute({ inputData })
+  const conductorClient = await createConductorClient()
+  const workflowExecutor = new WorkflowExecutor(conductorClient)
+  const worker = createSendToPhase3Worker(workflowExecutor)
+
+  return worker.execute({ inputData })
 }
 
 describe("sendToPhase3", () => {
@@ -143,13 +147,9 @@ describe("sendToPhase3", () => {
     })
 
     it("should return failed status when it fails to start the Conductor workflow", async () => {
-      const fakeConductorClient = {
-        workflowResource: {
-          startWorkflow1: jest.fn().mockRejectedValue(new Error("Dummy Conductor error"))
-        }
-      } as unknown as ConductorClient
-
-      const worker = sendToPhase3Worker(fakeConductorClient)
+      const worker = createSendToPhase3Worker({
+        startWorkflow: jest.fn().mockRejectedValue(new Error("Dummy Conductor error"))
+      } as unknown as WorkflowExecutor)
 
       const { phase2Result, parsedPhase2Result, s3TaskDataPath } = getPhase2Result()
 

@@ -1,5 +1,6 @@
 import "./helpers/setEnvironmentVariables"
 
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
 import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
@@ -149,8 +150,9 @@ describe("Incoming message handler", () => {
     const correlationId = workflows[0].correlationId
 
     // Start workflow again with the same correlation ID
-    const conductorClient = createConductorClient()
-    const newWorkflowId = await conductorClient.workflowResource.startWorkflow({
+    const conductorClient = await createConductorClient()
+    const executor = new WorkflowExecutor(conductorClient)
+    const newWorkflowId = await executor.startWorkflow({
       correlationId,
       input: { s3Path },
       name: "incoming_message_handler"

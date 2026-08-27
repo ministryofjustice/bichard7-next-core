@@ -4,25 +4,31 @@ import logger from "@moj-bichard7/common/utils/logger"
 import postgres from "postgres"
 import MessageForwarder from "./MessageForwarder"
 import createStompClient from "./createStompClient"
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 
-const stompClient = createStompClient()
-const conductorClient = createConductorClient()
-const databaseConfig = createDbConfig(true)
-const database = postgres(databaseConfig)
+async function startServer(): Promise<void> {
+  const stompClient = createStompClient()
+  const conductorClient = await createConductorClient()
+  const workflowExecutor = new WorkflowExecutor(conductorClient)
+  const databaseConfig = createDbConfig(true)
+  const database = postgres(databaseConfig)
 
-const messageForwarder = new MessageForwarder(stompClient, conductorClient, database)
+  const messageForwarder = new MessageForwarder(stompClient, workflowExecutor, database)
 
-const signalHandler = async (signal: string): Promise<void> => {
-  logger.info(`${signal} signal received.`)
-  await messageForwarder.stop()
+  const signalHandler = async (signal: string): Promise<void> => {
+    logger.info(`${signal} signal received.`)
+    await messageForwarder.stop()
+  }
+
+  process.on("SIGINT", signalHandler)
+  process.on("SIGTERM", signalHandler)
+  process.on("SIGQUIT", signalHandler)
+
+  process.on("exit", () => {
+    logger.info("Exiting gracefully")
+  })
+
+  await messageForwarder.start()
 }
 
-process.on("SIGINT", signalHandler)
-process.on("SIGTERM", signalHandler)
-process.on("SIGQUIT", signalHandler)
-
-process.on("exit", () => {
-  logger.info("Exiting gracefully")
-})
-
-messageForwarder.start().then(() => logger.info("Message forwarder started"))
+startServer().then(() => logger.info("Message forwarder started"))

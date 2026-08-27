@@ -1,5 +1,6 @@
 import "./helpers/setEnvironmentVariables"
 
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
@@ -29,7 +30,6 @@ const TASK_DATA_BUCKET_NAME = "conductor-task-data"
 const s3Config = createS3Config()
 const dbConfig = createDbConfig()
 const db = postgres(dbConfig)
-const conductorClient = createConductorClient()
 
 describe("bichard_phase_3 workflow", () => {
   let correlationId: string
@@ -118,13 +118,11 @@ describe("bichard_phase_3 workflow", () => {
     await startWorkflow("bichard_phase_3", { s3TaskDataPath }, correlationId)
     await waitForCompletedWorkflow(s3TaskDataPath, "FAILED", 60000, "bichard_phase_3")
 
-    const { results: tasks } = await conductorClient.taskResource.search(
-      undefined,
-      undefined,
-      undefined,
-      correlationId,
-      undefined
-    )
-    expect(tasks?.filter((task) => task.taskType === "process_phase3")).toHaveLength(1)
+    const conductorClient = await createConductorClient()
+    const workflowExecutor = new WorkflowExecutor(conductorClient)
+    const { results: workflows } = await workflowExecutor.search(0, 100, `correlationId = '${correlationId}'`, "*")
+    const failedTasks = workflows?.flatMap((workflow) => workflow.failedTaskNames)
+
+    expect(failedTasks?.filter((task) => task === "process_phase3")).toHaveLength(1)
   })
 })

@@ -46,7 +46,7 @@
     "@cucumber/cucumber": "^9.5.1",
     "@cucumber/pretty-formatter": "^1.0.1",
     "@faker-js/faker": "^9.9.0",
-    "@io-orkes/conductor-javascript": "^3.0.3",
+    "@io-orkes/conductor-javascript": "^4.0.0",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.415",
     "@types/jest": "^30.0.0",
     "axios": "^1.19.0",

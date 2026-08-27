@@ -21,10 +21,10 @@ import createStompClient from "./createStompClient"
 import successExceptionsAHOFixture from "./test/fixtures/success-exceptions-aho.json"
 import successExceptionsPNCMock from "./test/fixtures/success-exceptions-aho.pnc.json"
 import { clearTables, insertCase } from "./test/setup/database"
+import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 
 const stompClient = createStompClient()
 const mqConfig = createMqConfig()
-const conductorClient = createConductorClient()
 const database = postgres(createDbConfig(true))
 const testDatabase = postgres(createDbConfig())
 
@@ -33,10 +33,13 @@ const resubmittedAho = fs.readFileSync("src/test/fixtures/success-exceptions-aho
 describe("Server in auto mode", () => {
   let messageData: string
   let correlationId: string
+  let workflowExecutor: WorkflowExecutor
   let messageForwarder: MessageForwarder
 
   beforeAll(async () => {
-    messageForwarder = new MessageForwarder(stompClient, conductorClient, database)
+    const conductorClient = await createConductorClient()
+    workflowExecutor = new WorkflowExecutor(conductorClient)
+    messageForwarder = new MessageForwarder(stompClient, workflowExecutor, database)
     await messageForwarder.start()
   })
 
@@ -61,12 +64,11 @@ describe("Server in auto mode", () => {
     await putIncomingMessageToS3(successExceptionsAHO, s3TaskDataPath, correlationId)
     await uploadPncMock(successExceptionsPNCMock)
 
-    await conductorClient.workflowResource.startWorkflow1(
-      "bichard_phase_1",
-      { s3TaskDataPath },
-      undefined,
-      correlationId
-    )
+    await workflowExecutor.startWorkflow({
+      correlationId,
+      input: { s3TaskDataPath },
+      name: "bichard_phase_1"
+    })
 
     let workflows = await waitForWorkflows({
       count: 1,

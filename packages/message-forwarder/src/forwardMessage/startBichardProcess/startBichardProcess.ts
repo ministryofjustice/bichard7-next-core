@@ -1,11 +1,11 @@
-import type { ConductorClient } from "@io-orkes/conductor-javascript"
+import type { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import { type AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
-import { randomUUID } from "crypto"
+import { randomUUID } from "node:crypto"
 import Phase from "@moj-bichard7/core/types/Phase"
 
 const taskDataBucket = process.env.TASK_DATA_BUCKET_NAME
@@ -19,7 +19,7 @@ export const startBichardProcess = async (
   workflowName: string,
   incomingMessage: AnnotatedHearingOutcome | PncUpdateDataset,
   correlationId: string,
-  conductorClient: ConductorClient,
+  workflowExecutor: WorkflowExecutor,
   phase: Phase = Phase.HEARING_OUTCOME
 ) => {
   const s3TaskDataPath = `${randomUUID()}${phase === Phase.PNC_UPDATE ? "-phase2" : ""}.json`
@@ -29,8 +29,12 @@ export const startBichardProcess = async (
     return putResult
   }
 
-  const workflowId = await conductorClient.workflowResource
-    .startWorkflow1(workflowName, { s3TaskDataPath }, undefined, correlationId)
+  const workflowId = await workflowExecutor
+    .startWorkflow({
+      correlationId,
+      input: { s3TaskDataPath },
+      name: workflowName
+    })
     .catch((e) => e as Error)
   if (isError(workflowId)) {
     return workflowId
