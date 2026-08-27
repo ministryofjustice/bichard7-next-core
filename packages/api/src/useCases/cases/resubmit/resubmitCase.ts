@@ -1,8 +1,7 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
@@ -39,10 +38,8 @@ export const resubmitCase = async (
         throw messageId
       }
 
-      const conductorClient = await createConductorClient()
-      const executor = new WorkflowExecutor(conductorClient)
-
-      const conductorResult = await executor
+      const workflowExecutor = await createWorkflowExecutor()
+      const conductorResult = await workflowExecutor
         .startWorkflow({
           correlationId: messageId,
           input: { autoResubmit, messageId },

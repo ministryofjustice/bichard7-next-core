@@ -1,5 +1,6 @@
 import "../../test/setup/setEnvironmentVariables"
 
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import { waitForCompletedWorkflow } from "@moj-bichard7/common/test/conductor/waitForCompletedWorkflow"
 import logger from "@moj-bichard7/common/utils/logger"
@@ -8,9 +9,7 @@ import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDatas
 import { randomUUID } from "crypto"
 import ahoFixture from "../../test/fixtures/ignored-aho.json"
 import { startBichardProcess } from "./startBichardProcess"
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import Phase from "@moj-bichard7/core/types/Phase"
-import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 
 describe("startBichardProcess", () => {
   const pncUpdateDatasetFixture = { ...ahoFixture, PncOperations: [] }
@@ -28,8 +27,7 @@ describe("startBichardProcess", () => {
   })
 
   it("starts a new workflow with correlation ID and s3TaskDataPath from the AHO", async () => {
-    const conductorClient = await createConductorClient()
-    const workflowExecutor = new WorkflowExecutor(conductorClient)
+    const workflowExecutor = await createWorkflowExecutor()
     await startBichardProcess(
       "bichard_phase_1",
       JSON.parse(aho) as AnnotatedHearingOutcome,
@@ -45,9 +43,7 @@ describe("startBichardProcess", () => {
   })
 
   it("starts a new workflow with correlation ID and s3TaskDataPath from the PncUpdateDataset", async () => {
-    const conductorClient = await createConductorClient()
-    const workflowExecutor = new WorkflowExecutor(conductorClient)
-
+    const workflowExecutor = await createWorkflowExecutor()
     await startBichardProcess(
       "bichard_phase_2",
       JSON.parse(pncUpdateDataset) as PncUpdateDataset,
@@ -63,8 +59,7 @@ describe("startBichardProcess", () => {
   })
 
   it("logs a completion metric for Phase 1", async () => {
-    const conductorClient = await createConductorClient()
-    const workflowExecutor = new WorkflowExecutor(conductorClient)
+    const workflowExecutor = await createWorkflowExecutor()
 
     jest.spyOn(logger, "info")
 
@@ -86,8 +81,7 @@ describe("startBichardProcess", () => {
   })
 
   it("logs a completion metric for Phase 2", async () => {
-    const conductorClient = await createConductorClient()
-    const workflowExecutor = new WorkflowExecutor(conductorClient)
+    const workflowExecutor = await createWorkflowExecutor()
 
     jest.spyOn(logger, "info")
 

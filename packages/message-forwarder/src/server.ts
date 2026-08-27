@@ -1,18 +1,15 @@
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import logger from "@moj-bichard7/common/utils/logger"
 import postgres from "postgres"
 import MessageForwarder from "./MessageForwarder"
 import createStompClient from "./createStompClient"
-import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 
 async function startServer(): Promise<void> {
   const stompClient = createStompClient()
-  const conductorClient = await createConductorClient()
-  const workflowExecutor = new WorkflowExecutor(conductorClient)
+  const workflowExecutor = await createWorkflowExecutor()
   const databaseConfig = createDbConfig(true)
   const database = postgres(databaseConfig)
-
   const messageForwarder = new MessageForwarder(stompClient, workflowExecutor, database)
 
   const signalHandler = async (signal: string): Promise<void> => {

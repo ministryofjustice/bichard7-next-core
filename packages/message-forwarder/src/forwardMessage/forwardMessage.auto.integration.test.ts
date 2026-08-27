@@ -2,7 +2,7 @@ import "../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "auto" // has to be done prior to module imports
 process.env.CONDUCTOR_WORKFLOW = "bichard_phase_1"
 
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
@@ -18,7 +18,6 @@ import successExceptionsAHOFixture from "../test/fixtures/success-exceptions-aho
 import successExceptionsPNCMock from "../test/fixtures/success-exceptions-aho.pnc.json"
 import { clearTables, insertCase } from "../test/setup/database"
 import forwardMessage from "./forwardMessage"
-import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 
 const mq = createMqConfig()
 const stompClient = createStompClient()
@@ -68,9 +67,8 @@ describe("forwardMessage", () => {
       "CORRELATION_ID",
       correlationId
     )
-    const conductorClient = await createConductorClient()
-    const workflowExecutor = new WorkflowExecutor(conductorClient)
 
+    const workflowExecutor = await createWorkflowExecutor()
     await forwardMessage(incomingMessage, stompClient, workflowExecutor, database)
     const message = await mqListener.waitForMessage()
 
@@ -82,9 +80,7 @@ describe("forwardMessage", () => {
     await putIncomingMessageToS3(successExceptionsAHO, s3TaskDataPath, correlationId)
     await uploadPncMock(successExceptionsPNCMock)
 
-    const conductorClient = await createConductorClient()
-    const workflowExecutor = new WorkflowExecutor(conductorClient)
-
+    const workflowExecutor = await createWorkflowExecutor()
     const startWorkflowResult = await workflowExecutor
       .startWorkflow({
         name: "bichard_phase_1",

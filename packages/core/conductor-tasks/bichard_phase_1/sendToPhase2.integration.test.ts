@@ -1,6 +1,5 @@
 import "../../tests/helpers/setEnvironmentVariables"
-import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
 import putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
@@ -41,8 +40,7 @@ const getPhase1Result = () => {
 const sendToPhase2 = async (canaryRatio: string | undefined, inputData: Record<string, unknown>) => {
   process.env.PHASE2_CORE_CANARY_RATIO = canaryRatio
 
-  const conductorClient = await createConductorClient()
-  const workflowExecutor = new WorkflowExecutor(conductorClient)
+  const workflowExecutor = await createWorkflowExecutor()
   const worker = createSendToPhase2Worker(workflowExecutor)
 
   return worker.execute({ inputData })

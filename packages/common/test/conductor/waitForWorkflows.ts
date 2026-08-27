@@ -1,7 +1,6 @@
-import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import promisePoller from "promise-poller"
 
-import createConductorClient from "../../conductor/createConductorClient"
+import { createWorkflowExecutor } from "../../conductor/createWorkflowExecutor"
 
 export type WorkflowSearchParams = {
   count?: number
@@ -22,9 +21,8 @@ const searchWorkflows = async (params: WorkflowSearchParams) => {
     .map(([k, v]) => `${k}=${v}`)
     .join(" AND ")
 
-  const conductorClient = await createConductorClient()
-  const executor = new WorkflowExecutor(conductorClient)
-  const response = await executor.search(0, 100, query, freeText ?? "")
+  const workflowExecutor = await createWorkflowExecutor()
+  const response = await workflowExecutor.search(0, 100, query, freeText ?? "")
 
   if (!response.results || response.results.length < expectedHits) {
     throw new Error("Not enough workflows fetched")

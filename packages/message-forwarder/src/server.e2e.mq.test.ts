@@ -5,8 +5,7 @@ process.env.SOURCE_QUEUE = sourceQueue
 const destinationQueue = "TEST_DESTINATION_QUEUE"
 process.env.DESTINATION = destinationQueue
 
-import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 import fs from "fs"
@@ -25,8 +24,7 @@ describe("Server in MQ mode", () => {
   let messageForwarder: MessageForwarder
 
   beforeAll(async () => {
-    const conductorClient = await createConductorClient()
-    const workflowExecutor = new WorkflowExecutor(conductorClient)
+    const workflowExecutor = await createWorkflowExecutor()
     messageForwarder = new MessageForwarder(stompClient, workflowExecutor, database)
     await messageForwarder.start()
   })

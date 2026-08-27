@@ -5,7 +5,9 @@ process.env.SOURCE_QUEUE = sourceQueue
 const destinationQueue = "TEST_DESTINATION_QUEUE"
 process.env.DESTINATION = destinationQueue
 
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import type { WorkflowExecutor } from "@io-orkes/conductor-javascript"
+
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
@@ -21,7 +23,6 @@ import createStompClient from "./createStompClient"
 import successExceptionsAHOFixture from "./test/fixtures/success-exceptions-aho.json"
 import successExceptionsPNCMock from "./test/fixtures/success-exceptions-aho.pnc.json"
 import { clearTables, insertCase } from "./test/setup/database"
-import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 
 const stompClient = createStompClient()
 const mqConfig = createMqConfig()
@@ -37,8 +38,7 @@ describe("Server in auto mode", () => {
   let messageForwarder: MessageForwarder
 
   beforeAll(async () => {
-    const conductorClient = await createConductorClient()
-    workflowExecutor = new WorkflowExecutor(conductorClient)
+    workflowExecutor = await createWorkflowExecutor()
     messageForwarder = new MessageForwarder(stompClient, workflowExecutor, database)
     await messageForwarder.start()
   })
