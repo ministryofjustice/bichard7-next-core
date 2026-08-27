@@ -1,19 +1,18 @@
-import type { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import type LedsOperation from "../../../types/LedsOperation"
 
 const logApiMetric = (
-  event: string,
   requestUrl: string,
   durationMs: number,
   correlationId: string,
-  status?: number,
-  operation?: PncOperation
+  operation: LedsOperation,
+  status: number | undefined
 ) => {
   console.log(
     JSON.stringify({
-      event,
+      event: "LEDS Gateway API Call",
       requestUrl,
-      ...(operation && { operation }),
-      duration_ms: durationMs,
+      operation,
+      durationMs,
       correlationId,
       status
     })

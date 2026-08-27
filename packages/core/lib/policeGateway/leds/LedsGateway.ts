@@ -4,7 +4,6 @@ import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryRe
 import type { AxiosError, AxiosResponse } from "axios"
 
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import { LogEvents } from "@moj-bichard7/common/types/LogEvents"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
 import axios, { HttpStatusCode } from "axios"
@@ -18,10 +17,12 @@ import type { ErrorResponse } from "../../../types/leds/ErrorResponse"
 import type LedsApiConfig from "../../../types/leds/LedsApiConfig"
 import type { RemandRequest } from "../../../types/leds/RemandRequest"
 import type { SubsequentDisposalResultsRequest } from "../../../types/leds/SubsequentDisposalResultsRequest"
+import type LedsOperation from "../../../types/LedsOperation"
 import type PoliceGateway from "../../../types/PoliceGateway"
 
 import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
 import LedsActionCode from "../../../types/leds/LedsActionCode"
+import { ledsOperations, pncToLedsOperations } from "../../../types/LedsOperation"
 import PoliceApiError from "../PoliceApiError"
 import cleanObjectStrings from "./cleanObjectStrings"
 import convertAsnToLedsFormat from "./convertAsnToLedsFormat"
@@ -42,17 +43,8 @@ const jsonTransformer = (data: string): unknown => {
   }
 }
 
-const requestTypes = {
-  [PncOperation.DISPOSAL_UPDATED]: "Subsequently Varied",
-  [PncOperation.NORMAL_DISPOSAL]: "Disposal Results",
-  [PncOperation.REMAND]: "Remand",
-  [PncOperation.SENTENCE_DEFERRED]: "Sentence Deferred",
-  AsnQuery: "ASN Query"
-} as const
-type RequestType = (typeof requestTypes)[keyof typeof requestTypes]
-
 const generateAuditLogAttributes = (
-  requestType: RequestType,
+  requestType: LedsOperation,
   url: string,
   headers: Record<string, unknown>,
   body: Record<string, unknown>,
@@ -109,12 +101,12 @@ export default class LedsGateway implements PoliceGateway {
 
     const durationMs = performance.now() - startTime
 
-    logApiMetric(LogEvents.LEDS_API_QUERY, asnQueryUrl, durationMs, correlationId, apiResponse.status)
+    logApiMetric(asnQueryUrl, durationMs, correlationId, ledsOperations.AsnQuery, apiResponse.status)
 
     this.auditLogger.info(
       EventCode.PncResponseReceived,
       generateAuditLogAttributes(
-        requestTypes.AsnQuery,
+        ledsOperations.AsnQuery,
         asnQueryUrl,
         requestHeaders,
         requestBody,
@@ -216,12 +208,12 @@ export default class LedsGateway implements PoliceGateway {
 
     const durationMs = performance.now() - startTime
 
-    logApiMetric(LogEvents.LEDS_API_UPDATE, updateUrl, durationMs, correlationId, apiResponse.status, request.operation)
+    logApiMetric(updateUrl, durationMs, correlationId, pncToLedsOperations[request.operation], apiResponse.status)
 
     this.auditLogger.info(
       EventCode.PncResponseReceived,
       generateAuditLogAttributes(
-        requestTypes[request.operation],
+        pncToLedsOperations[request.operation],
         updateUrl,
         requestHeaders,
         requestBody,
