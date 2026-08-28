@@ -12,20 +12,21 @@ RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss
 # ===========================================================================================================
 # 1. UI Builder stage
 # ===========================================================================================================
-FROM node:20-alpine AS ui-builder
+FROM node:24-alpine@sha256:e67514e5d0f6c46656005e1b693b2ec9d52e80b641307de684d4a015ba7a4eaf AS ui-builder
 
 COPY --from=src /conductor/ui /conductor/ui
 
 WORKDIR /conductor/ui
 
-RUN npm install --legacy-peer-deps && \
+# Using `npm install` over `npm ci` as Conductors package.json and package-lock.json don't seem to be in sync
+RUN npm install --legacy-peer-deps --ignore-scripts --no-audit && \
     npm cache clean --force && \
     npm run build
 
 # ===========================================================================================================
 # 2. Java Builder stage
 # ===========================================================================================================
-FROM eclipse-temurin:21-jdk-jammy AS builder
+FROM eclipse-temurin:21-jdk-jammy@sha256:ce5767b7222312d42395f5bab033cd91f09e44032a2f21bdfd7b5b912dbe1e77 AS builder
 
 COPY --from=src /conductor /conductor
 
@@ -54,7 +55,7 @@ RUN mkdir -p /certs /var/log/supervisor && \
     yum install -y --setopt=install_weak_deps=False nginx httpd-tools gettext java-21-amazon-corretto && \
     yum clean all && \
     rm -rf /var/cache/yum && \
-    pip install --no-cache-dir supervisor && \
+    pip install --no-cache-dir --only-binary=:all: supervisor==4.3.0 && \
     openssl req -x509 -nodes -days 730 -newkey rsa:4096 \
     -out /certs/server.crt -keyout /certs/server.key \
     -config /tmp/openssl.cnf -extensions 'v3_req' && \
