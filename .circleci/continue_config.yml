@@ -1002,6 +1002,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.user-service-changes >>
+              - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
@@ -1014,6 +1015,7 @@ jobs:
       - node_install_packages
       - start_services:
           SERVICES: db-seed audit-log-api
+      - build_common
       - run:
           name: Run unit tests against user service code
           command: nvm use && npm run -w packages/user-service test:unit
@@ -1053,6 +1055,7 @@ jobs:
       - run:
           name: Install GOV.UK Assets
           command: npm run -w packages/user-service install:assets
+      - build_common
       - run:
           name: Build the user service
           command: npm run -w packages/user-service build
