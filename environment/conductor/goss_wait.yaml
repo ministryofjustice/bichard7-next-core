@@ -24,10 +24,10 @@ command:
     stdout:
       - RUNNING
   supervisorctl status templates:
-    exit-status: 0
+    exit-status: 3
     stdout:
       - EXITED
   supervisorctl status htpasswd:
-    exit-status: 0
+    exit-status: 3
     stdout:
       - EXITED
