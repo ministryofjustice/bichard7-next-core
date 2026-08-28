@@ -18,7 +18,7 @@ COPY --from=src /conductor/ui /conductor/ui
 
 WORKDIR /conductor/ui
 
-RUN npm install --legacy-peer-deps && \
+RUN npm ci --legacy-peer-deps --ignore-scripts --no-audit && \
     npm cache clean --force && \
     npm run build
 
