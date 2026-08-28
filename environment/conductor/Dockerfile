@@ -18,7 +18,8 @@ COPY --from=src /conductor/ui /conductor/ui
 
 WORKDIR /conductor/ui
 
-RUN npm ci --legacy-peer-deps --ignore-scripts --no-audit && \
+# Using `npm install` over `npm ci` as Conductors package.json and package-lock.json don't seem to be in sync
+RUN npm install --legacy-peer-deps --ignore-scripts --no-audit && \
     npm cache clean --force && \
     npm run build
 
