@@ -29,6 +29,7 @@ describe("generateRequestHeaders", () => {
     expect(headers).toEqual({
       Authorization: "Bearer dummy-auth-token",
       Accept: "application/json",
+      "Content-Type": "application/json",
       "X-Leds-Session-Id": expectedRandomUuid,
       "X-Leds-System-Name": "Bichard7",
       "X-Leds-Application-Datetime": expect.anything(),

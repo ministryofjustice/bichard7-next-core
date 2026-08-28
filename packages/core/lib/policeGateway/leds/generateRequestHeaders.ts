@@ -22,6 +22,7 @@ const generateRequestHeaders = (
   return {
     Authorization: `Bearer ${authToken}`,
     Accept: "application/json",
+    "Content-Type": "application/json",
     "X-Leds-Session-Id": randomUUID(),
     "X-Leds-System-Name": "Bichard7",
     "X-Leds-Application-Datetime": new Date().toISOString(),
