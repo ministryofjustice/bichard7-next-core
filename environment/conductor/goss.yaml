@@ -124,6 +124,11 @@ command:
     exit-status: 0
     stdout:
       - "@nginx-mainline"
+  supervisord --version:
+    exit-status: 0
+    stdout:
+      - "4.3.0"
+    timeout: 10000
 package:
   nginx:
     installed: true
