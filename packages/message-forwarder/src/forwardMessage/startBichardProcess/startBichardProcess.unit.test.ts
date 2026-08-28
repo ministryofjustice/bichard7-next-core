@@ -1,13 +1,12 @@
 import "../../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "mq"
 
-import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import * as putFileToS3 from "@moj-bichard7/common/s3/putFileToS3"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { randomUUID } from "crypto"
 import ignoredAHOFixture from "../../test/fixtures/ignored-aho.json"
 import { startBichardProcess } from "./startBichardProcess"
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 
 describe("forwardMessage", () => {
   afterEach(() => {
@@ -15,8 +14,7 @@ describe("forwardMessage", () => {
   })
 
   it("throws an exception if it can't write to S3", async () => {
-    const conductorClient = await createConductorClient()
-    const workflowExecutor = new WorkflowExecutor(conductorClient)
+    const workflowExecutor = await createWorkflowExecutor()
 
     jest.spyOn(putFileToS3, "default").mockReturnValue(Promise.resolve(new Error("Mock error")))
 

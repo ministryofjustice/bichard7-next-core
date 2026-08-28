@@ -1,7 +1,7 @@
 import "../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "auto"
 
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { Client } from "@stomp/stompjs"
 import { randomUUID } from "crypto"
@@ -48,8 +48,8 @@ describe("forwardMessage", () => {
 
   it("returns an error if invalid Conductor workflow provided", async () => {
     process.env.CONDUCTOR_WORKFLOW = "invalid_conductor_workflow"
-    const conductorClient = await createConductorClient()
-    const workflowExecutor = new WorkflowExecutor(conductorClient)
+
+    const workflowExecutor = await createWorkflowExecutor()
 
     const result = await forwardMessage(incomingMessage, stompClient, workflowExecutor, database)
 
@@ -59,9 +59,8 @@ describe("forwardMessage", () => {
 
   it("returns an error if search returns an error", async () => {
     process.env.CONDUCTOR_WORKFLOW = "bichard_phase_1"
-    const conductorClient = await createConductorClient()
-    const workflowExecutor = new WorkflowExecutor(conductorClient)
 
+    const workflowExecutor = await createWorkflowExecutor()
     jest.spyOn(workflowExecutor, "search").mockRejectedValue(new Error("Mock error"))
 
     const result = await forwardMessage(incomingMessage, stompClient, workflowExecutor, database)

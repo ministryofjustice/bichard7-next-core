@@ -4,15 +4,14 @@ process.env.DESTINATION_TYPE = "mq"
 import { randomUUID } from "crypto"
 import fs from "fs"
 
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import type { Sql } from "postgres"
 import createStompClient from "../createStompClient"
 import forwardMessage from "./forwardMessage"
-import { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 
 const mq = createMqConfig()
 const stompClient = createStompClient()
@@ -50,8 +49,7 @@ describe("forwardMessage", () => {
       "CORRELATION_ID",
       correlationId
     )
-    const conductorClient = await createConductorClient()
-    const workflowExecutor = new WorkflowExecutor(conductorClient)
+    const workflowExecutor = await createWorkflowExecutor()
 
     await forwardMessage(incomingMessage, stompClient, workflowExecutor, database)
     const message = await mqListener.waitForMessage()
