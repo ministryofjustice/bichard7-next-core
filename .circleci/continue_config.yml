@@ -1002,6 +1002,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.user-service-changes >>
+              - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
