@@ -48,9 +48,4 @@ describe("searchCourtOrganisationUnits", () => {
 
     expect(getFullOrganisationName(result[0])).toBe("Magistrates' Courts Greater Manchester Wigan")
   })
-
-  it("Should pass", () => {
-    const result = "pass"
-    expect(result).toBe("pass")
-  })
 })
