@@ -49,7 +49,7 @@
     "api": "NOWORKER=true SKIP_CONDUCTOR_SETUP=true ./environment/boot.sh api",
     "watch": "tsc --build --watch",
     "prepare": "husky",
-    "mock-script": "pwd"
+    "mock-script": "pwd -L"
   },
   "workspaces": [
     "packages/common",
