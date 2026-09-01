@@ -43,7 +43,7 @@ jobs:
           SHOULD_RUN="true"
 
           if [[ "${{ github.event_name }}" == "pull_request" || "${{ github.event_name }}" == "merge_group" ]]; then
-            IF_MATCHED="${{ steps.paths-filter.outputs.env == 'true' || steps.paths-filter.outputs.common == 'true' }}"
+            IF_MATCHED="${{ steps.paths-filter.outputs.github == 'true' || steps.paths-filter.outputs.env == 'true' || steps.paths-filter.outputs.common == 'true' }}"
             if [[ "$IF_MATCHED" != "true" ]]; then
               SHOULD_RUN="false"
             fi
