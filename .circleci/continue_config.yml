@@ -296,6 +296,22 @@ any_change: &any_change
     - << pipeline.parameters.message-forwarder-changes >>
 
 jobs:
+  test-goss:
+    docker
+    - image: cimg/base:current
+  steps:
+      - checkout
+      - setup_remote_docker
+      - install_goss 
+      - build_and_cache_image:
+          image_name: "core-image" 
+          dockerfile: "Dockerfile"
+          cache_key: "core-image-cache"
+      - run:
+          name: Run Goss tests
+          working_directory: 
+          command: make goss
+
   build_audit_logging_images:
     machine:
       image: ubuntu-2204:current
