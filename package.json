@@ -48,8 +48,7 @@
     "ui": "NOWORKER=true SKIP_CONDUCTOR_SETUP=true ./environment/boot.sh activemq ui && docker compose --project-name bichard -f environment/docker-compose.yml up -d --no-deps --wait nginx-auth-proxy user-service audit-log-api",
     "api": "NOWORKER=true SKIP_CONDUCTOR_SETUP=true ./environment/boot.sh api",
     "watch": "tsc --build --watch",
-    "prepare": "husky",
-    "mock-script": "pwd -L"
+    "prepare": "husky"
   },
   "workspaces": [
     "packages/common",
