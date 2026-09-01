@@ -17,7 +17,7 @@ jobs:
       pull-requests: read
     
     outputs:
-      should_run: ${{ steps.paths-filter.outputs.github == 'true' || steps.paths-filter.outputs.env == 'true' || steps.paths-filter.outputs.common == 'true' }}
+      should_run: ${{ steps.evaluate.outputs.should_run }}
 
     steps: 
       - name: Checkout repository
@@ -37,34 +37,49 @@ jobs:
             common:
               - 'packages/common/**'
 
+      - name: Evaluate Run Condition
+        id: evaluate
+        run: |
+          SHOULD_RUN="true"
+
+          if [[ "${{ github.event_name }}" == "pull_request" || "${{ github.event_name }}" == "merge_group" ]]; then
+            IF_MATCHED="${{ steps.paths-filter.outputs.github == 'true' || steps.paths-filter.outputs.env == 'true' || steps.paths-filter.outputs.common == 'true' }}"
+            if [[ "$IF_MATCHED" != "true" ]]; then
+              SHOULD_RUN="false"
+            fi
+          fi
+
+          echo "should_run=$SHOULD_RUN" >> $GITHUB_OUTPUT
+
   test_common:
     name: Test Common
     needs: changes
+    if: ${{ needs.changes.outputs.should_run == 'true' }}
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        if: ${{ needs.changes.outputs.should_run == 'true' }}
         uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
 
       - name: Setup node version
-        if: ${{ needs.changes.outputs.should_run == 'true' }}
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
         with:
           node-version-file: .nvmrc
 
       - name: ⛓️ SLSA Supply Chain Security
-        if: ${{ needs.changes.outputs.should_run == 'true' }}
         uses: ministryofjustice/devsecops-actions/sca/slsa@805c9da24fe7083e24b8435a626463b25951d278 # v1.4.0
       
       - name: Install dependencies
-        if: ${{ needs.changes.outputs.should_run == 'true' }}
         run: npm ci --ignore-scripts
 
       - name: Run Unit Test Common
-        if: ${{ needs.changes.outputs.should_run == 'true' }}
         run: npm run test -w packages/common
 
+  skip_notice:
+    name: Skip Notification
+    needs: changes
+    if: ${{ needs.changes.outputs.should_run != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Skip Notification
-        if: ${{ needs.changes.outputs.should_run != 'true' }}
         run: echo "No relevant paths modified. Skipping tests."
