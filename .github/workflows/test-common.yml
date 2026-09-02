@@ -30,8 +30,6 @@ jobs:
         uses: ./.github/actions/path-filter
         with:
           filters: |
-            github:
-              - '.github/**'
             env:
               - 'environment/**'
             common:
