@@ -426,7 +426,7 @@ jobs:
       - run:
           name: Run Goss Tests
           working_directory: packages/message-forwarder
-          
+
       - persist_to_workspace:
           root: .
           paths:
