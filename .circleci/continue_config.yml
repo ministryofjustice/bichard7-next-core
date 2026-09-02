@@ -532,6 +532,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -546,6 +547,10 @@ jobs:
           command: |
             mkdir -p images
             docker image save "ui:${DOCKER_TAG}" | pigz > "images/ui.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/ui
+          command: make goss
       - persist_to_workspace:
           root: .
           paths:
