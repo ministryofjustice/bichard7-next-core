@@ -15,19 +15,19 @@ jobs:
 
     permissions:
       pull-requests: read
-    
+
     outputs:
       should_run: ${{ steps.evaluate.outputs.should_run }}
 
-    steps: 
+    steps:
       - name: Checkout repository
         uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
-        with: 
+        with:
           fetch-depth: 0
 
-      - name: Path Filtering
-        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
-        id: paths-filter
+      - name: Evaluate Run Condition
+        id: evaluate
+        uses: ./.github/actions/path-filter
         with:
           filters: |
             github:
@@ -37,24 +37,10 @@ jobs:
             common:
               - 'packages/common/**'
 
-      - name: Evaluate Run Condition
-        id: evaluate
-        run: |
-          SHOULD_RUN="true"
-
-          if [[ "${{ github.event_name }}" == "pull_request" || "${{ github.event_name }}" == "merge_group" ]]; then
-            IF_MATCHED="${{ steps.paths-filter.outputs.github == 'true' || steps.paths-filter.outputs.env == 'true' || steps.paths-filter.outputs.common == 'true' }}"
-            if [[ "$IF_MATCHED" != "true" ]]; then
-              SHOULD_RUN="false"
-            fi
-          fi
-
-          echo "should_run=$SHOULD_RUN" >> $GITHUB_OUTPUT
-
   test_common:
     name: Test Common
     needs: changes
-    if: ${{ needs.changes.outputs.should_run == 'true' }}
+    if: needs.changes.outputs.should_run == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -68,7 +54,7 @@ jobs:
 
       - name: ⛓️ SLSA Supply Chain Security
         uses: ministryofjustice/devsecops-actions/sca/slsa@805c9da24fe7083e24b8435a626463b25951d278 # v1.4.0
-      
+
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
@@ -78,7 +64,7 @@ jobs:
   skip_notice:
     name: Skip Notification
     needs: changes
-    if: ${{ needs.changes.outputs.should_run != 'true' }}
+    if: needs.changes.outputs.should_run != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Skip Notification
