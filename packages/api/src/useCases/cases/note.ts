@@ -3,10 +3,10 @@ import type { FastifyBaseLogger } from "fastify"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
-import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
 import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
 import fetchCase from "../../services/db/cases/fetchCase"
+import insertNotes from "../../services/db/cases/insertNotes"
 import { NotFoundError } from "../../types/errors/NotFoundError"
 
 const MaxNoteLength = 2000
@@ -14,7 +14,6 @@ const notesRegex = new RegExp(`(.|\\s){1,${MaxNoteLength}}`, "g")
 
 const note = async (
   database: WritableDatabaseConnection,
-  auditLogGateway: AuditLogDynamoGateway,
   user: User,
   caseId: number,
   logger: FastifyBaseLogger,
@@ -30,14 +29,20 @@ const note = async (
     return new Error()
   }
 
-  // const wholeNote = noteText.match(notesRegex)
+  const wholeNote = noteText.match(notesRegex)
 
-  // const notes =
-  //   wholeNote?.map((text) => ({
-  //     noteText: text,
-  //     errorId: caseId,
-  //     userId: user.username
-  //   })) ?? []
+  const notes = wholeNote ? wholeNote.map((text) => text) : []
+
+  const noteResult = await database
+    .transaction<boolean | Error>(async (tx) => {
+      const noteResult = await insertNotes(tx, notes, user.username, caseId)
+      return noteResult
+    })
+    .catch((err) => err)
+
+  if (isError(noteResult)) {
+    return new Error()
+  }
 }
 
 export default note
