@@ -30,8 +30,8 @@ jobs:
           filters: |
             github:
               - '.github/**'
-            env:
-              - 'environment/**'
+            core:
+              - 'packages/core/**'
             common:
               - 'packages/common/**'
 
