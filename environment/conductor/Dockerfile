@@ -32,7 +32,17 @@ COPY --from=src /conductor /conductor
 
 WORKDIR /conductor
 
-RUN sed -i 's/^subprojects {$/ext["tomcat.version"] = "10.1.55"\n\n&/' build.gradle
+RUN printf '%s\n' \
+    'ext["tomcat.version"] = "10.1.55"' \
+    'subprojects {' \
+    '    configurations.all {' \
+    '        resolutionStrategy.eachDependency { d ->' \
+    '            if (d.requested.group == "org.bouncycastle") {' \
+    '                d.useVersion "1.84"' \
+    '            }' \
+    '        }' \
+    '    }' \
+    '}' >> build.gradle
 
 RUN ./gradlew --version && \
     ./gradlew build --no-daemon -x test
