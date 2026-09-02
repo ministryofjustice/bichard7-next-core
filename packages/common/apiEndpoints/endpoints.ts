@@ -20,6 +20,7 @@ export const Endpoints = {
   Connectivity: "/connectivity",
   Health: "/health",
   Me: "/me",
+  Note: "/cases/:caseId/note",
   Users: "/users",
   UsersLookup: "/users/lookup"
 } as const
