@@ -6,7 +6,7 @@ build:
 run:
 	docker run -p 3443:443 -e DB_HOST=172.17.0.1 user-service
 
-goss:
+goss: build
 	GOSS_SLEEP=15 dgoss run -e DB_HOST=172.17.0.1 "user-service:latest"
 	dgoss run \
 		-e S3_BUCKET_NAME="test-bucket" \
