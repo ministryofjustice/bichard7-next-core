@@ -41,7 +41,7 @@ const schema = {
   body: NoteApiSchema,
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
   response: {
-    [OK]: jsonResponse("Case DTO", CaseDtoSchema.meta({ description: "Case DTO" })),
+    [OK]: z.null().meta({ description: "Note successfully created" }),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...notFoundError(),
