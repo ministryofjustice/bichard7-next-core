@@ -296,7 +296,6 @@ any_change: &any_change
     - << pipeline.parameters.message-forwarder-changes >>
 
 jobs:
-
   build_audit_logging_images:
     machine:
       image: ubuntu-2204:current
