@@ -3,8 +3,11 @@ name: Test Characterisation
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
   pull_request:
-      types: [opened, synchronize, reopened]
+  merge_group:
+    types: [checks_requested]
       
 jobs:
   changes:
@@ -14,30 +17,28 @@ jobs:
       pull-requests: read
     
     outputs:
-      github: ${{ steps.paths-filter.outputs.github }}
-      common: ${{ steps.paths-filter.outputs.common }}
-      core: ${{ steps.paths-filter.outputs.core }}
+      should_run: ${{ steps.evaluate.outputs.should_run }}
 
     steps: 
       - name: Checkout repository
         uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
 
-      - name: Path Filtering
-        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
-        id: paths-filter
+      - name: Evaluate Run Condition
+        id: evaluate
+        uses: ./.github/actions/path-filter
         with:
           filters: |
             github:
               - '.github/**'
+            env:
+              - 'environment/**'
             common:
               - 'packages/common/**'
-            core: 
-              - 'packages/core/**'
 
   test_characterisation:
     name: Test Characterisation
     needs: changes
-    if: ${{ needs.changes.outputs.github == 'true' || needs.changes.outputs.common == 'true' || needs.changes.outputs.core == 'true' }}
+    if: needs.changes.outputs.should_run == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -60,3 +61,12 @@ jobs:
 
       - name: Run tests against core code
         run: npm run test:characterisation -w packages/core
+      
+  skip_notice:
+    name: Skip Notification
+    needs: changes
+    if: needs.changes.outputs.should_run != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip Notification
+        run: echo "No relevant paths modified. Skipping tests."    
