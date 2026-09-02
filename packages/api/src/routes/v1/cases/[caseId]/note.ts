@@ -22,7 +22,7 @@ import {
 import useZod from "../../../../server/useZod"
 import { NotFoundError } from "../../../../types/errors/NotFoundError"
 import { UnprocessableEntityError } from "../../../../types/errors/UnprocessableEntityError"
-import note from "../../../../useCases/cases/note"
+import createNote from "../../../../useCases/cases/createNote"
 
 type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway
@@ -50,21 +50,21 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ caseId, database, logger, noteText, reply, user }: HandlerProps) => {
-  const noteResult = await note(database.writable, user, caseId, logger, noteText)
+  const createNoteResult = await createNote(database.writable, user, caseId, logger, noteText)
 
-  if (!isError(noteResult)) {
+  if (!isError(createNoteResult)) {
     return reply.code(OK).send()
   }
 
-  reply.log.error(noteResult)
+  reply.log.error(createNoteResult)
 
   switch (true) {
-    case noteResult instanceof NotFoundError:
+    case createNoteResult instanceof NotFoundError:
       return reply.code(NOT_FOUND).send()
-    case noteResult instanceof UnprocessableEntityError:
+    case createNoteResult instanceof UnprocessableEntityError:
       return reply
         .code(UNPROCESSABLE_ENTITY)
-        .send({ code: `${UNPROCESSABLE_ENTITY}`, message: noteResult.message, statusCode: UNPROCESSABLE_ENTITY })
+        .send({ code: `${UNPROCESSABLE_ENTITY}`, message: createNoteResult.message, statusCode: UNPROCESSABLE_ENTITY })
     default:
       return reply.code(FORBIDDEN).send()
   }

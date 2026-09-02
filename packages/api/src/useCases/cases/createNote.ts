@@ -12,7 +12,7 @@ import { NotFoundError } from "../../types/errors/NotFoundError"
 const MaxNoteLength = 2000
 const notesRegex = new RegExp(`(.|\\s){1,${MaxNoteLength}}`, "g")
 
-const note = async (
+const createNote = async (
   database: WritableDatabaseConnection,
   user: User,
   caseId: number,
@@ -45,4 +45,4 @@ const note = async (
   }
 }
 
-export default note
+export default createNote

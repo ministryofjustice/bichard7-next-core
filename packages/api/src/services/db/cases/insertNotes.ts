@@ -8,6 +8,10 @@ export default async (
   userId: string,
   caseId: number
 ): PromiseResult<void> => {
+  if (notes.length === 0) {
+    return
+  }
+
   const createTs = new Date()
   const mappedNotes = notes.map((note) => ({
     create_ts: createTs,
