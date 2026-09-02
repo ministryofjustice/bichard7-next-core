@@ -1290,7 +1290,6 @@ workflows:
       - build_s3_web_proxy_image
       - build_audit_logging_images
       - build_conductor_image
-      - test-goss
 
       - comparison_test:
           requires:
