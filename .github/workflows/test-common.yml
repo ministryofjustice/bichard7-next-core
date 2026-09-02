@@ -17,13 +17,13 @@ jobs:
       pull-requests: read
     
     outputs:
-      github: ${{ steps.paths-filter.outputs.github }}
-      env: ${{ steps.paths-filter.outputs.env }}
-      common: ${{ steps.paths-filter.outputs.common }}
+      should_run: ${{ steps.evaluate.outputs.should_run }}
 
     steps: 
       - name: Checkout repository
         uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
+        with: 
+          fetch-depth: 0
 
       - name: Path Filtering
         uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
@@ -37,10 +37,24 @@ jobs:
             common:
               - 'packages/common/**'
 
+      - name: Evaluate Run Condition
+        id: evaluate
+        run: |
+          SHOULD_RUN="true"
+
+          if [[ "${{ github.event_name }}" == "pull_request" || "${{ github.event_name }}" == "merge_group" ]]; then
+            IF_MATCHED="${{ steps.paths-filter.outputs.github == 'true' || steps.paths-filter.outputs.env == 'true' || steps.paths-filter.outputs.common == 'true' }}"
+            if [[ "$IF_MATCHED" != "true" ]]; then
+              SHOULD_RUN="false"
+            fi
+          fi
+
+          echo "should_run=$SHOULD_RUN" >> $GITHUB_OUTPUT
+
   test_common:
     name: Test Common
     needs: changes
-    if: ${{ needs.changes.outputs.github == 'true' || needs.changes.outputs.env == 'true' || needs.changes.outputs.common == 'true' }}
+    if: ${{ needs.changes.outputs.should_run == 'true' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -60,3 +74,12 @@ jobs:
 
       - name: Run Unit Test Common
         run: npm run test -w packages/common
+
+  skip_notice:
+    name: Skip Notification
+    needs: changes
+    if: ${{ needs.changes.outputs.should_run != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip Notification
+        run: echo "No relevant paths modified. Skipping tests."
