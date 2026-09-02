@@ -82,7 +82,7 @@ const getConfig = (): UserServiceConfig => ({
   suggestedPasswordNumWords: 3,
   suggestedPasswordMinWordLength: 3,
   suggestedPasswordMaxWordLength: 8,
-  tokenExpiresIn: "10000 minutes",
+  tokenExpiresIn: (process.env.TOKEN_EXPIRES_IN as StringValue) ?? "10 minutes",
   tokenIssuer: process.env.TOKEN_ISSUER ?? "Bichard",
   tokenSecret: process.env.TOKEN_SECRET ?? "OliverTwist",
   maxPasswordFailedAttempts: 3,
