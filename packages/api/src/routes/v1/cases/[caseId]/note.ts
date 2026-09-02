@@ -3,6 +3,7 @@ import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { NoteSchema } from "@moj-bichard7/common/types/Note"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
@@ -21,7 +22,6 @@ import {
 import useZod from "../../../../server/useZod"
 import { NotFoundError } from "../../../../types/errors/NotFoundError"
 import { UnprocessableEntityError } from "../../../../types/errors/UnprocessableEntityError"
-import { NoteApiSchema } from "../../../../types/Note"
 import note from "../../../../useCases/cases/note"
 
 type HandlerProps = {
@@ -36,7 +36,7 @@ type HandlerProps = {
 
 const schema = {
   ...auth,
-  body: NoteApiSchema,
+  body: NoteSchema.pick({ noteText: true }),
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
   response: {
     [OK]: z.null().meta({ description: "Note successfully created" }),
@@ -53,7 +53,7 @@ const handler = async ({ caseId, database, logger, noteText, reply, user }: Hand
   const noteResult = await note(database.writable, user, caseId, logger, noteText)
 
   if (!isError(noteResult)) {
-    return reply.code(OK).send(noteResult)
+    return reply.code(OK).send()
   }
 
   reply.log.error(noteResult)
