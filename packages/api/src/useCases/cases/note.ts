@@ -34,7 +34,7 @@ const note = async (
   const notes = wholeNote ? wholeNote.map((text) => text) : []
 
   const noteResult = await database
-    .transaction<boolean | Error>(async (tx) => {
+    .transaction<Error | void>(async (tx) => {
       const noteResult = await insertNotes(tx, notes, user.username, caseId)
       return noteResult
     })

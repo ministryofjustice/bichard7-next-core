@@ -3,7 +3,6 @@ import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { CaseDtoSchema } from "@moj-bichard7/common/types/Case"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { FORBIDDEN, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
@@ -11,7 +10,6 @@ import z from "zod"
 import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
-import { jsonResponse } from "../../../../server/openapi/jsonResponse"
 import auth from "../../../../server/schemas/auth"
 import {
   forbiddenError,

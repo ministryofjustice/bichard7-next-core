@@ -7,7 +7,7 @@ export default async (
   notes: string[],
   userId: string,
   caseId: number
-): PromiseResult<boolean> => {
+): PromiseResult<void> => {
   const createTs = new Date()
   const mappedNotes = notes.map((note) => ({
     create_ts: createTs,
@@ -24,6 +24,4 @@ export default async (
   if (isError(result)) {
     return Error(`Couldn't insert notes for case id:${caseId}: ${result.message}`)
   }
-
-  return true
 }
