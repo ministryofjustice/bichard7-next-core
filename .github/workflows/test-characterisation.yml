@@ -28,6 +28,8 @@ jobs:
         uses: ./.github/actions/path-filter
         with:
           filters: |
+            github:
+              - '.github/**'
             core:
               - 'packages/core/**'
             common:
