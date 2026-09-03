@@ -5,7 +5,7 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { NoteSchema } from "@moj-bichard7/common/types/Note"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { FORBIDDEN, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
+import { CREATED, INTERNAL_SERVER_ERROR, NOT_FOUND } from "http-status"
 import z from "zod"
 
 import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
@@ -21,7 +21,6 @@ import {
 } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
 import { NotFoundError } from "../../../../types/errors/NotFoundError"
-import { UnprocessableEntityError } from "../../../../types/errors/UnprocessableEntityError"
 import createNote from "../../../../useCases/cases/createNote"
 
 type HandlerProps = {
@@ -38,7 +37,7 @@ const schema = {
   body: NoteSchema.pick({ noteText: true }),
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
   response: {
-    [OK]: z.null().meta({ description: "Note successfully created" }),
+    [CREATED]: z.null().meta({ description: "Note successfully created" }),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...notFoundError(),
@@ -52,7 +51,7 @@ const handler = async ({ caseId, database, noteText, reply, user }: HandlerProps
   const createNoteResult = await createNote(database.writable, user, caseId, noteText)
 
   if (!isError(createNoteResult)) {
-    return reply.code(OK).send()
+    return reply.code(CREATED).send()
   }
 
   reply.log.error(createNoteResult)
@@ -60,12 +59,8 @@ const handler = async ({ caseId, database, noteText, reply, user }: HandlerProps
   switch (true) {
     case createNoteResult instanceof NotFoundError:
       return reply.code(NOT_FOUND).send()
-    case createNoteResult instanceof UnprocessableEntityError:
-      return reply
-        .code(UNPROCESSABLE_ENTITY)
-        .send({ code: `${UNPROCESSABLE_ENTITY}`, message: createNoteResult.message, statusCode: UNPROCESSABLE_ENTITY })
     default:
-      return reply.code(FORBIDDEN).send()
+      return reply.code(INTERNAL_SERVER_ERROR).send()
   }
 }
 
