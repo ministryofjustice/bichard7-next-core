@@ -38,11 +38,11 @@
     "*.{js,ts,tsx}": "eslint"
   },
   "devDependencies": {
-    "@jest/globals": "^30.4.1",
+    "@jest/globals": "^30.5.0",
     "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash": "^4.17.25",
-    "jest": "^30.4.2",
+    "jest": "^30.5.0",
     "mockdate": "^3.0.5",
     "nodemon": "^3.1.14",
     "pino": "^10.3.1",
@@ -51,15 +51,15 @@
     "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "tsx": "^4.23.12",
+    "tsx": "^4.23.13",
     "zod-fixture": "^2.5.2"
   },
   "dependencies": {
-    "@aws-sdk/lib-dynamodb": "^3.1120.0",
+    "@aws-sdk/lib-dynamodb": "^3.1121.0",
     "@fastify/autoload": "6.5.0",
     "@fastify/swagger": "^9.8.1",
     "@fastify/swagger-ui": "^6.1.1",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.415",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.420",
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "fastify": "^5.12.1",
@@ -68,7 +68,7 @@
     "jsonwebtoken": "^9.0.3",
     "lodash": "^4.18.1",
     "postgres": "^3.4.9",
-    "qs": "^6.15.3",
-    "zod": "^4.4.3"
+    "qs": "^6.16.0",
+    "zod": "^4.5.4"
   }
 }

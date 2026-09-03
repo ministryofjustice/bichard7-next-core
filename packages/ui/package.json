@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^11.0.0",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.419",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.420",
     "cookie": "^1.1.1",
     "cookie-signature": "^1.2.2",
     "cookies-next": "4.3.0",
@@ -59,7 +59,7 @@
     "next": "^16.3.3",
     "pg": "^8.23.0",
     "pino": "^10.3.1",
-    "qs": "^6.15.3",
+    "qs": "^6.16.0",
     "raw-body": "^3.0.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -71,7 +71,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
-    "@jest/globals": "^30.4.1",
+    "@jest/globals": "^30.5.0",
     "@next/bundle-analyzer": "^16.3.3",
     "@stdlib/random-base-exponential": "^0.2.2",
     "@stdlib/random-sample": "^0.2.2",
@@ -99,7 +99,7 @@
     "cypress-plugin-tab": "^2.0.0",
     "http-server": "^14.1.1",
     "husky": "^9.1.7",
-    "jest": "^30.4.2",
+    "jest": "^30.5.0",
     "jest-axe": "^11.0.0",
     "lint-staged": "^17.4.1",
     "lodash.sample": "^4.2.1",
@@ -116,6 +116,6 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths-webpack-plugin": "^4.2.0",
     "wait-on": "^9.1.0",
-    "webpack": "^5.110.1"
+    "webpack": "^5.110.2"
   }
 }
