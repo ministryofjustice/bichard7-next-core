@@ -16,8 +16,7 @@ import {
   forbiddenError,
   internalServerError,
   notFoundError,
-  unauthorizedError,
-  unprocessableEntityError
+  unauthorizedError
 } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
 import { NotFoundError } from "../../../../types/errors/NotFoundError"
@@ -41,7 +40,6 @@ const schema = {
     ...unauthorizedError(),
     ...forbiddenError(),
     ...notFoundError(),
-    ...unprocessableEntityError(),
     ...internalServerError()
   },
   tags: ["Cases V1"]
@@ -50,18 +48,17 @@ const schema = {
 const handler = async ({ caseId, database, noteText, reply, user }: HandlerProps) => {
   const createNoteResult = await createNote(database.writable, user, caseId, noteText)
 
-  if (!isError(createNoteResult)) {
-    return reply.code(CREATED).send()
-  }
+  if (isError(createNoteResult)) {
+    reply.log.error(createNoteResult)
 
-  reply.log.error(createNoteResult)
-
-  switch (true) {
-    case createNoteResult instanceof NotFoundError:
+    if (createNoteResult instanceof NotFoundError) {
       return reply.code(NOT_FOUND).send()
-    default:
-      return reply.code(INTERNAL_SERVER_ERROR).send()
+    }
+
+    return reply.code(INTERNAL_SERVER_ERROR).send()
   }
+
+  return reply.code(CREATED).send()
 }
 
 const route = async (fastify: FastifyInstance) => {
