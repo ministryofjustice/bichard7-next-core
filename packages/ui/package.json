@@ -70,7 +70,7 @@
     "undici": "^7.29.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "^9.9.0",
+    "@faker-js/faker": "^10.6.0",
     "@jest/globals": "^30.4.1",
     "@next/bundle-analyzer": "^16.3.3",
     "@stdlib/random-base-exponential": "^0.2.2",
