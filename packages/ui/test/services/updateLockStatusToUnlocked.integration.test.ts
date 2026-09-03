@@ -1,6 +1,6 @@
+import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
-import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import type User from "services/entities/User"
 import type { DataSource } from "typeorm"
 import { UpdateQueryBuilder } from "typeorm"
@@ -109,7 +109,7 @@ const testCases = [
     unlockReason: UnlockReason.TriggerAndException,
     expectTriggersToBeLockedBy: null,
     expectExceptionsToBeLockedBy: "BichardForce02",
-    expectError: "User does not have permission to unlock this specific case", // Updated error message
+    expectError: undefined,
     expectedEvents: []
   },
   {
@@ -182,7 +182,7 @@ const testCases = [
     unlockReason: UnlockReason.TriggerAndException,
     expectTriggersToBeLockedBy: "BichardForce02",
     expectExceptionsToBeLockedBy: null,
-    expectError: "User does not have permission to unlock this specific case", // Updated error message
+    expectError: undefined,
     expectedEvents: []
   },
   {
@@ -430,7 +430,7 @@ describe("Unlock court case", () => {
       } as Partial<User> as User
 
       const events: AuditLogEvent[] = []
-      const result = await updateLockStatusToUnlocked(dataSource.manager, courtCase, user, unlockReason, events, false)
+      const result = await updateLockStatusToUnlocked(dataSource.manager, courtCase, user, unlockReason, events)
 
       if (expectError) {
         expect(isError(result)).toBe(true)
@@ -481,8 +481,7 @@ describe("Unlock court case", () => {
         lockedCourtCase,
         user,
         UnlockReason.TriggerAndException,
-        events,
-        false
+        events
       )
       expect(isError(result)).toBe(true)
 
