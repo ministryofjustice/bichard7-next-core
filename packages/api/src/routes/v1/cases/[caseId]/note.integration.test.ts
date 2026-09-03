@@ -2,7 +2,7 @@ import { expect } from "@jest/globals"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { type FastifyInstance } from "fastify"
-import { BAD_REQUEST, NOT_FOUND, OK } from "http-status"
+import { BAD_REQUEST, CREATED, NOT_FOUND } from "http-status"
 
 import build from "../../../../app"
 import AuditLogDynamoGateway from "../../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
@@ -31,7 +31,7 @@ describe("createNote", () => {
     await app.close()
   })
 
-  it("returns 200 OK when note saved successfully", async () => {
+  it("returns 201 CREATED when note saved successfully", async () => {
     const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
 
     const response = await app.inject({
@@ -41,7 +41,7 @@ describe("createNote", () => {
       url: V1.Note.replace(":caseId", "1")
     })
 
-    expect(response.statusCode).toBe(OK)
+    expect(response.statusCode).toBe(CREATED)
   })
 
   it("returns 400 Bad Request when request body is invalid", async () => {
