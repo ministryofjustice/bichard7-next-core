@@ -38,7 +38,7 @@ describe("createNote", () => {
     const caseObj = await createCase(testDatabaseGateway, {})
 
     const noteText = "This is a short test note."
-    const result = await createNote(testDatabaseGateway.writable, user, caseObj.errorId, mockLogger, noteText)
+    const result = await createNote(testDatabaseGateway.writable, user, caseObj.errorId, noteText)
 
     expect(isError(result)).toBe(true)
     expect(result).toBeInstanceOf(NotFoundError)
@@ -50,7 +50,7 @@ describe("createNote", () => {
       visibleForces: ["01"]
     })
 
-    const result = await createNote(testDatabaseGateway.writable, user, 999, mockLogger, "This is a test note")
+    const result = await createNote(testDatabaseGateway.writable, user, 999, "This is a test note")
 
     expect(isError(result)).toBe(true)
     expect(result).toBeInstanceOf(NotFoundError)
@@ -66,7 +66,7 @@ describe("createNote", () => {
     const caseObj = await createCase(testDatabaseGateway, {})
     const noteText = "This is a short test note."
 
-    const result = await createNote(testDatabaseGateway.writable, user, caseObj.errorId, mockLogger, noteText)
+    const result = await createNote(testDatabaseGateway.writable, user, caseObj.errorId, noteText)
 
     expect(isError(result)).toBe(false)
 
@@ -90,7 +90,7 @@ describe("createNote", () => {
     // Create a string of 4500 characters
     const longNoteText = "A".repeat(4500)
 
-    const result = await createNote(testDatabaseGateway.writable, user, caseObj.errorId, mockLogger, longNoteText)
+    const result = await createNote(testDatabaseGateway.writable, user, caseObj.errorId, longNoteText)
 
     expect(isError(result)).toBe(false)
 

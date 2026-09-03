@@ -1,5 +1,5 @@
 import type { User } from "@moj-bichard7/common/types/User"
-import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
+import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
@@ -28,7 +28,6 @@ type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway
   caseId: number
   database: DatabaseGateway
-  logger: FastifyBaseLogger
   noteText: string
   reply: FastifyReply
   user: User
@@ -49,8 +48,8 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ caseId, database, logger, noteText, reply, user }: HandlerProps) => {
-  const createNoteResult = await createNote(database.writable, user, caseId, logger, noteText)
+const handler = async ({ caseId, database, noteText, reply, user }: HandlerProps) => {
+  const createNoteResult = await createNote(database.writable, user, caseId, noteText)
 
   if (!isError(createNoteResult)) {
     return reply.code(OK).send()
@@ -76,7 +75,6 @@ const route = async (fastify: FastifyInstance) => {
       auditLogGateway: req.auditLogGateway,
       caseId: Number(req.params.caseId),
       database: req.database,
-      logger: req.log,
       noteText: req.body.noteText,
       reply,
       user: req.user

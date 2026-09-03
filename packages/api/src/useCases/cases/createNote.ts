@@ -1,11 +1,10 @@
 import type { User } from "@moj-bichard7/common/types/User"
-import type { FastifyBaseLogger } from "fastify"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
-import fetchCase from "../../services/db/cases/fetchCase"
+import checkCasePermission from "../../services/db/cases/checkCasePermission"
 import insertNotes from "../../services/db/cases/insertNotes"
 
 const MaxNoteLength = 2000
@@ -15,10 +14,9 @@ const createNote = async (
   database: WritableDatabaseConnection,
   user: User,
   caseId: number,
-  logger: FastifyBaseLogger,
   noteText: string
 ): PromiseResult<void> => {
-  const caseResult = await fetchCase(database, user, caseId, logger)
+  const caseResult = await checkCasePermission(database, user, caseId)
 
   if (isError(caseResult)) {
     return caseResult
