@@ -8,8 +8,6 @@ const semver = new RegExp(
     - v5 is a breaking change
   - @types/diff
     - changed the Change type to require extra values
-  - @faker-js/faker
-    - v10 has breaking change with Jest
   - undici
     - v6 supports node v20. Higher versions need > node v20
 
@@ -26,7 +24,7 @@ const semver = new RegExp(
   - fast-xml-parser
     - Breaks above 5.7.2 due to encoding issues. Does not follow semver
 */
-const pinned = ["chalk", "@types/diff", "@faker-js/faker", "eslint", "eslint-plugin-perfectionist", "undici"]
+const pinned = ["chalk", "@types/diff", "eslint", "eslint-plugin-perfectionist", "undici"]
 const ignored = [
   "p-limit",
   "esbuild",
