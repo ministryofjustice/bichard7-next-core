@@ -7,7 +7,6 @@ import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
 import fetchCase from "../../services/db/cases/fetchCase"
 import insertNotes from "../../services/db/cases/insertNotes"
-import { NotFoundError } from "../../types/errors/NotFoundError"
 
 const MaxNoteLength = 2000
 const notesRegex = new RegExp(`(.|\\s){1,${MaxNoteLength}}`, "g")
@@ -22,11 +21,7 @@ const createNote = async (
   const caseResult = await fetchCase(database, user, caseId, logger)
 
   if (isError(caseResult)) {
-    if (caseResult instanceof NotFoundError) {
-      return new NotFoundError()
-    }
-
-    return new Error()
+    return caseResult
   }
 
   const wholeNote = noteText.match(notesRegex)
@@ -41,7 +36,7 @@ const createNote = async (
     .catch((err) => err)
 
   if (isError(noteResult)) {
-    return new Error()
+    return noteResult
   }
 }
 
