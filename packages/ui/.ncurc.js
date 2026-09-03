@@ -4,8 +4,6 @@
     - v2.0.0 contains breaking changes
   - cookies-next
     - v5 contains breaking changes
-  - @faker-js/faker
-    - v10 has breaking change with Jest
   - undici
     - v6 supports node v20. Higher versions need > node v20
 
@@ -16,7 +14,7 @@
       - v4 breaks our CI
 */
 
-const pinned = ["cookie", "cookies-next", "@faker-js/faker", "undici"]
+const pinned = ["cookie", "cookies-next", "undici"]
 const ignored = ["cypress-circleci-reporter", "raw-body"]
 const skipped = []
 
