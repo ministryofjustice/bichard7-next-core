@@ -3,7 +3,7 @@ import type { FastifyInstance } from "fastify"
 import { expect } from "@jest/globals"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import { BAD_REQUEST, NOT_FOUND, OK } from "http-status"
+import { BAD_REQUEST, CREATED, NOT_FOUND } from "http-status"
 
 import { createCase } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
@@ -34,13 +34,13 @@ describe("/V1/cases/:caseId/note", () => {
     await helper.postgres.close()
   })
 
-  it("receives 200 OK when note saved successfully", async () => {
+  it("receives 201 CREATED when note saved successfully", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor])
     await createCase(helper.postgres)
 
     const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
-    expect(response.status).toBe(OK)
+    expect(response.status).toBe(CREATED)
   })
 
   it("received 400 Bad Request when request body is invalid", async () => {
