@@ -496,12 +496,12 @@ jobs:
       - run:
           name: Run Goss Tests - DB
           working_directory: packages/api
-          command: GOSS_SLEEP=15 dgoss run -e DB_HOST=172.17.0.1 -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' "api:latest"
+          command: GOSS_SLEEP=15 dgoss run -e DB_HOST=172.17.0.1 -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' "api:${DOCKER_TAG}"
 
       - run:
           name: Run Goss Tests - AWS
           working_directory: packages/api
-          command: dgoss run -e S3_BUCKET_NAME="test-bucket" -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' -e AWS_ACCESS_KEY_ID="test-key" -e AWS_SECRET_ACCESS_KEY="test-secret" -e AWS_REGION="eu-west-2" "api:latest"
+          command: dgoss run -e S3_BUCKET_NAME="test-bucket" -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' -e AWS_ACCESS_KEY_ID="test-key" -e AWS_SECRET_ACCESS_KEY="test-secret" -e AWS_REGION="eu-west-2" "api:${DOCKER_TAG}"
       - persist_to_workspace:
           root: .
           paths:
