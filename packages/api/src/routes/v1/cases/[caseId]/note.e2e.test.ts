@@ -61,4 +61,16 @@ describe("/V1/cases/:caseId/note", () => {
 
     expect(response.status).toBe(NOT_FOUND)
   })
+
+  it("returns 404 Not Found if the user has no visible courts or visible forces in common with the case", async () => {
+    const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Supervisor], {
+      visibleCourts: ["DEF"],
+      visibleForces: ["02"]
+    })
+    await createCase(helper.postgres)
+
+    const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
+
+    expect(response.status).toBe(NOT_FOUND)
+  })
 })

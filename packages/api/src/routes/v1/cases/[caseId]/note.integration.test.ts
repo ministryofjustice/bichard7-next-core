@@ -69,4 +69,20 @@ describe("createNote", () => {
 
     expect(response.statusCode).toBe(NOT_FOUND)
   })
+
+  it("returns 404 Not Found if the user has no visible courts or visible forces in common with the case", async () => {
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor], {
+      visibleCourts: ["DEF"],
+      visibleForces: ["02"]
+    })
+
+    const response = await app.inject({
+      headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
+      method: "POST",
+      payload: { noteText: "This is a note" },
+      url: V1.Note.replace(":caseId", "1")
+    })
+
+    expect(response.statusCode).toBe(NOT_FOUND)
+  })
 })

@@ -28,6 +28,22 @@ describe("createNote", () => {
     await testDatabaseGateway.close()
   })
 
+  it("returns NotFoundError if the user has no visible courts or visible forces in common with the case", async () => {
+    const user = await createUser(testDatabaseGateway, {
+      groups: [UserGroup.Supervisor],
+      visibleCourts: ["DEF"],
+      visibleForces: ["02"]
+    })
+
+    const caseObj = await createCase(testDatabaseGateway, {})
+
+    const noteText = "This is a short test note."
+    const result = await createNote(testDatabaseGateway.writable, user, caseObj.errorId, mockLogger, noteText)
+
+    expect(isError(result)).toBe(true)
+    expect(result).toBeInstanceOf(NotFoundError)
+  })
+
   it("returns NotFoundError if the case does not exist", async () => {
     const user = await createUser(testDatabaseGateway, {
       groups: [UserGroup.Supervisor],
