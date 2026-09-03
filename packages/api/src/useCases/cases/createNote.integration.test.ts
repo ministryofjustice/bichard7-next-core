@@ -1,5 +1,3 @@
-import type { FastifyBaseLogger } from "fastify"
-
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
@@ -8,13 +6,6 @@ import { createUser } from "../../tests/helpers/userHelper"
 import End2EndPostgres from "../../tests/testGateways/e2ePostgres"
 import { NotFoundError } from "../../types/errors/NotFoundError"
 import createNote from "./createNote"
-
-const mockLogger = {
-  debug: jest.fn(),
-  error: jest.fn(),
-  info: jest.fn(),
-  warn: jest.fn()
-} as unknown as FastifyBaseLogger
 
 describe("createNote", () => {
   const testDatabaseGateway = new End2EndPostgres()

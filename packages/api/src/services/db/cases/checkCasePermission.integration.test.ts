@@ -1,5 +1,3 @@
-import type { Case } from "@moj-bichard7/common/types/Case"
-
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import { createCase } from "../../../tests/helpers/caseHelper"
@@ -9,13 +7,11 @@ import checkCasePermission from "./checkCasePermission"
 
 const testDatabaseGateway = new End2EndPostgres()
 
-let caseObj: Case
-
 describe("checkCasePermission", () => {
   beforeEach(async () => {
     await testDatabaseGateway.clearDb()
 
-    caseObj = await createCase(testDatabaseGateway)
+    await createCase(testDatabaseGateway)
   })
 
   afterAll(async () => {
