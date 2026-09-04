@@ -562,7 +562,7 @@ jobs:
           working_directory: packages/ui
           command: |
             docker tag "ui:${DOCKER_TAG}" "ui:latest"
-            make goss  
+            make goss
       - persist_to_workspace:
           root: .
           paths:
