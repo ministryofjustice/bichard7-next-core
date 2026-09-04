@@ -556,7 +556,7 @@ jobs:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "ui:${DOCKER_TAG}" | pigz > "images/ui.tar.gz"
+            docker image save "ui:latest" | pigz > "images/ui.tar.gz"
       - run:
           name: Run Goss Tests
           working_directory: packages/ui
@@ -591,7 +591,7 @@ jobs:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "user-service:${DOCKER_TAG}" | pigz > "images/user-service.tar.gz"
+            docker image save "user-service:latest" | pigz > "images/user-service.tar.gz"
       - run:
           name: Run Goss Tests
           working_directory: packages/user-service
