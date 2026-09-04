@@ -426,7 +426,7 @@ jobs:
       - run:
           name: Run Goss Tests
           working_directory: packages/message-forwarder
-          command: GOSS_SLEEP=15 dgoss run -e DB_HOST=172.17.0.1 -e S3_BUCKET_NAME="test-bucket" -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' -e AWS_ACCESS_KEY_ID="test-key" -e AWS_SECRET_ACCESS_KEY="test-secret" -e AWS_REGION="eu-west-2" "message-forwarder:${DOCKER_TAG}"
+          command: GOSS_SLEEP=15 dgoss run -e DB_HOST=172.17.0.1 -e S3_BUCKET_NAME="test-bucket" -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' -e AWS_ACCESS_KEY_ID="test-key" -e AWS_SECRET_ACCESS_KEY="test-secret" -e AWS_REGION="eu-west-2" "message-forwarder:latest"
       - persist_to_workspace:
           root: .
           paths:
