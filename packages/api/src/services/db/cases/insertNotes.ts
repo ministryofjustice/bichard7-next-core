@@ -26,6 +26,6 @@ export default async (
   `.catch((error: Error) => error)
 
   if (isError(result)) {
-    return Error(`Couldn't insert notes for case id:${caseId}: ${result.message}`)
+    return new Error(`Couldn't insert notes for case id:${caseId}: ${result.message}`)
   }
 }

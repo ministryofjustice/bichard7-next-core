@@ -8,7 +8,6 @@ import checkCasePermission from "../../services/db/cases/checkCasePermission"
 import insertNotes from "../../services/db/cases/insertNotes"
 
 const MaxNoteLength = 2000
-const notesRegex = new RegExp(`(.|\\s){1,${MaxNoteLength}}`, "g")
 
 const createNote = async (
   database: WritableDatabaseConnection,
@@ -22,9 +21,10 @@ const createNote = async (
     return caseResult
   }
 
-  const wholeNote = noteText.match(notesRegex)
-
-  const notes = wholeNote ? wholeNote.map((text) => text) : []
+  const notes: string[] = []
+  for (let i = 0; i < noteText.length; i += MaxNoteLength) {
+    notes.push(noteText.slice(i, i + MaxNoteLength))
+  }
 
   const noteResult = await database
     .transaction<Error | void>(async (tx) => {
