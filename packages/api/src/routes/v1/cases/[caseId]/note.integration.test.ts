@@ -44,6 +44,19 @@ describe("createNote", () => {
     expect(response.statusCode).toBe(CREATED)
   })
 
+  it("returns 400 Bad Request when request body contains an empty string", async () => {
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
+
+    const response = await app.inject({
+      headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
+      method: "POST",
+      payload: { noteText: "" },
+      url: V1.Note.replace(":caseId", "1")
+    })
+
+    expect(response.statusCode).toBe(BAD_REQUEST)
+  })
+
   it("returns 400 Bad Request when request body is invalid", async () => {
     const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
 
