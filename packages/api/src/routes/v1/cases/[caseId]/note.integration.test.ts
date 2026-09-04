@@ -32,7 +32,7 @@ describe("createNote", () => {
   })
 
   it("returns 201 CREATED when note saved successfully", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
 
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
@@ -45,7 +45,7 @@ describe("createNote", () => {
   })
 
   it("returns 400 Bad Request when request body is invalid", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
 
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
@@ -58,7 +58,7 @@ describe("createNote", () => {
   })
 
   it("returns 404 Not Found when there's no case found", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
 
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
@@ -71,7 +71,7 @@ describe("createNote", () => {
   })
 
   it("returns 404 Not Found if the user has no visible courts or visible forces in common with the case", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor], {
+    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler], {
       visibleCourts: ["DEF"],
       visibleForces: ["02"]
     })
