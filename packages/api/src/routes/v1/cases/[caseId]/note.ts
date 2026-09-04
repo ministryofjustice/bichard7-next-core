@@ -8,7 +8,6 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { CREATED, INTERNAL_SERVER_ERROR, NOT_FOUND } from "http-status"
 import z from "zod"
 
-import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
 import auth from "../../../../server/schemas/auth"
@@ -23,7 +22,6 @@ import { NotFoundError } from "../../../../types/errors/NotFoundError"
 import createNote from "../../../../useCases/cases/createNote"
 
 type HandlerProps = {
-  auditLogGateway: AuditLogDynamoGateway
   caseId: number
   database: DatabaseGateway
   noteText: string
@@ -64,7 +62,6 @@ const handler = async ({ caseId, database, noteText, reply, user }: HandlerProps
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).post(V1.Note, { schema }, async (req, reply) => {
     await handler({
-      auditLogGateway: req.auditLogGateway,
       caseId: Number(req.params.caseId),
       database: req.database,
       noteText: req.body.noteText,
