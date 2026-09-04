@@ -556,11 +556,13 @@ jobs:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "ui:latest" | pigz > "images/ui.tar.gz"
+            docker image save "ui:${DOCKER_TAG}" | pigz > "images/ui.tar.gz"
       - run:
           name: Run Goss Tests
           working_directory: packages/ui
-          command: make goss
+          command: |
+            docker tag "user-service:${DOCKER_TAG}" "user-service:latest"
+            make goss      
       - persist_to_workspace:
           root: .
           paths:
@@ -591,11 +593,13 @@ jobs:
           name: Save Docker image
           command: |
             mkdir -p images
-            docker image save "user-service:latest" | pigz > "images/user-service.tar.gz"
+            docker image save "user-service:${DOCKER_TAG}" | pigz > "images/user-service.tar.gz"
       - run:
           name: Run Goss Tests
           working_directory: packages/user-service
-          command: make goss
+          command: |
+            docker tag "user-service:${DOCKER_TAG}" "user-service:latest"
+            make goss
       - persist_to_workspace:
           root: .
           paths:
