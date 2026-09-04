@@ -561,8 +561,8 @@ jobs:
           name: Run Goss Tests
           working_directory: packages/ui
           command: |
-            docker tag "user-service:${DOCKER_TAG}" "user-service:latest"
-            make goss      
+            docker tag "ui:${DOCKER_TAG}" "ui:latest"
+            make goss  
       - persist_to_workspace:
           root: .
           paths:
