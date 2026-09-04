@@ -408,6 +408,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
@@ -422,6 +423,10 @@ jobs:
           command: |
             mkdir -p images
             docker image save "message-forwarder:latest" | pigz > "images/message-forwarder.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/message-forwarder
+          command: GOSS_SLEEP=15 dgoss run -e DB_HOST=172.17.0.1 -e S3_BUCKET_NAME="test-bucket" -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' -e AWS_ACCESS_KEY_ID="test-key" -e AWS_SECRET_ACCESS_KEY="test-secret" -e AWS_REGION="eu-west-2" "message-forwarder:latest"
       - persist_to_workspace:
           root: .
           paths:
@@ -468,6 +473,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -482,6 +488,10 @@ jobs:
           command: |
             mkdir -p images
             docker image save "api:${DOCKER_TAG}" | pigz > "images/api.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/api
+          command: GOSS_SLEEP=15 dgoss run -e DB_HOST=172.17.0.1 -e S3_BUCKET_NAME="test-bucket" -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' -e AWS_ACCESS_KEY_ID="test-key" -e AWS_SECRET_ACCESS_KEY="test-secret" -e AWS_REGION="eu-west-2" "api:${DOCKER_TAG}"
       - persist_to_workspace:
           root: .
           paths:
@@ -532,6 +542,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -546,6 +557,12 @@ jobs:
           command: |
             mkdir -p images
             docker image save "ui:${DOCKER_TAG}" | pigz > "images/ui.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/ui
+          command: |
+            docker tag "ui:${DOCKER_TAG}" "ui:latest"
+            make goss
       - persist_to_workspace:
           root: .
           paths:
@@ -562,6 +579,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -576,6 +594,12 @@ jobs:
           command: |
             mkdir -p images
             docker image save "user-service:${DOCKER_TAG}" | pigz > "images/user-service.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/user-service
+          command: |
+            docker tag "user-service:${DOCKER_TAG}" "user-service:latest"
+            make goss
       - persist_to_workspace:
           root: .
           paths:
