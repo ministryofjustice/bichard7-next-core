@@ -21,7 +21,7 @@ describe("createNote", () => {
 
   it("returns NotFoundError if the user has no visible courts or visible forces in common with the case", async () => {
     const user = await createUser(testDatabaseGateway, {
-      groups: [UserGroup.Supervisor],
+      groups: [UserGroup.GeneralHandler],
       visibleCourts: ["DEF"],
       visibleForces: ["02"]
     })
@@ -37,7 +37,7 @@ describe("createNote", () => {
 
   it("returns NotFoundError if the case does not exist", async () => {
     const user = await createUser(testDatabaseGateway, {
-      groups: [UserGroup.Supervisor],
+      groups: [UserGroup.GeneralHandler],
       visibleForces: ["01"]
     })
 
@@ -49,8 +49,8 @@ describe("createNote", () => {
 
   it("successfully creates a single note for an existing case", async () => {
     const user = await createUser(testDatabaseGateway, {
-      groups: [UserGroup.Supervisor],
-      username: "test_supervisor",
+      groups: [UserGroup.GeneralHandler],
+      username: "test_general_handler",
       visibleForces: ["01"]
     })
 

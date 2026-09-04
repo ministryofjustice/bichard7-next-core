@@ -11,6 +11,7 @@ export const VersionedEndpoints: Record<string, Record<string, string>> = {
     AuditLogs: Versions.V1 + Endpoints.AuditLogs,
     Case: Versions.V1 + Endpoints.Case,
     CaseAudit: Versions.V1 + Endpoints.CaseAudit,
+    CaseNote: Versions.V1 + Endpoints.CaseNote,
     CaseResubmit: Versions.V1 + Endpoints.CaseResubmit,
     Cases: Versions.V1 + Endpoints.Cases,
     CasesAllocate: Versions.V1 + Endpoints.CasesAllocate,
@@ -24,7 +25,6 @@ export const VersionedEndpoints: Record<string, Record<string, string>> = {
     Connectivity: Versions.V1 + Endpoints.Connectivity,
     Health: Versions.V1 + Endpoints.Health,
     Me: Versions.V1 + Endpoints.Me,
-    Note: Versions.V1 + Endpoints.Note,
     Users: Versions.V1 + Endpoints.Users,
     UsersLookup: Versions.V1 + Endpoints.UsersLookup
   } as const
