@@ -424,14 +424,9 @@ jobs:
             mkdir -p images
             docker image save "message-forwarder:latest" | pigz > "images/message-forwarder.tar.gz"
       - run:
-          name: Run Goss Tests - DB
+          name: Run Goss Tests
           working_directory: packages/message-forwarder
-          command: GOSS_SLEEP=15 dgoss run -e DB_HOST=172.17.0.1 -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' "message-forwarder:latest"
-
-      - run:
-          name: Run Goss Tests - AWS
-          working_directory: packages/message-forwarder
-          command: dgoss run -e S3_BUCKET_NAME="test-bucket" -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' -e AWS_ACCESS_KEY_ID="test-key" -e AWS_SECRET_ACCESS_KEY="test-secret" -e AWS_REGION="eu-west-2" "message-forwarder:latest"
+          command: GOSS_SLEEP=15 dgoss run -e DB_HOST=172.17.0.1 -e S3_BUCKET_NAME="test-bucket" -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' -e AWS_ACCESS_KEY_ID="test-key" -e AWS_SECRET_ACCESS_KEY="test-secret" -e AWS_REGION="eu-west-2" "message-forwarder:${DOCKER_TAG}"
       - persist_to_workspace:
           root: .
           paths:
@@ -494,14 +489,9 @@ jobs:
             mkdir -p images
             docker image save "api:${DOCKER_TAG}" | pigz > "images/api.tar.gz"
       - run:
-          name: Run Goss Tests - DB
+          name: Run Goss Tests
           working_directory: packages/api
-          command: GOSS_SLEEP=15 dgoss run -e DB_HOST=172.17.0.1 -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' "api:${DOCKER_TAG}"
-
-      - run:
-          name: Run Goss Tests - AWS
-          working_directory: packages/api
-          command: dgoss run -e S3_BUCKET_NAME="test-bucket" -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' -e AWS_ACCESS_KEY_ID="test-key" -e AWS_SECRET_ACCESS_KEY="test-secret" -e AWS_REGION="eu-west-2" "api:${DOCKER_TAG}"
+          command: GOSS_SLEEP=15 dgoss run -e DB_HOST=172.17.0.1 -e S3_BUCKET_NAME="test-bucket" -e TASK_DATA_BUCKET_NAME="test-task-bucket" -e MQ_URL="ws://mock:5672" -e MQ_AUTH='{"username":"mock","password":"mock"}' -e AWS_ACCESS_KEY_ID="test-key" -e AWS_SECRET_ACCESS_KEY="test-secret" -e AWS_REGION="eu-west-2" "api:${DOCKER_TAG}"
       - persist_to_workspace:
           root: .
           paths:
