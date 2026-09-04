@@ -28,8 +28,7 @@ const createNote = async (
 
   const noteResult = await database
     .transaction<Error | void>(async (tx) => {
-      const noteResult = await insertNotes(tx, notes, user.username, caseId)
-      return noteResult
+      return await insertNotes(tx, notes, user.username, caseId)
     })
     .catch((err) => err)
 
