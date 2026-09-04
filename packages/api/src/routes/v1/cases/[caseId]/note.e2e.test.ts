@@ -53,6 +53,16 @@ describe("/V1/cases/:caseId/note e2e tests", () => {
     expect(response.status).toBe(BAD_REQUEST)
   })
 
+  it("received 400 Bad Request when request body contains an empty string", async () => {
+    const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.GeneralHandler])
+    await createCase(helper.postgres)
+    const invalidRequest = defaultRequest(encodedJwt, { noteText: "" })
+
+    const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, invalidRequest)
+
+    expect(response.status).toBe(BAD_REQUEST)
+  })
+
   it("receives 404 Not Found when there is no case found", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.GeneralHandler])
     await createCase(helper.postgres)
