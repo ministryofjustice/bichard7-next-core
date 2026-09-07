@@ -23,6 +23,9 @@ const createArrestedPerson = async (
     requestOptions.checkName
   )
 
+  console.log("Sending arrest payload:", JSON.stringify(arrestedPersonRequest, null, 2))
+  console.log("Request headers:", JSON.stringify(ENDPOINT_HEADERS.createArrestedPerson, null, 2))
+
   const createArrestedPersonResult = await asyncRequest<CreateArrestedPersonResult>(
     requestOptions,
     "person-services/v1/people/create-arrested-person",

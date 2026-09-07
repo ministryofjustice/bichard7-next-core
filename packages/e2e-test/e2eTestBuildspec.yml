@@ -24,7 +24,7 @@ phases:
       - bash ./scripts/setup-e2e-tests.sh
       - source ./workspaces/${WORKSPACE}.env
       - bash ./scripts/run-pipeline-tests.sh
-      - codebuild-breakpoint
+      # - codebuild-breakpoint
   post_build:
     commands:
       - unset AWS_SESSION_TOKEN
