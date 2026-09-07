@@ -10,6 +10,7 @@ export const Endpoints = {
   CaseResubmit: "/cases/:caseId/resubmit",
   Cases: "/cases",
   CasesAllocate: "/cases/:caseId/allocate",
+  CasesReallocate: "/cases/:caseId/reallocate",
   CasesReportsBails: "/cases/reports/bails",
   CasesReportsDomesticViolence: "/cases/reports/domestic-violence",
   CasesReportsExceptions: "/cases/reports/exceptions",
