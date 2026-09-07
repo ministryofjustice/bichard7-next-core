@@ -73,9 +73,4 @@ describe("dateTransformer Exception Handling", () => {
     expect(result.count).toBe(123)
     expect(typeof result.count).toBe("number")
   })
-  it("mock test", () => {
-    const result = "pass"
-
-    expect(result).toBe("pass")
-  })
 })
