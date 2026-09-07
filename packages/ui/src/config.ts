@@ -2,8 +2,6 @@ import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/
 import bannerFirstShownDate from "utils/bannerFirstShownDate"
 import { formatForceEnvVariable } from "utils/forceNormalisation"
 
-const toBoolean = (val: number | string): boolean => val === "true" || val === "1" || val === 1
-
 export const isProduction = process.env.NEXT_PUBLIC_WORKSPACE === "production"
 
 export const MAX_NOTE_LENGTH = 2000
@@ -19,15 +17,7 @@ export const INFO_BANNER_FIRST_SHOWN = bannerFirstShownDate()
 export const IS_AUDIT_PAGE_ACCESSIBLE = true // !isProduction
 
 export const API_LOCATION = process.env.API_URL ?? "https://localhost:3333"
-export const USE_API = toBoolean(process.env.USE_API ?? "false")
-export const USE_API_CASE_ENDPOINT = toBoolean(process.env.USE_API_CASE_ENDPOINT ?? "false")
-export const USE_API_CASES_INDEX_ENDPOINT = toBoolean(process.env.USE_API_CASES_INDEX_ENDPOINT ?? "false")
-export const USE_API_CASE_RESUBMIT_ENDPOINT = toBoolean(process.env.USE_API_CASE_RESUBMIT_ENDPOINT ?? "false")
-export const USE_API_CASE_CANARY_RATIO = Number(process.env.USE_API_CASE_CANARY_RATIO ?? 0)
-export const USE_API_CASES_INDEX_CANARY_RATIO = Number(process.env.USE_API_CASES_INDEX_CANARY_RATIO ?? 0)
-export const USE_API_CASE_RESUBMIT_CANARY_RATIO = Number(process.env.USE_API_CASE_RESUBMIT_CANARY_RATIO ?? 0)
 
-export const FORCES_WITH_API_ENABLED: Set<string> = formatForceEnvVariable(process.env.FORCES_WITH_API_ENABLED ?? "")
 export const FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED: Set<string> = formatForceEnvVariable(
   process.env.FORCES_WITH_COURT_DATE_RECEIVED_DATE_MISMATCH_ENABLED ?? (isProduction ? "" : "01")
 )

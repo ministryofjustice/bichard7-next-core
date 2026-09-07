@@ -1,3 +1,4 @@
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type User from "services/entities/User"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import { storeMessageAuditLogEvents } from "services/storeAuditLogEvents"
@@ -14,7 +15,6 @@ import { hasAccessToAll } from "../helpers/hasAccessTo"
 import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 jest.mock("services/updateLockStatusToUnlocked")
 jest.mock("services/storeAuditLogEvents")
@@ -106,8 +106,7 @@ describe("unlock court case", () => {
         expectedToCallWithCourtCase,
         user,
         UnlockReason.TriggerAndException,
-        expectedAuditLogEvents,
-        undefined
+        expectedAuditLogEvents
       )
       expect(storeMessageAuditLogEvents).toHaveBeenCalledTimes(1)
       expect(storeMessageAuditLogEvents).toHaveBeenCalledWith(lockedCourtCase.messageId, expectedAuditLogEvents)

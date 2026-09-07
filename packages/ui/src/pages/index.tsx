@@ -22,15 +22,9 @@ import { ParsedUrlQuery } from "querystring"
 import { useEffect, useState } from "react"
 import ApiClient from "services/api/ApiClient"
 import BichardApiV1 from "services/api/BichardApiV1"
-import { canUseApiEndpoint } from "services/api/canUseApi/canUseEndpoint"
-import { ApiEndpoints } from "services/api/types"
-import { courtCaseToDisplayPartialCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
-import CourtCase from "services/entities/CourtCase"
-import getCountOfCasesByCaseAge from "services/getCountOfCasesByCaseAge"
 import getDataSource from "services/getDataSource"
 import getLastSwitchingFormSubmission from "services/getLastSwitchingFormSubmission"
-import listCourtCases from "services/listCourtCases"
 import unlockCourtCase from "services/unlockCourtCase"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
 import { CaseListQueryParams, QueryOrder, SerializedDateRange } from "types/CaseListQueryParams"
@@ -83,13 +77,6 @@ export const getServerSideProps = withMultipleServerSideProps(
     const queryStringCookieName = getQueryStringCookieName(currentUser.username)
     const caseDetailsCookieName = getCaseDetailsCookieName(currentUser.username)
 
-    const useApi = canUseApiEndpoint(ApiEndpoints.CaseList, currentUser.visibleForces, currentUser.email)
-    const useApiForCaseResubmit = canUseApiEndpoint(
-      ApiEndpoints.CaseResubmit,
-      currentUser.visibleForces,
-      currentUser.email
-    )
-
     const { unlockException, unlockTrigger, ...searchQueryParams } = query
 
     const caseListQueryParams = extractSearchParamsFromQuery(searchQueryParams, currentUser)
@@ -101,26 +88,14 @@ export const getServerSideProps = withMultipleServerSideProps(
     const dataSource = await getDataSource()
 
     if (isPost(req) && typeof unlockException === "string") {
-      const lockResult = await unlockCourtCase(
-        dataSource,
-        +unlockException,
-        currentUser,
-        UnlockReason.Exception,
-        useApiForCaseResubmit
-      )
+      const lockResult = await unlockCourtCase(dataSource, +unlockException, currentUser, UnlockReason.Exception)
       if (isError(lockResult)) {
         throw lockResult
       }
     }
 
     if (isPost(req) && typeof unlockTrigger === "string") {
-      const lockResult = await unlockCourtCase(
-        dataSource,
-        +unlockTrigger,
-        currentUser,
-        UnlockReason.Trigger,
-        useApiForCaseResubmit
-      )
+      const lockResult = await unlockCourtCase(dataSource, +unlockTrigger, currentUser, UnlockReason.Trigger)
       if (isError(lockResult)) {
         throw lockResult
       }
@@ -136,61 +111,36 @@ export const getServerSideProps = withMultipleServerSideProps(
       }
     }
 
-    let caseAgeCounts: Record<string, number>
-    let courtCases: CourtCase[] = []
-    let totalCases: number
-    let apiCases: CaseIndexDto[] = []
+    const jwt = req.cookies[".AUTH"] as string
+    const apiClient = new ApiClient(jwt)
+    const apiGateway = new BichardApiV1(apiClient)
+    const logger = apiLogger(apiClient.traceId, req.url)
 
-    if (useApi) {
-      const jwt = req.cookies[".AUTH"] as string
-      const apiClient = new ApiClient(jwt)
-      const apiGateway = new BichardApiV1(apiClient)
-      const logger = apiLogger(apiClient.traceId, req.url)
+    logger.info("Fetching cases")
 
-      logger.info("Fetching cases")
+    const caseAge = [query?.caseAge].flat().filter((value) => Object.values(CaseAge).includes(value as CaseAge))
 
-      const caseAge = [query?.caseAge].flat().filter((value) => Object.values(CaseAge).includes(value as CaseAge))
+    const apiCaseQuery = {
+      ...caseListQueryParams,
+      maxPerPage: caseListQueryParams.maxPageItems ?? 50,
+      pageNum: caseListQueryParams.page ?? 1,
+      reason: caseListQueryParams.reason ?? Reason.All,
+      ...(query.from && { from: query.from }),
+      ...(query.to && { to: query.to }),
+      ...(query.caseAge && { caseAge }),
+      ...(query.resolvedFrom && { resolvedFrom: query.resolvedFrom }),
+      ...(query.resolvedTo && { resolvedTo: query.resolvedTo })
+    } as ApiCaseQuery
 
-      const apiCaseQuery = {
-        ...caseListQueryParams,
-        maxPerPage: caseListQueryParams.maxPageItems ?? 50,
-        pageNum: caseListQueryParams.page ?? 1,
-        reason: caseListQueryParams.reason ?? Reason.All,
-        ...(query.from && { from: query.from }),
-        ...(query.to && { to: query.to }),
-        ...(query.caseAge && { caseAge }),
-        ...(query.resolvedFrom && { resolvedFrom: query.resolvedFrom }),
-        ...(query.resolvedTo && { resolvedTo: query.resolvedTo })
-      } as ApiCaseQuery
+    const caseIndexMetadata = await apiGateway.fetchCases(apiCaseQuery)
 
-      const caseIndexMetadata = await apiGateway.fetchCases(apiCaseQuery)
-
-      if (isError(caseIndexMetadata)) {
-        throw caseIndexMetadata
-      }
-
-      caseAgeCounts = caseIndexMetadata.caseAges as Record<string, number>
-      apiCases = caseIndexMetadata.cases
-      totalCases = caseIndexMetadata.totalCases
-    } else {
-      const [tempCaseAgeCounts, tempCourtCases] = await Promise.all([
-        getCountOfCasesByCaseAge(dataSource, currentUser),
-        listCourtCases(dataSource, caseListQueryParams, currentUser)
-      ])
-
-      if (isError(tempCaseAgeCounts)) {
-        throw tempCaseAgeCounts
-      }
-
-      if (isError(tempCourtCases)) {
-        throw tempCourtCases
-      }
-
-      courtCases = tempCourtCases.result
-      caseAgeCounts = tempCaseAgeCounts
-
-      totalCases = tempCourtCases.totalCases
+    if (isError(caseIndexMetadata)) {
+      throw caseIndexMetadata
     }
+
+    const caseAgeCounts: Record<string, number> = caseIndexMetadata.caseAges as Record<string, number>
+    const apiCases: CaseIndexDto[] = caseIndexMetadata.cases
+    const totalCases: number = caseIndexMetadata.totalCases
 
     const oppositeOrder: QueryOrder = caseListQueryParams.order === "asc" ? "desc" : "asc"
 
@@ -220,9 +170,7 @@ export const getServerSideProps = withMultipleServerSideProps(
         build: process.env.NEXT_PUBLIC_BUILD || null,
         caseAge: caseAges,
         caseAgeCounts: caseAgeCounts,
-        courtCases: useApi
-          ? (apiCases as unknown[] as DisplayPartialCourtCase[])
-          : courtCases.map((courtCase) => courtCaseToDisplayPartialCourtCaseDto(courtCase, currentUser)),
+        courtCases: apiCases as unknown[] as DisplayPartialCourtCase[],
         csrfToken,
         dateRange:
           !!caseListQueryParams.courtDateRange && !Array.isArray(caseListQueryParams.courtDateRange)

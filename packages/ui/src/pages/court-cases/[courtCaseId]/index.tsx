@@ -23,20 +23,14 @@ import { useEffect, useState } from "react"
 import addNote from "services/addNote"
 import ApiClient from "services/api/ApiClient"
 import BichardApiV1 from "services/api/BichardApiV1"
-import { canUseApiEndpoint } from "services/api/canUseApi/canUseEndpoint"
-import { ApiEndpoints } from "services/api/types"
 import { canReallocate, canResolveOrSubmit } from "services/case"
-import { courtCaseToDisplayFullCourtCaseDto } from "services/dto/courtCaseDto"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
 import CourtCase from "services/entities/CourtCase"
 import User from "services/entities/User"
 import getCourtCaseByOrganisationUnit from "services/getCourtCaseByOrganisationUnit"
 import getDataSource from "services/getDataSource"
 import getLastSwitchingFormSubmission from "services/getLastSwitchingFormSubmission"
-import lockCourtCase from "services/lockCourtCase"
-import { createMqConfig, StompitMqGateway } from "services/mq"
 import resolveTriggers from "services/resolveTriggers"
-import resubmitCourtCase from "services/resubmitCourtCase"
 import unlockCourtCase from "services/unlockCourtCase"
 import { UpdateResult } from "typeorm"
 import { isApiError } from "types/ApiError"
@@ -51,9 +45,6 @@ import { isPost } from "utils/http"
 import { logRenderTime } from "utils/logging"
 import redirectTo from "utils/redirectTo"
 import shouldShowSwitchingFeedbackForm from "utils/shouldShowSwitchingFeedbackForm"
-
-const mqGatewayConfig = createMqConfig()
-const mqGateway = new StompitMqGateway(mqGatewayConfig)
 
 const allIssuesCleared = (courtCase: CourtCase | DisplayFullCourtCase, triggerToResolve: number[], user: User) => {
   const triggersResolved = user.hasAccessTo[Permission.Triggers]
@@ -83,41 +74,13 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     const loadLockedBy = true
 
-    const useApiForCaseDetails = canUseApiEndpoint(
-      ApiEndpoints.CaseDetails,
-      currentUser.visibleForces,
-      currentUser.email
-    )
-    const useApiForCaseResubmit = canUseApiEndpoint(
-      ApiEndpoints.CaseResubmit,
-      currentUser.visibleForces,
-      currentUser.email
-    )
-
     let apiGateway: BichardApiV1 | undefined = undefined
     let apiClientTraceId: string | undefined = undefined
 
-    if (useApiForCaseDetails || useApiForCaseResubmit) {
-      const jwt = req.cookies[".AUTH"] as string
-      const apiClient = new ApiClient(jwt)
-      apiClientTraceId = apiClient.traceId
-      apiGateway = new BichardApiV1(apiClient)
-    }
-
-    let courtCase
-    if (!useApiForCaseDetails) {
-      courtCase = await getCourtCaseByOrganisationUnit(dataSource, +courtCaseId, currentUser, loadLockedBy)
-
-      if (isError(courtCase)) {
-        throw courtCase
-      }
-
-      if (!courtCase) {
-        return {
-          notFound: true
-        }
-      }
-    }
+    const jwt = req.cookies[".AUTH"] as string
+    const apiClient = new ApiClient(jwt)
+    apiClientTraceId = apiClient.traceId
+    apiGateway = new BichardApiV1(apiClient)
 
     const triggersToResolve = []
     if (typeof resolveTrigger === "string" && !Number.isNaN(+resolveTrigger)) {
@@ -158,34 +121,18 @@ export const getServerSideProps = withMultipleServerSideProps(
     }
 
     if (isPost(req) && resubmitCase === "true") {
-      if (useApiForCaseResubmit && apiGateway) {
-        const logger = apiLogger(apiClientTraceId, req.url)
-        logger.info(`Resubmitting court case ${courtCaseId}`)
-        const resubmitResult = await apiGateway.resubmitCase(Number(courtCaseId))
+      const logger = apiLogger(apiClientTraceId, req.url)
+      logger.info(`Resubmitting court case ${courtCaseId}`)
+      const resubmitResult = await apiGateway.resubmitCase(Number(courtCaseId))
 
-        if (isError(resubmitResult)) {
-          const error = resubmitResult
-          if (isApiError(error) && error.status === 404) {
-            return {
-              notFound: true
-            }
+      if (isError(resubmitResult)) {
+        const error = resubmitResult
+        if (isApiError(error) && error.status === 404) {
+          return {
+            notFound: true
           }
-          throw error
         }
-      } else {
-        const { amendments } = formData as { amendments: string }
-
-        const resubmitCourtCaseResult = await resubmitCourtCase(
-          dataSource,
-          mqGateway,
-          JSON.parse(amendments),
-          +courtCaseId,
-          currentUser
-        )
-
-        if (isError(resubmitCourtCaseResult)) {
-          throw resubmitCourtCaseResult
-        }
+        throw error
       }
     }
 
@@ -207,38 +154,11 @@ export const getServerSideProps = withMultipleServerSideProps(
     let lockResult: UpdateResult | Error | undefined
 
     if (isPost(req) && lock === "false") {
-      lockResult = await unlockCourtCase(
-        dataSource,
-        +courtCaseId,
-        currentUser,
-        UnlockReason.TriggerAndException,
-        useApiForCaseResubmit
-      )
-    } else if (
-      !isPost(req) &&
-      !useApiForCaseDetails &&
-      (currentUser.hasAccessTo[Permission.Exceptions] || currentUser.hasAccessTo[Permission.Triggers])
-    ) {
-      lockResult = await lockCourtCase(dataSource, +courtCaseId, currentUser)
+      lockResult = await unlockCourtCase(dataSource, +courtCaseId, currentUser, UnlockReason.TriggerAndException)
     }
 
     if (isError(lockResult)) {
       throw lockResult
-    }
-
-    // Fetch the record from the database after updates
-    if (!useApiForCaseDetails) {
-      courtCase = await getCourtCaseByOrganisationUnit(dataSource, +courtCaseId, currentUser, loadLockedBy)
-
-      if (isError(courtCase)) {
-        throw courtCase
-      }
-
-      if (!courtCase) {
-        return {
-          notFound: true
-        }
-      }
     }
 
     const lastSwitchingFormSubmission = await getLastSwitchingFormSubmission(dataSource, currentUser.id)
@@ -249,7 +169,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     let apiCase: DisplayFullCourtCase | Error | undefined
 
-    if (useApiForCaseDetails && apiGateway) {
+    if (apiGateway) {
       const logger = apiLogger(apiClientTraceId, req.url)
       logger.info(`Fetching details for ${courtCaseId}`)
       apiCase = await apiGateway.fetchCase(Number(courtCaseId))
@@ -267,9 +187,7 @@ export const getServerSideProps = withMultipleServerSideProps(
 
     logRenderTime(startTime, "caseView")
 
-    const caseDto = useApiForCaseDetails
-      ? (apiCase as DisplayFullCourtCase)
-      : courtCaseToDisplayFullCourtCaseDto(courtCase as CourtCase, currentUser)
+    const caseDto = apiCase as DisplayFullCourtCase
 
     const organisationUnits: OrganisationUnit[] = sortCourtOrganisationUnits(OrganisationUnits)
 
