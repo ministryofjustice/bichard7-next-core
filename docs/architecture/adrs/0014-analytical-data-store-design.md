@@ -37,7 +37,7 @@ Comprised of:
    - levarages Data Engineer existing experience
    - low/no change needed to integrate with operational systems
    - easy to migrate to MoJ cloud platform if needed
-   - look to move to queue/event based system (i.e. integrating with conductor) if reduced latency is required (out of scope for the internal analytical data store) 
+   - look to move to queue/event based system (i.e. integrating with conductor) if reduced latency is required (out of scope for the internal analytical data store)
 
 4. Initial design to use delta tables in s3 as the storage format
    - low storage cost compared to traditional databases
@@ -58,5 +58,4 @@ Comprised of:
   - Bichard naturally has relatively small data volumes (10s - 100s of GB)
 - Duplication of data. Good CDC reduces/eliminates the risk of stale data. AWS provides CDC for DynamoDB and RDS.
 - Untested/unvalidated data. Clear "internal" naming and communication across the team ensures this is not used for operational/user facing workloads
-    - can be superseeded in future once ready for wider consumption
-
+  - can be superseeded in future once ready for wider consumption
