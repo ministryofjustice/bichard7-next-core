@@ -67,7 +67,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "concurrently": "^10.0.5",
-    "cypress": "^16.0.0",
+    "cypress": "^15.21.1",
     "cypress-circleci-reporter": "^0.3.0",
     "jest": "^30.5.1",
     "jest-environment-jsdom": "^30.5.1",
