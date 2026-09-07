@@ -68,7 +68,7 @@
     "tiny-glob": "^0.2.9",
     "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
-    "zod": "^4.5.4"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@swc/core": "^1.16.1",

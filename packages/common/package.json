@@ -54,14 +54,14 @@
     "stompit": "^1.0.0",
     "undici": "^7.29.0",
     "ws": "^8.21.3",
-    "zod": "^4.5.4",
+    "zod": "^4.4.3",
     "zod-validation-error": "^5.0.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/nodemailer": "^8.0.1",
     "@types/lodash": "^4.17.25",
+    "@types/nodemailer": "^8.0.1",
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
     "jest": "^30.5.1",
