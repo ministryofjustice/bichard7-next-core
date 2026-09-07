@@ -103,9 +103,4 @@ describe("Bichard Core processing logic", () => {
       ])
     )
   })
-  it("mock test", () => {
-    const result = "pass"
-
-    expect(result).toBe("pass")
-  })
 })
