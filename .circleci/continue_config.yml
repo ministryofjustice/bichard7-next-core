@@ -463,7 +463,7 @@ jobs:
           command: |
             mkdir -p images
             docker image save "bichard-worker:${DOCKER_TAG}" | pigz > "images/worker.tar.gz"
-      - run: 
+      - run:
           name: Run Goss Tests
           working_directory: packages/conductor
           command: |
