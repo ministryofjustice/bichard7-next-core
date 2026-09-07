@@ -42,6 +42,7 @@ export SSM_PARAM__LEDS_NIAM_CERTIFICATE="/cjse-${WORKSPACE}-bichard-7/leds/niam/
 export SSM_PARAM__LEDS_NIAM_PARAMETERS="/cjse-${WORKSPACE}-bichard-7/leds/niam/parameters"
 export SSM_PARAM__LEDS_NIAM_AUTH_URL="/cjse-${WORKSPACE}-bichard-7/leds/niam/public_api_url"
 export SSM_PARAM__LEDS_ALLOWED_OPERATIONS="/cjse-${WORKSPACE}-bichard-7/leds/allowed-operations"
+export SSM_PARAM__POLICE_API_ACCESS="/cjse-${WORKSPACE}-bichard-7/police-api/access"
 
 export LEDS_NIAM_PRIVATE_KEY=$(read_ssm_parameter_value "$SSM_PARAM__LEDS_NIAM_PRIVATE_KEY")
 export LEDS_NIAM_CERTIFICATE=$(read_ssm_parameter_value "$SSM_PARAM__LEDS_NIAM_CERTIFICATE")
