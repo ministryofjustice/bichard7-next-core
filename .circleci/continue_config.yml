@@ -1164,11 +1164,11 @@ jobs:
       - fetch_images:
           images: nginx-auth-proxy
       - node/install
+      - node_install_packages
       - run:
           name: Install Cypress
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
-      - node_install_packages
       - build_common
       - run:
           name: Wait for cypress install to finish
