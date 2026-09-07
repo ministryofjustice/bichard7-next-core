@@ -38,7 +38,7 @@ describe("createNote", () => {
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
       payload: { noteText: "This is a note" },
-      url: V1.Note.replace(":caseId", "1")
+      url: V1.CaseNote.replace(":caseId", "1")
     })
 
     expect(response.statusCode).toBe(CREATED)
@@ -51,7 +51,7 @@ describe("createNote", () => {
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
       payload: { noteText: "" },
-      url: V1.Note.replace(":caseId", "1")
+      url: V1.CaseNote.replace(":caseId", "1")
     })
 
     expect(response.statusCode).toBe(BAD_REQUEST)
@@ -64,7 +64,7 @@ describe("createNote", () => {
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
       payload: {},
-      url: V1.Note.replace(":caseId", "1")
+      url: V1.CaseNote.replace(":caseId", "1")
     })
 
     expect(response.statusCode).toBe(BAD_REQUEST)
@@ -77,7 +77,7 @@ describe("createNote", () => {
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
       payload: { noteText: "This is a note on a non-existent case" },
-      url: V1.Note.replace(":caseId", "2")
+      url: V1.CaseNote.replace(":caseId", "2")
     })
 
     expect(response.statusCode).toBe(NOT_FOUND)
@@ -93,7 +93,7 @@ describe("createNote", () => {
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
       payload: { noteText: "This is a note" },
-      url: V1.Note.replace(":caseId", "1")
+      url: V1.CaseNote.replace(":caseId", "1")
     })
 
     expect(response.statusCode).toBe(NOT_FOUND)
