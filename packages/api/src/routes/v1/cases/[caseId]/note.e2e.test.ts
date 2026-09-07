@@ -16,7 +16,7 @@ const defaultRequest = (jwt: string, body: Record<string, unknown> = { noteText:
 })
 
 describe("/V1/cases/:caseId/note e2e tests", () => {
-  const endpoint = V1.Note
+  const endpoint = V1.CaseNote
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 
