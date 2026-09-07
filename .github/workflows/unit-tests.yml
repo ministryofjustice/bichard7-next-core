@@ -33,11 +33,11 @@ jobs:
         with:
           filters: |
             common:
-              - 'github/**'
+              - '.github/**'
               - 'environment/**'
               - 'packages/common/**'
             characterisation:
-              - 'github/**'
+              - '.github/**'
               - 'packages/common/**'
               - 'packages/core/**'
 
