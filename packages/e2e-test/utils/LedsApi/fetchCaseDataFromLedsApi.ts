@@ -98,6 +98,12 @@ const fetchCaseDataFromLedsApi = async (bichard: LedsBichard): Promise<CaseData>
   const disposals = ledsDisposals.map((ledsDisposal) => convertDisposal(ledsDisposal, ledsOffences))
   const remands = ledsRemands.map((ledsRemand) => mapKeys(ledsRemand, remandKeys))
 
+  disposals.forEach((disposal) => {
+    if (disposal.subsequentAppearances?.length === 0) {
+      delete disposal.subsequentAppearances
+    }
+  })
+
   return { disposals, remands }
 }
 
