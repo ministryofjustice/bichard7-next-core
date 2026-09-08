@@ -23,7 +23,6 @@ phases:
       - bash ./scripts/setup-api-hosts.sh
       - bash ./scripts/setup-e2e-tests.sh
       - source ./workspaces/${WORKSPACE}.env
-      # - codebuild-breakpoint
       - bash ./scripts/run-pipeline-tests.sh
   post_build:
     commands:
