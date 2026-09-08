@@ -7,7 +7,7 @@ export default async (database: DatabaseConnection, caseId: number): PromiseResu
     SELECT NOT EXISTS (
         SELECT 1 
         FROM br7own.error_list_triggers 
-        WHERE case_id = ${caseId}  
+        WHERE error_id = ${caseId}  
             AND status != 2
         ) AS "allResolved"
     `.catch((error: Error) => error)

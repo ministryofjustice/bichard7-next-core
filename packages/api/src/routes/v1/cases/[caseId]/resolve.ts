@@ -1,6 +1,6 @@
 import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
 import type { User } from "@moj-bichard7/common/types/User"
-import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
+import type { FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
@@ -24,7 +24,7 @@ type HandlerProps = {
   body: ResolveBody
   caseId: number
   database: DatabaseGateway
-  logger: FastifyBaseLogger
+  /*  logger: FastifyBaseLogger */
   reply: FastifyReply
   user: User
 }
@@ -47,8 +47,8 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ body, caseId, database, logger, reply, user }: HandlerProps) => {
-  const result = await resolveCase(database.writable, user, caseId, body, logger)
+const handler = async ({ body, caseId, database, reply, user }: HandlerProps) => {
+  const result = await resolveCase(database.writable, user, caseId, body) /* , logger */
 
   if (!isError(result)) {
     return reply.code(ACCEPTED).send()
@@ -76,7 +76,7 @@ const route = async (fastify: FastifyInstance) => {
       body: req.body,
       caseId: Number(req.params.caseId),
       database: req.database,
-      logger: req.log,
+      /*   logger: req.log, */
       reply,
       user: req.user
     })

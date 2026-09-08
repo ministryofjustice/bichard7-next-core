@@ -1,6 +1,5 @@
 import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
 import type { User } from "@moj-bichard7/common/types/User"
-import type { FastifyBaseLogger } from "fastify"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import { validateManualResolution } from "@moj-bichard7/common/utils/validateManualResolution"
@@ -14,8 +13,8 @@ export const resolveError = async (
   databaseConnection: WritableDatabaseConnection,
   user: User,
   caseId: number,
-  resolution: ResolveBody,
-  logger: FastifyBaseLogger
+  resolution: ResolveBody
+  /*   logger: FastifyBaseLogger */
 ): PromiseResult<void> => {
   const resolutionError = validateManualResolution(resolution).error
 
@@ -23,7 +22,7 @@ export const resolveError = async (
     return new Error(resolutionError)
   }
 
-  if (resolution.resolutionStatus === "Resolved") {
+  if (resolution.courtCaseErrorStatus === "Resolved") {
     return
   }
 
@@ -36,19 +35,23 @@ export const resolveError = async (
   const resolver = user.username
   const resolutionTimestamp = new Date()
 
+  const updateFields: Record<string, unknown> = {
+    error_resolved_by: resolver,
+    error_resolved_ts: resolutionTimestamp,
+    error_status: 2
+  }
+
   const allTriggersResolved = await checkAllTriggersResolved(databaseConnection, caseId)
 
-  const resolutionTimestampQuery = allTriggersResolved ? `, resolution_ts = ${resolutionTimestamp}` : ""
+  if (allTriggersResolved) {
+    updateFields.resolution_ts = resolutionTimestamp
+  }
 
   const resolveErrorResult = await databaseConnection
     .transaction<Error | void>(async (tx) => {
       const updateResult = await tx.connection`
     UPDATE br7own.error_list
-    SET 
-      error_resolved_by = ${resolver}, 
-      error_resolved_ts = ${resolutionTimestamp}, 
-      error_status = 2 
-      ${resolutionTimestampQuery}
+    SET ${tx.connection(updateFields)}
     WHERE error_id = ${caseId} AND error_locked_by_id = ${resolver} AND error_count > 0 AND error_status = 1
   `.catch((error: Error) => error)
 

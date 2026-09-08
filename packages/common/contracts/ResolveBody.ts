@@ -1,6 +1,7 @@
 import z from "zod"
 
 export const ResolveBodySchema = z.object({
+  courtCaseErrorStatus: z.enum(["Resolved", "Submitted", "Unresolved"]),
   reason: z.enum([
     "UpdatedDisposal",
     "UpdatedRemand",
