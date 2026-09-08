@@ -1,5 +1,5 @@
 name: "Dynamic Path Filter"
-description: "Evaluates dynamic path filters on PRs and outputs should_run alongside filter results."
+description: "Evaluates dynamic path filters on PRs and outputs filter results."
 
 inputs:
   filters:
