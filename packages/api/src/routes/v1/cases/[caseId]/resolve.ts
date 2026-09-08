@@ -1,8 +1,10 @@
+import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
 import type { User } from "@moj-bichard7/common/types/User"
-import type { FastifyInstance, FastifyReply } from "fastify"
+import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
+import { ResolveBodySchema } from "@moj-bichard7/common/contracts/ResolveBody"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { ACCEPTED, BAD_GATEWAY, FORBIDDEN, NOT_FOUND, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
@@ -16,12 +18,20 @@ import useZod from "../../../../server/useZod"
 import handleDisconnectedError from "../../../../services/db/handleDisconnectedError"
 import { NotFoundError } from "../../../../types/errors/NotFoundError"
 import { UnprocessableEntityError } from "../../../../types/errors/UnprocessableEntityError"
-import { resubmitCase } from "../../../../useCases/cases/resubmit/resubmitCase"
+import { resolveCase } from "../../../../useCases/cases/resolve/resolveCase"
 
-type HandlerProps = { caseId: number; database: DatabaseGateway; reply: FastifyReply; user: User }
+type HandlerProps = {
+  body: ResolveBody
+  caseId: number
+  database: DatabaseGateway
+  logger: FastifyBaseLogger
+  reply: FastifyReply
+  user: User
+}
 
 const schema = {
   ...auth,
+  body: ResolveBodySchema,
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
   response: {
     [ACCEPTED]: jsonResponse(
@@ -37,11 +47,11 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ caseId, database, reply, user }: HandlerProps) => {
-  const result = await resubmitCase(database.writable, user, caseId)
+const handler = async ({ body, caseId, database, logger, reply, user }: HandlerProps) => {
+  const result = await resolveCase(database.writable, user, caseId, body, logger)
 
   if (!isError(result)) {
-    return reply.code(ACCEPTED).send({ messageId: result.messageId })
+    return reply.code(ACCEPTED).send()
   }
 
   reply.log.error(result)
@@ -63,8 +73,10 @@ const handler = async ({ caseId, database, reply, user }: HandlerProps) => {
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).post(V1.CaseResolve, { schema }, async (req, reply) => {
     await handler({
+      body: req.body,
       caseId: Number(req.params.caseId),
       database: req.database,
+      logger: req.log,
       reply,
       user: req.user
     })

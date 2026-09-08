@@ -1,6 +1,6 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import type { ManualResolution } from "@moj-bichard7/common/types/ManualResolution"
 import type { DataSource, EntityManager, UpdateResult } from "typeorm"
-import type { ManualResolution } from "types/ManualResolution"
 import { isError } from "types/Result"
 import UnlockReason from "types/UnlockReason"
 import type CourtCase from "./entities/CourtCase"
