@@ -1,15 +1,19 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
+import type { Trigger } from "@moj-bichard7/core/types/Trigger"
 import type { FastifyBaseLogger } from "fastify"
 
 import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { isError } from "@moj-bichard7/common/types/Result"
+import generateTriggers from "@moj-bichard7/core/lib/triggers/generateTriggers"
 import Phase from "@moj-bichard7/core/types/Phase"
 
-import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
-import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
+import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
+import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
-import fetchCase from "../../services/db/cases/fetchCase"
+import { REALLOCATE_CASE_TRIGGER_CODE } from "../../../config"
+import fetchCase from "../../../services/db/cases/fetchCase"
+import recalculateTriggers from "./recalculateTriggers"
 
 const reallocate = async (
   auditLogGateway: AuditLogDynamoGateway,
@@ -47,13 +51,13 @@ const reallocate = async (
       ? Phase.PNC_UPDATE
       : Phase.HEARING_OUTCOME
 
-  // const triggers = generateTriggers(ahoResult, triggersPhase)
+  const triggers = generateTriggers(ahoResult, triggersPhase)
 
-  //   if (hasNoExceptionsOrAllResolved) {
-  //     triggers.push({ code: REALLOCATE_CASE_TRIGGER_CODE } as Trigger)
-  //   }
+  if (hasNoExceptionsOrAllResolved) {
+    triggers.push({ code: REALLOCATE_CASE_TRIGGER_CODE } as Trigger)
+  }
 
-  //   const { triggersToAdd, triggersToDelete } = recalculateTriggers(courtCase.triggers, triggers)
+  const { triggersToAdd, triggersToDelete } = recalculateTriggers(courtCase.triggers, triggers)
 
   //   const updateTriggersResult = await updateTriggers(
   //     entityManager,
