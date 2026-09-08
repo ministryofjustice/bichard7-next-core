@@ -408,6 +408,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
@@ -422,6 +423,15 @@ jobs:
           command: |
             mkdir -p images
             docker image save "message-forwarder:latest" | pigz > "images/message-forwarder.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/message-forwarder
+          command: |
+            dgoss run \
+              -e MQ_URL="ws://mq" \
+              -e MQ_AUTH='{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}' \
+              -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
+              "message-forwarder:latest"
       - persist_to_workspace:
           root: .
           paths:
@@ -438,6 +448,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -452,6 +463,28 @@ jobs:
           command: |
             mkdir -p images
             docker image save "bichard-worker:${DOCKER_TAG}" | pigz > "images/worker.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/conductor
+          command: |
+            docker network inspect conductor-test-net >/dev/null 2>&1 || docker network create conductor-test-net
+            docker rm -f mock-conductor || true
+            docker run -d --name mock-conductor --network conductor-test-net \
+              nodejs-24-2023 \
+              node -e "require('http').createServer((req,res) => { res.writeHead(200, {'Content-Type': 'application/json'}); res.end('[]'); }).listen(4000, '0.0.0.0');"
+            dgoss run \
+              --network conductor-test-net \
+              -e PINO_LOG_LEVEL=info \
+              -e NODE_OPTIONS="--dns-result-order=ipv4first --unhandled-rejections=warn" \
+              -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
+              -e AUDIT_LOG_API_KEY="xxx" \
+              -e AUDIT_LOG_API_URL="http://localhost:3000" \
+              -e MQ_URL="mq" \
+              -e MQ_AUTH='{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}' \
+              -e INCOMING_BUCKET_NAME="incoming-messages" \
+              -e S3_REGION="eu-west-2" \
+              -e CONDUCTOR_URL="http://mock-conductor:4000" \
+              "bichard-worker:${DOCKER_TAG}"
       - persist_to_workspace:
           root: .
           paths:
@@ -468,6 +501,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -482,6 +516,10 @@ jobs:
           command: |
             mkdir -p images
             docker image save "api:${DOCKER_TAG}" | pigz > "images/api.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/api
+          command: dgoss run "api:${DOCKER_TAG}"
       - persist_to_workspace:
           root: .
           paths:
@@ -532,6 +570,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -546,6 +585,12 @@ jobs:
           command: |
             mkdir -p images
             docker image save "ui:${DOCKER_TAG}" | pigz > "images/ui.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/ui
+          command: |
+            docker tag "ui:${DOCKER_TAG}" "ui:latest"
+            make goss
       - persist_to_workspace:
           root: .
           paths:
@@ -562,6 +607,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -576,6 +622,12 @@ jobs:
           command: |
             mkdir -p images
             docker image save "user-service:${DOCKER_TAG}" | pigz > "images/user-service.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/user-service
+          command: |
+            docker tag "user-service:${DOCKER_TAG}" "user-service:latest"
+            make goss
       - persist_to_workspace:
           root: .
           paths:
@@ -1112,11 +1164,11 @@ jobs:
       - fetch_images:
           images: nginx-auth-proxy
       - node/install
+      - node_install_packages
       - run:
           name: Install Cypress
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
-      - node_install_packages
       - build_common
       - run:
           name: Wait for cypress install to finish
