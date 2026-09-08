@@ -4,13 +4,13 @@ import type { User } from "@moj-bichard7/common/types/User"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import { validateManualResolution } from "@moj-bichard7/common/utils/validateManualResolution"
 
-import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
+import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
 import checkAllTriggersResolved from "../../../services/db/cases/checkAllTriggersResolved"
 import checkCasePermission from "../../../services/db/cases/checkCasePermission"
 
 export const resolveError = async (
-  databaseConnection: WritableDatabaseConnection,
+  tx: TransactionConnection,
   user: User,
   caseId: number,
   resolution: ResolveBody
@@ -26,7 +26,7 @@ export const resolveError = async (
     return
   }
 
-  const caseResult = await checkCasePermission(databaseConnection, user, caseId)
+  const caseResult = await checkCasePermission(tx, user, caseId)
 
   if (isError(caseResult)) {
     return caseResult
@@ -41,27 +41,19 @@ export const resolveError = async (
     error_status: 2
   }
 
-  const allTriggersResolved = await checkAllTriggersResolved(databaseConnection, caseId)
+  const allTriggersResolved = await checkAllTriggersResolved(tx, caseId)
 
   if (allTriggersResolved) {
     updateFields.resolution_ts = resolutionTimestamp
   }
 
-  const resolveErrorResult = await databaseConnection
-    .transaction<Error | void>(async (tx) => {
-      const updateResult = await tx.connection`
+  const updateResult = await tx.connection`
     UPDATE br7own.error_list
     SET ${tx.connection(updateFields)}
     WHERE error_id = ${caseId} AND error_locked_by_id = ${resolver} AND error_count > 0 AND error_status = 1
   `.catch((error: Error) => error)
 
-      if (isError(updateResult)) {
-        return new Error(`Couldn't resolve case id:${caseId}: ${updateResult.message}`)
-      }
-    })
-    .catch((err) => err)
-
-  if (isError(resolveErrorResult)) {
-    return resolveErrorResult
+  if (isError(updateResult)) {
+    return new Error(`Couldn't resolve case id:${caseId}: ${updateResult.message}`)
   }
 }

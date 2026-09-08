@@ -15,29 +15,28 @@ export const resolveCase = async (
   resolution: ResolveBody
   /*   logger: FastifyBaseLogger */
 ): PromiseResult<void> => {
-  const resolveErrorResult = await resolveError(databaseConnection, user, caseId, resolution) /* , logger */
+  return await databaseConnection
+    .transaction<Error | void>(async (tx) => {
+      const resolveErrorResult = await resolveError(tx, user, caseId, resolution)
+      if (isError(resolveErrorResult)) {
+        return resolveErrorResult
+      }
 
-  if (isError(resolveErrorResult)) {
-    return resolveErrorResult
-  }
+      // Unlock Case (TBD)
+      // const unlockResult = await unlockCase(tx, caseId, user)
+      // if (isError(unlockResult)) { return unlockResult }
 
-  // unlock case
+      const noteText =
+        `${user.username}: Portal Action: Record Manually Resolved.` +
+        ` Reason: ${resolution.reason}. Reason Text: ${resolution.reasonText}`
 
-  const noteText =
-    `${user.username}: Portal Action: Record Manually Resolved.` +
-    ` Reason: ${resolution.reason}. Reason Text: ${resolution.reasonText}`
+      const insertNoteResult = await insertNote(tx, caseId, noteText, "System").catch((err: Error) => err)
 
-  const insertNoteResult = await databaseConnection
-    .transaction<boolean | Error>(async (tx) => {
-      return await insertNote(tx, caseId, noteText, "System")
+      if (isError(insertNoteResult)) {
+        return insertNoteResult
+      }
+
+      // audit logging (TBD)
     })
-    .catch((err) => err)
-
-  if (isError(insertNoteResult)) {
-    throw insertNoteResult
-  }
-
-  // audit log store here, need to add events throughout process still though
-
-  return undefined
+    .catch((err: Error) => err)
 }
