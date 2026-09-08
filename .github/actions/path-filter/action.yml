@@ -7,9 +7,6 @@ inputs:
     required: true
 
 outputs:
-  should_run:
-    description: "Returns 'true' if any filter matches, or if event is push/workflow_dispatch"
-    value: ${{ steps.evaluate.outputs.should_run }}
   filters:
     description: "JSON string mapping filter names to boolean strings"
     value: ${{ steps.evaluate.outputs.filters }}
@@ -27,20 +24,13 @@ runs:
       shell: bash
       id: evaluate
       run: |
-        SHOULD_RUN="true"
-        RAW_OUTPUTS='${{ toJson(steps.paths-filter.outputs) }}'
+        FILTER_OUTPUTS='${{ toJson(steps.paths-filter.outputs) }}'
 
         if [[ "${{ github.event_name }}" == "pull_request" || "${{ github.event_name }}" == "merge_group" ]]; then
-          IF_MATCHED=$(echo "$RAW_OUTPUTS" | jq 'to_entries | any(.value == "true" or .value == true)')
-
-          if [[ "$IF_MATCHED" != "true" ]]; then
-            SHOULD_RUN="false"
-          fi
-          FILTER_MAP="$RAW_OUTPUTS"
+          FILTER_MAP="$FILTER_OUTPUTS"
         else
           # On push to main / workflow_dispatch, override all filters to true so tests run
-          FILTER_MAP=$(echo "$RAW_OUTPUTS" | jq 'with_entries(.value = "true")')
+          FILTER_MAP=$(echo "$FILTER_OUTPUTS" | jq 'with_entries(.value = "true")')
         fi
 
-        echo "should_run=$SHOULD_RUN" >> $GITHUB_OUTPUT
         echo "filters=$(echo "$FILTER_MAP" | jq -c .)" >> $GITHUB_OUTPUT
