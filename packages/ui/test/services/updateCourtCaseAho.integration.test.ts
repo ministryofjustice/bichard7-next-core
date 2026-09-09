@@ -14,6 +14,16 @@ import { getDummyCourtCase, insertCourtCases } from "../utils/insertCourtCases"
 
 jest.setTimeout(60 * 60 * 1000)
 
+const expectHearingOutcomeToMatchSnapshot = (
+  courtCase: CourtCase | null | undefined,
+  state: "Before update" | "After update"
+) => {
+  expect(courtCase?.hearingOutcome).toMatchSnapshot(`${state} (hearingOutcome XML)`)
+  expect(courtCase?.updatedHearingOutcome).toMatchSnapshot(`${state} (updatedHearingOutcome XML)`)
+  expect(courtCase?.hearingOutcomeJson).toMatchSnapshot(`${state} (hearingOutcome JSON)`)
+  expect(courtCase?.updatedHearingOutcomeJson).toMatchSnapshot(`${state} (updatedHearingOutcome JSON)`)
+}
+
 const dummyPncUpdateDatasetXml = readFileSync(
   path.join(__dirname, "../test-data/AnnotatedPNCUpdateDataset.xml")
 ).toString()
@@ -36,7 +46,7 @@ describe("update court case updated hearing outcome", () => {
   })
 
   describe("when message is AHO", () => {
-    it("Should update the court case `updated_msg` field in the db", async () => {
+    it("Should update the court case `updated_msg` and `updated_hearing_outcome` fields in the db", async () => {
       const inputCourtCase = await getDummyCourtCase({
         errorLockedByUsername: null,
         triggerLockedByUsername: null,
@@ -48,35 +58,36 @@ describe("update court case updated hearing outcome", () => {
 
       await insertCourtCases(inputCourtCase)
 
-      await dataSource.getRepository(CourtCase).findOne({ where: { errorId: inputCourtCase.errorId } })
+      const courtCaseBeforeUpdate = await dataSource
+        .getRepository(CourtCase)
+        .findOne({ where: { errorId: inputCourtCase.errorId } })
+      expectHearingOutcomeToMatchSnapshot(courtCaseBeforeUpdate, "Before update")
 
-      const result = await updateCourtCaseAho(dataSource, inputCourtCase.errorId, dummyAho)
-      expect(isError(result)).toBe(false)
+      const updateResult = (await updateCourtCaseAho(dataSource, inputCourtCase.errorId, dummyAho)) as UpdateResult
 
-      const courtCaseRow = (result as UpdateResult).raw[0]
-      expect(courtCaseRow.updated_msg).toMatchSnapshot()
-      expect(courtCaseRow.user_updated_flag).toBe(1)
+      expect(isError(updateResult)).toBe(false)
+      expect(updateResult.raw).toHaveLength(1)
+      expect(updateResult.affected).toBe(1)
+      expect(updateResult.raw[0].user_updated_flag).toBe(1)
+
+      const courtCaseAfterUpdate = await dataSource
+        .getRepository(CourtCase)
+        .findOne({ where: { errorId: inputCourtCase.errorId } })
+      expectHearingOutcomeToMatchSnapshot(courtCaseAfterUpdate, "After update")
     })
 
     it("Should not update if the court case doesn't exist", async () => {
-      const inputCourtCase = await getDummyCourtCase({
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        errorCount: 1,
-        errorStatus: "Unresolved",
-        triggerCount: 1,
-        phase: 1
-      })
+      const nonExistentErrorId = 2
+      const updateResult = (await updateCourtCaseAho(dataSource, nonExistentErrorId, dummyAho)) as UpdateResult
 
-      const result = await updateCourtCaseAho(dataSource, inputCourtCase.errorId, dummyAho)
-
-      expect((result as UpdateResult).raw).toHaveLength(0)
-      expect((result as UpdateResult).affected).toBe(0)
+      expect(isError(updateResult)).toBe(false)
+      expect(updateResult.raw).toHaveLength(0)
+      expect(updateResult.affected).toBe(0)
     })
   })
 
   describe("when message is PNC Update Dataset", () => {
-    it("Should update the court case `updated_msg` field in the db", async () => {
+    it("Should update the court case `updated_msg` and `updated_hearing_outcome` fields in the db", async () => {
       const inputCourtCase = await getDummyCourtCase({
         errorLockedByUsername: null,
         triggerLockedByUsername: null,
@@ -88,30 +99,39 @@ describe("update court case updated hearing outcome", () => {
 
       await insertCourtCases(inputCourtCase)
 
-      await dataSource.getRepository(CourtCase).findOne({ where: { errorId: inputCourtCase.errorId } })
+      const courtCaseBeforeUpdate = await dataSource
+        .getRepository(CourtCase)
+        .findOne({ where: { errorId: inputCourtCase.errorId } })
+      expectHearingOutcomeToMatchSnapshot(courtCaseBeforeUpdate, "Before update")
 
-      const result = await updateCourtCaseAho(dataSource, inputCourtCase.errorId, dummyPncUpdateDataset)
-      expect(isError(result)).toBe(false)
+      const updateResult = (await updateCourtCaseAho(
+        dataSource,
+        inputCourtCase.errorId,
+        dummyPncUpdateDataset
+      )) as UpdateResult
 
-      const courtCaseRow = (result as UpdateResult).raw[0]
-      expect(courtCaseRow.updated_msg).toMatchSnapshot()
-      expect(courtCaseRow.user_updated_flag).toBe(1)
+      expect(isError(updateResult)).toBe(false)
+      expect(updateResult.raw).toHaveLength(1)
+      expect(updateResult.affected).toBe(1)
+      expect(updateResult.raw[0].user_updated_flag).toBe(1)
+
+      const courtCaseAfterUpdate = await dataSource
+        .getRepository(CourtCase)
+        .findOne({ where: { errorId: inputCourtCase.errorId } })
+      expectHearingOutcomeToMatchSnapshot(courtCaseAfterUpdate, "After update")
     })
 
     it("Should not update if the court case doesn't exist", async () => {
-      const inputCourtCase = await getDummyCourtCase({
-        errorLockedByUsername: null,
-        triggerLockedByUsername: null,
-        errorCount: 1,
-        errorStatus: "Unresolved",
-        triggerCount: 1,
-        phase: 1
-      })
+      const nonExistentErrorId = 1
+      const updateResult = (await updateCourtCaseAho(
+        dataSource,
+        nonExistentErrorId,
+        dummyPncUpdateDataset
+      )) as UpdateResult
 
-      const result = await updateCourtCaseAho(dataSource, inputCourtCase.errorId, dummyPncUpdateDataset)
-
-      expect((result as UpdateResult).raw).toHaveLength(0)
-      expect((result as UpdateResult).affected).toBe(0)
+      expect(isError(updateResult)).toBe(false)
+      expect(updateResult.raw).toHaveLength(0)
+      expect(updateResult.affected).toBe(0)
     })
   })
 })

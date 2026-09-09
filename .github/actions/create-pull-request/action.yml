@@ -59,7 +59,11 @@ runs:
 
         # Deletes branch if there are no staged changes
         if git diff --cached --quiet; then
-          git push origin --delete "$BRANCH" || true
+          # Check if the branch exists on the remote before trying to delete it
+          if git ls-remote --exit-code --heads origin "$BRANCH" > /dev/null 2>&1; then
+            git push origin --delete "$BRANCH"
+          fi
+
           echo "pull-request-number=" >> "$GITHUB_OUTPUT"
           echo "pull-request-url=" >> "$GITHUB_OUTPUT"
           exit 0

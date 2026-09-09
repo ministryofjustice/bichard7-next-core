@@ -5,7 +5,9 @@ process.env.SOURCE_QUEUE = sourceQueue
 const destinationQueue = "TEST_DESTINATION_QUEUE"
 process.env.DESTINATION = destinationQueue
 
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import type { WorkflowExecutor } from "@io-orkes/conductor-javascript"
+
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
@@ -24,7 +26,6 @@ import { clearTables, insertCase } from "./test/setup/database"
 
 const stompClient = createStompClient()
 const mqConfig = createMqConfig()
-const conductorClient = createConductorClient()
 const database = postgres(createDbConfig(true))
 const testDatabase = postgres(createDbConfig())
 
@@ -33,10 +34,12 @@ const resubmittedAho = fs.readFileSync("src/test/fixtures/success-exceptions-aho
 describe("Server in auto mode", () => {
   let messageData: string
   let correlationId: string
+  let workflowExecutor: WorkflowExecutor
   let messageForwarder: MessageForwarder
 
   beforeAll(async () => {
-    messageForwarder = new MessageForwarder(stompClient, conductorClient, database)
+    workflowExecutor = await createWorkflowExecutor()
+    messageForwarder = new MessageForwarder(stompClient, workflowExecutor, database)
     await messageForwarder.start()
   })
 
@@ -61,12 +64,11 @@ describe("Server in auto mode", () => {
     await putIncomingMessageToS3(successExceptionsAHO, s3TaskDataPath, correlationId)
     await uploadPncMock(successExceptionsPNCMock)
 
-    await conductorClient.workflowResource.startWorkflow1(
-      "bichard_phase_1",
-      { s3TaskDataPath },
-      undefined,
-      correlationId
-    )
+    await workflowExecutor.startWorkflow({
+      correlationId,
+      input: { s3TaskDataPath },
+      name: "bichard_phase_1"
+    })
 
     let workflows = await waitForWorkflows({
       count: 1,

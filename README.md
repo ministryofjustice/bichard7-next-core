@@ -56,7 +56,7 @@ for each of them:
 - Clone [Audit Logging](https://github.com/ministryofjustice/bichard7-next-audit-logging)
   - Run `make build-api-server build-event-handler-server`
 
-There are two folders inside this very repo (bichard7-next-core) that also need building:
+There are folders inside this very repo (bichard7-next-core) that also need building:
 
 - [api](packages/api)
   - Navigate to `packages/api` and run `npm run build:docker`

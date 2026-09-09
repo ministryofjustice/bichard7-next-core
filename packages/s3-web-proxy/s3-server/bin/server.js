@@ -124,7 +124,7 @@ app.use(function (req, res, next) {
       if (data.Contents.length) {
         let indexPath
         data.Contents.some(function (obj) {
-          if (obj.Key.index("index.html") !== -1) {
+          if (obj.Key.indexOf("index.html") !== -1) {
             indexPath = obj.Key
             return true
           }

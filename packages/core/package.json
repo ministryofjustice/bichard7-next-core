@@ -25,7 +25,7 @@
     "test:e2e": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml -f environment/docker-compose-e2e-tests.yml run e2e-tests npm run test:chunk",
     "test:e2e:ci": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-e2e-tests.yml run e2e-tests npm run test:chunk",
     "test:characterisation": "cd characterisation-tests && jest --runInBand --workerThreads=true",
-    "update-deps": "ncu -u && npm install"
+    "update-deps": "ncu -u --cooldown 3d && npm install"
   },
   "repository": {
     "type": "git",
@@ -52,9 +52,10 @@
     "@types/jest": "^30.0.0",
     "@types/lodash.differencewith": "^4.5.9",
     "@types/lodash.isequal": "^4.5.8",
+    "@types/lodash.ismatch": "^4.4.9",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^26.1.2",
+    "@types/node": "^26.4.1",
     "@types/nunjucks": "^3.2.6",
     "@types/pretty-data": "^0.40.3",
     "@types/promise-poller": "^1.7.4",
@@ -63,7 +64,7 @@
     "esbuild": "~0.28.1",
     "esbuild-plugin-ignore": "^1.1.1",
     "express": "^5.2.1",
-    "jest": "^30.4.2",
+    "jest": "^30.5.1",
     "jest-mock-server": "^0.1.0",
     "jest-xml-matcher": "^1.2.0",
     "lodash.ismatch": "^4.4.0",
@@ -71,7 +72,7 @@
     "mailhog": "^4.16.0",
     "mockdate": "^3.0.5",
     "nunjucks": "^3.2.4",
-    "pg-promise": "^12.7.0",
+    "pg-promise": "^12.7.1",
     "promise-poller": "^1.9.1",
     "ts-command-line-args": "^2.5.1",
     "ts-jest": "^29.4.12",
@@ -79,13 +80,12 @@
     "tsconfig-paths": "^4.2.0"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.1105.0",
-    "@aws-sdk/client-s3": "^3.1105.0",
-    "@io-orkes/conductor-javascript": "~2.1.5",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.412",
-    "@types/lodash.ismatch": "^4.4.9",
+    "@aws-sdk/client-dynamodb": "^3.1126.0",
+    "@aws-sdk/client-s3": "^3.1126.0",
+    "@io-orkes/conductor-javascript": "^4.0.0",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.420",
     "aws-sdk": "^2.1693.0",
-    "axios": "^1.19.0",
+    "axios": "^1.20.0",
     "diff": "^9.0.0",
     "dynalite": "^4.0.0",
     "fast-xml-parser": "5.7.2",
@@ -101,7 +101,7 @@
     "zod-validation-error": "^5.0.0"
   },
   "optionalDependencies": {
-    "@esbuild/linux-arm64": "^0.28.1",
-    "@esbuild/linux-x64": "^0.28.1"
+    "@esbuild/linux-arm64": "^0.28.2",
+    "@esbuild/linux-x64": "^0.28.2"
   }
 }

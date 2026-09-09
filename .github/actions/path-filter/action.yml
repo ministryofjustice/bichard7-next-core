@@ -1,0 +1,37 @@
+name: "Dynamic Path Filter"
+description: "Evaluates dynamic path filters on PRs and outputs should_run, defaulting to true on push and dispatch events."
+
+inputs:
+  filters:
+    description: "YAML multi-line string defining dorny/paths-filter rules"
+    required: true
+
+outputs:
+  should_run:
+    description: "Returns 'true' if any filter matches, or if event is push/workflow_dispatch"
+    value: ${{ steps.evaluate.outputs.should_run }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Path Filtering
+      uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+      id: paths-filter
+      with:
+        filters: ${{ inputs.filters }}
+
+    - name: Evaluate Run Condition
+      shell: bash
+      id: evaluate
+      run: |
+        SHOULD_RUN="true"
+
+        if [[ "${{ github.event_name }}" == "pull_request" || "${{ github.event_name }}" == "merge_group" ]]; then
+          IF_MATCHED=$(echo '${{ toJson(steps.paths-filter.outputs) }}' | jq 'to_entries | any(.value == "true" or .value == true)')
+
+          if [[ "$IF_MATCHED" != "true" ]]; then
+            SHOULD_RUN="false"
+          fi
+        fi
+
+        echo "should_run=$SHOULD_RUN" >> $GITHUB_OUTPUT

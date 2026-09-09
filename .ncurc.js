@@ -8,21 +8,15 @@ const semver = new RegExp(
     - v5 is a breaking change
   - @types/diff
     - changed the Change type to require extra values
-  - @faker-js/faker
-    - v10 has breaking change with Jest
   - undici
     - v6 supports node v20. Higher versions need > node v20
 
   Ignored:
-  - bichard7-next-data-x.x.x
-    - ncu updates all of them to the latest version, very unhelpful
   - p-limit
   - esbuild
     - ignored at v0.18.16 because v0.18.17 doesn't run the postinstall script properly.
   - @cucumber/cucumber
     - from tests repo migration, version was pinned to v9
-  - @io-orkes/conductor-javascript
-    - Breaking changes for how to use the Client, workflows etc
   - @typescript-eslint/eslint-plugin
     - Breaks dependency tree for eslint-config-next
   - cypress-circleci-reporter
@@ -30,15 +24,13 @@ const semver = new RegExp(
   - fast-xml-parser
     - Breaks above 5.7.2 due to encoding issues. Does not follow semver
 */
-const pinned = ["chalk", "@types/diff", "@faker-js/faker", "eslint", "eslint-plugin-perfectionist", "undici"]
+const pinned = ["chalk", "@types/diff", "eslint", "eslint-plugin-perfectionist", "undici"]
 const ignored = [
-  `bichard7-next-data-(${semver.source})`,
   "p-limit",
   "esbuild",
   "@cucumber/cucumber",
   "@cucumber/pretty-formatter",
   "http-status",
-  "@io-orkes/conductor-javascript",
   "@typescript-eslint/eslint-plugin",
   "cypress-circleci-reporter",
   "fast-xml-parser"

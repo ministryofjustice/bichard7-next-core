@@ -14,6 +14,7 @@ const updateCourtCaseAho = async (
   const updatedHoXml = isPncUpdateDataset(updatedHo)
     ? serialiseToPncUpdateDatasetXml(updatedHo, false)
     : serialiseToAhoXml(updatedHo, false)
+  updatedHo.Exceptions = []
 
   return await dataSource
     .getRepository(CourtCase)

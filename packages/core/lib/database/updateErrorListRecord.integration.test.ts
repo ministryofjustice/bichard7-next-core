@@ -107,7 +107,9 @@ describe("updateErrorListRecord", () => {
       )[0]
 
       expect(updatedRecord.hearing_outcome).toEqual(JSON.parse(JSON.stringify(result.outputMessage)))
-      expect(updatedRecord.updated_hearing_outcome).toEqual(JSON.parse(JSON.stringify(result.outputMessage)))
+      expect(updatedRecord.updated_hearing_outcome).toEqual(
+        JSON.parse(JSON.stringify({ ...result.outputMessage, Exceptions: [] }))
+      )
       expect(updatedRecord.error_status).toBe(expectedStatus)
       expect(updatedRecord).toMatchSnapshot(snapshotExclusions)
     })
@@ -132,7 +134,9 @@ describe("updateErrorListRecord", () => {
       )[0]
 
       expect(updatedRecord.hearing_outcome).toEqual(JSON.parse(JSON.stringify(result.hearingOutcome)))
-      expect(updatedRecord.updated_hearing_outcome).toEqual(JSON.parse(JSON.stringify(result.hearingOutcome)))
+      expect(updatedRecord.updated_hearing_outcome).toEqual(
+        JSON.parse(JSON.stringify({ ...result.hearingOutcome, Exceptions: [] }))
+      )
       expect(updatedRecord.error_status).toBe(expectedStatus)
       expect(updatedRecord).toMatchSnapshot(snapshotExclusions)
     })

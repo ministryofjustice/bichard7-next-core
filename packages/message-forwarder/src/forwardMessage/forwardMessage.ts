@@ -1,4 +1,4 @@
-import type { ConductorClient } from "@io-orkes/conductor-javascript"
+import type { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import parsePncUpdateDataSetXml from "@moj-bichard7/common/aho/parse/parsePncUpdateDataSetXml/parsePncUpdateDataSetXml"
 import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
@@ -23,7 +23,7 @@ const conductorWorkflows: Record<string, Phase> = {
 const forwardMessage = async (
   message: string,
   stompClient: Client,
-  conductorClient: ConductorClient,
+  workflowExecutor: WorkflowExecutor,
   database: Sql
 ): PromiseResult<void> => {
   const destinationType: DestinationType = (process.env.DESTINATION_TYPE ?? "auto") as DestinationType
@@ -50,14 +50,14 @@ const forwardMessage = async (
     return sendToResubmissionQueue(stompClient, message, correlationId, phase)
   }
 
-  const workflows = await conductorClient.workflowResource
-    .getWorkflows1(conductorWorkflow, correlationId, true, false)
+  const workflows = await workflowExecutor
+    .search(0, 10, `workflowType = '${conductorWorkflow}' AND correlationId = '${correlationId}'`, "*")
     .catch((e) => e as Error)
   if (isError(workflows)) {
     return workflows
   }
 
-  const workflowExists = workflows && workflows.length > 0
+  const workflowExists = (workflows.results?.length ?? 0) > 0
   if (destinationType === DestinationType.AUTO && !workflowExists) {
     return sendToResubmissionQueue(stompClient, message, correlationId, phase)
   }
@@ -71,7 +71,7 @@ const forwardMessage = async (
     ahoOrPncUpdateDataset.PncQuery = policeQuery
   }
 
-  return startBichardProcess(conductorWorkflow, ahoOrPncUpdateDataset, correlationId, conductorClient, phase)
+  return startBichardProcess(conductorWorkflow, ahoOrPncUpdateDataset, correlationId, workflowExecutor, phase)
 }
 
 export default forwardMessage

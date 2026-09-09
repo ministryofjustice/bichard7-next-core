@@ -24,6 +24,16 @@ const pncUpdateDataset = readFileSync(
   "../core/phase2/tests/fixtures/PncUpdateDataSet-with-single-NEWREM.xml"
 ).toString()
 
+const expectHearingOutcomeToMatchSnapshot = (
+  courtCase: CourtCase | null | undefined,
+  state: "Before amendment" | "After amendment"
+) => {
+  expect(courtCase?.hearingOutcome).toMatchSnapshot(`${state} (hearingOutcome XML)`)
+  expect(courtCase?.updatedHearingOutcome).toMatchSnapshot(`${state} (updatedHearingOutcome XML)`)
+  expect(courtCase?.hearingOutcomeJson).toMatchSnapshot(`${state} (hearingOutcome JSON)`)
+  expect(courtCase?.updatedHearingOutcomeJson).toMatchSnapshot(`${state} (updatedHearingOutcome JSON)`)
+}
+
 describe("amend court case", () => {
   const userName = "BichardForce01"
   const orgCode = "36FPA1"
@@ -65,7 +75,7 @@ describe("amend court case", () => {
 
     await insertCourtCases(inputCourtCase)
 
-    expect(inputCourtCase.hearingOutcome).toMatchSnapshot()
+    expectHearingOutcomeToMatchSnapshot(inputCourtCase, "Before amendment")
 
     const result = await amendCourtCase(dataSource, {}, inputCourtCase, user)
 
@@ -76,7 +86,7 @@ describe("amend court case", () => {
       .getRepository(CourtCase)
       .findOne({ where: { errorId: inputCourtCase.errorId } })
 
-    expect(retrievedCase?.hearingOutcome).toMatchSnapshot()
+    expectHearingOutcomeToMatchSnapshot(retrievedCase, "After amendment")
   })
 
   it("Should amend the court case when updated hearing outcome is PNC update dataset", async () => {
@@ -94,8 +104,7 @@ describe("amend court case", () => {
 
     await insertCourtCases(inputCourtCase)
 
-    expect(inputCourtCase.hearingOutcome).toMatchSnapshot()
-    expect(inputCourtCase.updatedHearingOutcome).toMatchSnapshot()
+    expectHearingOutcomeToMatchSnapshot(inputCourtCase, "Before amendment")
 
     const result = await amendCourtCase(dataSource, {}, inputCourtCase, user)
 
@@ -106,8 +115,7 @@ describe("amend court case", () => {
       .getRepository(CourtCase)
       .findOne({ where: { errorId: inputCourtCase.errorId } })
 
-    expect(retrievedCase?.hearingOutcome).toMatchSnapshot()
-    expect(retrievedCase?.updatedHearingOutcome).toMatchSnapshot()
+    expectHearingOutcomeToMatchSnapshot(retrievedCase, "After amendment")
   })
 
   it("Should amend the court case when hearing outcome is annotated PNC update dataset", async () => {
@@ -125,8 +133,10 @@ describe("amend court case", () => {
 
     await insertCourtCases(inputCourtCase)
 
-    expect(inputCourtCase.hearingOutcome).toMatchSnapshot()
-    expect(inputCourtCase.updatedHearingOutcome).toMatchSnapshot()
+    expect(inputCourtCase.hearingOutcome).toMatchSnapshot("Before amendment (hearingOutcome XML)")
+    expect(inputCourtCase.updatedHearingOutcome).toMatchSnapshot("Before amendment (updatedHearingOutcome XML)")
+    expect(inputCourtCase.hearingOutcomeJson).toMatchSnapshot("Before amendment (hearingOutcome JSON)")
+    expect(inputCourtCase.updatedHearingOutcomeJson).toMatchSnapshot("Before amendment (updatedHearingOutcome JSON)")
 
     const result = await amendCourtCase(dataSource, {}, inputCourtCase, user)
 
@@ -137,8 +147,10 @@ describe("amend court case", () => {
       .getRepository(CourtCase)
       .findOne({ where: { errorId: inputCourtCase.errorId } })
 
-    expect(retrievedCase?.hearingOutcome).toMatchSnapshot()
-    expect(retrievedCase?.updatedHearingOutcome).toMatchSnapshot()
+    expect(retrievedCase?.hearingOutcome).toMatchSnapshot("Before amendment (hearingOutcome XML)")
+    expect(retrievedCase?.updatedHearingOutcome).toMatchSnapshot("Before amendment (updatedHearingOutcome XML)")
+    expect(retrievedCase?.hearingOutcomeJson).toMatchSnapshot("Before amendment (hearingOutcome JSON)")
+    expect(retrievedCase?.updatedHearingOutcomeJson).toMatchSnapshot("Before amendment (updatedHearingOutcome JSON)")
   })
 
   it("Should amend the court case when the lock is held by the current user", async () => {
@@ -154,7 +166,7 @@ describe("amend court case", () => {
 
     await insertCourtCases(inputCourtCase)
 
-    expect(inputCourtCase.hearingOutcome).toMatchSnapshot()
+    expectHearingOutcomeToMatchSnapshot(inputCourtCase, "Before amendment")
 
     const result = await amendCourtCase(dataSource, {}, inputCourtCase, user)
 
@@ -165,7 +177,7 @@ describe("amend court case", () => {
       .getRepository(CourtCase)
       .findOne({ where: { errorId: inputCourtCase.errorId } })
 
-    expect(retrievedCase?.hearingOutcome).toMatchSnapshot()
+    expectHearingOutcomeToMatchSnapshot(retrievedCase, "After amendment")
   })
 
   it("Should generate system notes for each each amendments", async () => {

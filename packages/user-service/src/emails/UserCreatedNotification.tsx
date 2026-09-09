@@ -1,4 +1,4 @@
-import EmailContent from "types/EmailContent"
+import type EmailContent from "@moj-bichard7/common/email/EmailContent"
 import User from "types/User"
 import { UserGroupResult } from "types/UserGroup"
 

@@ -5,7 +5,7 @@
   "scripts": {
     "build": "npx tsc --noEmit --skipLibCheck",
     "lint": "eslint --fix .",
-    "update-deps": "ncu -u -x eslint && npm install"
+    "update-deps": "ncu -u --cooldown 3d -x eslint && npm install"
   },
   "license": "MIT",
   "lint-staged": {
@@ -15,7 +15,7 @@
     "tsconfig-paths": "^4.2.0"
   },
   "dependencies": {
-    "@faker-js/faker": "^9.9.0",
-    "@types/node": "^26.1.2"
+    "@faker-js/faker": "^10.6.0",
+    "@types/node": "^26.4.1"
   }
 }

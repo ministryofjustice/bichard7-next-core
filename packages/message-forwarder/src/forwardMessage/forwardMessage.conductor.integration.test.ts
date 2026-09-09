@@ -1,7 +1,7 @@
 import "../test/setup/setEnvironmentVariables"
 process.env.DESTINATION_TYPE = "conductor" // has to be done prior to module imports
 
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import waitForWorkflows from "@moj-bichard7/common/test/conductor/waitForWorkflows"
@@ -15,7 +15,6 @@ import { clearTables, insertCase } from "../test/setup/database"
 import forwardMessage from "./forwardMessage"
 
 const stompClient = createStompClient()
-const conductorClient = createConductorClient()
 const database = postgres(createDbConfig(true))
 const testDatabase = postgres(createDbConfig())
 
@@ -41,10 +40,13 @@ describe("forwardMessage", () => {
     "starts $conductorWorkflow Conductor workflow if workflow doesn't already exist",
     async ({ conductorWorkflow, message }) => {
       process.env.CONDUCTOR_WORKFLOW = conductorWorkflow
+
+      const workflowExecutor = await createWorkflowExecutor()
+
       await insertCase(testDatabase, { message_id: correlationId })
       const resubmittedMessage = String(fs.readFileSync(message)).replace("CORRELATION_ID", correlationId)
 
-      await forwardMessage(resubmittedMessage, stompClient, conductorClient, database)
+      await forwardMessage(resubmittedMessage, stompClient, workflowExecutor, database)
 
       const workflows = await waitForWorkflows({
         count: 1,
@@ -55,14 +57,16 @@ describe("forwardMessage", () => {
   )
 
   it("returns error when it fails to fetch the police query", async () => {
-    const conductorWorkflow = "bichard_phase_2"
-    process.env.CONDUCTOR_WORKFLOW = conductorWorkflow
+    process.env.CONDUCTOR_WORKFLOW = "bichard_phase_2"
+
+    const workflowExecutor = await createWorkflowExecutor()
+    const fakeDatabase = jest.fn().mockRejectedValue(Error("Dummy database error")) as unknown as Sql
+
     await insertCase(testDatabase, { message_id: correlationId })
     const messagePath = "src/test/fixtures/pnc-update-dataset.xml"
     const resubmittedMessage = String(fs.readFileSync(messagePath)).replace("CORRELATION_ID", correlationId)
 
-    const fakeDatabase = jest.fn().mockRejectedValue(Error("Dummy database error")) as unknown as Sql
-    const result = await forwardMessage(resubmittedMessage, stompClient, conductorClient, fakeDatabase)
+    const result = await forwardMessage(resubmittedMessage, stompClient, workflowExecutor, fakeDatabase)
 
     expect(isError(result)).toBe(true)
     expect((result as Error).message).toBe("Dummy database error")
