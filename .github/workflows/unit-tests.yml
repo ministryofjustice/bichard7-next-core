@@ -32,9 +32,11 @@ jobs:
         with:
           filters: |
             common:
+              - '.github/**'
               - 'environment/**'
               - 'packages/common/**'
             characterisation:
+              - '.github/**'
               - 'packages/common/**'
               - 'packages/core/**'
 
@@ -61,7 +63,7 @@ jobs:
 
       - name: Run Unit Test Common
         run: npm run test -w packages/common
-      
+
   test_characterisation:
     name: Test Characterisation
     needs: changes
@@ -79,7 +81,7 @@ jobs:
 
       - name: ⛓️ SLSA Supply Chain Security
         uses: ministryofjustice/devsecops-actions/sca/slsa@805c9da24fe7083e24b8435a626463b25951d278 # v1.4.0
-      
+
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
