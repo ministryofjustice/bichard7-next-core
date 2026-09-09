@@ -1,4 +1,5 @@
 import { type PromiseResult } from "@moj-bichard7/common/types/Result"
+import { isError } from "lodash"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
@@ -12,8 +13,8 @@ export default async (database: DatabaseConnection, caseId: number): PromiseResu
         ) AS "allResolved"
     `.catch((error: Error) => error)
 
-  if (result instanceof Error) {
-    throw result
+  if (isError(result)) {
+    return new Error(`Failed to check if all triggers are resolved for case ${caseId}: ${result.message}`)
   }
 
   return result[0].allResolved

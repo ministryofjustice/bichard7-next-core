@@ -6,9 +6,12 @@ import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import UnlockReason from "@moj-bichard7/common/types/UnlockReason"
 
 import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
+import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import insertNote from "../../../services/db/cases/insertNote"
+import selectMessageId from "../../../services/db/cases/selectMessageId"
+import createAuditLogEvents from "../../createAuditLogEvents"
 import { unlockAndAuditLog } from "../getCase/unlockAndAuditLog"
 import { resolveError } from "./resolveError"
 
@@ -22,19 +25,14 @@ export const resolveCase = async (
 ): PromiseResult<void> => {
   return await databaseConnection
     .transaction<Error | void>(async (tx) => {
-      const resolveErrorResult = await resolveError(tx, user, caseId, resolution)
+      const auditLogEvents: ApiAuditLogEvent[] = []
+
+      const resolveErrorResult = await resolveError(tx, user, caseId, resolution, auditLogEvents)
       if (isError(resolveErrorResult)) {
         return resolveErrorResult
       }
 
-      const unlockResult = await unlockAndAuditLog(
-        tx,
-        user,
-        caseId,
-        UnlockReason.TriggerAndException,
-        auditLogGateway,
-        logger
-      )
+      const unlockResult = await unlockAndAuditLog(tx, user, caseId, UnlockReason.TriggerAndException, auditLogEvents)
       if (isError(unlockResult)) {
         return unlockResult
       }
@@ -44,12 +42,21 @@ export const resolveCase = async (
         ` Reason: ${resolution.reason}. Reason Text: ${resolution.reasonText}`
 
       const insertNoteResult = await insertNote(tx, caseId, noteText, "System").catch((err: Error) => err)
-
       if (isError(insertNoteResult)) {
         return insertNoteResult
       }
 
-      // audit logging (TBD)
+      if (auditLogEvents.length > 0) {
+        const caseMessageId = await selectMessageId(tx, user, caseId)
+        if (isError(caseMessageId)) {
+          return caseMessageId
+        }
+
+        const auditLogEventsResult = await createAuditLogEvents(auditLogEvents, caseMessageId, auditLogGateway, logger)
+        if (isError(auditLogEventsResult)) {
+          return auditLogEventsResult
+        }
+      }
     })
     .catch((err: Error) => err)
 }
