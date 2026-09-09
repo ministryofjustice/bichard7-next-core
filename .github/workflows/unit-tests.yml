@@ -90,17 +90,3 @@ jobs:
 
       - name: Run tests against core code
         run: npm run test:characterisation -w packages/core
-      
-  ci_status_check:
-      name: CI Status Check
-      needs: [changes, test_common, test_characterisation]
-      if: always()
-      runs-on: ubuntu-latest
-      steps:
-        - name: Evaluate Upstream Statuses
-          run: |
-            if echo '${{ toJson(needs) }}' | jq -e 'to_entries[] | select(.value.result == "failure" or .value.result == "cancelled")' > /dev/null; then
-              echo "Error: One or more test jobs failed or were cancelled."
-              exit 1
-            fi
-            echo "Success: All test jobs passed or were safely skipped."
