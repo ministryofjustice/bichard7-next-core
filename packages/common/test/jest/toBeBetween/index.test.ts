@@ -14,10 +14,4 @@ describe(".toBeBetween()", () => {
     const after = 100
     expect(toCompare).toBeBetween(before, after)
   })
-
-  test("mock test", () => {
-    const result = "pass"
-
-    expect(result).toBe("pass")
-  })
 })
