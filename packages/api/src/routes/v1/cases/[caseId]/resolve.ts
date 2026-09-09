@@ -1,6 +1,6 @@
 import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
 import type { User } from "@moj-bichard7/common/types/User"
-import type { FastifyInstance, FastifyReply } from "fastify"
+import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
@@ -9,6 +9,7 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { ACCEPTED, BAD_GATEWAY, FORBIDDEN, NOT_FOUND, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
+import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
 import { jsonResponse } from "../../../../server/openapi/jsonResponse"
@@ -21,10 +22,11 @@ import { UnprocessableEntityError } from "../../../../types/errors/Unprocessable
 import { resolveCase } from "../../../../useCases/cases/resolve/resolveCase"
 
 type HandlerProps = {
+  auditLogGateway: AuditLogDynamoGateway
   body: ResolveBody
   caseId: number
   database: DatabaseGateway
-  /*  logger: FastifyBaseLogger */
+  logger: FastifyBaseLogger
   reply: FastifyReply
   user: User
 }
@@ -47,8 +49,8 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ body, caseId, database, reply, user }: HandlerProps) => {
-  const result = await resolveCase(database.writable, user, caseId, body) /* , logger */
+const handler = async ({ auditLogGateway, body, caseId, database, logger, reply, user }: HandlerProps) => {
+  const result = await resolveCase(database.writable, user, caseId, body, auditLogGateway, logger)
 
   if (!isError(result)) {
     return reply.code(ACCEPTED).send()
@@ -73,10 +75,11 @@ const handler = async ({ body, caseId, database, reply, user }: HandlerProps) =>
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).post(V1.CaseResolve, { schema }, async (req, reply) => {
     await handler({
+      auditLogGateway: req.auditLogGateway,
       body: req.body,
       caseId: Number(req.params.caseId),
       database: req.database,
-      /*   logger: req.log, */
+      logger: req.log,
       reply,
       user: req.user
     })

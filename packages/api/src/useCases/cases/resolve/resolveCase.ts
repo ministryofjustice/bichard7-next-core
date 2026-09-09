@@ -1,19 +1,24 @@
 import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
 import type { User } from "@moj-bichard7/common/types/User"
+import type { FastifyBaseLogger } from "fastify"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+import UnlockReason from "@moj-bichard7/common/types/UnlockReason"
 
+import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import insertNote from "../../../services/db/cases/insertNote"
+import { unlockAndAuditLog } from "../getCase/unlockAndAuditLog"
 import { resolveError } from "./resolveError"
 
 export const resolveCase = async (
   databaseConnection: WritableDatabaseConnection,
   user: User,
   caseId: number,
-  resolution: ResolveBody
-  /*   logger: FastifyBaseLogger */
+  resolution: ResolveBody,
+  auditLogGateway: AuditLogDynamoGateway,
+  logger: FastifyBaseLogger
 ): PromiseResult<void> => {
   return await databaseConnection
     .transaction<Error | void>(async (tx) => {
@@ -22,9 +27,17 @@ export const resolveCase = async (
         return resolveErrorResult
       }
 
-      // Unlock Case (TBD)
-      // const unlockResult = await unlockCase(tx, caseId, user)
-      // if (isError(unlockResult)) { return unlockResult }
+      const unlockResult = await unlockAndAuditLog(
+        tx,
+        user,
+        caseId,
+        UnlockReason.TriggerAndException,
+        auditLogGateway,
+        logger
+      )
+      if (isError(unlockResult)) {
+        return unlockResult
+      }
 
       const noteText =
         `${user.username}: Portal Action: Record Manually Resolved.` +

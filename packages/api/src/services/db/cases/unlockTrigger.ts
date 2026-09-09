@@ -7,7 +7,7 @@ import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
 import { organisationUnitSql } from "../organisationUnitSql"
 
-export default async function unlockException(
+export default async function unlockTrigger(
   database: TransactionConnection,
   user: User,
   caseId: number
@@ -15,14 +15,14 @@ export default async function unlockException(
   const result = await database.connection`
     UPDATE br7own.error_list el
       SET
-        error_locked_by_id = NULL
+        trigger_locked_by_id = NULL
       WHERE
         error_id = ${caseId} AND
       (${organisationUnitSql(database, user)})
     `.catch((error: Error) => error)
 
   if (isError(result)) {
-    return new Error(`Couldn't unlock exceptions for case id ${caseId}: ${result.message}`)
+    return new Error(`Couldn't unlock triggers for case id ${caseId}: ${result.message}`)
   }
 
   return result.count > 0
