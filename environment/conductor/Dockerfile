@@ -36,9 +36,14 @@ RUN printf '%s\n' \
     'ext["tomcat.version"] = "10.1.57"' \
     'subprojects {' \
     '    configurations.all {' \
-    '        resolutionStrategy.eachDependency { d ->' \
-    '            if (d.requested.group == "org.bouncycastle") {' \
-    '                d.useVersion "1.84"' \
+    '        resolutionStrategy.eachDependency { details ->' \
+    '            if (details.requested.group == "org.bouncycastle") {' \
+    '                details.useVersion "1.84"' \
+    '                details.because "Fix CVE-2025-14813"' \
+    '            }' \
+    '            if (details.requested.group == "io.netty") {' \
+    '                details.useVersion "4.1.137.Final"' \
+    '                details.because "Fix CVE-2026-75595"' \
     '            }' \
     '        }' \
     '    }' \
