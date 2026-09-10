@@ -1,0 +1,43 @@
+{
+  "personId": "5c6ab813-35b6-44de-817c-f41de14c9526",
+  "longPersonUrn": "1950/1581C",
+  "reportId": "1aaa5c44-4fca-4af7-a558-9c6148a77c4c",
+  "asn": "26/0000/00/00000001566Y",
+  "ownerCode": "01ZD",
+  "disposals": [
+    {
+      "courtCaseId": "bddbd0d2-232d-47b3-896a-ce7be613b07c",
+      "courtCaseReference": "26/9998/000826X",
+      "caseStatusMarker": "court-case",
+      "court": {
+        "courtIdentityType": "name",
+        "courtName": "Magistrates' Courts London Croydon"
+      },
+      "convictionDate": "2011-09-26",
+      "offences": [
+        {
+          "offenceId": "9faec803-2428-496b-a670-68e15a7849bb",
+          "arrestOffenceSequenceNumber": 3,
+          "courtOffenceSequenceNumber": 3,
+          "npccOffenceCode": "2.1.4.1",
+          "cjsOffenceCode": "SX03001",
+          "qualifiedCjsCode": "SX03001",
+          "roleQualifiers": [],
+          "legislationQualifiers": [],
+          "offenceStartDate": "2010-11-28",
+          "offenceTic": 2,
+          "plea": "Not Guilty",
+          "adjudications": [
+            {
+              "adjudicationId": "1fdf2ef3-d6a3-4692-aee8-98bd28ca9ea5",
+              "appearanceNumber": 0,
+              "disposalDate": "2011-09-26",
+              "adjudication": "Guilty"
+            }
+          ],
+          "disposalResults": []
+        }
+      ]
+    }
+  ]
+}
