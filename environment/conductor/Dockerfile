@@ -41,7 +41,7 @@ RUN printf '%s\n' \
     '                d.useVersion "1.84"' \
     '                d.because "Fix CVE-2025-14813"' \
     '            }' \
-    '            if (d.requested.group == "io.netty") {' \
+    '            if (d.requested.group == "io.netty" && !d.requested.name.startsWith("netty-tcnative")) {' \
     '                d.useVersion "4.1.137.Final"' \
     '                d.because "Fix CVE-2026-75595"' \
     '            }' \
