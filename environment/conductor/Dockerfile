@@ -12,7 +12,7 @@ RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss
 # ===========================================================================================================
 # 1. UI Builder stage
 # ===========================================================================================================
-FROM node:24-alpine@sha256:e67514e5d0f6c46656005e1b693b2ec9d52e80b641307de684d4a015ba7a4eaf AS ui-builder
+FROM node:26-alpine@sha256:ef24c5053d50fdc3e4e56eb4e7ddb7861874ab0fdc797046ba897581deb8e868 AS ui-builder
 
 COPY --from=src /conductor/ui /conductor/ui
 
