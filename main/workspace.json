@@ -101,7 +101,7 @@
       "order" : 1,
       "title" : ""
     }, {
-      "content" : "## Transitioning Bichard\n\n### \"Old\" Bichard\n\nBichard after the \"lift and shift\" into AWS. [Link to nice version of Old Bichard](/diagrams/OldBichard.png).\n\n![Old Bichard](embed:OldBichard)\n\n### Hybrid Bichard\n\nBichard in its current state. [Link to nice version of Hybrid Bichard](/diagrams/HybridBichard.png).\n![Old Bichard](embed:HybridBichard)\n",
+      "content" : "# Transitioning Bichard\n\n## Current (Hybrid) Bichard\n\nBichard in its current state. [Link to nice version of Hybrid Bichard](/diagrams/HybridBichard.png).\n![Hybrid Bichard](embed:HybridBichard)\n\n## \"Old\" Bichard\n\nBichard after the \"lift and shift\" into AWS. [Link to nice version of Old Bichard](/diagrams/OldBichard.png).\n\n![Old Bichard](embed:OldBichard)\n",
       "filename" : "002-transitioning-bichard.md",
       "format" : "Markdown",
       "order" : 2,
