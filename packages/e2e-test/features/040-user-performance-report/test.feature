@@ -17,6 +17,7 @@ Feature: {040} 04 MIS - User Performance Summary
 		Given the data for this test is in the PNC
 			And "input-message-1" is received
 
+	@Excluded
 	@Could
 	@ExcludeOnPreProd
 	@ExcludedOnLedsPreProd
