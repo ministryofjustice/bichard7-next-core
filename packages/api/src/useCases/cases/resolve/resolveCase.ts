@@ -29,12 +29,12 @@ export const resolveCase = async (
 
       const resolveErrorResult = await resolveError(tx, user, caseId, resolution, auditLogEvents, logger)
       if (isError(resolveErrorResult)) {
-        return resolveErrorResult
+        throw resolveErrorResult
       }
 
       const unlockResult = await unlockAndAuditLog(tx, user, caseId, UnlockReason.TriggerAndException, auditLogEvents)
       if (isError(unlockResult)) {
-        return unlockResult
+        throw unlockResult
       }
 
       const noteText =
@@ -43,18 +43,18 @@ export const resolveCase = async (
 
       const insertNoteResult = await insertNote(tx, caseId, noteText, "System").catch((err: Error) => err)
       if (isError(insertNoteResult)) {
-        return insertNoteResult
+        throw insertNoteResult
       }
 
       if (auditLogEvents.length > 0) {
         const caseMessageId = await selectMessageId(tx, user, caseId)
         if (isError(caseMessageId)) {
-          return caseMessageId
+          throw caseMessageId
         }
 
         const auditLogEventsResult = await createAuditLogEvents(auditLogEvents, caseMessageId, auditLogGateway, logger)
         if (isError(auditLogEventsResult)) {
-          return auditLogEventsResult
+          throw auditLogEventsResult
         }
       }
     })
