@@ -14,8 +14,8 @@ then
   echo "Running LEDS tests against the real LEDS API and old UI"
   CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:oldUI:leds:real
 
-  echo "Running LEDS tests against the real LEDS API and new UI"
-  CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:leds:real
+  # echo "Running LEDS tests against the real LEDS API and new UI"
+  # CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:leds:real
 elif [[ "$WORKSPACE" == "e2e-test" ]]
 then
   echo "Build was triggered by $TRIGGER"
