@@ -6,17 +6,17 @@ import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 
-export default async function unlockException(database: TransactionConnection, caseId: number): PromiseResult<void> {
+export default async function unlockTrigger(database: TransactionConnection, caseId: number): PromiseResult<void> {
   const result = await database.connection`
     UPDATE br7own.error_list el
       SET
-        error_locked_by_id = NULL
+        trigger_locked_by_id = NULL
       WHERE
-        error_id = ${caseId} 
+        error_id = ${caseId}
     `.catch((error: Error) => error)
 
   if (isError(result)) {
-    return new Error(`Couldn't unlock exceptions for case id ${caseId}: ${result.message}`)
+    return new Error(`Couldn't unlock triggers for case id ${caseId}: ${result.message}`)
   }
 
   if (result.count === 0) {

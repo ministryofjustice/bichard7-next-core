@@ -1,4 +1,6 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { ResolutionReasonCode, type ManualResolution } from "@moj-bichard7/common/types/ManualResolution"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { differenceInMilliseconds } from "date-fns"
 import type User from "services/entities/User"
 import insertNotes from "services/insertNotes"
@@ -7,8 +9,6 @@ import { storeMessageAuditLogEvents } from "services/storeAuditLogEvents"
 import updateLockStatusToUnlocked from "services/updateLockStatusToUnlocked"
 import type { DataSource } from "typeorm"
 import { UpdateQueryBuilder } from "typeorm"
-import type { ManualResolution } from "types/ManualResolution"
-import { ResolutionReasonCode } from "types/ManualResolution"
 import { isError } from "types/Result"
 import { AUDIT_LOG_API_URL, AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
 import CourtCase from "../../src/services/entities/CourtCase"
@@ -21,7 +21,6 @@ import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
 import type { TestTrigger } from "../utils/manageTriggers"
 import { insertTriggers } from "../utils/manageTriggers"
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 jest.setTimeout(100000)
 jest.mock("services/insertNotes")

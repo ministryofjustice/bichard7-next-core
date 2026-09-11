@@ -1,10 +1,11 @@
+import UnlockReason from "@moj-bichard7/common/types/UnlockReason"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type User from "services/entities/User"
 import courtCasesByOrganisationUnitQuery from "services/queries/courtCasesByOrganisationUnitQuery"
 import { storeMessageAuditLogEvents } from "services/storeAuditLogEvents"
 import unlockCourtCase from "services/unlockCourtCase"
 import updateLockStatusToUnlocked from "services/updateLockStatusToUnlocked"
 import type { DataSource } from "typeorm"
-import UnlockReason from "types/UnlockReason"
 import { AUDIT_LOG_API_URL, AUDIT_LOG_EVENT_SOURCE } from "../../src/config"
 import CourtCase from "../../src/services/entities/CourtCase"
 import getCourtCase from "../../src/services/getCourtCase"
@@ -14,7 +15,6 @@ import { hasAccessToAll } from "../helpers/hasAccessTo"
 import deleteFromDynamoTable from "../utils/deleteFromDynamoTable"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { insertCourtCasesWithFields } from "../utils/insertCourtCases"
-import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 jest.mock("services/updateLockStatusToUnlocked")
 jest.mock("services/storeAuditLogEvents")
