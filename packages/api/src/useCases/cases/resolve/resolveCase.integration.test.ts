@@ -1,5 +1,5 @@
 import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
-import type { FastifyBaseLogger } from "fastify"
+import type { FastifyBaseLogger, FastifyInstance } from "fastify"
 
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
@@ -36,9 +36,11 @@ const mockLogger = {
 
 describe("resolveCase orchestration integration", () => {
   let helper: SetupAppEnd2EndHelper
+  let app: FastifyInstance
 
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
+    app = helper.app
   })
 
   beforeEach(async () => {
@@ -57,6 +59,7 @@ describe("resolveCase orchestration integration", () => {
   })
 
   afterAll(async () => {
+    await app.close()
     await helper.postgres.close()
   })
 

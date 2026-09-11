@@ -1,3 +1,5 @@
+import type { FastifyInstance } from "fastify"
+
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { TransactionConnection } from "../../../types/DatabaseGateway"
@@ -9,9 +11,11 @@ import unlockException from "./unlockException"
 
 describe("unlockException integration", () => {
   let helper: SetupAppEnd2EndHelper
+  let app: FastifyInstance
 
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
+    app = helper.app
   })
 
   beforeEach(async () => {
@@ -19,6 +23,7 @@ describe("unlockException integration", () => {
   })
 
   afterAll(async () => {
+    await app.close()
     await helper.postgres.close()
   })
 

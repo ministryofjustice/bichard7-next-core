@@ -1,3 +1,5 @@
+import type { FastifyInstance } from "fastify/types/instance"
+
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import UnlockReason from "@moj-bichard7/common/types/UnlockReason"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
@@ -12,9 +14,11 @@ import { unlockAndAuditLog } from "./unlockAndAuditLog"
 
 describe("unlockAndAuditLog integration", () => {
   let helper: SetupAppEnd2EndHelper
+  let app: FastifyInstance
 
   beforeAll(async () => {
     helper = await SetupAppEnd2EndHelper.setup()
+    app = helper.app
   })
 
   beforeEach(async () => {
@@ -22,6 +26,7 @@ describe("unlockAndAuditLog integration", () => {
   })
 
   afterAll(async () => {
+    await app.close()
     await helper.postgres.close()
   })
 
