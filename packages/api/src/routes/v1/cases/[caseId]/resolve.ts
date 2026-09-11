@@ -6,13 +6,12 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { ResolveBodySchema } from "@moj-bichard7/common/contracts/ResolveBody"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { ACCEPTED, BAD_GATEWAY, FORBIDDEN, NOT_FOUND, UNPROCESSABLE_ENTITY } from "http-status"
+import { BAD_GATEWAY, FORBIDDEN, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
 import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
-import { jsonResponse } from "../../../../server/openapi/jsonResponse"
 import auth from "../../../../server/schemas/auth"
 import { forbiddenError, internalServerError, unauthorizedError } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
@@ -36,12 +35,6 @@ const schema = {
   body: ResolveBodySchema,
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
   response: {
-    [ACCEPTED]: jsonResponse(
-      "Successful manual resolve",
-      z
-        .object({ messageId: z.string().or(z.uuid()).meta({ description: "Confirmation of the Message ID" }) })
-        .meta({ description: "Successful manual resolve" })
-    ),
     ...unauthorizedError(),
     ...forbiddenError(),
     ...internalServerError()
@@ -53,7 +46,7 @@ const handler = async ({ auditLogGateway, body, caseId, database, logger, reply,
   const result = await resolveCase(database.writable, user, caseId, body, auditLogGateway, logger)
 
   if (!isError(result)) {
-    return reply.code(ACCEPTED).send()
+    return reply.code(OK).send()
   }
 
   reply.log.error(result)

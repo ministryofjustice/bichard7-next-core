@@ -1,5 +1,6 @@
 import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
 import type { User } from "@moj-bichard7/common/types/User"
+import type { FastifyBaseLogger } from "fastify"
 
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
@@ -12,7 +13,8 @@ import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
 import checkAllTriggersResolved from "../../../services/db/cases/checkAllTriggersResolved"
-import checkCasePermission from "../../../services/db/cases/checkCasePermission"
+import fetchCase from "../../../services/db/cases/fetchCase"
+import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
 import buildAuditLogEvent from "../../auditLog/buildAuditLogEvent"
 
 export const resolveError = async (
@@ -20,7 +22,8 @@ export const resolveError = async (
   user: User,
   caseId: number,
   resolution: ResolveBody,
-  auditLogEvents: ApiAuditLogEvent[]
+  auditLogEvents: ApiAuditLogEvent[],
+  logger: FastifyBaseLogger
 ): PromiseResult<void> => {
   const resolutionError = validateManualResolution(resolution).error
 
@@ -28,14 +31,14 @@ export const resolveError = async (
     return new Error(resolutionError)
   }
 
-  if (resolution.courtCaseErrorStatus === "Resolved") {
-    return
-  }
-
-  const caseResult = await checkCasePermission(tx, user, caseId)
+  const caseResult = await fetchCase(tx, user, caseId, logger)
 
   if (isError(caseResult)) {
     return caseResult
+  }
+
+  if (caseResult.errorStatus === "Resolved") {
+    return
   }
 
   const resolver = user.username
@@ -61,6 +64,10 @@ export const resolveError = async (
 
   if (isError(updateResult)) {
     return new Error(`Couldn't resolve case id:${caseId}: ${updateResult.message}`)
+  }
+
+  if (updateResult.count === 0) {
+    return new UnprocessableEntityError(`Couldn't resolve case id: ${caseId}`)
   }
 
   auditLogEvents.push(

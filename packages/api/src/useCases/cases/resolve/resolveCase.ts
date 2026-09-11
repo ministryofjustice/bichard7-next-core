@@ -27,7 +27,7 @@ export const resolveCase = async (
     .transaction<Error | void>(async (tx) => {
       const auditLogEvents: ApiAuditLogEvent[] = []
 
-      const resolveErrorResult = await resolveError(tx, user, caseId, resolution, auditLogEvents)
+      const resolveErrorResult = await resolveError(tx, user, caseId, resolution, auditLogEvents, logger)
       if (isError(resolveErrorResult)) {
         return resolveErrorResult
       }
