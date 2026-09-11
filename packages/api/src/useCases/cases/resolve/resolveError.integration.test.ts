@@ -127,6 +127,7 @@ describe("resolveError integration", () => {
     expect(updatedCase.error_resolved_by).toBe(user.username)
     expect(updatedCase.error_resolved_ts).toBeDefined()
     expect(updatedCase.resolution_ts).toBeDefined()
+    expect(updatedCase.resolution_ts).toEqual(updatedCase.error_resolved_ts)
 
     expect(auditLogEvents).toHaveLength(1)
     expect(auditLogEvents[0].eventCode).toBe(EventCode.ExceptionsResolved)
@@ -166,7 +167,17 @@ describe("resolveError integration", () => {
     `
 
     expect(updatedCase.error_status).toBe(ResolutionStatusNumber.Resolved)
+    expect(updatedCase.error_resolved_by).toBe(user.username)
+    expect(updatedCase.error_resolved_ts).toBeDefined()
     expect(updatedCase.resolution_ts).toBeNull()
+
+    expect(auditLogEvents).toHaveLength(1)
+    expect(auditLogEvents[0].eventCode).toBe(EventCode.ExceptionsResolved)
+    expect(auditLogEvents[0].attributes).toMatchObject({
+      resolutionReasonCode: ResolutionReasonCode["UpdatedDisposal"],
+      resolutionReasonText: "Test comment",
+      user: user.username
+    })
   })
 
   it("returns an unprocessable error if the update fails because the case is locked by another user", async () => {

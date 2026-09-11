@@ -64,7 +64,7 @@ export const unlockAndAuditLog = async (
   }
 
   if (wantsToUnlockExceptions) {
-    const exceptionUnlockedResult = await unlockException(tx, user, caseId)
+    const exceptionUnlockedResult = await unlockException(tx, caseId)
     if (isError(exceptionUnlockedResult)) {
       return exceptionUnlockedResult
     }
@@ -73,7 +73,7 @@ export const unlockAndAuditLog = async (
   }
 
   if (wantsToUnlockTriggers) {
-    const triggerUnlockedResult = await unlockTrigger(tx, user, caseId)
+    const triggerUnlockedResult = await unlockTrigger(tx, caseId)
     if (isError(triggerUnlockedResult)) {
       return triggerUnlockedResult
     }

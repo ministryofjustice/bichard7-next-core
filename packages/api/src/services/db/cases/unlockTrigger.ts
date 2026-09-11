@@ -1,29 +1,25 @@
 import type { PromiseResult } from "@moj-bichard7/common/types/Result"
-import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError } from "@moj-bichard7/common/types/Result"
 
 import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
-import { organisationUnitSql } from "../organisationUnitSql"
+import { NotFoundError } from "../../../types/errors/NotFoundError"
 
-export default async function unlockTrigger(
-  database: TransactionConnection,
-  user: User,
-  caseId: number
-): PromiseResult<boolean> {
+export default async function unlockTrigger(database: TransactionConnection, caseId: number): PromiseResult<void> {
   const result = await database.connection`
     UPDATE br7own.error_list el
       SET
         trigger_locked_by_id = NULL
       WHERE
-        error_id = ${caseId} AND
-      (${organisationUnitSql(database, user)})
+        error_id = ${caseId}
     `.catch((error: Error) => error)
 
   if (isError(result)) {
     return new Error(`Couldn't unlock triggers for case id ${caseId}: ${result.message}`)
   }
 
-  return result.count > 0
+  if (result.count === 0) {
+    return new NotFoundError()
+  }
 }
