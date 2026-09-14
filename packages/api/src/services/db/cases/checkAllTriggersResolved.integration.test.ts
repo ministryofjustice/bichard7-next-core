@@ -23,10 +23,6 @@ describe("fetchCase", () => {
 
     const result = await checkAllTriggersResolved(testDatabaseGateway.readonly, caseObj.errorId)
 
-    if (isError(result)) {
-      throw result
-    }
-
     expect(result).toBe(true)
   })
 
@@ -38,10 +34,6 @@ describe("fetchCase", () => {
     ])
 
     const result = await checkAllTriggersResolved(testDatabaseGateway.readonly, caseObj.errorId)
-
-    if (result instanceof Error) {
-      throw result
-    }
 
     expect(result).toBe(true)
   })
@@ -55,10 +47,6 @@ describe("fetchCase", () => {
 
     const result = await checkAllTriggersResolved(testDatabaseGateway.readonly, caseObj.errorId)
 
-    if (result instanceof Error) {
-      throw result
-    }
-
     expect(result).toBe(false)
   })
 
@@ -67,10 +55,6 @@ describe("fetchCase", () => {
     await createTriggers(testDatabaseGateway, caseObj.errorId, [{ status: ResolutionStatusNumber.Unresolved }])
 
     const result = await checkAllTriggersResolved(testDatabaseGateway.readonly, caseObj.errorId)
-
-    if (result instanceof Error) {
-      throw result
-    }
 
     expect(result).toBe(false)
   })
@@ -84,10 +68,6 @@ describe("fetchCase", () => {
 
     const result = await checkAllTriggersResolved(testDatabaseGateway.readonly, caseA.errorId)
 
-    if (result instanceof Error) {
-      throw result
-    }
-
     expect(result).toBe(true)
   })
 
@@ -98,7 +78,7 @@ describe("fetchCase", () => {
 
     const result = await checkAllTriggersResolved(mockDbConnection, 1)
 
-    expect(result).toBeInstanceOf(Error)
+    expect(isError(result)).toBe(true)
     expect((result as Error).message).toBe(
       "Failed to check if all triggers are resolved for case 1: Database query failed"
     )

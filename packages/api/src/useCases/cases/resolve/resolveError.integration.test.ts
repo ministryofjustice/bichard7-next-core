@@ -4,6 +4,7 @@ import type { FastifyBaseLogger } from "fastify"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { ResolutionReasonCode } from "@moj-bichard7/common/types/ManualResolution"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
+import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
@@ -48,7 +49,7 @@ describe("resolveError integration", () => {
       resolveError(tx, user, 1, invalidResolution, auditLogEvents, mockLogger)
     )
 
-    expect(result).toBeInstanceOf(Error)
+    expect(isError(result)).toBe(true)
     expect((result as Error).message).toBe("Reason text is required")
     expect(auditLogEvents).toHaveLength(0)
   })
@@ -90,7 +91,7 @@ describe("resolveError integration", () => {
       resolveError(tx, user, 1, validResolution, auditLogEvents, mockLogger)
     )
 
-    expect(result).toBeUndefined()
+    expect(isError(result)).toBe(true)
     expect(auditLogEvents).toHaveLength(0)
   })
 
@@ -199,7 +200,7 @@ describe("resolveError integration", () => {
       resolveError(tx, user, caseObj.errorId, validResolution, auditLogEvents, mockLogger)
     )
 
-    expect(result).toBeInstanceOf(Error)
+    expect(isError(result)).toBe(true)
     expect((result as Error).message).toContain(`Couldn't resolve case id: ${caseObj.errorId}`)
     expect(auditLogEvents).toHaveLength(0)
   })
