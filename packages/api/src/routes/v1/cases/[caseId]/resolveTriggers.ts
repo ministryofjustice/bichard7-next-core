@@ -1,10 +1,10 @@
 import type { User } from "@moj-bichard7/common/types/User"
-import type { FastifyInstance, FastifyReply } from "fastify"
+import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from "http-status"
+import { INTERNAL_SERVER_ERROR, OK } from "http-status"
 import z from "zod"
 
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
@@ -17,12 +17,12 @@ import {
   unauthorizedError
 } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
-import { NotFoundError } from "../../../../types/errors/NotFoundError"
 import resolveTriggers from "../../../../useCases/cases/resolveTriggers"
 
 type HandlerProps = {
   caseId: number
   database: DatabaseGateway
+  logger: FastifyBaseLogger
   reply: FastifyReply
   triggerIds: number[]
   user: User
@@ -44,15 +44,15 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ caseId, database, reply, triggerIds, user }: HandlerProps) => {
-  const resolveTriggersResult = await resolveTriggers(database.writable, triggerIds, caseId, user)
+const handler = async ({ caseId, database, logger, reply, triggerIds, user }: HandlerProps) => {
+  const resolveTriggersResult = await resolveTriggers(database.writable, logger, triggerIds, caseId, user)
 
   if (isError(resolveTriggersResult)) {
     reply.log.error(resolveTriggersResult)
 
-    if (resolveTriggersResult instanceof NotFoundError) {
-      return reply.code(NOT_FOUND).send()
-    }
+    // if (resolveTriggersResult instanceof NotFoundError) {
+    //   return reply.code(NOT_FOUND).send()
+    // }
 
     return reply.code(INTERNAL_SERVER_ERROR).send()
   }
@@ -65,6 +65,7 @@ const route = async (fastify: FastifyInstance) => {
     await handler({
       caseId: Number(req.params.caseId),
       database: req.database,
+      logger: req.log,
       reply,
       triggerIds: req.body.triggerIds,
       user: req.user

@@ -29,6 +29,7 @@ export default async (
         el.defendant_name,
         el.error_id,
         el.error_locked_by_id,
+        el.error_count,
         el.error_quality_checked,
         el.error_report,
         el.error_status,

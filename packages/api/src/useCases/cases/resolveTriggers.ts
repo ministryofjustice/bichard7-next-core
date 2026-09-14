@@ -1,10 +1,5 @@
-import type { UpdateResult } from "typeorm"
-
-import { type AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
-import EventCategory from "@moj-bichard7/common/types/EventCategory"
-import EventCode from "@moj-bichard7/common/types/EventCode"
-import getAuditLogEvent from "@moj-bichard7/core/lib/auditLog/getAuditLogEvent"
-import { In, IsNull } from "typeorm"
+import type { User } from "@moj-bichard7/common/types/User"
+import type { FastifyBaseLogger } from "fastify"
 
 // import { isError } from "types/Result"
 // import getSystemNotesForTriggers from "utils/getSystemNotesForTriggers"
@@ -17,27 +12,30 @@ import { In, IsNull } from "typeorm"
 // import insertNotes from "./insertNotes"
 // import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 // import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
+import { isError } from "@moj-bichard7/common/types/Result"
+
+import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
 import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
-const generateTriggersAttributes = (triggers: Trigger[]) =>
-  triggers.reduce((acc: Record<string, unknown>, trigger, index) => {
-    const offenceNumberText =
-      trigger.triggerItemIdentity && trigger.triggerItemIdentity > 0 ? ` (${trigger.triggerItemIdentity})` : ""
-    acc[`Trigger ${index + 1} Details`] = `${trigger.triggerCode}${offenceNumberText}`
-    return acc
-  }, {})
+import fetchCase from "../../services/db/cases/fetchCase"
+import getSystemNotesForTriggers from "../../services/db/cases/getSystemNotesForTriggers"
+import insertNotes from "../../services/db/cases/insertNotes"
+import { NotFoundError } from "../../types/errors/NotFoundError"
+import { getAllTriggers } from "./getCase/getAllTriggers"
+import { updateTriggers } from "./getCase/updateTriggers"
 
 const resolveTriggers = async (
-  dataSource: WritableDatabaseConnection,
+  database: WritableDatabaseConnection,
+  logger: FastifyBaseLogger,
   triggerIds: number[],
   courtCaseId: number,
   user: User
-): Promise<Error | UpdateResult> => {
+): Promise<void> => {
   const resolver = user.username
+  const auditLogEvents: ApiAuditLogEvent[] = []
 
-  return await dataSource.transaction(async (entityManager) => {
-    const courtCase = await getCourtCaseByOrganisationUnit(entityManager, courtCaseId, user)
-
+  await database.transaction(async (tx) => {
+    const courtCase = await fetchCase(tx, user, courtCaseId, logger)
     if (isError(courtCase)) {
       throw courtCase
     }
@@ -51,69 +49,56 @@ const resolveTriggers = async (
     )
 
     if (triggersToResolve.length === 0) {
-      return { affected: 0, generatedMaps: [], raw: [] } as UpdateResult
+      return new NotFoundError()
     }
 
     const unresolvedTriggerIds = triggersToResolve.map((trigger) => trigger.triggerId)
 
-    if (!courtCase.triggersAreLockedByCurrentUser(resolver)) {
+    // refactor into separate function?
+    if (!!courtCase.triggerLockedByUsername && courtCase.triggerLockedByUsername === user.username) {
       throw Error(`Triggers are not locked by the user - ${courtCaseId}`)
     }
 
-    const updateTriggersResult = await entityManager.getRepository(Trigger).update(
-      {
-        resolvedAt: IsNull(),
-        resolvedBy: IsNull(),
-        triggerId: In(unresolvedTriggerIds)
-      },
-      {
-        resolvedAt: new Date(),
-        resolvedBy: resolver,
-        status: "Resolved"
-      }
-    )
+    const updateTriggersResult = await updateTriggers(tx, user, unresolvedTriggerIds, auditLogEvents)
+    if (isError(updateTriggersResult)) {
+      throw updateTriggersResult
+    }
 
-    if (updateTriggersResult.affected && updateTriggersResult.affected !== unresolvedTriggerIds.length) {
+    if (updateTriggersResult !== unresolvedTriggerIds.length) {
       throw Error(`Failed to resolve triggers - ${courtCaseId}`)
     }
 
     const addNoteResult = await insertNotes(
-      entityManager,
-      getSystemNotesForTriggers(triggersToResolve, resolver, courtCase.errorId)
+      tx,
+      getSystemNotesForTriggers(
+        triggersToResolve.map((a) => a.triggerCode),
+        resolver
+      ),
+      "System",
+      courtCaseId
     )
 
     if (isError(addNoteResult)) {
       throw addNoteResult
     }
 
-    const events: AuditLogEvent[] = []
-
-    events.push(
-      getAuditLogEvent(EventCode.TriggersResolved, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
-        auditLogVersion: 2,
-        "Number Of Triggers": unresolvedTriggerIds.length,
-        user: user.username,
-        ...generateTriggersAttributes(triggersToResolve)
-      })
-    )
-
-    const allTriggers = await entityManager.getRepository(Trigger).find({ where: { errorId: courtCaseId } })
+    const allTriggers = await getAllTriggers(tx, courtCaseId)
     if (isError(allTriggers)) {
       throw allTriggers
     }
 
-    const triggersVisibleToUser = user.excludedTriggers
-      ? allTriggers.filter((trigger) => !user.excludedTriggers.includes(trigger.triggerCode))
-      : allTriggers
+    // const triggersVisibleToUser = user.excludedTriggers
+    //   ? allTriggers.filter((trigger) => !user.excludedTriggers.includes(trigger.trigger_code))
+    //   : allTriggers
 
-    const areAllTriggersResolved = allTriggers.filter((trigger) => trigger.resolvedAt).length === allTriggers.length
+    // const areAllTriggersResolved = allTriggers.filter((trigger) => trigger.resolved_ts).length === allTriggers.length
 
-    const allTriggersVisibleToUserResolved =
-      triggersVisibleToUser.filter((trigger) => trigger.resolvedAt).length === triggersVisibleToUser.length
+    // const allTriggersVisibleToUserResolved =
+    //   triggersVisibleToUser.filter((trigger) => trigger.resolved_ts).length === triggersVisibleToUser.length
 
-    if (areAllTriggersResolved) {
+    /*   if (areAllTriggersResolved) {
       const hasUnresolvedExceptions = courtCase.errorCount > 0 && courtCase.errorResolvedTimestamp === null
-      const updateCaseResult = await entityManager
+      const updateCaseResult = await tx
         .getRepository(CourtCase)
         .update(
           {
@@ -135,6 +120,7 @@ const resolveTriggers = async (
       }
 
       if (updateCaseResult.affected && updateCaseResult.affected > 0) {
+        // appendAuditLog
         events.push(
           getAuditLogEvent(EventCode.AllTriggersResolved, EventCategory.information, AUDIT_LOG_EVENT_SOURCE, {
             auditLogVersion: 2,
@@ -147,20 +133,27 @@ const resolveTriggers = async (
     }
 
     if (allTriggersVisibleToUserResolved) {
-      const unlockResult = await updateLockStatusToUnlocked(
-        entityManager,
-        courtCase,
-        user,
-        UnlockReason.Trigger,
-        events
-      )
+      const unlockResult = await updateLockStatusToUnlocked(tx, courtCase, user, UnlockReason.Trigger, events)
 
       if (isError(unlockResult)) {
         throw unlockResult
       }
-    }
+    } */
 
-    await storeMessageAuditLogEvents(courtCase.messageId, events)
+    // createAuditLog
+    /* await storeMessageAuditLogEvents(courtCase.messageId, events) */
+
+    /*   if (auditLogEvents.length > 0) {
+        const caseMessageId = await selectMessageId(tx, user, caseId)
+        if (isError(caseMessageId)) {
+          throw caseMessageId
+        }
+
+        const auditLogEventsResult = await createAuditLogEvents(auditLogEvents, caseMessageId, auditLogGateway, logger)
+        if (isError(auditLogEventsResult)) {
+          throw auditLogEventsResult
+        }
+      } */
 
     return updateTriggersResult
   })

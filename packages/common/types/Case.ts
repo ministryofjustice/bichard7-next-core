@@ -108,6 +108,7 @@ export const CaseIndexDtoSchema = z.object({
   courtDate: z.date().nullable(),
   courtName: z.string().nullable(),
   defendantName: z.string().nullable(),
+  errorCount: z.number().optional(),
   errorId: z.number(),
   errorLockedByUserFullName: z.string().nullable().optional(),
   errorLockedByUsername: z.string().nullable(),

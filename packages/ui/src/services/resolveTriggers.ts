@@ -1,6 +1,7 @@
 import { type AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import { generateTriggersAttributes } from "@moj-bichard7/common/utils/generateTriggersAttributes"
 import getAuditLogEvent from "@moj-bichard7/core/lib/auditLog/getAuditLogEvent"
 import type { DataSource, UpdateResult } from "typeorm"
 import { In, IsNull } from "typeorm"
@@ -15,14 +16,6 @@ import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import insertNotes from "./insertNotes"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"
 import updateLockStatusToUnlocked from "./updateLockStatusToUnlocked"
-
-const generateTriggersAttributes = (triggers: Trigger[]) =>
-  triggers.reduce((acc: Record<string, unknown>, trigger, index) => {
-    const offenceNumberText =
-      trigger.triggerItemIdentity && trigger.triggerItemIdentity > 0 ? ` (${trigger.triggerItemIdentity})` : ""
-    acc[`Trigger ${index + 1} Details`] = `${trigger.triggerCode}${offenceNumberText}`
-    return acc
-  }, {})
 
 const resolveTriggers = async (
   dataSource: DataSource,
@@ -90,7 +83,12 @@ const resolveTriggers = async (
         user: user.username,
         auditLogVersion: 2,
         "Number Of Triggers": unresolvedTriggerIds.length,
-        ...generateTriggersAttributes(triggersToResolve)
+        ...generateTriggersAttributes(
+          triggersToResolve.map((trigger) => ({
+            triggerItemIdentity: trigger.triggerItemIdentity,
+            triggerCode: trigger.triggerCode
+          }))
+        )
       })
     )
 
