@@ -17,10 +17,9 @@ Feature: {040} 04 MIS - User Performance Summary
 		Given the data for this test is in the PNC
 			And "input-message-1" is received
 
-	@Excluded
 	@Could
 	@ExcludeOnPreProd
-	@ExcludedOnLedsPreProd
+	@ExcludedOnLeds
 	Scenario: Generating the user performance report
 		Given I am logged in as "generalhandler"
 			And I view the list of exceptions
