@@ -13,6 +13,7 @@ import selectMessageId from "../../../services/db/cases/selectMessageId"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
+import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import createAuditLogEvents from "../../createAuditLogEvents"
 import { unlockAndAuditLog } from "../getCase/unlockAndAuditLog"
 import { resolveCase } from "./resolveCase"
@@ -321,5 +322,59 @@ describe("resolveCase orchestration integration", () => {
     expect(mockCreateAuditLogEvents).not.toHaveBeenCalled()
     expect(mockSelectMessageId).not.toHaveBeenCalled()
     expect(mockCreateAuditLogEvents).not.toHaveBeenCalled()
+  })
+
+  it("exits early if user does not have trigger handler permissions", async () => {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
+    const caseObj = await createCase(databaseGateway, {
+      errorCount: 1,
+      errorLockedById: user.username,
+      errorStatus: ResolutionStatusNumber.Unresolved
+    })
+
+    const validResolution: ResolveBody = {
+      reason: "UpdatedDisposal",
+      reasonText: "Test reason text",
+      resolutionStatus: "Resolved"
+    }
+
+    const result = await resolveCase(
+      databaseGateway.writable,
+      user,
+      caseObj.errorId,
+      validResolution,
+      mockAuditLogDynamoGateway,
+      mockLogger
+    )
+
+    expect(isError(result)).toBe(true)
+    expect(result).toBeInstanceOf(NotAllowedError)
+  })
+
+  it("exits early if user does not have exceptions handler permissions", async () => {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.TriggerHandler], id: 1 })
+    const caseObj = await createCase(databaseGateway, {
+      errorCount: 1,
+      errorLockedById: user.username,
+      errorStatus: ResolutionStatusNumber.Unresolved
+    })
+
+    const validResolution: ResolveBody = {
+      reason: "UpdatedDisposal",
+      reasonText: "Test reason text",
+      resolutionStatus: "Resolved"
+    }
+
+    const result = await resolveCase(
+      databaseGateway.writable,
+      user,
+      caseObj.errorId,
+      validResolution,
+      mockAuditLogDynamoGateway,
+      mockLogger
+    )
+
+    expect(isError(result)).toBe(true)
+    expect(result).toBeInstanceOf(NotAllowedError)
   })
 })
