@@ -128,17 +128,17 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6 
         with:
-          start: npm run cypress:run
+          install: false
+          start: npm --prefix packages/ui run cypress:run
           wait-on: 'http://localhost:3000'
           component: true
-          working-directory: packages/ui
       
       - name: Run UI component tests
         uses: cypress-io/github-action@v6 
         with:
+          install: false
           component: true
           spec: packages/ui/cypress/component/**/*.cy.tsx
-          working-directory: packages/ui
         env:
           UI_IS_HTTPS: "true"
           TZ: "Europe/London"
