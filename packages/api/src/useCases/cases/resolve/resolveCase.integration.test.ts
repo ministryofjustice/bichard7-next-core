@@ -74,7 +74,8 @@ describe("resolveCase orchestration integration", () => {
     const caseObj = await createCase(databaseGateway, {
       errorCount: 1,
       errorLockedById: user.username,
-      errorStatus: ResolutionStatusNumber.Unresolved
+      errorStatus: ResolutionStatusNumber.Unresolved,
+      triggerLockedById: user.username
     })
 
     const validResolution: ResolveBody = {
@@ -97,7 +98,15 @@ describe("resolveCase orchestration integration", () => {
     expect(mockResolveError).toHaveBeenCalledTimes(1)
 
     expect(mockUnlockAndAuditLog).toHaveBeenCalledTimes(1)
-    expect(mockUnlockAndAuditLog).toHaveBeenCalledWith(expect.anything(), user, caseObj.errorId, 2, expect.any(Array))
+    expect(mockUnlockAndAuditLog).toHaveBeenCalledWith(
+      expect.anything(),
+      user,
+      caseObj.errorId,
+      2,
+      expect.any(Array),
+      user.username,
+      user.username
+    )
 
     expect(mockInsertNote).toHaveBeenCalledTimes(1)
     expect(mockInsertNote).toHaveBeenCalledWith(
@@ -324,13 +333,9 @@ describe("resolveCase orchestration integration", () => {
     expect(mockCreateAuditLogEvents).not.toHaveBeenCalled()
   })
 
-  it("exits early if user does not have trigger handler permissions", async () => {
+  it("returns an error if fetchCase fails because case doesn't exist", async () => {
     const user = await createUser(databaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
-    const caseObj = await createCase(databaseGateway, {
-      errorCount: 1,
-      errorLockedById: user.username,
-      errorStatus: ResolutionStatusNumber.Unresolved
-    })
+    const auditLogEvents: ApiAuditLogEvent[] = []
 
     const validResolution: ResolveBody = {
       reason: "UpdatedDisposal",
@@ -341,14 +346,15 @@ describe("resolveCase orchestration integration", () => {
     const result = await resolveCase(
       databaseGateway.writable,
       user,
-      caseObj.errorId,
+      999,
       validResolution,
       mockAuditLogDynamoGateway,
       mockLogger
     )
 
-    expect(isError(result)).toBe(true)
-    expect(result).toBeInstanceOf(NotAllowedError)
+    expect(result).toBeInstanceOf(Error)
+    expect((result as Error).message).toBe("Case id 999 for user User1 not found")
+    expect(auditLogEvents).toHaveLength(0)
   })
 
   it("exits early if user does not have exceptions handler permissions", async () => {

@@ -11,6 +11,7 @@ import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
+import fetchCase from "../../../services/db/cases/fetchCase"
 import insertNote from "../../../services/db/cases/insertNote"
 import selectMessageId from "../../../services/db/cases/selectMessageId"
 import { NotAllowedError } from "../../../types/errors/NotAllowedError"
@@ -26,7 +27,7 @@ export const resolveCase = async (
   auditLogGateway: AuditLogDynamoGateway,
   logger: FastifyBaseLogger
 ): PromiseResult<void> => {
-  if (!(userAccess(user)[Permission.Triggers] && userAccess(user)[Permission.Exceptions])) {
+  if (!userAccess(user)[Permission.Exceptions]) {
     return new NotAllowedError()
   }
 
@@ -34,12 +35,31 @@ export const resolveCase = async (
     .transaction<Error | void>(async (tx) => {
       const auditLogEvents: ApiAuditLogEvent[] = []
 
-      const resolveErrorResult = await resolveError(tx, user, caseId, resolution, auditLogEvents, logger)
+      // verify the case exists and perform permissions checks, this also checks the case is not locked to another user
+      const caseResult = await fetchCase(tx, user, caseId, logger)
+
+      if (isError(caseResult)) {
+        return caseResult
+      }
+
+      const resolveErrorResult = await resolveError(tx, user, caseId, resolution, auditLogEvents)
       if (isError(resolveErrorResult)) {
         throw resolveErrorResult
       }
 
-      const unlockResult = await unlockAndAuditLog(tx, user, caseId, UnlockReason.TriggerAndException, auditLogEvents)
+      const unlockReason = userAccess(user)[Permission.Triggers]
+        ? UnlockReason.TriggerAndException
+        : UnlockReason.Exception
+
+      const unlockResult = await unlockAndAuditLog(
+        tx,
+        user,
+        caseId,
+        unlockReason,
+        auditLogEvents,
+        caseResult.errorLockedByUsername,
+        caseResult.triggerLockedByUsername
+      )
       if (isError(unlockResult)) {
         throw unlockResult
       }

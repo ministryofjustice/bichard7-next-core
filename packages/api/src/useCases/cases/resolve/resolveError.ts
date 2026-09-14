@@ -1,6 +1,5 @@
 import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
 import type { User } from "@moj-bichard7/common/types/User"
-import type { FastifyBaseLogger } from "fastify"
 
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
@@ -13,7 +12,6 @@ import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
 import checkAllTriggersResolved from "../../../services/db/cases/checkAllTriggersResolved"
-import fetchCase from "../../../services/db/cases/fetchCase"
 import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
 import buildAuditLogEvent from "../../auditLog/buildAuditLogEvent"
 
@@ -22,20 +20,12 @@ export const resolveError = async (
   user: User,
   caseId: number,
   resolution: ResolveBody,
-  auditLogEvents: ApiAuditLogEvent[],
-  logger: FastifyBaseLogger
+  auditLogEvents: ApiAuditLogEvent[]
 ): PromiseResult<void> => {
   const resolutionError = validateManualResolution(resolution).error
 
   if (resolutionError) {
     return new Error(resolutionError)
-  }
-
-  // verify the case exists and perform permissions checks, this also checks the case is not locked to another user
-  const caseResult = await fetchCase(tx, user, caseId, logger)
-
-  if (isError(caseResult)) {
-    return caseResult
   }
 
   const resolver = user.username

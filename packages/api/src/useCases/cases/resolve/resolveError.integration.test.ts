@@ -46,30 +46,11 @@ describe("resolveError integration", () => {
     }
 
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveError(tx, user, 1, invalidResolution, auditLogEvents, mockLogger)
+      resolveError(tx, user, 1, invalidResolution, auditLogEvents)
     )
 
     expect(isError(result)).toBe(true)
     expect((result as Error).message).toBe("Reason text is required")
-    expect(auditLogEvents).toHaveLength(0)
-  })
-
-  it("returns an error if fetchCase fails because case doesn't exist", async () => {
-    const user = await createUser(databaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
-    const auditLogEvents: ApiAuditLogEvent[] = []
-
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test reason text",
-      resolutionStatus: "Resolved"
-    }
-
-    const result = await databaseGateway.writable.transaction((tx) =>
-      resolveError(tx, user, 999, validResolution, auditLogEvents, mockLogger)
-    )
-
-    expect(result).toBeInstanceOf(Error)
-    expect((result as Error).message).toBe("Case id 999 for user User1 not found")
     expect(auditLogEvents).toHaveLength(0)
   })
 
@@ -88,7 +69,7 @@ describe("resolveError integration", () => {
       resolutionStatus: "Resolved"
     }
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveError(tx, user, 1, validResolution, auditLogEvents, mockLogger)
+      resolveError(tx, user, 1, validResolution, auditLogEvents)
     )
 
     expect(isError(result)).toBe(true)
@@ -113,7 +94,7 @@ describe("resolveError integration", () => {
     }
 
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveError(tx, user, caseObj.errorId, validResolution, auditLogEvents, mockLogger)
+      resolveError(tx, user, caseObj.errorId, validResolution, auditLogEvents)
     )
 
     expect(result).toBeUndefined()
@@ -156,7 +137,7 @@ describe("resolveError integration", () => {
     }
 
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveError(tx, user, caseObj.errorId, validResolution, auditLogEvents, mockLogger)
+      resolveError(tx, user, caseObj.errorId, validResolution, auditLogEvents)
     )
 
     expect(result).toBeUndefined()
@@ -197,7 +178,7 @@ describe("resolveError integration", () => {
     }
 
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveError(tx, user, caseObj.errorId, validResolution, auditLogEvents, mockLogger)
+      resolveError(tx, user, caseObj.errorId, validResolution, auditLogEvents)
     )
 
     expect(isError(result)).toBe(true)
