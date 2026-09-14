@@ -2,8 +2,10 @@ import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
+import Permission from "@moj-bichard7/common/types/Permission"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import UnlockReason from "@moj-bichard7/common/types/UnlockReason"
+import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
@@ -11,6 +13,7 @@ import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import insertNote from "../../../services/db/cases/insertNote"
 import selectMessageId from "../../../services/db/cases/selectMessageId"
+import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import createAuditLogEvents from "../../createAuditLogEvents"
 import { unlockAndAuditLog } from "../getCase/unlockAndAuditLog"
 import { resolveError } from "./resolveError"
@@ -23,6 +26,10 @@ export const resolveCase = async (
   auditLogGateway: AuditLogDynamoGateway,
   logger: FastifyBaseLogger
 ): PromiseResult<void> => {
+  if (!(userAccess(user)[Permission.Triggers] && userAccess(user)[Permission.Exceptions])) {
+    return new NotAllowedError()
+  }
+
   return await databaseConnection
     .transaction<Error | void>(async (tx) => {
       const auditLogEvents: ApiAuditLogEvent[] = []

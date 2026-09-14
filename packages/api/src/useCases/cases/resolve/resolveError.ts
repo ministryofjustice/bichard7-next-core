@@ -31,14 +31,11 @@ export const resolveError = async (
     return new Error(resolutionError)
   }
 
+  // verify the case exists and perform permissions checks, this also checks the case is not locked to another user
   const caseResult = await fetchCase(tx, user, caseId, logger)
 
   if (isError(caseResult)) {
     return caseResult
-  }
-
-  if (caseResult.errorStatus === "Resolved") {
-    return
   }
 
   const resolver = user.username
