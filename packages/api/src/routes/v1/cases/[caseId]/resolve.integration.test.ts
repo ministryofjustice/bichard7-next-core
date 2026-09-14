@@ -56,8 +56,23 @@ describe("resolve", () => {
   })
 
   describe("200 OK", () => {
-    it("will receive a 200 if the case is found and unresolved", async () => {
+    it("will receive a 200 if the case is found and unresolved, with GeneralHandler permission", async () => {
       const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
+      const caseObj = await createCase(testDatabaseGateway, {
+        errorId: 1,
+        errorLockedById: user.username,
+        errorStatus: ResolutionStatusNumber.Unresolved
+      })
+
+      const response = await app.inject(
+        defaultInjectParams(encodedJwt, String(caseObj.errorId), defaultResolveCasePayload)
+      )
+
+      expect(response.statusCode).toBe(OK)
+    })
+
+    it("will receive a 200 if the case is found and unresolved, with ExceptionHandler permission", async () => {
+      const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.ExceptionHandler])
       const caseObj = await createCase(testDatabaseGateway, {
         errorId: 1,
         errorLockedById: user.username,
@@ -164,21 +179,6 @@ describe("resolve", () => {
   })
 
   describe("403 Forbidden", () => {
-    it("will receive 403 Forbidden if the user has ExceptionHandler role only", async () => {
-      const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.ExceptionHandler])
-      const caseObj = await createCase(testDatabaseGateway, {
-        errorId: 1,
-        errorLockedById: user.username,
-        errorStatus: ResolutionStatusNumber.Unresolved
-      })
-
-      const response = await app.inject(
-        defaultInjectParams(encodedJwt, String(caseObj.errorId), defaultResolveCasePayload)
-      )
-
-      expect(response.statusCode).toBe(FORBIDDEN)
-    })
-
     it("will receive 403 Forbidden if the user has TriggerHandler role only", async () => {
       const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.TriggerHandler])
       const caseObj = await createCase(testDatabaseGateway, {
