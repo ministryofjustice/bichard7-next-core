@@ -1,17 +1,18 @@
 import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
-import type { FastifyBaseLogger, FastifyInstance } from "fastify"
+import type { FastifyBaseLogger } from "fastify"
 
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
+import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 
 import insertNote from "../../../services/db/cases/insertNote"
 import selectMessageId from "../../../services/db/cases/selectMessageId"
 import { createCase } from "../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
+import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import createAuditLogEvents from "../../createAuditLogEvents"
 import { unlockAndAuditLog } from "../getCase/unlockAndAuditLog"
 import { resolveCase } from "./resolveCase"
@@ -35,19 +36,24 @@ const mockLogger = {
 } as unknown as FastifyBaseLogger
 
 describe("resolveCase orchestration integration", () => {
-  let helper: SetupAppEnd2EndHelper
-  let app: FastifyInstance
+  let databaseGateway: End2EndPostgres
+  const mockAuditLogDynamoGateway = {} as AuditLogDynamoGateway
 
-  beforeAll(async () => {
-    helper = await SetupAppEnd2EndHelper.setup()
-    app = helper.app
+  beforeAll(() => {
+    databaseGateway = new End2EndPostgres()
   })
 
   beforeEach(async () => {
-    await helper.postgres.clearDb()
+    await databaseGateway.clearDb()
+
     jest.clearAllMocks()
 
-    mockResolveError.mockImplementation(async (_tx, _user, _caseId, _resolution, auditLogEvents) => {
+    mockResolveError.mockImplementation(async (tx, _user, caseId, _resolution, auditLogEvents) => {
+      await tx.connection`
+        UPDATE br7own.error_list 
+        SET error_status = ${ResolutionStatusNumber.Resolved} 
+        WHERE error_id = ${caseId}
+      `
       auditLogEvents.push({} as ApiAuditLogEvent)
       return undefined
     })
@@ -59,13 +65,12 @@ describe("resolveCase orchestration integration", () => {
   })
 
   afterAll(async () => {
-    await app.close()
-    await helper.postgres.close()
+    await databaseGateway.close()
   })
 
   it("successfully calls resolveError, unlockAndAuditLog, insertNote, and createAuditLogEvents", async () => {
-    const user = await createUser(helper.postgres, { groups: [UserGroup.GeneralHandler], id: 1 })
-    const caseObj = await createCase(helper.postgres, {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.GeneralHandler], id: 1 })
+    const caseObj = await createCase(databaseGateway, {
       errorCount: 1,
       errorLockedById: user.username,
       errorStatus: ResolutionStatusNumber.Unresolved
@@ -78,11 +83,11 @@ describe("resolveCase orchestration integration", () => {
     }
 
     const result = await resolveCase(
-      helper.postgres.writable,
+      databaseGateway.writable,
       user,
       caseObj.errorId,
       validResolution,
-      helper.dynamo,
+      mockAuditLogDynamoGateway,
       mockLogger
     )
 
@@ -105,14 +110,14 @@ describe("resolveCase orchestration integration", () => {
     expect(mockCreateAuditLogEvents).toHaveBeenCalledWith(
       expect.any(Array),
       "mock-message-id",
-      helper.dynamo,
+      mockAuditLogDynamoGateway,
       mockLogger
     )
   })
 
   it("rolls back database transaction and halts execution if unlockAndAuditLog fails", async () => {
-    const user = await createUser(helper.postgres, { groups: [UserGroup.GeneralHandler], id: 1 })
-    const caseObj = await createCase(helper.postgres, {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.GeneralHandler], id: 1 })
+    const caseObj = await createCase(databaseGateway, {
       errorCount: 1,
       errorLockedById: user.username,
       errorStatus: ResolutionStatusNumber.Unresolved
@@ -127,11 +132,11 @@ describe("resolveCase orchestration integration", () => {
     }
 
     const result = await resolveCase(
-      helper.postgres.writable,
+      databaseGateway.writable,
       user,
       caseObj.errorId,
       validResolution,
-      helper.dynamo,
+      mockAuditLogDynamoGateway,
       mockLogger
     )
     expect(isError(result)).toBe(true)
@@ -143,8 +148,8 @@ describe("resolveCase orchestration integration", () => {
   })
 
   it("rolls back database transaction and halts execution if resolveError fails", async () => {
-    const user = await createUser(helper.postgres, { groups: [UserGroup.GeneralHandler], id: 1 })
-    const caseObj = await createCase(helper.postgres, {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.GeneralHandler], id: 1 })
+    const caseObj = await createCase(databaseGateway, {
       errorCount: 1,
       errorLockedById: user.username,
       errorStatus: ResolutionStatusNumber.Unresolved
@@ -159,11 +164,11 @@ describe("resolveCase orchestration integration", () => {
     }
 
     const result = await resolveCase(
-      helper.postgres.writable,
+      databaseGateway.writable,
       user,
       caseObj.errorId,
       validResolution,
-      helper.dynamo,
+      mockAuditLogDynamoGateway,
       mockLogger
     )
 
@@ -177,8 +182,8 @@ describe("resolveCase orchestration integration", () => {
   })
 
   it("rolls back database transaction and halts execution if insertNote fails", async () => {
-    const user = await createUser(helper.postgres, { groups: [UserGroup.GeneralHandler], id: 1 })
-    const caseObj = await createCase(helper.postgres, {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.GeneralHandler], id: 1 })
+    const caseObj = await createCase(databaseGateway, {
       errorCount: 1,
       errorLockedById: user.username,
       errorStatus: ResolutionStatusNumber.Unresolved
@@ -193,11 +198,11 @@ describe("resolveCase orchestration integration", () => {
     }
 
     const result = await resolveCase(
-      helper.postgres.writable,
+      databaseGateway.writable,
       user,
       caseObj.errorId,
       validResolution,
-      helper.dynamo,
+      mockAuditLogDynamoGateway,
       mockLogger
     )
 
@@ -211,8 +216,8 @@ describe("resolveCase orchestration integration", () => {
   })
 
   it("rolls back database transaction and halts execution if selectMessageId fails", async () => {
-    const user = await createUser(helper.postgres, { groups: [UserGroup.GeneralHandler], id: 1 })
-    const caseObj = await createCase(helper.postgres, {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.GeneralHandler], id: 1 })
+    const caseObj = await createCase(databaseGateway, {
       errorCount: 1,
       errorLockedById: user.username,
       errorStatus: ResolutionStatusNumber.Unresolved
@@ -227,11 +232,11 @@ describe("resolveCase orchestration integration", () => {
     }
 
     const result = await resolveCase(
-      helper.postgres.writable,
+      databaseGateway.writable,
       user,
       caseObj.errorId,
       validResolution,
-      helper.dynamo,
+      mockAuditLogDynamoGateway,
       mockLogger
     )
 
@@ -246,8 +251,8 @@ describe("resolveCase orchestration integration", () => {
   })
 
   it("rolls back database transaction if createAuditLogEvents fails", async () => {
-    const user = await createUser(helper.postgres, { groups: [UserGroup.GeneralHandler], id: 1 })
-    const caseObj = await createCase(helper.postgres, {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.GeneralHandler], id: 1 })
+    const caseObj = await createCase(databaseGateway, {
       errorCount: 1,
       errorLockedById: user.username,
       errorStatus: ResolutionStatusNumber.Unresolved
@@ -262,11 +267,11 @@ describe("resolveCase orchestration integration", () => {
     }
 
     const result = await resolveCase(
-      helper.postgres.writable,
+      databaseGateway.writable,
       user,
       caseObj.errorId,
       validResolution,
-      helper.dynamo,
+      mockAuditLogDynamoGateway,
       mockLogger
     )
 
@@ -279,8 +284,8 @@ describe("resolveCase orchestration integration", () => {
   })
 
   it("skips audit log creation if auditLogEvents is empty", async () => {
-    const user = await createUser(helper.postgres, { groups: [UserGroup.GeneralHandler], id: 1 })
-    const caseObj = await createCase(helper.postgres, {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.GeneralHandler], id: 1 })
+    const caseObj = await createCase(databaseGateway, {
       errorCount: 1,
       errorLockedById: user.username,
       errorStatus: ResolutionStatusNumber.Unresolved
@@ -299,11 +304,11 @@ describe("resolveCase orchestration integration", () => {
     }
 
     const result = await resolveCase(
-      helper.postgres.writable,
+      databaseGateway.writable,
       user,
       caseObj.errorId,
       validResolution,
-      helper.dynamo,
+      mockAuditLogDynamoGateway,
       mockLogger
     )
 

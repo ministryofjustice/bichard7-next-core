@@ -9,9 +9,9 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 
 import { createCase } from "../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
+import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import { resolveError } from "./resolveError"
 
 const mockLogger = {
@@ -20,22 +20,22 @@ const mockLogger = {
 } as unknown as FastifyBaseLogger
 
 describe("resolveError integration", () => {
-  let helper: SetupAppEnd2EndHelper
+  let databaseGateway: End2EndPostgres
 
-  beforeAll(async () => {
-    helper = await SetupAppEnd2EndHelper.setup()
+  beforeAll(() => {
+    databaseGateway = new End2EndPostgres()
   })
 
   beforeEach(async () => {
-    await helper.postgres.clearDb()
+    await databaseGateway.clearDb()
   })
 
   afterAll(async () => {
-    await helper.postgres.close()
+    await databaseGateway.close()
   })
 
   it("returns an error if validateManualResolution fails", async () => {
-    const user = await createUser(helper.postgres, { groups: [UserGroup.ExceptionHandler], id: 1 })
+    const user = await createUser(databaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
     const auditLogEvents: ApiAuditLogEvent[] = []
 
     const invalidResolution: ResolveBody = {
@@ -44,7 +44,7 @@ describe("resolveError integration", () => {
       resolutionStatus: "Resolved"
     }
 
-    const result = await helper.postgres.writable.transaction((tx) =>
+    const result = await databaseGateway.writable.transaction((tx) =>
       resolveError(tx, user, 1, invalidResolution, auditLogEvents, mockLogger)
     )
 
@@ -54,7 +54,7 @@ describe("resolveError integration", () => {
   })
 
   it("returns an error if fetchCase fails because case doesn't exist", async () => {
-    const user = await createUser(helper.postgres, { groups: [UserGroup.ExceptionHandler], id: 1 })
+    const user = await createUser(databaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
     const auditLogEvents: ApiAuditLogEvent[] = []
 
     const validResolution: ResolveBody = {
@@ -63,7 +63,7 @@ describe("resolveError integration", () => {
       resolutionStatus: "Resolved"
     }
 
-    const result = await helper.postgres.writable.transaction((tx) =>
+    const result = await databaseGateway.writable.transaction((tx) =>
       resolveError(tx, user, 999, validResolution, auditLogEvents, mockLogger)
     )
 
@@ -73,8 +73,8 @@ describe("resolveError integration", () => {
   })
 
   it("returns if exception is already resolved", async () => {
-    const user = await createUser(helper.postgres, { groups: [UserGroup.ExceptionHandler], id: 1 })
-    await createCase(helper.postgres, {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
+    await createCase(databaseGateway, {
       errorCount: 1,
       errorResolvedBy: user.username,
       errorStatus: ResolutionStatusNumber.Resolved
@@ -86,7 +86,7 @@ describe("resolveError integration", () => {
       reasonText: "Test reason text",
       resolutionStatus: "Resolved"
     }
-    const result = await helper.postgres.writable.transaction((tx) =>
+    const result = await databaseGateway.writable.transaction((tx) =>
       resolveError(tx, user, 1, validResolution, auditLogEvents, mockLogger)
     )
 
@@ -95,14 +95,14 @@ describe("resolveError integration", () => {
   })
 
   it("resolves exceptions and populates resolution_ts when all triggers resolved", async () => {
-    const user = await createUser(helper.postgres, { groups: [UserGroup.ExceptionHandler], id: 1 })
-    const caseObj = await createCase(helper.postgres, {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
+    const caseObj = await createCase(databaseGateway, {
       errorCount: 1,
       errorLockedById: user.username,
       errorStatus: ResolutionStatusNumber.Unresolved
     })
 
-    await createTriggers(helper.postgres, caseObj.errorId, [{ status: ResolutionStatusNumber.Resolved }])
+    await createTriggers(databaseGateway, caseObj.errorId, [{ status: ResolutionStatusNumber.Resolved }])
 
     const auditLogEvents: ApiAuditLogEvent[] = []
     const validResolution: ResolveBody = {
@@ -111,13 +111,13 @@ describe("resolveError integration", () => {
       resolutionStatus: "Resolved"
     }
 
-    const result = await helper.postgres.writable.transaction((tx) =>
+    const result = await databaseGateway.writable.transaction((tx) =>
       resolveError(tx, user, caseObj.errorId, validResolution, auditLogEvents, mockLogger)
     )
 
     expect(result).toBeUndefined()
 
-    const [updatedCase] = await helper.postgres.writable.connection`
+    const [updatedCase] = await databaseGateway.writable.connection`
       SELECT error_status, error_resolved_by, error_resolved_ts, resolution_ts 
       FROM br7own.error_list 
       WHERE error_id = ${caseObj.errorId}
@@ -139,13 +139,13 @@ describe("resolveError integration", () => {
   })
 
   it("resolves the error but does not populate resolution_ts if there are unresolved triggers", async () => {
-    const user = await createUser(helper.postgres, { groups: [UserGroup.ExceptionHandler], id: 1 })
-    const caseObj = await createCase(helper.postgres, {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
+    const caseObj = await createCase(databaseGateway, {
       errorCount: 1,
       errorLockedById: user.username,
       errorStatus: ResolutionStatusNumber.Unresolved
     })
-    await createTriggers(helper.postgres, caseObj.errorId, [{ status: ResolutionStatusNumber.Unresolved }])
+    await createTriggers(databaseGateway, caseObj.errorId, [{ status: ResolutionStatusNumber.Unresolved }])
 
     const auditLogEvents: ApiAuditLogEvent[] = []
     const validResolution: ResolveBody = {
@@ -154,13 +154,13 @@ describe("resolveError integration", () => {
       resolutionStatus: "Resolved"
     }
 
-    const result = await helper.postgres.writable.transaction((tx) =>
+    const result = await databaseGateway.writable.transaction((tx) =>
       resolveError(tx, user, caseObj.errorId, validResolution, auditLogEvents, mockLogger)
     )
 
     expect(result).toBeUndefined()
 
-    const [updatedCase] = await helper.postgres.writable.connection`
+    const [updatedCase] = await databaseGateway.writable.connection`
       SELECT error_status, error_resolved_by, error_resolved_ts, resolution_ts 
       FROM br7own.error_list 
       WHERE error_id = ${caseObj.errorId}
@@ -181,8 +181,8 @@ describe("resolveError integration", () => {
   })
 
   it("returns an unprocessable error if the update fails because the case is locked by another user", async () => {
-    const user = await createUser(helper.postgres, { groups: [UserGroup.ExceptionHandler], id: 1 })
-    const caseObj = await createCase(helper.postgres, {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
+    const caseObj = await createCase(databaseGateway, {
       errorCount: 1,
       errorLockedById: "another_user",
       errorStatus: ResolutionStatusNumber.Unresolved
@@ -195,7 +195,7 @@ describe("resolveError integration", () => {
       resolutionStatus: "Resolved"
     }
 
-    const result = await helper.postgres.writable.transaction((tx) =>
+    const result = await databaseGateway.writable.transaction((tx) =>
       resolveError(tx, user, caseObj.errorId, validResolution, auditLogEvents, mockLogger)
     )
 
