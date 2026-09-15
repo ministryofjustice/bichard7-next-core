@@ -9,7 +9,7 @@ import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import checkAllTriggersResolved from "./checkAllTriggersResolved"
 const testDatabaseGateway = new End2EndPostgres()
 
-describe("fetchCase", () => {
+describe("checkAllTriggersResolved", () => {
   beforeEach(async () => {
     await testDatabaseGateway.clearDb()
   })

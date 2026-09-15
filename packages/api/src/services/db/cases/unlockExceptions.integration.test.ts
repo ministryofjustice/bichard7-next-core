@@ -7,7 +7,7 @@ import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 import unlockException from "./unlockExceptions"
 
-describe("unlockException integration", () => {
+describe("unlockExceptions integration", () => {
   let databaseGateway: End2EndPostgres
 
   beforeAll(() => {
