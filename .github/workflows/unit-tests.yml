@@ -133,7 +133,6 @@ jobs:
         with:
           install: false
           start: npm --prefix packages/ui run cypress:run
-          wait-on: 'http://localhost:3000'
           component: true
       
       - name: Run UI component tests
