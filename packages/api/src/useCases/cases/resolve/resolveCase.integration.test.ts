@@ -1,4 +1,4 @@
-import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
+import type { ResolveBody } from "@moj-bichard7/common/contracts/ExceptionsManualResolveBody"
 import type { FastifyBaseLogger } from "fastify"
 
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"

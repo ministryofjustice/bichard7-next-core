@@ -1,3 +1,4 @@
+import type { ExceptionsManualResolveBody } from "@moj-bichard7/common/contracts/ExceptionsManualResolveBody"
 import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
@@ -27,10 +28,9 @@ const defaultRequest = (jwt: string, body: Record<string, unknown>) => {
   }
 }
 
-const defaultResolvePayload = {
+const defaultResolvePayload: ExceptionsManualResolveBody = {
   reason: "UpdatedDisposal",
-  reasonText: "Test comment",
-  resolutionStatus: "Resolved"
+  resolutionDetails: "Test comment"
 }
 
 describe("/v1/cases/:caseId/exceptions/manualResolve e2e", () => {

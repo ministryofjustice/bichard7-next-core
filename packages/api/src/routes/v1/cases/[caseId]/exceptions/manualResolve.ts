@@ -1,10 +1,10 @@
-import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
+import type { ExceptionsManualResolveBody } from "@moj-bichard7/common/contracts/ExceptionsManualResolveBody"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger, FastifyInstance, FastifyReply } from "fastify"
 import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
-import { ResolveBodySchema } from "@moj-bichard7/common/contracts/ResolveBody"
+import { ExceptionsManualResolveBodySchema } from "@moj-bichard7/common/contracts/ExceptionsManualResolveBody"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { BAD_GATEWAY, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
@@ -23,7 +23,7 @@ import { resolveCase } from "../../../../../useCases/cases/resolve/resolveCase"
 
 type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway
-  body: ResolveBody
+  body: ExceptionsManualResolveBody
   caseId: number
   database: DatabaseGateway
   logger: FastifyBaseLogger
@@ -33,7 +33,7 @@ type HandlerProps = {
 
 const schema = {
   ...auth,
-  body: ResolveBodySchema,
+  body: ExceptionsManualResolveBodySchema,
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
   response: {
     ...unauthorizedError(),

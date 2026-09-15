@@ -1,4 +1,4 @@
-import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
+import type { ExceptionsManualResolveBody } from "@moj-bichard7/common/contracts/ExceptionsManualResolveBody"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
@@ -19,7 +19,7 @@ export const resolveExceptions = async (
   tx: TransactionConnection,
   user: User,
   caseId: number,
-  resolution: ResolveBody,
+  resolution: ExceptionsManualResolveBody,
   auditLogEvents: ApiAuditLogEvent[]
 ): PromiseResult<void> => {
   const resolutionError = validateManualResolution(resolution).error

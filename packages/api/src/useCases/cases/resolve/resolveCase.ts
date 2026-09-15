@@ -1,4 +1,4 @@
-import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
+import type { ExceptionsManualResolveBody } from "@moj-bichard7/common/contracts/ExceptionsManualResolveBody"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
@@ -24,7 +24,7 @@ export const resolveCase = async (
   databaseConnection: WritableDatabaseConnection,
   user: User,
   caseId: number,
-  resolution: ResolveBody,
+  resolution: ExceptionsManualResolveBody,
   auditLogGateway: AuditLogDynamoGateway,
   logger: FastifyBaseLogger
 ): PromiseResult<void> => {
