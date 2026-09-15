@@ -134,12 +134,14 @@ jobs:
           install: false
           start: npm --prefix packages/ui run cypress:run
           component: true
+          config-file: packages/ui/cypress.config.ts
       
       - name: Run UI component tests
         uses: cypress-io/github-action@v6 
         with:
           install: false
           component: true
+          config-file: packages/ui/cypress.config.ts
           spec: packages/ui/cypress/component/**/*.cy.tsx
         env:
           UI_IS_HTTPS: "true"
