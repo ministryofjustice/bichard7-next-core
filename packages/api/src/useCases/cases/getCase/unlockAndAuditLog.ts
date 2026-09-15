@@ -16,18 +16,37 @@ import unlockTriggers from "../../../services/db/cases/unlockTriggers"
 import { ForbiddenError } from "../../../types/errors/ForbiddenError"
 import buildAuditLogEvent from "../../auditLog/buildAuditLogEvent"
 
-const appendAuditLogEvent = (
-  auditLogEvents: ApiAuditLogEvent[],
-  eventSource: string,
-  user: User,
-  eventCode: EventCode
-) => {
+const appendAuditLogEvent = (auditLogEvents: ApiAuditLogEvent[], user: User, eventCode: EventCode) => {
   auditLogEvents.push(
-    buildAuditLogEvent(eventCode, EventCategory.information, eventSource, {
+    buildAuditLogEvent(eventCode, EventCategory.information, "Bichard New UI", {
       auditLogVersion: 2,
       user: user.username
     })
   )
+}
+
+const checkPermissions = (user: User, wantsTriggers: boolean, wantsExceptions: boolean): ForbiddenError | null => {
+  if (isServiceUser(user)) {
+    return new ForbiddenError("Service user does not have permission to unlock exceptions or triggers")
+  }
+
+  const access = userAccess(user)
+  const canUnlockTriggers = access[Permission.Triggers]
+  const canUnlockExceptions = access[Permission.Exceptions]
+
+  if (wantsTriggers && wantsExceptions && (!canUnlockExceptions || !canUnlockTriggers)) {
+    return new ForbiddenError("User does not have permission to unlock triggers and exceptions")
+  }
+
+  if (wantsExceptions && !canUnlockExceptions) {
+    return new ForbiddenError("User does not have permission to unlock exceptions")
+  }
+
+  if (wantsTriggers && !canUnlockTriggers) {
+    return new ForbiddenError("User does not have permission to unlock triggers")
+  }
+
+  return null
 }
 
 export const unlockAndAuditLog = async (
@@ -39,47 +58,31 @@ export const unlockAndAuditLog = async (
   exceptionsLockedTo: null | string,
   triggersLockedTo: null | string
 ): PromiseResult<void> => {
-  if (isServiceUser(user)) {
-    return new ForbiddenError("Service user does not have permission to unlock exceptions or triggers")
-  }
-
-  const eventSource = "Bichard New UI"
-  const canUnlockTriggers = userAccess(user)[Permission.Triggers]
-  const canUnlockExceptions = userAccess(user)[Permission.Exceptions]
-
   const wantsToUnlockTriggers =
     unlockReason === UnlockReason.Trigger || unlockReason === UnlockReason.TriggerAndException
-
   const wantsToUnlockExceptions =
     unlockReason === UnlockReason.Exception || unlockReason === UnlockReason.TriggerAndException
 
-  if (wantsToUnlockTriggers && wantsToUnlockExceptions && !(canUnlockExceptions && canUnlockTriggers)) {
-    return new ForbiddenError("User does not have permission to unlock triggers and exceptions")
+  const permissionError = checkPermissions(user, wantsToUnlockTriggers, wantsToUnlockExceptions)
+  if (permissionError) {
+    return permissionError
   }
 
-  if (wantsToUnlockExceptions && !canUnlockExceptions) {
-    return new ForbiddenError("User does not have permission to unlock exceptions")
-  }
-
-  if (wantsToUnlockTriggers && !canUnlockTriggers) {
-    return new ForbiddenError("User does not have permission to unlock triggers")
-  }
-
-  if (wantsToUnlockExceptions && !!exceptionsLockedTo) {
+  if (wantsToUnlockExceptions && exceptionsLockedTo) {
     const exceptionUnlockedResult = await unlockExceptions(tx, caseId)
     if (isError(exceptionUnlockedResult)) {
       return exceptionUnlockedResult
     }
 
-    appendAuditLogEvent(auditLogEvents, eventSource, user, EventCode.ExceptionsUnlocked)
+    appendAuditLogEvent(auditLogEvents, user, EventCode.ExceptionsUnlocked)
   }
 
-  if (wantsToUnlockTriggers && !!triggersLockedTo) {
+  if (wantsToUnlockTriggers && triggersLockedTo) {
     const triggerUnlockedResult = await unlockTriggers(tx, caseId)
     if (isError(triggerUnlockedResult)) {
       return triggerUnlockedResult
     }
 
-    appendAuditLogEvent(auditLogEvents, eventSource, user, EventCode.TriggersUnlocked)
+    appendAuditLogEvent(auditLogEvents, user, EventCode.TriggersUnlocked)
   }
 }
