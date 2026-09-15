@@ -5,7 +5,7 @@ import type { TransactionConnection } from "../../../types/DatabaseGateway"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
-import unlockException from "./unlockExceptions"
+import unlockExceptions from "./unlockExceptions"
 
 describe("unlockExceptions integration", () => {
   let databaseGateway: End2EndPostgres
@@ -27,7 +27,7 @@ describe("unlockExceptions integration", () => {
       errorLockedById: "test_user"
     })
 
-    const result = await databaseGateway.writable.transaction((tx) => unlockException(tx, caseObj.errorId))
+    const result = await databaseGateway.writable.transaction((tx) => unlockExceptions(tx, caseObj.errorId))
 
     expect(result).toBeUndefined()
 
@@ -42,7 +42,7 @@ describe("unlockExceptions integration", () => {
       errorLockedById: null
     })
 
-    const result = await databaseGateway.writable.transaction((tx) => unlockException(tx, caseObj.errorId))
+    const result = await databaseGateway.writable.transaction((tx) => unlockExceptions(tx, caseObj.errorId))
 
     expect(result).toBeUndefined()
 
@@ -53,7 +53,7 @@ describe("unlockExceptions integration", () => {
   })
 
   it("returns 404 NotFound when the case does not exist", async () => {
-    const result = await databaseGateway.writable.transaction((tx) => unlockException(tx, 99999))
+    const result = await databaseGateway.writable.transaction((tx) => unlockExceptions(tx, 99999))
     expect(result).toBeInstanceOf(NotFoundError)
   })
 
@@ -62,7 +62,7 @@ describe("unlockExceptions integration", () => {
       connection: jest.fn().mockImplementation(() => Promise.reject(new Error("Connection error")))
     } as unknown as TransactionConnection
 
-    const result = await unlockException(mockTx, 1)
+    const result = await unlockExceptions(mockTx, 1)
 
     expect(isError(result)).toBe(true)
     expect((result as Error).message).toBe("Couldn't unlock exceptions for case id 1: Connection error")
