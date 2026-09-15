@@ -33,7 +33,7 @@ COPY --from=src /conductor /conductor
 WORKDIR /conductor
 
 RUN printf '%s\n' \
-    'ext["tomcat.version"] = "10.1.57"' \
+    'ext["tomcat.version"] = "10.1.58"' \
     'subprojects {' \
     '    configurations.all {' \
     '        resolutionStrategy.eachDependency { d ->' \
