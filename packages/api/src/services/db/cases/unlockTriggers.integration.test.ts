@@ -5,7 +5,7 @@ import type { TransactionConnection } from "../../../types/DatabaseGateway"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
-import unlockTrigger from "./unlockTrigger"
+import unlockTrigger from "./unlockTriggers"
 
 describe("unlockTrigger integration", () => {
   let databaseGateway: End2EndPostgres

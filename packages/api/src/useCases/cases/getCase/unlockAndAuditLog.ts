@@ -11,8 +11,8 @@ import { isServiceUser, userAccess } from "@moj-bichard7/common/utils/userPermis
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
-import unlockException from "../../../services/db/cases/unlockException"
-import unlockTrigger from "../../../services/db/cases/unlockTrigger"
+import unlockExceptions from "../../../services/db/cases/unlockExceptions"
+import unlockTriggers from "../../../services/db/cases/unlockTriggers"
 import { ForbiddenError } from "../../../types/errors/ForbiddenError"
 import buildAuditLogEvent from "../../auditLog/buildAuditLogEvent"
 
@@ -66,7 +66,7 @@ export const unlockAndAuditLog = async (
   }
 
   if (wantsToUnlockExceptions && !!exceptionsLockedTo) {
-    const exceptionUnlockedResult = await unlockException(tx, caseId)
+    const exceptionUnlockedResult = await unlockExceptions(tx, caseId)
     if (isError(exceptionUnlockedResult)) {
       return exceptionUnlockedResult
     }
@@ -75,7 +75,7 @@ export const unlockAndAuditLog = async (
   }
 
   if (wantsToUnlockTriggers && !!triggersLockedTo) {
-    const triggerUnlockedResult = await unlockTrigger(tx, caseId)
+    const triggerUnlockedResult = await unlockTriggers(tx, caseId)
     if (isError(triggerUnlockedResult)) {
       return triggerUnlockedResult
     }
