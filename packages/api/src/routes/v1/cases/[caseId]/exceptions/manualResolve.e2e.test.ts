@@ -1,4 +1,3 @@
-import type { ExceptionsManualResolveBody } from "@moj-bichard7/common/contracts/ExceptionsManualResolveBody"
 import type { FastifyInstance } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
@@ -17,7 +16,13 @@ import { SetupAppEnd2EndHelper } from "../../../../../tests/helpers/setupAppEnd2
 import { createUserAndJwtToken } from "../../../../../tests/helpers/userHelper"
 import FetchById from "../../../../../useCases/fetchAuditLogs/FetchById"
 
-const defaultRequest = (jwt: string, body: Record<string, unknown>) => {
+const defaultRequest = (
+  jwt: string,
+  body: Record<string, unknown> = {
+    reason: "UpdatedDisposal",
+    reasonText: "Test comment"
+  }
+) => {
   return {
     body: JSON.stringify(body),
     headers: {
@@ -26,11 +31,6 @@ const defaultRequest = (jwt: string, body: Record<string, unknown>) => {
     },
     method: "POST"
   }
-}
-
-const defaultResolvePayload: ExceptionsManualResolveBody = {
-  reason: "UpdatedDisposal",
-  resolutionDetails: "Test comment"
 }
 
 describe("/v1/cases/:caseId/exceptions/manualResolve e2e", () => {
@@ -56,10 +56,7 @@ describe("/v1/cases/:caseId/exceptions/manualResolve e2e", () => {
   it("will receive a 404 error if there's no case found", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.GeneralHandler])
 
-    const response = await fetch(
-      `${helper.address}${endpoint.replace(":caseId", "999")}`,
-      defaultRequest(encodedJwt, defaultResolvePayload)
-    )
+    const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "999")}`, defaultRequest(encodedJwt))
 
     expect(response.status).toBe(NOT_FOUND)
   })
@@ -74,10 +71,7 @@ describe("/v1/cases/:caseId/exceptions/manualResolve e2e", () => {
       orgForPoliceFilter: "02"
     })
 
-    const response = await fetch(
-      `${helper.address}${endpoint.replace(":caseId", "1")}`,
-      defaultRequest(encodedJwt, defaultResolvePayload)
-    )
+    const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
     expect(response.status).toBe(NOT_FOUND)
   })
@@ -86,10 +80,7 @@ describe("/v1/cases/:caseId/exceptions/manualResolve e2e", () => {
     const [encodedJwt, user] = await createUserAndJwtToken(helper.postgres, [UserGroup.TriggerHandler])
     await createCase(helper.postgres, { errorLockedById: user.username })
 
-    const response = await fetch(
-      `${helper.address}${endpoint.replace(":caseId", "1")}`,
-      defaultRequest(encodedJwt, defaultResolvePayload)
-    )
+    const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
     expect(response.status).toBe(FORBIDDEN)
   })
@@ -98,10 +89,7 @@ describe("/v1/cases/:caseId/exceptions/manualResolve e2e", () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.GeneralHandler])
     await createCase(helper.postgres, { errorLockedById: "another_user" })
 
-    const response = await fetch(
-      `${helper.address}${endpoint.replace(":caseId", "1")}`,
-      defaultRequest(encodedJwt, defaultResolvePayload)
-    )
+    const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
     expect(response.status).toBe(UNPROCESSABLE_ENTITY)
   })
@@ -114,10 +102,7 @@ describe("/v1/cases/:caseId/exceptions/manualResolve e2e", () => {
       resolutionAt: new Date()
     })
 
-    const response = await fetch(
-      `${helper.address}${endpoint.replace(":caseId", "1")}`,
-      defaultRequest(encodedJwt, defaultResolvePayload)
-    )
+    const response = await fetch(`${helper.address}${endpoint.replace(":caseId", "1")}`, defaultRequest(encodedJwt))
 
     expect(response.status).toBe(NOT_FOUND)
   })
@@ -133,7 +118,7 @@ describe("/v1/cases/:caseId/exceptions/manualResolve e2e", () => {
 
     const response = await fetch(
       `${helper.address}${endpoint.replace(":caseId", String(caseObj.errorId))}`,
-      defaultRequest(encodedJwt, defaultResolvePayload)
+      defaultRequest(encodedJwt)
     )
 
     expect(response.status).toBe(OK)

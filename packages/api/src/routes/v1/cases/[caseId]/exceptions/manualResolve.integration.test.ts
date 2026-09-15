@@ -1,4 +1,3 @@
-import type { ExceptionsManualResolveBody } from "@moj-bichard7/common/contracts/ExceptionsManualResolveBody"
 import type { FastifyInstance, InjectOptions } from "fastify"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
@@ -13,18 +12,20 @@ import auditLogDynamoConfig from "../../../../../tests/helpers/dynamoDbConfig"
 import { createUserAndJwtToken } from "../../../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../../../tests/testGateways/e2ePostgres"
 
-const defaultInjectParams = (jwt: string, caseId: string, body: Record<string, unknown>): InjectOptions => {
+const defaultInjectParams = (
+  jwt: string,
+  caseId: string,
+  body: Record<string, unknown> = {
+    reason: "UpdatedDisposal",
+    reasonText: "Test comment"
+  }
+): InjectOptions => {
   return {
     headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
     method: "POST",
     payload: body,
     url: V1.CaseExceptionsManualResolve.replace(":caseId", caseId)
   }
-}
-
-const defaultResolvePayload: ExceptionsManualResolveBody = {
-  reason: "UpdatedDisposal",
-  resolutionDetails: "Test comment"
 }
 
 describe("manualResolve integration", () => {
@@ -64,7 +65,7 @@ describe("manualResolve integration", () => {
         errorStatus: ResolutionStatusNumber.Unresolved
       })
 
-      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId), defaultResolvePayload))
+      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId)))
 
       expect(response.statusCode).toBe(OK)
     })
@@ -77,7 +78,7 @@ describe("manualResolve integration", () => {
         errorStatus: ResolutionStatusNumber.Unresolved
       })
 
-      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId), defaultResolvePayload))
+      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId)))
 
       expect(response.statusCode).toBe(OK)
     })
@@ -95,7 +96,7 @@ describe("manualResolve integration", () => {
         orgForPoliceFilter: "ABC"
       })
 
-      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId), defaultResolvePayload))
+      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId)))
 
       expect(response.statusCode).toBe(OK)
     })
@@ -112,7 +113,7 @@ describe("manualResolve integration", () => {
         orgForPoliceFilter: "01"
       })
 
-      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId), defaultResolvePayload))
+      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId)))
 
       expect(response.statusCode).toBe(OK)
     })
@@ -135,20 +136,6 @@ describe("manualResolve integration", () => {
           reason: "InvalidReason",
           reasonText: "Test comment",
           resolutionStatus: "Resolved"
-        })
-      )
-
-      expect(response.statusCode).toBe(BAD_REQUEST)
-    })
-
-    it("will receive 400 BadRequest if request body resolutionStatus property is invalid", async () => {
-      const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
-
-      const response = await app.inject(
-        defaultInjectParams(encodedJwt, String(1), {
-          reason: "UpdatedDisposal",
-          reasonText: "Test comment",
-          resolutionStatus: "InvalidStatus"
         })
       )
 
@@ -179,7 +166,7 @@ describe("manualResolve integration", () => {
         errorStatus: ResolutionStatusNumber.Unresolved
       })
 
-      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId), defaultResolvePayload))
+      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId)))
 
       expect(response.statusCode).toBe(FORBIDDEN)
     })
@@ -194,7 +181,7 @@ describe("manualResolve integration", () => {
         errorStatus: ResolutionStatusNumber.Resolved
       })
 
-      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId), defaultResolvePayload))
+      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId)))
 
       expect(response.statusCode).toBe(NOT_FOUND)
     })
@@ -202,7 +189,7 @@ describe("manualResolve integration", () => {
     it("will receive 404 NotFound if the case id doesn't exist", async () => {
       const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
 
-      const response = await app.inject(defaultInjectParams(encodedJwt, String(999), defaultResolvePayload))
+      const response = await app.inject(defaultInjectParams(encodedJwt, String(999)))
 
       expect(response.statusCode).toBe(NOT_FOUND)
     })
@@ -219,7 +206,7 @@ describe("manualResolve integration", () => {
         orgForPoliceFilter: "ABC"
       })
 
-      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId), defaultResolvePayload))
+      const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId)))
 
       expect(response.statusCode).toBe(NOT_FOUND)
     })
@@ -233,7 +220,7 @@ describe("manualResolve integration", () => {
       errorStatus: ResolutionStatusNumber.Unresolved
     })
 
-    const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId), defaultResolvePayload))
+    const response = await app.inject(defaultInjectParams(encodedJwt, String(caseObj.errorId)))
 
     expect(response.statusCode).toBe(UNPROCESSABLE_ENTITY)
   })
