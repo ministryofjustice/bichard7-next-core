@@ -125,6 +125,33 @@ describe("unlockAndAuditLog integration", () => {
       expect((result as ForbiddenError).message).toBe("User does not have permission to unlock triggers and exceptions")
       expect(auditLogEvents).toHaveLength(0)
     })
+
+    it("returns ForbiddenError if service user attempts to unlock case", async () => {
+      const user = await createUser(databaseGateway, {
+        groups: [UserGroup.Service],
+        id: 1
+      })
+      const auditLogEvents: ApiAuditLogEvent[] = []
+      const caseObj = await createCase(databaseGateway)
+
+      const result = await databaseGateway.writable.transaction((tx) =>
+        unlockAndAuditLog(
+          tx,
+          user,
+          1,
+          UnlockReason.Trigger,
+          auditLogEvents,
+          caseObj.errorLockedById,
+          caseObj.triggerLockedById
+        )
+      )
+
+      expect(result).toBeInstanceOf(ForbiddenError)
+      expect((result as ForbiddenError).message).toBe(
+        "Service user does not have permission to unlock exceptions or triggers"
+      )
+      expect(auditLogEvents).toHaveLength(0)
+    })
   })
 
   describe("When lock is present", () => {

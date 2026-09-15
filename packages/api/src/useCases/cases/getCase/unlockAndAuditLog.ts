@@ -6,7 +6,7 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import Permission from "@moj-bichard7/common/types/Permission"
 import { isError } from "@moj-bichard7/common/types/Result"
 import UnlockReason from "@moj-bichard7/common/types/UnlockReason"
-import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
+import { isServiceUser, userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 import type { TransactionConnection } from "../../../types/DatabaseGateway"
@@ -39,6 +39,10 @@ export const unlockAndAuditLog = async (
   exceptionsLockedTo: null | string,
   triggersLockedTo: null | string
 ): PromiseResult<void> => {
+  if (isServiceUser(user)) {
+    return new ForbiddenError("Service user does not have permission to unlock exceptions or triggers")
+  }
+
   const eventSource = "Bichard New UI"
   const canUnlockTriggers = userAccess(user)[Permission.Triggers]
   const canUnlockExceptions = userAccess(user)[Permission.Exceptions]
