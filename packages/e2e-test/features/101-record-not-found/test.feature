@@ -36,6 +36,7 @@ Feature: {101} R4.1.3_BR7_New Trigger TRPR0016
 
 	@Should
 	@PreProdTest
+	@ExcludedOnPnc
 	Scenario: Trigger is still created when record is not found in LEDS
 		Given I am logged in as "generalhandler"
 			And I view the list of exceptions
