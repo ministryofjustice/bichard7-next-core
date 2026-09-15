@@ -37,7 +37,7 @@ jobs:
         run: sudo cp -r docs/schema docs/architecture/build/site
 
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@049a95c516cd5723d8cfde79dc7a79fcdcbd6c97 #v4
+        uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 #v4
         with:
           branch: gh-pages
           folder: docs/architecture/build/site
