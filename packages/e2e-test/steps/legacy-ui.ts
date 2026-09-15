@@ -18,6 +18,7 @@ import * as ui from "../utils/actions.next-ui"
 import { Given, Then, When } from "../helpers/stepsHelpers"
 import { checkAuditLogExists } from "../utils/auditLogging"
 import { delay } from "../utils/puppeteer-utils"
+import type Bichard from "../utils/world"
 
 export const setupLegacySteps = () => {
   Given("the data for this test is in the PNC", function () {
@@ -55,8 +56,12 @@ export const setupLegacySteps = () => {
   When("I wait {string} seconds", delay)
   When("I view offence {string}", legacy.viewOffence)
   When("I unlock the record and return to the list", legacy.returnToCaseListUnlock)
-  When("I correct {string} to {string}", legacy.correctOffenceException)
-  When("I amend {string} to {string}", legacy.correctOffenceException)
+  When("I correct {string} to {string}", function (this: Bichard, field: string, value: string) {
+    return legacy.correctOffenceException.apply(this, [field, value, false])
+  })
+  When("I amend {string} to {string}", function (this: Bichard, field: string, value: string) {
+    return legacy.correctOffenceException.apply(this, [field, value, true])
+  })
   When("I match the offence to PNC offence {string}", legacy.matchOffence)
   When("I match the offence to PNC offence {string} in case {string}", legacy.matchOffenceAndCcr)
   When("I match the offence as Added In Court", () => {})

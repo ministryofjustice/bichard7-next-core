@@ -90,7 +90,8 @@
         "courtIdentityType": "name",
         "courtName": "Magistrates' Courts London"
       },
-      "courtCaseReference": "26/9998/002196T"
+      "courtCaseReference": "26/9998/002196T",
+      "subsequentAppearances": []
     }
   ],
   "remands": []

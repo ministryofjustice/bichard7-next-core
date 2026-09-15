@@ -21,6 +21,7 @@ Feature: {101} R4.1.3_BR7_New Trigger TRPR0016
 
 	@Should
 	@PreProdTest
+	@ExcludedOnLeds
 	Scenario: Trigger is still created when record is not found in PNC
 		Given I am logged in as "generalhandler"
 			And I view the list of exceptions
@@ -32,3 +33,18 @@ Feature: {101} R4.1.3_BR7_New Trigger TRPR0016
 			And I see trigger "TRPR0016" for offence "2"
 		When I click the "PNC Errors" tab
 		Then I see "I1008 - GWAY - ENQUIRY ERROR ARREST/SUMMONS REF (11/01ZD/01/410843C) NOT FOUND" in the "Error" row of the results table
+
+	@Should
+	@PreProdTest
+	@ExcludedOnPnc
+	Scenario: Trigger is still created when record is not found in LEDS
+		Given I am logged in as "generalhandler"
+			And I view the list of exceptions
+		Then I see trigger "PR16 - Forfeiture order" in the exception list table
+			And I see exception "HO100301" in the exception list table
+		When I open the record for "TRPRSIXTEEN TRIGGER"
+			And I click the "Triggers" tab
+		Then I see trigger "TRPR0016" for offence "1"
+			And I see trigger "TRPR0016" for offence "2"
+		When I click the "PNC Errors" tab
+		Then I see "No matching arrest reports found for asn" in the "Error" row of the results table
