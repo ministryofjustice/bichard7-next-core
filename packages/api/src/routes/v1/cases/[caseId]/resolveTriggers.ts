@@ -4,9 +4,10 @@ import type { FastifyZodOpenApiSchema } from "fastify-zod-openapi"
 
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { INTERNAL_SERVER_ERROR, OK } from "http-status"
+import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
+import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
 import auth from "../../../../server/schemas/auth"
@@ -17,9 +18,12 @@ import {
   unauthorizedError
 } from "../../../../server/schemas/errorReasons"
 import useZod from "../../../../server/useZod"
+import { NotFoundError } from "../../../../types/errors/NotFoundError"
+import { UnprocessableEntityError } from "../../../../types/errors/UnprocessableEntityError"
 import resolveTriggers from "../../../../useCases/cases/resolveTriggers"
 
 type HandlerProps = {
+  auditLogGateway: AuditLogDynamoGateway
   caseId: number
   database: DatabaseGateway
   logger: FastifyBaseLogger
@@ -44,15 +48,26 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ caseId, database, logger, reply, triggerIds, user }: HandlerProps) => {
-  const resolveTriggersResult = await resolveTriggers(database.writable, logger, triggerIds, caseId, user)
+const handler = async ({ auditLogGateway, caseId, database, logger, reply, triggerIds, user }: HandlerProps) => {
+  const resolveTriggersResult = await resolveTriggers(
+    database.writable,
+    logger,
+    triggerIds,
+    caseId,
+    user,
+    auditLogGateway
+  )
 
   if (isError(resolveTriggersResult)) {
     reply.log.error(resolveTriggersResult)
 
-    // if (resolveTriggersResult instanceof NotFoundError) {
-    //   return reply.code(NOT_FOUND).send()
-    // }
+    if (resolveTriggersResult instanceof NotFoundError) {
+      return reply.code(NOT_FOUND).send()
+    }
+
+    if (resolveTriggersResult instanceof UnprocessableEntityError) {
+      return reply.code(UNPROCESSABLE_ENTITY).send()
+    }
 
     return reply.code(INTERNAL_SERVER_ERROR).send()
   }
@@ -63,6 +78,7 @@ const handler = async ({ caseId, database, logger, reply, triggerIds, user }: Ha
 const route = async (fastify: FastifyInstance) => {
   useZod(fastify).post(V1.ResolveTriggers, { schema }, async (req, reply) => {
     await handler({
+      auditLogGateway: req.auditLogGateway,
       caseId: Number(req.params.caseId),
       database: req.database,
       logger: req.log,

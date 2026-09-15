@@ -135,7 +135,12 @@ const resolveTriggers = async (
             user: user.username,
             auditLogVersion: 2,
             "Number Of Triggers": allTriggers.length,
-            ...generateTriggersAttributes(allTriggers)
+            ...generateTriggersAttributes(
+              allTriggers.map((trigger) => ({
+                triggerItemIdentity: trigger.triggerItemIdentity,
+                triggerCode: trigger.triggerCode
+              }))
+            )
           })
         )
       }

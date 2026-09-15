@@ -114,6 +114,7 @@ export const CaseIndexDtoSchema = z.object({
   errorLockedByUsername: z.string().nullable(),
   errorQualityChecked: z.number().nullable(),
   errorReport: z.string().optional(),
+  errorResolvedTimestamp: z.date().nullable(),
   errorStatus: z.string().nullable(),
   isUrgent: z.number().optional(),
   messageReceivedTimestamp: z.date().nullable(),

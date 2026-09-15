@@ -61,6 +61,7 @@ export const convertCaseToCaseIndexDto = (
   errorLockedByUsername: caseRowForDto.error_locked_by_id,
   errorQualityChecked: caseRowForDto.error_quality_checked,
   errorReport: caseRowForDto.error_report,
+  errorResolvedTimestamp: caseRowForDto.error_resolved_ts,
   errorStatus: resolutionStatusFromDb(caseRowForDto.error_status),
   isUrgent: caseRowForDto.is_urgent,
   messageReceivedTimestamp: caseRowForDto.msg_received_ts,

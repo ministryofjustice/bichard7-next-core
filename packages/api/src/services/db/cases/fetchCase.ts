@@ -32,6 +32,7 @@ export default async (
         el.error_count,
         el.error_quality_checked,
         el.error_report,
+        el.error_resolved_ts,
         el.error_status,
         el.hearing_outcome,
         el.is_urgent,
