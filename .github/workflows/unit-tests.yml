@@ -133,15 +133,10 @@ jobs:
         with:
           install: false
           working-directory: packages/ui
-          component: true
-          spec: cypress/component/**/*.cy.tsx
+          command: npx cypress run --component --spec "cypress/component/**/*.cy.tsx" --reporter junit --reporter-options "mochaFile=cypress/results/results-[hash].xml"
         env:
           UI_IS_HTTPS: "true"
           TZ: "Europe/London"
-        
-      - name: Locate XML files
-        if: always()
-        run: find . -name "*.xml"
 
       - name: Publish Cypress Test Report
         uses: dorny/test-reporter@v1 
