@@ -3,7 +3,7 @@ import { isError } from "lodash"
 
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
 
-export default async (database: DatabaseConnection, caseId: number): PromiseResult<boolean> => {
+const checkAllTriggersResolved = async (database: DatabaseConnection, caseId: number): PromiseResult<boolean> => {
   const result = await database.connection<{ allResolved: boolean }[]>`
     SELECT NOT EXISTS (
         SELECT 1 
@@ -19,3 +19,5 @@ export default async (database: DatabaseConnection, caseId: number): PromiseResu
 
   return result[0].allResolved
 }
+
+export default checkAllTriggersResolved

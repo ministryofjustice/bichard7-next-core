@@ -37,9 +37,9 @@ export const unlockAndAuditLog = async (
   unlockReason: UnlockReason,
   auditLogEvents: ApiAuditLogEvent[],
   exceptionsLockedTo: null | string,
-  triggersLockedTo: null | string,
-  eventSource: string = "Bichard New UI"
+  triggersLockedTo: null | string
 ): PromiseResult<void> => {
+  const eventSource = "Bichard New UI"
   const canUnlockTriggers = userAccess(user)[Permission.Triggers]
   const canUnlockExceptions = userAccess(user)[Permission.Exceptions]
 

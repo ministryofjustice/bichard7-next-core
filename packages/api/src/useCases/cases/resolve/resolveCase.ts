@@ -35,11 +35,14 @@ export const resolveCase = async (
     .transaction<Error | void>(async (tx) => {
       const auditLogEvents: ApiAuditLogEvent[] = []
 
-      // verify the case exists and perform permissions checks, this also checks the case is not locked to another user
       const caseResult = await fetchCase(tx, user, caseId, logger)
 
       if (isError(caseResult)) {
         return caseResult
+      }
+
+      if (caseResult.errorLockedByUsername !== user.username) {
+        throw new Error(`Case id ${caseId} is locked to another user`)
       }
 
       const resolveErrorResult = await resolveError(tx, user, caseId, resolution, auditLogEvents)

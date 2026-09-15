@@ -1,5 +1,4 @@
 import type { ResolveBody } from "@moj-bichard7/common/contracts/ResolveBody"
-import type { FastifyBaseLogger } from "fastify"
 
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { ResolutionReasonCode } from "@moj-bichard7/common/types/ManualResolution"
@@ -14,11 +13,6 @@ import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import { resolveError } from "./resolveError"
-
-const mockLogger = {
-  error: jest.fn(),
-  info: jest.fn()
-} as unknown as FastifyBaseLogger
 
 describe("resolveError integration", () => {
   let databaseGateway: End2EndPostgres

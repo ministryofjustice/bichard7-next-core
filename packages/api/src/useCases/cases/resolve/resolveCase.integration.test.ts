@@ -301,11 +301,9 @@ describe("resolveCase orchestration integration", () => {
       errorStatus: ResolutionStatusNumber.Unresolved
     })
 
-    mockResolveError.mockImplementation(async (_tx, _user, _caseId, _resolution, auditLogEvents) => {
-      auditLogEvents = []
+    mockResolveError.mockImplementation(async (_tx, _user, _caseId, _resolution) => {
       return undefined
     })
-    mockUnlockAndAuditLog.mockImplementationOnce(async () => undefined)
 
     const validResolution: ResolveBody = {
       reason: "UpdatedDisposal",
@@ -354,6 +352,35 @@ describe("resolveCase orchestration integration", () => {
 
     expect(result).toBeInstanceOf(Error)
     expect((result as Error).message).toBe("Case id 999 for user User1 not found")
+    expect(auditLogEvents).toHaveLength(0)
+  })
+
+  it("returns an error if exceptions are locked to another user", async () => {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
+    await createCase(databaseGateway, {
+      errorCount: 1,
+      errorLockedById: "another_user",
+      errorStatus: ResolutionStatusNumber.Unresolved
+    })
+    const auditLogEvents: ApiAuditLogEvent[] = []
+
+    const validResolution: ResolveBody = {
+      reason: "UpdatedDisposal",
+      reasonText: "Test reason text",
+      resolutionStatus: "Resolved"
+    }
+
+    const result = await resolveCase(
+      databaseGateway.writable,
+      user,
+      1,
+      validResolution,
+      mockAuditLogDynamoGateway,
+      mockLogger
+    )
+
+    expect(result).toBeInstanceOf(Error)
+    expect((result as Error).message).toBe("Case id 1 is locked to another user")
     expect(auditLogEvents).toHaveLength(0)
   })
 
