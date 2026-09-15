@@ -4,7 +4,7 @@ import { formatForceEnvVariable } from "utils/forceNormalisation"
 
 const toBoolean = (val: number | string): boolean => val === "true" || val === "1" || val === 1
 
-export const isProduction = process.env.NEXT_PUBLIC_WORKSPACE === "production"
+export const x = process.env.NEXT_PUBLIC_WORKSPACE === "production"
 
 export const MAX_NOTE_LENGTH = 2000
 export const MAX_FEEDBACK_LENGTH = 2000
