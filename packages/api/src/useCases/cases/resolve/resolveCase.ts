@@ -39,7 +39,7 @@ export const resolveCase = async (
       const caseResult = await fetchCase(tx, user, caseId, logger)
 
       if (isError(caseResult)) {
-        return caseResult
+        throw caseResult
       }
 
       if (caseResult.errorLockedByUsername !== user.username) {
@@ -72,7 +72,7 @@ export const resolveCase = async (
         `${user.username}: Portal Action: Record Manually Resolved.` +
         ` Reason: ${resolution.reason}. Reason Text: ${resolution.reasonText}`
 
-      const insertNoteResult = await insertNote(tx, caseId, noteText, "System").catch((err: Error) => err)
+      const insertNoteResult = await insertNote(tx, caseId, noteText, "System")
       if (isError(insertNoteResult)) {
         throw insertNoteResult
       }
