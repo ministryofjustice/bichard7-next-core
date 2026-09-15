@@ -133,7 +133,7 @@ jobs:
         with:
           install: false
           working-directory: packages/ui
-          command: npx cypress run --component --spec "packages/uicypress/component/**/*.cy.tsx" --reporter junit --reporter-options mochaFile=cypress/results/results-[hash].xml
+          command: npx cypress run --component --spec "packages/ui/cypress/component/**/*.cy.tsx" --reporter junit --reporter-options mochaFile=cypress/results/results-[hash].xml
         env:
           UI_IS_HTTPS: "true"
           TZ: "Europe/London"
