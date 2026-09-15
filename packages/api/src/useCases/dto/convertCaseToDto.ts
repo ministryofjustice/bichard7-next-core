@@ -53,6 +53,7 @@ export const convertCaseToCaseIndexDto = (
   courtDate: caseRowForDto.court_date,
   courtName: caseRowForDto.court_name,
   defendantName: caseRowForDto.defendant_name,
+  errorCount: caseRowForDto.error_count,
   errorId: caseRowForDto.error_id,
   errorLockedByUserFullName: isEmpty(caseRowForDto.error_locked_by_fullname?.replace(/ /g, ""))
     ? null
@@ -61,7 +62,6 @@ export const convertCaseToCaseIndexDto = (
   errorQualityChecked: caseRowForDto.error_quality_checked,
   errorReport: caseRowForDto.error_report,
   errorStatus: resolutionStatusFromDb(caseRowForDto.error_status),
-  // errorCount: caseRowForDto.error_count,
   isUrgent: caseRowForDto.is_urgent,
   messageReceivedTimestamp: caseRowForDto.msg_received_ts,
   noteCount: (caseRowForDto as CaseRowForIndexDto).note_count
