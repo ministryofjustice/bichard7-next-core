@@ -1,3 +1,4 @@
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { type PromiseResult } from "@moj-bichard7/common/types/Result"
 import { isError } from "lodash"
 
@@ -9,7 +10,7 @@ const checkAllTriggersResolved = async (database: DatabaseConnection, caseId: nu
         SELECT 1 
         FROM br7own.error_list_triggers 
         WHERE error_id = ${caseId}  
-            AND status != 2
+            AND status != ${ResolutionStatusNumber.Resolved}
         ) AS "allResolved"
     `.catch((error: Error) => error)
 
