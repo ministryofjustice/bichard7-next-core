@@ -33,12 +33,17 @@ COPY --from=src /conductor /conductor
 WORKDIR /conductor
 
 RUN printf '%s\n' \
-    'ext["tomcat.version"] = "10.1.55"' \
+    'ext["tomcat.version"] = "10.1.57"' \
     'subprojects {' \
     '    configurations.all {' \
     '        resolutionStrategy.eachDependency { d ->' \
     '            if (d.requested.group == "org.bouncycastle") {' \
     '                d.useVersion "1.84"' \
+    '                d.because "Fix CVE-2025-14813"' \
+    '            }' \
+    '            if (d.requested.group == "io.netty" && d.requested.version?.startsWith("4.1.")) {' \
+    '                d.useVersion "4.1.137.Final"' \
+    '                d.because "Fix CVE-2026-75595"' \
     '            }' \
     '        }' \
     '    }' \
