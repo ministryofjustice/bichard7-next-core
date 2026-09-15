@@ -18,7 +18,7 @@ import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
 import createAuditLogEvents from "../../createAuditLogEvents"
 import { unlockAndAuditLog } from "../getCase/unlockAndAuditLog"
-import { resolveError } from "./resolveError"
+import { resolveExceptions } from "./resolveExceptions"
 
 export const resolveCase = async (
   databaseConnection: WritableDatabaseConnection,
@@ -46,9 +46,9 @@ export const resolveCase = async (
         throw new UnprocessableEntityError(`Case id ${caseId} is locked to another user`)
       }
 
-      const resolveErrorResult = await resolveError(tx, user, caseId, resolution, auditLogEvents)
-      if (isError(resolveErrorResult)) {
-        throw resolveErrorResult
+      const resolveExceptionsResult = await resolveExceptions(tx, user, caseId, resolution, auditLogEvents)
+      if (isError(resolveExceptionsResult)) {
+        throw resolveExceptionsResult
       }
 
       const unlockReason = userAccess(user)[Permission.Triggers]

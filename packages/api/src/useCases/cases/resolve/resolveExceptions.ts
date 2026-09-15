@@ -15,7 +15,7 @@ import checkAllTriggersResolved from "../../../services/db/cases/checkAllTrigger
 import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
 import buildAuditLogEvent from "../../auditLog/buildAuditLogEvent"
 
-export const resolveError = async (
+export const resolveExceptions = async (
   tx: TransactionConnection,
   user: User,
   caseId: number,

@@ -5,19 +5,19 @@ import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionSta
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { BAD_REQUEST, FORBIDDEN, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 
-import build from "../../../../app"
-import { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
-import { createCase } from "../../../../tests/helpers/caseHelper"
-import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
-import { createUserAndJwtToken } from "../../../../tests/helpers/userHelper"
-import End2EndPostgres from "../../../../tests/testGateways/e2ePostgres"
+import build from "../../../../../app"
+import { AuditLogDynamoGateway } from "../../../../../services/gateways/dynamo"
+import { createCase } from "../../../../../tests/helpers/caseHelper"
+import auditLogDynamoConfig from "../../../../../tests/helpers/dynamoDbConfig"
+import { createUserAndJwtToken } from "../../../../../tests/helpers/userHelper"
+import End2EndPostgres from "../../../../../tests/testGateways/e2ePostgres"
 
 const defaultInjectParams = (jwt: string, caseId: string, body: Record<string, unknown>): InjectOptions => {
   return {
     headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
     method: "POST",
     payload: body,
-    url: V1.CaseResolve.replace(":caseId", caseId)
+    url: V1.CaseExceptionsManualResolve.replace(":caseId", caseId)
   }
 }
 
@@ -27,7 +27,7 @@ const defaultResolveCasePayload = {
   resolutionStatus: "Resolved"
 }
 
-describe("resolve integration", () => {
+describe("manualResolve integration", () => {
   let app: FastifyInstance
   const testDatabaseGateway = new End2EndPostgres()
   const auditLogGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)

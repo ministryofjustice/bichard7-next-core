@@ -8,13 +8,13 @@ import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionSta
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { FORBIDDEN, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 
-import type { OutputApiAuditLog } from "../../../../types/AuditLog"
+import type { OutputApiAuditLog } from "../../../../../types/AuditLog"
 
-import fetchCase from "../../../../services/db/cases/fetchCase"
-import { createCase } from "../../../../tests/helpers/caseHelper"
-import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
-import { createUserAndJwtToken } from "../../../../tests/helpers/userHelper"
-import FetchById from "../../../../useCases/fetchAuditLogs/FetchById"
+import fetchCase from "../../../../../services/db/cases/fetchCase"
+import { createCase } from "../../../../../tests/helpers/caseHelper"
+import { SetupAppEnd2EndHelper } from "../../../../../tests/helpers/setupAppEnd2EndHelper"
+import { createUserAndJwtToken } from "../../../../../tests/helpers/userHelper"
+import FetchById from "../../../../../useCases/fetchAuditLogs/FetchById"
 
 const defaultRequest = (jwt: string, body: Record<string, unknown>) => {
   return {
@@ -33,8 +33,8 @@ const defaultResolvePayload = {
   resolutionStatus: "Resolved"
 }
 
-describe("/v1/cases/:caseId/resolve e2e", () => {
-  const endpoint = V1.CaseResolve
+describe("/v1/cases/:caseId/exceptions/manualResolve e2e", () => {
+  const endpoint = V1.CaseExceptionsManualResolve
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 

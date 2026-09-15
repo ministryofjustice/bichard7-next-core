@@ -9,17 +9,17 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { BAD_GATEWAY, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
-import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
-import type DatabaseGateway from "../../../../types/DatabaseGateway"
+import type { AuditLogDynamoGateway } from "../../../../../services/gateways/dynamo"
+import type DatabaseGateway from "../../../../../types/DatabaseGateway"
 
-import auth from "../../../../server/schemas/auth"
-import { forbiddenError, internalServerError, unauthorizedError } from "../../../../server/schemas/errorReasons"
-import useZod from "../../../../server/useZod"
-import handleDisconnectedError from "../../../../services/db/handleDisconnectedError"
-import { NotAllowedError } from "../../../../types/errors/NotAllowedError"
-import { NotFoundError } from "../../../../types/errors/NotFoundError"
-import { UnprocessableEntityError } from "../../../../types/errors/UnprocessableEntityError"
-import { resolveCase } from "../../../../useCases/cases/resolve/resolveCase"
+import auth from "../../../../../server/schemas/auth"
+import { forbiddenError, internalServerError, unauthorizedError } from "../../../../../server/schemas/errorReasons"
+import useZod from "../../../../../server/useZod"
+import handleDisconnectedError from "../../../../../services/db/handleDisconnectedError"
+import { NotAllowedError } from "../../../../../types/errors/NotAllowedError"
+import { NotFoundError } from "../../../../../types/errors/NotFoundError"
+import { UnprocessableEntityError } from "../../../../../types/errors/UnprocessableEntityError"
+import { resolveCase } from "../../../../../useCases/cases/resolve/resolveCase"
 
 type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway
@@ -74,7 +74,7 @@ const handler = async ({ auditLogGateway, body, caseId, database, logger, reply,
 }
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).post(V1.CaseResolve, { schema }, async (req, reply) => {
+  useZod(fastify).post(V1.CaseExceptionsManualResolve, { schema }, async (req, reply) => {
     await handler({
       auditLogGateway: req.auditLogGateway,
       body: req.body,

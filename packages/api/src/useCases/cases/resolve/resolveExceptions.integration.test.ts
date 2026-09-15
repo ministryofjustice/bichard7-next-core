@@ -12,9 +12,9 @@ import { createCase } from "../../../tests/helpers/caseHelper"
 import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
-import { resolveError } from "./resolveError"
+import { resolveExceptions } from "./resolveExceptions"
 
-describe("resolveError integration", () => {
+describe("resolveExceptions integration", () => {
   let databaseGateway: End2EndPostgres
 
   beforeAll(() => {
@@ -40,7 +40,7 @@ describe("resolveError integration", () => {
     }
 
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveError(tx, user, 1, invalidResolution, auditLogEvents)
+      resolveExceptions(tx, user, 1, invalidResolution, auditLogEvents)
     )
 
     expect(isError(result)).toBe(true)
@@ -63,7 +63,7 @@ describe("resolveError integration", () => {
       resolutionStatus: "Resolved"
     }
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveError(tx, user, 1, validResolution, auditLogEvents)
+      resolveExceptions(tx, user, 1, validResolution, auditLogEvents)
     )
 
     expect(isError(result)).toBe(true)
@@ -88,7 +88,7 @@ describe("resolveError integration", () => {
     }
 
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveError(tx, user, caseObj.errorId, validResolution, auditLogEvents)
+      resolveExceptions(tx, user, caseObj.errorId, validResolution, auditLogEvents)
     )
 
     expect(result).toBeUndefined()
@@ -131,7 +131,7 @@ describe("resolveError integration", () => {
     }
 
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveError(tx, user, caseObj.errorId, validResolution, auditLogEvents)
+      resolveExceptions(tx, user, caseObj.errorId, validResolution, auditLogEvents)
     )
 
     expect(result).toBeUndefined()
@@ -172,7 +172,7 @@ describe("resolveError integration", () => {
     }
 
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveError(tx, user, caseObj.errorId, validResolution, auditLogEvents)
+      resolveExceptions(tx, user, caseObj.errorId, validResolution, auditLogEvents)
     )
 
     expect(isError(result)).toBe(true)

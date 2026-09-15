@@ -17,15 +17,15 @@ import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import createAuditLogEvents from "../../createAuditLogEvents"
 import { unlockAndAuditLog } from "../getCase/unlockAndAuditLog"
 import { resolveCase } from "./resolveCase"
-import { resolveError } from "./resolveError"
+import { resolveExceptions } from "./resolveExceptions"
 
 jest.mock("../../../services/db/cases/insertNote")
 jest.mock("../../../services/db/cases/selectMessageId")
 jest.mock("../../createAuditLogEvents")
 jest.mock("../getCase/unlockAndAuditLog")
-jest.mock("./resolveError")
+jest.mock("./resolveExceptions")
 
-const mockResolveError = resolveError as jest.MockedFunction<typeof resolveError>
+const mockResolveError = resolveExceptions as jest.MockedFunction<typeof resolveExceptions>
 const mockInsertNote = insertNote as jest.MockedFunction<typeof insertNote>
 const mockSelectMessageId = selectMessageId as jest.MockedFunction<typeof selectMessageId>
 const mockCreateAuditLogEvents = createAuditLogEvents as jest.MockedFunction<typeof createAuditLogEvents>
