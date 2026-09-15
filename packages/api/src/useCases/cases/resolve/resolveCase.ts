@@ -15,6 +15,7 @@ import fetchCase from "../../../services/db/cases/fetchCase"
 import insertNote from "../../../services/db/cases/insertNote"
 import selectMessageId from "../../../services/db/cases/selectMessageId"
 import { NotAllowedError } from "../../../types/errors/NotAllowedError"
+import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
 import createAuditLogEvents from "../../createAuditLogEvents"
 import { unlockAndAuditLog } from "../getCase/unlockAndAuditLog"
 import { resolveError } from "./resolveError"
@@ -42,7 +43,7 @@ export const resolveCase = async (
       }
 
       if (caseResult.errorLockedByUsername !== user.username) {
-        throw new Error(`Case id ${caseId} is locked to another user`)
+        throw new UnprocessableEntityError(`Case id ${caseId} is locked to another user`)
       }
 
       const resolveErrorResult = await resolveError(tx, user, caseId, resolution, auditLogEvents)
