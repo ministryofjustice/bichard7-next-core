@@ -600,7 +600,9 @@ jobs:
       - run:
           name: Run Goss Tests
           working_directory: packages/nginx-auth-proxy
-          command: make goss
+          command: |
+            docker tag "nginx-auth-proxy:${DOCKER_TAG}" "nginx-auth-proxy:latest"
+            make goss
       - run:
           name: Run unit tests
           working_directory: packages/nginx-auth-proxy
