@@ -308,18 +308,18 @@ workspace "Bichard" {
       autoLayout lr
     }
 
-    container bichard "OldBichard" {
-      include * pnc
-      exclude slack pagerDuty bichardUI conductor bichardApi niam leds ledsProxy
-      autoLayout
-      title "Old Bichard"
-    }
-
     container bichard "HybridBichard" {
       include * pnc
       exclude slack pagerDuty
       autoLayout
       title "Hybrid Bichard"
+    }
+
+    container bichard "OldBichard" {
+      include * pnc
+      exclude slack pagerDuty bichardUI conductor bichardApi niam leds ledsProxy
+      autoLayout
+      title "Old Bichard"
     }
 
     component conductor {
