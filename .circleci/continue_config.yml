@@ -43,6 +43,9 @@ parameters:
   s3-web-proxy-changes:
     type: boolean
     default: false
+  nginx-auth-proxy-changes:
+    type: boolean
+    default: false
 
 commands:
   fetch_images:
