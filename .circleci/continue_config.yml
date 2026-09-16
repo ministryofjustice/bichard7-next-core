@@ -894,6 +894,7 @@ jobs:
       - load_api_image
       - load_audit_logging_image
       - load_conductor_image
+      - load_nginx_auth_proxy_image
       - node/install
       - node_install_packages
       - build_core
