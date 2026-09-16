@@ -42,8 +42,8 @@ export const resolveCase = async (
         throw caseResult
       }
 
-      if (caseResult.errorLockedByUsername && caseResult.errorLockedByUsername !== user.username) {
-        throw new UnprocessableEntityError(`Case id ${caseId} is locked to another user`)
+      if (caseResult.errorLockedByUsername !== user.username) {
+        throw new UnprocessableEntityError(`Case id ${caseId} is not locked to this user`)
       }
 
       const resolveExceptionsResult = await resolveExceptions(tx, user, caseId, resolution, auditLogEvents)

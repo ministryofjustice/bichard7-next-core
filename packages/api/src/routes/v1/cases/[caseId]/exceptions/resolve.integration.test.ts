@@ -28,7 +28,7 @@ const defaultInjectParams = (
   }
 }
 
-describe("manualResolve integration", () => {
+describe("resolve integration", () => {
   let app: FastifyInstance
   const testDatabaseGateway = new End2EndPostgres()
   const auditLogGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)

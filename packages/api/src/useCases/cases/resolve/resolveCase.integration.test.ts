@@ -125,54 +125,6 @@ describe("resolveCase orchestration integration", () => {
     )
   })
 
-  it("successfully calls resolveError, unlockAndAuditLog, insertNote, and createAuditLogEvents, if case is unlocked", async () => {
-    const user = await createUser(databaseGateway, { groups: [UserGroup.GeneralHandler], id: 1 })
-    const caseObj = await createCase(databaseGateway, {
-      errorCount: 1,
-      errorStatus: ResolutionStatusNumber.Unresolved
-    })
-
-    const result = await resolveCase(
-      databaseGateway.writable,
-      user,
-      caseObj.errorId,
-      defaultValidResolution,
-      mockAuditLogDynamoGateway,
-      mockLogger
-    )
-
-    expect(result).toBeUndefined()
-
-    expect(mockResolveError).toHaveBeenCalledTimes(1)
-
-    expect(mockUnlockAndAppendAuditEvents).toHaveBeenCalledTimes(1)
-    expect(mockUnlockAndAppendAuditEvents).toHaveBeenCalledWith(
-      expect.anything(),
-      user,
-      caseObj.errorId,
-      2,
-      expect.any(Array),
-      null,
-      null
-    )
-
-    expect(mockInsertNote).toHaveBeenCalledTimes(1)
-    expect(mockInsertNote).toHaveBeenCalledWith(
-      expect.anything(),
-      caseObj.errorId,
-      `${user.username}: Portal Action: Record Manually Resolved. Reason: UpdatedDisposal. Reason Text: Test reason text`,
-      "System"
-    )
-
-    expect(mockSelectMessageId).toHaveBeenCalledWith(expect.anything(), user, caseObj.errorId)
-    expect(mockCreateAuditLogEvents).toHaveBeenCalledWith(
-      expect.any(Array),
-      "mock-message-id",
-      mockAuditLogDynamoGateway,
-      mockLogger
-    )
-  })
-
   it("rolls back database transaction and halts execution if unlockAndAuditLog fails", async () => {
     const user = await createUser(databaseGateway, { groups: [UserGroup.GeneralHandler], id: 1 })
     const caseObj = await createCase(databaseGateway, {
@@ -380,7 +332,29 @@ describe("resolveCase orchestration integration", () => {
     )
 
     expect(isError(result)).toBe(true)
-    expect((result as Error).message).toBe("Case id 1 is locked to another user")
+    expect((result as Error).message).toBe("Case id 1 is not locked to this user")
+    expect(auditLogEvents).toHaveLength(0)
+  })
+
+  it("returns an error if exceptions are not locked", async () => {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
+    await createCase(databaseGateway, {
+      errorCount: 1,
+      errorStatus: ResolutionStatusNumber.Unresolved
+    })
+    const auditLogEvents: ApiAuditLogEvent[] = []
+
+    const result = await resolveCase(
+      databaseGateway.writable,
+      user,
+      1,
+      defaultValidResolution,
+      mockAuditLogDynamoGateway,
+      mockLogger
+    )
+
+    expect(isError(result)).toBe(true)
+    expect((result as Error).message).toBe("Case id 1 is not locked to this user")
     expect(auditLogEvents).toHaveLength(0)
   })
 

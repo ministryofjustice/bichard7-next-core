@@ -33,7 +33,7 @@ const defaultRequest = (
   }
 }
 
-describe("/v1/cases/:caseId/exceptions/manualResolve e2e", () => {
+describe("/v1/cases/:caseId/exceptions/resolve e2e", () => {
   const endpoint = V1.CaseExceptionsResolve
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
