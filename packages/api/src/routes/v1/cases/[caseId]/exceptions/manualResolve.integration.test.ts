@@ -24,7 +24,7 @@ const defaultInjectParams = (
     headers: { authorization: "Bearer {{ token }}".replace("{{ token }}", jwt) },
     method: "POST",
     payload: body,
-    url: V1.CaseExceptionsManualResolve.replace(":caseId", caseId)
+    url: V1.CaseExceptionsResolve.replace(":caseId", caseId)
   }
 }
 

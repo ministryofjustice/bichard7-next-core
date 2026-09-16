@@ -74,7 +74,7 @@ const handler = async ({ auditLogGateway, body, caseId, database, logger, reply,
 }
 
 const route = async (fastify: FastifyInstance) => {
-  useZod(fastify).post(V1.CaseExceptionsManualResolve, { schema }, async (req, reply) => {
+  useZod(fastify).post(V1.CaseExceptionsResolve, { schema }, async (req, reply) => {
     await handler({
       auditLogGateway: req.auditLogGateway,
       body: req.body,

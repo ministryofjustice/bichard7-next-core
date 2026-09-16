@@ -13,7 +13,7 @@ import type { TransactionConnection } from "../../../types/DatabaseGateway"
 
 import unlockExceptions from "../../../services/db/cases/unlockExceptions"
 import unlockTriggers from "../../../services/db/cases/unlockTriggers"
-import { ForbiddenError } from "../../../types/errors/ForbiddenError"
+import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import buildAuditLogEvent from "../../auditLog/buildAuditLogEvent"
 
 const appendAuditLogEvent = (auditLogEvents: ApiAuditLogEvent[], user: User, eventCode: EventCode) => {
@@ -25,9 +25,9 @@ const appendAuditLogEvent = (auditLogEvents: ApiAuditLogEvent[], user: User, eve
   )
 }
 
-const checkPermissions = (user: User, wantsTriggers: boolean, wantsExceptions: boolean): ForbiddenError | null => {
+const checkPermissions = (user: User, wantsTriggers: boolean, wantsExceptions: boolean): NotAllowedError | null => {
   if (isServiceUser(user)) {
-    return new ForbiddenError("Service user does not have permission to unlock exceptions or triggers")
+    return new NotAllowedError("Service user does not have permission to unlock exceptions or triggers")
   }
 
   const access = userAccess(user)
@@ -35,15 +35,15 @@ const checkPermissions = (user: User, wantsTriggers: boolean, wantsExceptions: b
   const canUnlockExceptions = access[Permission.Exceptions]
 
   if (wantsTriggers && wantsExceptions && (!canUnlockExceptions || !canUnlockTriggers)) {
-    return new ForbiddenError("User does not have permission to unlock triggers and exceptions")
+    return new NotAllowedError("User does not have permission to unlock triggers and exceptions")
   }
 
   if (wantsExceptions && !canUnlockExceptions) {
-    return new ForbiddenError("User does not have permission to unlock exceptions")
+    return new NotAllowedError("User does not have permission to unlock exceptions")
   }
 
   if (wantsTriggers && !canUnlockTriggers) {
-    return new ForbiddenError("User does not have permission to unlock triggers")
+    return new NotAllowedError("User does not have permission to unlock triggers")
   }
 
   return null

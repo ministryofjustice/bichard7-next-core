@@ -42,7 +42,7 @@ export const resolveCase = async (
         throw caseResult
       }
 
-      if (caseResult.errorLockedByUsername !== user.username) {
+      if (caseResult.errorLockedByUsername && caseResult.errorLockedByUsername !== user.username) {
         throw new UnprocessableEntityError(`Case id ${caseId} is locked to another user`)
       }
 

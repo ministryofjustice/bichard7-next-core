@@ -306,7 +306,7 @@ describe("resolveCase orchestration integration", () => {
       mockLogger
     )
 
-    expect(result).toBeInstanceOf(Error)
+    expect(isError(result)).toBe(true)
     expect((result as Error).message).toBe("Case id 999 for user User1 not found")
     expect(auditLogEvents).toHaveLength(0)
   })
@@ -329,7 +329,7 @@ describe("resolveCase orchestration integration", () => {
       mockLogger
     )
 
-    expect(result).toBeInstanceOf(Error)
+    expect(isError(result)).toBe(true)
     expect((result as Error).message).toBe("Case id 1 is locked to another user")
     expect(auditLogEvents).toHaveLength(0)
   })

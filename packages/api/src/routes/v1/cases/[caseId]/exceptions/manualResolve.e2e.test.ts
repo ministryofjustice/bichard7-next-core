@@ -34,7 +34,7 @@ const defaultRequest = (
 }
 
 describe("/v1/cases/:caseId/exceptions/manualResolve e2e", () => {
-  const endpoint = V1.CaseExceptionsManualResolve
+  const endpoint = V1.CaseExceptionsResolve
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
 

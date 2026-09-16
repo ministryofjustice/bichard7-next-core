@@ -4,10 +4,11 @@ import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 
+import { isError } from "@moj-bichard7/common/types/Result"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
-import { ForbiddenError } from "../../../types/errors/ForbiddenError"
+import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import { unlockAndAppendAuditEvents } from "./unlockAndAppendAuditEvents"
 
 describe("unlockAndAuditLog integration", () => {
@@ -26,7 +27,7 @@ describe("unlockAndAuditLog integration", () => {
   })
 
   describe("Permission checks", () => {
-    it("returns ForbiddenError if user lacks permission to unlock exceptions", async () => {
+    it("returns NotAllowedError if user lacks permission to unlock exceptions", async () => {
       const user = await createUser(databaseGateway, {
         groups: [UserGroup.TriggerHandler],
         id: 1
@@ -46,12 +47,12 @@ describe("unlockAndAuditLog integration", () => {
         )
       )
 
-      expect(result).toBeInstanceOf(ForbiddenError)
-      expect((result as ForbiddenError).message).toBe("User does not have permission to unlock exceptions")
+      expect(isError(result)).toBe(true)
+      expect((result as NotAllowedError).message).toBe("User does not have permission to unlock exceptions")
       expect(auditLogEvents).toHaveLength(0)
     })
 
-    it("returns ForbiddenError if user lacks permission to unlock triggers", async () => {
+    it("returns NotAllowedError if user lacks permission to unlock triggers", async () => {
       const user = await createUser(databaseGateway, {
         groups: [UserGroup.ExceptionHandler],
         id: 1
@@ -71,12 +72,12 @@ describe("unlockAndAuditLog integration", () => {
         )
       )
 
-      expect(result).toBeInstanceOf(ForbiddenError)
-      expect((result as ForbiddenError).message).toBe("User does not have permission to unlock triggers")
+      expect(isError(result)).toBe(true)
+      expect((result as NotAllowedError).message).toBe("User does not have permission to unlock triggers")
       expect(auditLogEvents).toHaveLength(0)
     })
 
-    it("returns ForbiddenError if user attempts to unlock triggers and exceptions but only has exceptions permission", async () => {
+    it("returns NotAllowedError if user attempts to unlock triggers and exceptions but only has exceptions permission", async () => {
       const user = await createUser(databaseGateway, {
         groups: [UserGroup.ExceptionHandler],
         id: 1
@@ -96,12 +97,14 @@ describe("unlockAndAuditLog integration", () => {
         )
       )
 
-      expect(result).toBeInstanceOf(ForbiddenError)
-      expect((result as ForbiddenError).message).toBe("User does not have permission to unlock triggers and exceptions")
+      expect(isError(result)).toBe(true)
+      expect((result as NotAllowedError).message).toBe(
+        "User does not have permission to unlock triggers and exceptions"
+      )
       expect(auditLogEvents).toHaveLength(0)
     })
 
-    it("returns ForbiddenError if user attempts to unlock triggers and exceptions but only has triggers permission", async () => {
+    it("returns NotAllowedError if user attempts to unlock triggers and exceptions but only has triggers permission", async () => {
       const user = await createUser(databaseGateway, {
         groups: [UserGroup.TriggerHandler],
         id: 1
@@ -121,12 +124,14 @@ describe("unlockAndAuditLog integration", () => {
         )
       )
 
-      expect(result).toBeInstanceOf(ForbiddenError)
-      expect((result as ForbiddenError).message).toBe("User does not have permission to unlock triggers and exceptions")
+      expect(isError(result)).toBe(true)
+      expect((result as NotAllowedError).message).toBe(
+        "User does not have permission to unlock triggers and exceptions"
+      )
       expect(auditLogEvents).toHaveLength(0)
     })
 
-    it("returns ForbiddenError if service user attempts to unlock case", async () => {
+    it("returns NotAllowedError if service user attempts to unlock case", async () => {
       const user = await createUser(databaseGateway, {
         groups: [UserGroup.Service],
         id: 1
@@ -146,8 +151,8 @@ describe("unlockAndAuditLog integration", () => {
         )
       )
 
-      expect(result).toBeInstanceOf(ForbiddenError)
-      expect((result as ForbiddenError).message).toBe(
+      expect(isError(result)).toBe(true)
+      expect((result as NotAllowedError).message).toBe(
         "Service user does not have permission to unlock exceptions or triggers"
       )
       expect(auditLogEvents).toHaveLength(0)
