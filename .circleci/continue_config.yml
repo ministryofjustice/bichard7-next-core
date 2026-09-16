@@ -603,6 +603,8 @@ jobs:
           command: |
             docker tag "nginx-auth-proxy:${DOCKER_TAG}" "nginx-auth-proxy:latest"
             make goss
+      - fetch_images:
+          images: nodejs-24-2023
       - run:
           name: Run unit tests
           working_directory: packages/nginx-auth-proxy
