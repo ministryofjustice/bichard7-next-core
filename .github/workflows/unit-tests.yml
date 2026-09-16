@@ -136,7 +136,7 @@ jobs:
           TZ: "Europe/London"
 
       - name: Publish Cypress Test Report
-        uses: dorny/test-reporter@v1 
+        uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5 # v1.9.1
         if: always()
         with:
           name: UI Component Tests               
