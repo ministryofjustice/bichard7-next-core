@@ -413,6 +413,9 @@ services:
 
   nginx-auth-proxy:
     image: nginx-auth-proxy
+    build:
+      dockerfile: packages/nginx-auth-proxy/Dockerfile
+      context: ..
     ports:
       - 4443:4443
     environment:
