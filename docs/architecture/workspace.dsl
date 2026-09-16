@@ -288,8 +288,8 @@ workspace "Bichard" {
     bichardApi -> phaseTwo "Resubmits court case"
 
     # LEDS proxy
-    ledsProxyLambda -> ledsTgw "" "Encrypted via mTLS"
-    ledsTgw -> leds "" "Encrypted via mTLS"
+    ledsProxyLambda -> ledsTgw "" "Encrypted via HTTPS"
+    ledsTgw -> leds "" "Encrypted via HTTPS"
 
     # Static file service
     s3WebProxy -> staticFilesS3Bucket
