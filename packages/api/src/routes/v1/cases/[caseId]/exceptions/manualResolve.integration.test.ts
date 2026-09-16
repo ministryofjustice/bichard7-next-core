@@ -134,8 +134,7 @@ describe("manualResolve integration", () => {
       const response = await app.inject(
         defaultInjectParams(encodedJwt, String(1), {
           reason: "InvalidReason",
-          reasonText: "Test comment",
-          resolutionStatus: "Resolved"
+          reasonText: "Test comment"
         })
       )
 
@@ -148,8 +147,7 @@ describe("manualResolve integration", () => {
       const response = await app.inject(
         defaultInjectParams(encodedJwt, String(1), {
           reason: "UpdatedDisposal",
-          reasonText: 123,
-          resolutionStatus: "Resolved"
+          reasonText: 123
         })
       )
 

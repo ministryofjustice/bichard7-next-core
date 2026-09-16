@@ -1,4 +1,4 @@
-import type { ResolveBody } from "@moj-bichard7/common/contracts/ExceptionsManualResolveBody"
+import type { ExceptionsManualResolveBody } from "@moj-bichard7/common/contracts/ExceptionsManualResolveBody"
 import type { FastifyBaseLogger } from "fastify"
 
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
@@ -39,6 +39,10 @@ const mockLogger = {
 describe("resolveCase orchestration integration", () => {
   let databaseGateway: End2EndPostgres
   const mockAuditLogDynamoGateway = {} as AuditLogDynamoGateway
+  const defaultValidResolution: ExceptionsManualResolveBody = {
+    reason: "UpdatedDisposal",
+    reasonText: "Test reason text"
+  }
 
   beforeAll(() => {
     databaseGateway = new End2EndPostgres()
@@ -78,17 +82,11 @@ describe("resolveCase orchestration integration", () => {
       triggerLockedById: user.username
     })
 
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test reason text",
-      resolutionStatus: "Resolved"
-    }
-
     const result = await resolveCase(
       databaseGateway.writable,
       user,
       caseObj.errorId,
-      validResolution,
+      defaultValidResolution,
       mockAuditLogDynamoGateway,
       mockLogger
     )
@@ -135,17 +133,11 @@ describe("resolveCase orchestration integration", () => {
 
     mockUnlockAndAuditLog.mockResolvedValueOnce(new Error("Unlock error"))
 
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test reason text",
-      resolutionStatus: "Resolved"
-    }
-
     const result = await resolveCase(
       databaseGateway.writable,
       user,
       caseObj.errorId,
-      validResolution,
+      defaultValidResolution,
       mockAuditLogDynamoGateway,
       mockLogger
     )
@@ -167,17 +159,11 @@ describe("resolveCase orchestration integration", () => {
 
     mockResolveError.mockResolvedValueOnce(new Error("General resolve error"))
 
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test reason text",
-      resolutionStatus: "Resolved"
-    }
-
     const result = await resolveCase(
       databaseGateway.writable,
       user,
       caseObj.errorId,
-      validResolution,
+      defaultValidResolution,
       mockAuditLogDynamoGateway,
       mockLogger
     )
@@ -201,17 +187,11 @@ describe("resolveCase orchestration integration", () => {
 
     mockInsertNote.mockResolvedValueOnce(new Error("General insert note error"))
 
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test reason text",
-      resolutionStatus: "Resolved"
-    }
-
     const result = await resolveCase(
       databaseGateway.writable,
       user,
       caseObj.errorId,
-      validResolution,
+      defaultValidResolution,
       mockAuditLogDynamoGateway,
       mockLogger
     )
@@ -235,17 +215,11 @@ describe("resolveCase orchestration integration", () => {
 
     mockSelectMessageId.mockResolvedValueOnce(new Error("General selectMessageId error"))
 
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test reason text",
-      resolutionStatus: "Resolved"
-    }
-
     const result = await resolveCase(
       databaseGateway.writable,
       user,
       caseObj.errorId,
-      validResolution,
+      defaultValidResolution,
       mockAuditLogDynamoGateway,
       mockLogger
     )
@@ -270,17 +244,11 @@ describe("resolveCase orchestration integration", () => {
 
     mockCreateAuditLogEvents.mockResolvedValueOnce(new Error("DynamoDB write failed"))
 
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test reason text",
-      resolutionStatus: "Resolved"
-    }
-
     const result = await resolveCase(
       databaseGateway.writable,
       user,
       caseObj.errorId,
-      validResolution,
+      defaultValidResolution,
       mockAuditLogDynamoGateway,
       mockLogger
     )
@@ -305,17 +273,11 @@ describe("resolveCase orchestration integration", () => {
       return undefined
     })
 
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test reason text",
-      resolutionStatus: "Resolved"
-    }
-
     const result = await resolveCase(
       databaseGateway.writable,
       user,
       caseObj.errorId,
-      validResolution,
+      defaultValidResolution,
       mockAuditLogDynamoGateway,
       mockLogger
     )
@@ -335,17 +297,11 @@ describe("resolveCase orchestration integration", () => {
     const user = await createUser(databaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
     const auditLogEvents: ApiAuditLogEvent[] = []
 
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test reason text",
-      resolutionStatus: "Resolved"
-    }
-
     const result = await resolveCase(
       databaseGateway.writable,
       user,
       999,
-      validResolution,
+      defaultValidResolution,
       mockAuditLogDynamoGateway,
       mockLogger
     )
@@ -364,17 +320,11 @@ describe("resolveCase orchestration integration", () => {
     })
     const auditLogEvents: ApiAuditLogEvent[] = []
 
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test reason text",
-      resolutionStatus: "Resolved"
-    }
-
     const result = await resolveCase(
       databaseGateway.writable,
       user,
       1,
-      validResolution,
+      defaultValidResolution,
       mockAuditLogDynamoGateway,
       mockLogger
     )
@@ -392,17 +342,11 @@ describe("resolveCase orchestration integration", () => {
       errorStatus: ResolutionStatusNumber.Unresolved
     })
 
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test reason text",
-      resolutionStatus: "Resolved"
-    }
-
     const result = await resolveCase(
       databaseGateway.writable,
       user,
       caseObj.errorId,
-      validResolution,
+      defaultValidResolution,
       mockAuditLogDynamoGateway,
       mockLogger
     )

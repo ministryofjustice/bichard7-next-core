@@ -1,4 +1,4 @@
-import type { ResolveBody } from "@moj-bichard7/common/contracts/ExceptionsManualResolveBody"
+import type { ExceptionsManualResolveBody } from "@moj-bichard7/common/contracts/ExceptionsManualResolveBody"
 
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { ResolutionReasonCode } from "@moj-bichard7/common/types/ManualResolution"
@@ -17,6 +17,11 @@ import { resolveExceptions } from "./resolveExceptions"
 describe("resolveExceptions integration", () => {
   let databaseGateway: End2EndPostgres
 
+  const defaultValidResolution: ExceptionsManualResolveBody = {
+    reason: "UpdatedDisposal",
+    reasonText: "Test reason text"
+  }
+
   beforeAll(() => {
     databaseGateway = new End2EndPostgres()
   })
@@ -33,10 +38,9 @@ describe("resolveExceptions integration", () => {
     const user = await createUser(databaseGateway, { groups: [UserGroup.ExceptionHandler], id: 1 })
     const auditLogEvents: ApiAuditLogEvent[] = []
 
-    const invalidResolution: ResolveBody = {
+    const invalidResolution: ExceptionsManualResolveBody = {
       reason: "Reallocated",
-      reasonText: "",
-      resolutionStatus: "Resolved"
+      reasonText: ""
     }
 
     const result = await databaseGateway.writable.transaction((tx) =>
@@ -57,13 +61,8 @@ describe("resolveExceptions integration", () => {
     })
     const auditLogEvents: ApiAuditLogEvent[] = []
 
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test reason text",
-      resolutionStatus: "Resolved"
-    }
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveExceptions(tx, user, 1, validResolution, auditLogEvents)
+      resolveExceptions(tx, user, 1, defaultValidResolution, auditLogEvents)
     )
 
     expect(isError(result)).toBe(true)
@@ -81,14 +80,9 @@ describe("resolveExceptions integration", () => {
     await createTriggers(databaseGateway, caseObj.errorId, [{ status: ResolutionStatusNumber.Resolved }])
 
     const auditLogEvents: ApiAuditLogEvent[] = []
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test comment",
-      resolutionStatus: "Resolved"
-    }
 
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveExceptions(tx, user, caseObj.errorId, validResolution, auditLogEvents)
+      resolveExceptions(tx, user, caseObj.errorId, defaultValidResolution, auditLogEvents)
     )
 
     expect(result).toBeUndefined()
@@ -109,7 +103,7 @@ describe("resolveExceptions integration", () => {
     expect(auditLogEvents[0].eventCode).toBe(EventCode.ExceptionsResolved)
     expect(auditLogEvents[0].attributes).toMatchObject({
       resolutionReasonCode: ResolutionReasonCode["UpdatedDisposal"],
-      resolutionReasonText: "Test comment",
+      resolutionReasonText: "Test reason text",
       user: user.username
     })
   })
@@ -124,14 +118,9 @@ describe("resolveExceptions integration", () => {
     await createTriggers(databaseGateway, caseObj.errorId, [{ status: ResolutionStatusNumber.Unresolved }])
 
     const auditLogEvents: ApiAuditLogEvent[] = []
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test comment",
-      resolutionStatus: "Resolved"
-    }
 
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveExceptions(tx, user, caseObj.errorId, validResolution, auditLogEvents)
+      resolveExceptions(tx, user, caseObj.errorId, defaultValidResolution, auditLogEvents)
     )
 
     expect(result).toBeUndefined()
@@ -151,7 +140,7 @@ describe("resolveExceptions integration", () => {
     expect(auditLogEvents[0].eventCode).toBe(EventCode.ExceptionsResolved)
     expect(auditLogEvents[0].attributes).toMatchObject({
       resolutionReasonCode: ResolutionReasonCode["UpdatedDisposal"],
-      resolutionReasonText: "Test comment",
+      resolutionReasonText: "Test reason text",
       user: user.username
     })
   })
@@ -165,14 +154,9 @@ describe("resolveExceptions integration", () => {
     })
 
     const auditLogEvents: ApiAuditLogEvent[] = []
-    const validResolution: ResolveBody = {
-      reason: "UpdatedDisposal",
-      reasonText: "Test comment",
-      resolutionStatus: "Resolved"
-    }
 
     const result = await databaseGateway.writable.transaction((tx) =>
-      resolveExceptions(tx, user, caseObj.errorId, validResolution, auditLogEvents)
+      resolveExceptions(tx, user, caseObj.errorId, defaultValidResolution, auditLogEvents)
     )
 
     expect(isError(result)).toBe(true)
