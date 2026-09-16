@@ -49,6 +49,10 @@ workspace "Bichard" {
           }
         }
 
+        apiGateway = container "API Gateway" "" "Amazon API Gateway" {
+          tags "API"
+        }
+
         eventHandler = container "Event Handler Step Function" {
           tags "Step Function"
 
@@ -240,8 +244,11 @@ workspace "Bichard" {
 
     # Bichard API
     bichardApi -> dynamoDB
-    bichardApi -> ledsProxyLambda "Encrypted via HTTPS"
-    bichardApi -> niam "via Internet" "Gets auth token to access LEDS API"
+    bichardApi -> ledsProxyLambda "" "Encrypted via HTTPS"
+    bichardApi -> apiGateway
+
+    # API Gateway
+    apiGateway -> niam "via Internet" "Gets auth token to access LEDS API"
 
     # Reporting
     automationReport -> bichardApi
