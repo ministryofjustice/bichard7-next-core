@@ -412,7 +412,7 @@ services:
         condition: service_healthy
 
   nginx-auth-proxy:
-    image: nginx-auth-proxy
+    image: nginx-auth-proxy:${DOCKER_TAG:-latest}
     build:
       dockerfile: packages/nginx-auth-proxy/Dockerfile
       context: ..
