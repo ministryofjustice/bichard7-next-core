@@ -129,11 +129,8 @@ jobs:
         run: npm run build:core
       
       - name: Run UI component tests
-        uses: cypress-io/github-action@v6 
-        with:
-          install: false
-          working-directory: packages/ui
-          command: npx cypress run --component --spec 'cypress/component/**/*.cy.tsx' --reporter junit --reporter-options mochaFile=cypress/results/results-[hash].xml
+        working-directory: packages/ui
+        run: npx cypress run --component --spec 'cypress/component/**/*.cy.tsx' --reporter junit --reporter-options mochaFile=cypress/results/results-[hash].xml
         env:
           UI_IS_HTTPS: "true"
           TZ: "Europe/London"
