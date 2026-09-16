@@ -322,6 +322,13 @@ workspace "Bichard" {
       title "Old Bichard"
     }
 
+    container bichard "FutureBichard" {
+      include *
+      exclude pnc pncApi beanconnect activeMQ bichardJavaApplication auditLogApi messageForwarder eventHandler
+      autoLayout
+      title "Future Bichard"
+    }
+
     component conductor {
       include *
     }
