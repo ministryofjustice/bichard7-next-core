@@ -39,7 +39,6 @@ Feature: {113b} BR7 R5.1-RCD422-Breach of Suspended Sentence-Order to Continue
 		Then I see exception "HO100402" in the exception list table
 			And I see trigger "PR20 - Breach" in the exception list table
 		When I open the record for "TOCONTINUEB ORDER"
-			And I wait 3000 seconds
 			And I click the "PNC Errors" tab
 		Then I see "must be a valid disposal code" in the "Error" row of the results table
 			And the PNC record has not been updated
