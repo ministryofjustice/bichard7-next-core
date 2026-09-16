@@ -593,8 +593,12 @@ jobs:
             docker image save "nginx-auth-proxy:${DOCKER_TAG}" | pigz > "images/nginx-auth-proxy.tar.gz"
       - run:
           name: Run Goss Tests
-          working_directory: packages/nginx-auth
+          working_directory: packages/nginx-auth-proxy
           command: make goss
+      - run:
+          name: Run unit tests
+          working_directory: packages/nginx-auth-proxy
+          command: make unit-test-nginx
 
   build_ui_image:
     machine:
