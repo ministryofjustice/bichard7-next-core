@@ -8,7 +8,7 @@ import { createCase } from "../../../tests/helpers/caseHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import { ForbiddenError } from "../../../types/errors/ForbiddenError"
-import { unlockAndAuditLog } from "./unlockAndAuditLog"
+import { unlockAndAppendAuditEvents } from "./unlockAndAppendAuditEvents"
 
 describe("unlockAndAuditLog integration", () => {
   let databaseGateway: End2EndPostgres
@@ -35,7 +35,7 @@ describe("unlockAndAuditLog integration", () => {
       const caseObj = await createCase(databaseGateway)
 
       const result = await databaseGateway.writable.transaction((tx) =>
-        unlockAndAuditLog(
+        unlockAndAppendAuditEvents(
           tx,
           user,
           1,
@@ -60,7 +60,7 @@ describe("unlockAndAuditLog integration", () => {
       const caseObj = await createCase(databaseGateway)
 
       const result = await databaseGateway.writable.transaction((tx) =>
-        unlockAndAuditLog(
+        unlockAndAppendAuditEvents(
           tx,
           user,
           1,
@@ -85,7 +85,7 @@ describe("unlockAndAuditLog integration", () => {
       const caseObj = await createCase(databaseGateway)
 
       const result = await databaseGateway.writable.transaction((tx) =>
-        unlockAndAuditLog(
+        unlockAndAppendAuditEvents(
           tx,
           user,
           1,
@@ -110,7 +110,7 @@ describe("unlockAndAuditLog integration", () => {
       const caseObj = await createCase(databaseGateway)
 
       const result = await databaseGateway.writable.transaction((tx) =>
-        unlockAndAuditLog(
+        unlockAndAppendAuditEvents(
           tx,
           user,
           1,
@@ -135,7 +135,7 @@ describe("unlockAndAuditLog integration", () => {
       const caseObj = await createCase(databaseGateway)
 
       const result = await databaseGateway.writable.transaction((tx) =>
-        unlockAndAuditLog(
+        unlockAndAppendAuditEvents(
           tx,
           user,
           1,
@@ -166,7 +166,7 @@ describe("unlockAndAuditLog integration", () => {
       const auditLogEvents: ApiAuditLogEvent[] = []
 
       const result = await databaseGateway.writable.transaction((tx) =>
-        unlockAndAuditLog(
+        unlockAndAppendAuditEvents(
           tx,
           user,
           caseObj.errorId,
@@ -200,7 +200,7 @@ describe("unlockAndAuditLog integration", () => {
       const auditLogEvents: ApiAuditLogEvent[] = []
 
       const result = await databaseGateway.writable.transaction((tx) =>
-        unlockAndAuditLog(
+        unlockAndAppendAuditEvents(
           tx,
           user,
           caseObj.errorId,
@@ -235,7 +235,7 @@ describe("unlockAndAuditLog integration", () => {
       const auditLogEvents: ApiAuditLogEvent[] = []
 
       const result = await databaseGateway.writable.transaction((tx) =>
-        unlockAndAuditLog(
+        unlockAndAppendAuditEvents(
           tx,
           user,
           caseObj.errorId,
@@ -272,7 +272,7 @@ describe("unlockAndAuditLog integration", () => {
       const auditLogEvents: ApiAuditLogEvent[] = []
 
       const result = await databaseGateway.writable.transaction((tx) =>
-        unlockAndAuditLog(
+        unlockAndAppendAuditEvents(
           tx,
           user,
           caseObj.errorId,
@@ -298,7 +298,7 @@ describe("unlockAndAuditLog integration", () => {
       const auditLogEvents: ApiAuditLogEvent[] = []
 
       const result = await databaseGateway.writable.transaction((tx) =>
-        unlockAndAuditLog(
+        unlockAndAppendAuditEvents(
           tx,
           user,
           caseObj.errorId,
@@ -325,7 +325,7 @@ describe("unlockAndAuditLog integration", () => {
       const auditLogEvents: ApiAuditLogEvent[] = []
 
       const result = await databaseGateway.writable.transaction((tx) =>
-        unlockAndAuditLog(
+        unlockAndAppendAuditEvents(
           tx,
           user,
           caseObj.errorId,
@@ -352,7 +352,7 @@ describe("unlockAndAuditLog integration", () => {
       const auditLogEvents: ApiAuditLogEvent[] = []
 
       const result = await databaseGateway.writable.transaction((tx) =>
-        unlockAndAuditLog(
+        unlockAndAppendAuditEvents(
           tx,
           user,
           caseObj.errorId,
@@ -380,7 +380,7 @@ describe("unlockAndAuditLog integration", () => {
       const auditLogEvents: ApiAuditLogEvent[] = []
 
       const result = await databaseGateway.writable.transaction((tx) =>
-        unlockAndAuditLog(
+        unlockAndAppendAuditEvents(
           tx,
           user,
           caseObj.errorId,

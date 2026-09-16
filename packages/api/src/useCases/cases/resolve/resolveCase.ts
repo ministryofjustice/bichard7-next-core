@@ -17,7 +17,7 @@ import selectMessageId from "../../../services/db/cases/selectMessageId"
 import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
 import createAuditLogEvents from "../../createAuditLogEvents"
-import { unlockAndAuditLog } from "../getCase/unlockAndAuditLog"
+import { unlockAndAppendAuditEvents } from "../getCase/unlockAndAppendAuditEvents"
 import { resolveExceptions } from "./resolveExceptions"
 
 export const resolveCase = async (
@@ -55,7 +55,7 @@ export const resolveCase = async (
         ? UnlockReason.TriggerAndException
         : UnlockReason.Exception
 
-      const unlockResult = await unlockAndAuditLog(
+      const unlockResult = await unlockAndAppendAuditEvents(
         tx,
         user,
         caseId,

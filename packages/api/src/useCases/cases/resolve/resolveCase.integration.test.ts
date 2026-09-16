@@ -15,21 +15,21 @@ import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import createAuditLogEvents from "../../createAuditLogEvents"
-import { unlockAndAuditLog } from "../getCase/unlockAndAuditLog"
+import { unlockAndAppendAuditEvents } from "../getCase/unlockAndAppendAuditEvents"
 import { resolveCase } from "./resolveCase"
 import { resolveExceptions } from "./resolveExceptions"
 
 jest.mock("../../../services/db/cases/insertNote")
 jest.mock("../../../services/db/cases/selectMessageId")
 jest.mock("../../createAuditLogEvents")
-jest.mock("../getCase/unlockAndAuditLog")
+jest.mock("../getCase/unlockAndAppendAuditEvents")
 jest.mock("./resolveExceptions")
 
 const mockResolveError = resolveExceptions as jest.MockedFunction<typeof resolveExceptions>
 const mockInsertNote = insertNote as jest.MockedFunction<typeof insertNote>
 const mockSelectMessageId = selectMessageId as jest.MockedFunction<typeof selectMessageId>
 const mockCreateAuditLogEvents = createAuditLogEvents as jest.MockedFunction<typeof createAuditLogEvents>
-const mockUnlockAndAuditLog = unlockAndAuditLog as jest.MockedFunction<typeof unlockAndAuditLog>
+const mockUnlockAndAuditLog = unlockAndAppendAuditEvents as jest.MockedFunction<typeof unlockAndAppendAuditEvents>
 
 const mockLogger = {
   error: jest.fn(),

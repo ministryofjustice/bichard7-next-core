@@ -49,7 +49,7 @@ const checkPermissions = (user: User, wantsTriggers: boolean, wantsExceptions: b
   return null
 }
 
-export const unlockAndAuditLog = async (
+export const unlockAndAppendAuditEvents = async (
   tx: TransactionConnection,
   user: User,
   caseId: number,
