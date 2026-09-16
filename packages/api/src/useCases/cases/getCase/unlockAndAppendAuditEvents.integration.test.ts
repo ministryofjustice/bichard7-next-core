@@ -1,14 +1,14 @@
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import { isError } from "@moj-bichard7/common/types/Result"
 import UnlockReason from "@moj-bichard7/common/types/UnlockReason"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
+import type { NotAllowedError } from "../../../types/errors/NotAllowedError"
 
-import { isError } from "@moj-bichard7/common/types/Result"
 import { createCase } from "../../../tests/helpers/caseHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
-import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import { unlockAndAppendAuditEvents } from "./unlockAndAppendAuditEvents"
 
 describe("unlockAndAuditLog integration", () => {
