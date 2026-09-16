@@ -1,9 +1,7 @@
-import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
-import postgres from "postgres"
 
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 
@@ -11,23 +9,10 @@ import { createCase } from "../../../tests/helpers/caseHelper"
 import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
+import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
 import { updateTriggers } from "./updateTriggers"
 
 const testDatabaseGateway = new End2EndPostgres()
-
-const db = postgres({
-  ...createDbConfig,
-  types: {
-    date: {
-      from: [1082],
-      parse: (x: string): Date => {
-        return new Date(x)
-      },
-      serialize: (x: string): string => x,
-      to: 25
-    }
-  }
-})
 
 describe("updateTriggers", () => {
   afterAll(async () => {
@@ -47,16 +32,17 @@ describe("updateTriggers", () => {
     const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
 
     const caseObj = await createCase(testDatabaseGateway)
+    const triggerIds = [1, 2]
 
     await createTriggers(testDatabaseGateway, caseObj.errorId, [
-      { triggerCode: "TRPR0001", triggerId: 1 },
-      { triggerCode: "TRPR0002", triggerId: 2 }
+      { triggerCode: "TRPR0001", triggerId: triggerIds[0] },
+      { triggerCode: "TRPR0002", triggerId: triggerIds[1] }
     ])
 
     let result: Error | number | undefined
 
     await testDatabaseGateway.writable.transaction(async (tx) => {
-      result = await updateTriggers(tx, user, [1, 2], auditLogEvents)
+      result = await updateTriggers(tx, user, triggerIds, auditLogEvents)
     })
 
     expect(isError(result)).toBe(false)
@@ -69,53 +55,59 @@ describe("updateTriggers", () => {
     expect(auditEvent.attributes).toHaveProperty("user", "test_user")
     expect(auditEvent.attributes).toHaveProperty("Number Of Triggers", 2)
 
-    const triggerRecords =
-      await db`SELECT status, resolved_by, resolved_ts FROM br7own.error_list_triggers WHERE trigger_id IN (${1}, ${2})`
+    const triggerRecords = await testDatabaseGateway.writable
+      .connection`SELECT status, resolved_by, resolved_ts FROM br7own.error_list_triggers WHERE trigger_id IN (${triggerIds[0]}, ${triggerIds[1]})`
     expect(triggerRecords).toHaveLength(2)
   })
 
-  // it("should return an UnprocessableEntityError if the triggers do not exist or are already resolved", async () => {
-  //   const auditLogEvents: ApiAuditLogEvent[] = []
-  //   const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
-  //   const caseObj = await createCase(testDatabaseGateway)
+  it("should return an UnprocessableEntityError if the trigger is already resolved", async () => {
+    const auditLogEvents: ApiAuditLogEvent[] = []
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
+    const caseObj = await createCase(testDatabaseGateway)
+    const triggerId = 1
 
-  //   await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: "TRPR0001", triggerId: 1 }])
+    await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: "TRPR0001", triggerId: triggerId }])
 
-  //   await testDatabaseGateway.writable.transaction(async (tx) => {
-  //     await updateTriggers(tx, user, [1], [])
-  //   })
+    await testDatabaseGateway.writable.transaction(async (tx) => {
+      await updateTriggers(tx, user, [triggerId], [])
+    })
 
-  //   let result: number | Error | undefined
+    let result: Error | number | undefined
 
-  //   // Try to resolve the same trigger again, which should fail
-  //   await testDatabaseGateway.writable.transaction(async (tx) => {
-  //     result = await updateTriggers(tx, user, [1], auditLogEvents)
-  //   })
+    // Try to resolve the same trigger again
+    await testDatabaseGateway.writable.transaction(async (tx) => {
+      result = await updateTriggers(tx, user, [triggerId], auditLogEvents)
+    })
 
-  //   expect(isError(result)).toBe(true)
-  //   expect(result).toBeInstanceOf(UnprocessableEntityError)
-  //   expect((result as Error).message).toContain(`Couldn't update triggers ids: ${1}`)
-  //   expect(auditLogEvents).toHaveLength(0)
-  // })
+    expect(isError(result)).toBe(true)
+    expect(result).toBeInstanceOf(UnprocessableEntityError)
+    expect((result as Error).message).toContain(`Couldn't update triggers ids: ${triggerId}`)
+    expect(auditLogEvents).toHaveLength(0)
+  })
 
-  // it("should return a standard Error if the database query fails", async () => {
-  //   const auditLogEvents: ApiAuditLogEvent[] = []
-  //   const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
-  //   const triggerIds = [1, 2]
+  it("should return an error if the database query fails", async () => {
+    const auditLogEvents: ApiAuditLogEvent[] = []
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
+    const triggerIds = [1, 2]
 
-  //   const brokenTx = {
-  //     connection: jest.fn().mockRejectedValue(new Error("Simulated Database Error"))
-  //   }
-  //   brokenTx.connection.mockImplementation(() => {
-  //     throw new Error("Simulated Database Error")
-  //   })
+    const brokenTx = {
+      connection: jest.fn().mockImplementation((stringsOrData) => {
+        if (Array.isArray(stringsOrData)) {
+          return Promise.reject(new Error("Simulated Database Error"))
+        }
 
-  //   const result = await updateTriggers(brokenTx as any, user, triggerIds, auditLogEvents)
+        return "mocked_fields"
+      })
+    }
 
-  //   expect(isError(result)).toBe(true)
-  //   expect(result).toBeInstanceOf(Error)
-  //   expect((result as Error).message).toContain(`Couldn't update triggers trigger ids:1,2: Simulated Database Error`)
+    const result = await updateTriggers(brokenTx as any, user, triggerIds, auditLogEvents)
 
-  //   expect(auditLogEvents).toHaveLength(0)
-  // })
+    expect(isError(result)).toBe(true)
+    expect(result).toBeInstanceOf(Error)
+    expect((result as Error).message).toContain(
+      `Couldn't update triggers trigger ids:${triggerIds}: Simulated Database Error`
+    )
+
+    expect(auditLogEvents).toHaveLength(0)
+  })
 })
