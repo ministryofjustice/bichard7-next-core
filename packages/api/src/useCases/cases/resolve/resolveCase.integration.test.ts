@@ -29,7 +29,9 @@ const mockResolveError = resolveExceptions as jest.MockedFunction<typeof resolve
 const mockInsertNote = insertNote as jest.MockedFunction<typeof insertNote>
 const mockSelectMessageId = selectMessageId as jest.MockedFunction<typeof selectMessageId>
 const mockCreateAuditLogEvents = createAuditLogEvents as jest.MockedFunction<typeof createAuditLogEvents>
-const mockUnlockAndAuditLog = unlockAndAppendAuditEvents as jest.MockedFunction<typeof unlockAndAppendAuditEvents>
+const mockUnlockAndAppendAuditEvents = unlockAndAppendAuditEvents as jest.MockedFunction<
+  typeof unlockAndAppendAuditEvents
+>
 
 const mockLogger = {
   error: jest.fn(),
@@ -63,7 +65,7 @@ describe("resolveCase orchestration integration", () => {
       return undefined
     })
 
-    mockUnlockAndAuditLog.mockResolvedValue(undefined)
+    mockUnlockAndAppendAuditEvents.mockResolvedValue(undefined)
     mockInsertNote.mockResolvedValue(true)
     mockSelectMessageId.mockResolvedValue("mock-message-id")
     mockCreateAuditLogEvents.mockResolvedValue(undefined)
@@ -73,7 +75,7 @@ describe("resolveCase orchestration integration", () => {
     await databaseGateway.close()
   })
 
-  it("successfully calls resolveError, unlockAndAuditLog, insertNote, and createAuditLogEvents", async () => {
+  it("successfully calls resolveError, unlockAndAuditLog, insertNote, and createAuditLogEvents, if case is locked to user", async () => {
     const user = await createUser(databaseGateway, { groups: [UserGroup.GeneralHandler], id: 1 })
     const caseObj = await createCase(databaseGateway, {
       errorCount: 1,
@@ -95,8 +97,8 @@ describe("resolveCase orchestration integration", () => {
 
     expect(mockResolveError).toHaveBeenCalledTimes(1)
 
-    expect(mockUnlockAndAuditLog).toHaveBeenCalledTimes(1)
-    expect(mockUnlockAndAuditLog).toHaveBeenCalledWith(
+    expect(mockUnlockAndAppendAuditEvents).toHaveBeenCalledTimes(1)
+    expect(mockUnlockAndAppendAuditEvents).toHaveBeenCalledWith(
       expect.anything(),
       user,
       caseObj.errorId,
@@ -104,6 +106,54 @@ describe("resolveCase orchestration integration", () => {
       expect.any(Array),
       user.username,
       user.username
+    )
+
+    expect(mockInsertNote).toHaveBeenCalledTimes(1)
+    expect(mockInsertNote).toHaveBeenCalledWith(
+      expect.anything(),
+      caseObj.errorId,
+      `${user.username}: Portal Action: Record Manually Resolved. Reason: UpdatedDisposal. Reason Text: Test reason text`,
+      "System"
+    )
+
+    expect(mockSelectMessageId).toHaveBeenCalledWith(expect.anything(), user, caseObj.errorId)
+    expect(mockCreateAuditLogEvents).toHaveBeenCalledWith(
+      expect.any(Array),
+      "mock-message-id",
+      mockAuditLogDynamoGateway,
+      mockLogger
+    )
+  })
+
+  it("successfully calls resolveError, unlockAndAuditLog, insertNote, and createAuditLogEvents, if case is unlocked", async () => {
+    const user = await createUser(databaseGateway, { groups: [UserGroup.GeneralHandler], id: 1 })
+    const caseObj = await createCase(databaseGateway, {
+      errorCount: 1,
+      errorStatus: ResolutionStatusNumber.Unresolved
+    })
+
+    const result = await resolveCase(
+      databaseGateway.writable,
+      user,
+      caseObj.errorId,
+      defaultValidResolution,
+      mockAuditLogDynamoGateway,
+      mockLogger
+    )
+
+    expect(result).toBeUndefined()
+
+    expect(mockResolveError).toHaveBeenCalledTimes(1)
+
+    expect(mockUnlockAndAppendAuditEvents).toHaveBeenCalledTimes(1)
+    expect(mockUnlockAndAppendAuditEvents).toHaveBeenCalledWith(
+      expect.anything(),
+      user,
+      caseObj.errorId,
+      2,
+      expect.any(Array),
+      null,
+      null
     )
 
     expect(mockInsertNote).toHaveBeenCalledTimes(1)
@@ -131,7 +181,7 @@ describe("resolveCase orchestration integration", () => {
       errorStatus: ResolutionStatusNumber.Unresolved
     })
 
-    mockUnlockAndAuditLog.mockResolvedValueOnce(new Error("Unlock error"))
+    mockUnlockAndAppendAuditEvents.mockResolvedValueOnce(new Error("Unlock error"))
 
     const result = await resolveCase(
       databaseGateway.writable,
@@ -171,7 +221,7 @@ describe("resolveCase orchestration integration", () => {
     expect(isError(result)).toBe(true)
     expect((result as Error).message).toBe("General resolve error")
 
-    expect(mockUnlockAndAuditLog).not.toHaveBeenCalled()
+    expect(mockUnlockAndAppendAuditEvents).not.toHaveBeenCalled()
     expect(mockInsertNote).not.toHaveBeenCalled()
     expect(mockSelectMessageId).not.toHaveBeenCalled()
     expect(mockCreateAuditLogEvents).not.toHaveBeenCalled()
@@ -200,7 +250,7 @@ describe("resolveCase orchestration integration", () => {
     expect((result as Error).message).toBe("General insert note error")
 
     expect(mockResolveError).toHaveBeenCalled()
-    expect(mockUnlockAndAuditLog).toHaveBeenCalled()
+    expect(mockUnlockAndAppendAuditEvents).toHaveBeenCalled()
 
     expect(mockCreateAuditLogEvents).not.toHaveBeenCalled()
   })
@@ -228,7 +278,7 @@ describe("resolveCase orchestration integration", () => {
     expect((result as Error).message).toBe("General selectMessageId error")
 
     expect(mockResolveError).toHaveBeenCalled()
-    expect(mockUnlockAndAuditLog).toHaveBeenCalled()
+    expect(mockUnlockAndAppendAuditEvents).toHaveBeenCalled()
     expect(mockInsertNote).toHaveBeenCalled()
 
     expect(mockCreateAuditLogEvents).not.toHaveBeenCalled()
@@ -257,7 +307,7 @@ describe("resolveCase orchestration integration", () => {
     expect((result as Error).message).toBe("DynamoDB write failed")
 
     expect(mockResolveError).toHaveBeenCalled()
-    expect(mockUnlockAndAuditLog).toHaveBeenCalled()
+    expect(mockUnlockAndAppendAuditEvents).toHaveBeenCalled()
     expect(mockInsertNote).toHaveBeenCalled()
   })
 
@@ -285,7 +335,7 @@ describe("resolveCase orchestration integration", () => {
     expect(result).toBeUndefined()
 
     expect(mockResolveError).toHaveBeenCalled()
-    expect(mockUnlockAndAuditLog).toHaveBeenCalled()
+    expect(mockUnlockAndAppendAuditEvents).toHaveBeenCalled()
     expect(mockInsertNote).toHaveBeenCalled()
 
     expect(mockCreateAuditLogEvents).not.toHaveBeenCalled()
