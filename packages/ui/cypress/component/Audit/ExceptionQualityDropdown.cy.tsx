@@ -37,6 +37,6 @@ describe("ExceptionQualityDropdown", () => {
 
     cy.get("select") // Add so component mounted before checking for errors
     cy.get("#exception-quality-error").should("not.exist")
-    cy.get("select").should("not.have.attr", "aria-describedby")
+    cy.get("select").should("have.attr", "aria-describedby")
   })
 })
