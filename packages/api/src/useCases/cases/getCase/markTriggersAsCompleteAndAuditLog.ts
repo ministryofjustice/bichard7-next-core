@@ -3,6 +3,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 import { generateTriggersAttributes } from "@moj-bichard7/common/utils/generateTriggersAttributes"
 
@@ -25,7 +26,7 @@ export const markTriggersAsCompleteAndAuditLog = async (
 
   const updateFields: Record<string, unknown> = {
     resolved_ts: resolutionTimestamp,
-    status: "Resolved",
+    status: ResolutionStatusNumber.Resolved,
     trigger_resolved_by: resolver,
     trigger_resolved_timestamp: new Date()
   }

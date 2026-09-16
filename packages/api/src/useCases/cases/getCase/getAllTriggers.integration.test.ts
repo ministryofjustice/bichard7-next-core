@@ -49,12 +49,12 @@ describe("getAllTriggers", () => {
   })
 
   it("should return an error if the database query fails", async () => {
-    const brokenTransaction = {
+    const brokenTx = {
       connection: jest.fn().mockRejectedValue(new Error("Simulated Database Error"))
     }
     const courtCaseId = 1
 
-    const result = await getAllTriggers(brokenTransaction as any, courtCaseId)
+    const result = await getAllTriggers(brokenTx as any, courtCaseId)
 
     expect(isError(result)).toBe(true)
     expect((result as Error).message).toContain("Couldn't fetch triggers for court case 1: Simulated Database Error")

@@ -2,6 +2,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
 
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
@@ -22,13 +23,15 @@ export const updateTriggers = async (
   const updateFields: Record<string, unknown> = {
     resolved_by: resolver,
     resolved_ts: resolutionTimestamp,
-    status: "Resolved"
+    status: ResolutionStatusNumber.Resolved
   }
+
+  const stringifiedIds = unresolvedTriggerIds.map(String)
 
   const updateResult = await tx.connection`
     UPDATE br7own.error_list_triggers
     SET ${tx.connection(updateFields)}
-    WHERE trigger_id IN (${unresolvedTriggerIds}) AND resolved_ts IS NULL AND resolved_by IS NULL
+    WHERE trigger_id = ANY(${stringifiedIds}) AND resolved_ts IS NULL AND resolved_by IS NULL
   `.catch((error: Error) => error)
 
   if (isError(updateResult)) {
