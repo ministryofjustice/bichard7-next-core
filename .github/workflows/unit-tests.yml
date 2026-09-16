@@ -120,7 +120,7 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Install Cypress
-        run: npx cypress install
+        run: npm exec --no -- cypress install
       
       - name: Install GOV.UK Assets
         run: npm run -w packages/ui install:assets
@@ -130,7 +130,7 @@ jobs:
       
       - name: Run UI component tests
         working-directory: packages/ui
-        run: npx cypress run --component --spec 'cypress/component/**/*.cy.tsx' --reporter junit --reporter-options mochaFile=cypress/results/results-[hash].xml
+        run: npm exec --no -- cypress run --component --spec 'cypress/component/**/*.cy.tsx' --reporter junit --reporter-options mochaFile=cypress/results/results-[hash].xml
         env:
           UI_IS_HTTPS: "true"
           TZ: "Europe/London"
