@@ -56,6 +56,6 @@ workflows:
   always-run:
     when:
       not:
-        equal: [ main, << pipeline.git.branch >> ]
+        equal: [main, << pipeline.git.branch >>]
     jobs:
       - set_parameters
