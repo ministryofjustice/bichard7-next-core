@@ -2,9 +2,6 @@ name: Lint and build
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
   pull_request:
   merge_group:
     types: [checks_requested]
