@@ -25,10 +25,10 @@ export const markTriggersAsCompleteAndAuditLog = async (
   const resolutionTimestamp = hasUnresolvedExceptions ? null : new Date()
 
   const updateFields: Record<string, unknown> = {
-    resolved_ts: resolutionTimestamp,
-    status: ResolutionStatusNumber.Resolved,
+    resolution_ts: resolutionTimestamp,
     trigger_resolved_by: resolver,
-    trigger_resolved_timestamp: new Date()
+    trigger_resolved_ts: new Date(),
+    trigger_status: ResolutionStatusNumber.Resolved
   }
 
   const updateResult = await tx.connection`
