@@ -1322,6 +1322,9 @@ jobs:
 
 workflows:
   test-all:
+    when:
+      not:
+        equal: [ main, << pipeline.git.branch >> ]
     jobs:
       - characterisation_test
       - test_ui_component
