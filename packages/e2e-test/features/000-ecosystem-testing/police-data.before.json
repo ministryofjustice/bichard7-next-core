@@ -1,0 +1,44 @@
+{
+  "disposals": [
+    {
+      "caseStatusMarker": "A",
+      "charges": [
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100020368M",
+          "chargeStatusMarker": "A",
+          "cjsOffenceCode": "CJ25001",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/021072F",
+          "crimeReference": "RI0RH3NOXCBSAVY",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "4.5.1.1",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "othersCharged": [],
+          "qualifiedCjsCode": "CJ25001",
+          "results": [],
+          "roleQualifier": [],
+          "startDate": "2026-07-01"
+        }
+      ],
+      "convictionDate": "2026-07-15",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/021072F",
+      "subsequentAppearances": []
+    }
+  ],
+  "remands": []
+}
