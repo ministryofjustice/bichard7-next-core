@@ -54,5 +54,8 @@ jobs:
 
 workflows:
   always-run:
+    when:
+      not:
+        equal: [main, << pipeline.git.branch >>]
     jobs:
       - set_parameters

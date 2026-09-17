@@ -308,6 +308,13 @@ workspace "Bichard" {
       autoLayout lr
     }
 
+    container bichard "HybridBichard" {
+      include * pnc
+      exclude slack pagerDuty
+      autoLayout
+      title "Hybrid Bichard"
+    }
+
     container bichard "OldBichard" {
       include * pnc
       exclude slack pagerDuty bichardUI conductor bichardApi niam leds ledsProxy
@@ -315,11 +322,11 @@ workspace "Bichard" {
       title "Old Bichard"
     }
 
-    container bichard "HybridBichard" {
-      include * pnc
-      exclude slack pagerDuty
+    container bichard "FutureBichard" {
+      include *
+      exclude pnc pncApi beanconnect activeMQ bichardJavaApplication auditLogApi messageForwarder eventHandler
       autoLayout
-      title "Hybrid Bichard"
+      title "Future Bichard"
     }
 
     component conductor {
