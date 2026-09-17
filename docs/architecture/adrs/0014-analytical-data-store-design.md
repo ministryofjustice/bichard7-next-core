@@ -8,11 +8,11 @@ Proposed
 
 ## Context
 
-To improve Bichard we are continually asking more complex questions of our data. Remodelling the data is required to reduce the manual time/effort needed to answer these questions, or to make some answerable at all e.g. a breakdown of total cases entering Bichard with certain result codes, by code and by month, for 2026. Depending on latency, it's possible that this datastore could be used to self-serve answers to common questions to stakeholders (i.e. dashboards), and to help with the next generation of in-system reporting.
+To improve Bichard we are continually asking more complex questions of our data. Remodelling the data is required to reduce the manual time/effort needed to answer these questions, or to make some answerable at all (e.g. a breakdown of total cases entering Bichard with certain result codes, by code and by month, for 2026). Depending on latency, it's possible that this datastore could be used to self-serve answers to common questions to stakeholders (i.e. dashboards), and to help with the next generation of in-system reporting.
 
 Comprised of:
 
-- data ingestion (i.e. ETL pipelines)
+- data ingestion (i.e. ETL jobs)
 - data storage
 - data access (i.e. query engine(s))
 
@@ -40,14 +40,15 @@ Comprised of:
    - look to move to queue/event based system (i.e. integrating with conductor) if reduced latency is required (out of scope for the internal analytical data store)
 
 4. Initial design to use delta tables in s3 as the storage format
+   - designed for analytics 
    - low storage cost compared to traditional databases
    - good partitioning/chunking strategy can lead to lots of data skipping on query (less compute, quicker query time)
    - columnar format works well with analytical workloads (column skipping)
    - ACID compliant
    - Delta tables and the underlying parquet file format is open source, this opens up options for query engines, reduces vendor lock in
 
-5. Query engine TBD
-   - duckdb could be used locally on team member's laptops. Free but poses a security risk, removing PII in the ingestion process mitigates this.
+6. Query engine TBD
+   - duckdb could be used locally on team member's laptops. Free and simple to set up but poses a security risk, removing PII in the ingestion process mitigates this.
    - AWS Athena could be used as a cloud based alternative where data doesn't leave the AWS account. Charged per GB scanned.
 
 ## Consequences
