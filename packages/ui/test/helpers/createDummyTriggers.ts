@@ -39,7 +39,8 @@ const triggerFrequency = {
   TRPR0007: 331,
   TRPR0017: 117,
   TRPS0002: 41,
-  TRPS0013: 19
+  TRPS0013: 19,
+  TRPR0031: 20000
 }
 const totalFrequency = Object.values(triggerFrequency).reduce((a, b) => a + b, 0)
 const probs = Object.values(triggerFrequency).map((freq) => freq / totalFrequency)
