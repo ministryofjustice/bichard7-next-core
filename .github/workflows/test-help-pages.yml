@@ -9,7 +9,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@3ff19f5e2baf30647122352b96108b1fbe250c64 #v1.299.0

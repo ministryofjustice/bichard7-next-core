@@ -2,9 +2,6 @@ name: Unit Tests
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
   pull_request:
   merge_group:
     types: [checks_requested]
@@ -23,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -55,7 +52,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup node version
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
@@ -79,7 +76,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup node version
         uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6

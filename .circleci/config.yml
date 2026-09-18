@@ -32,9 +32,10 @@ jobs:
             packages/e2e-test/.* e2e-test-changes true
             packages/core/characterisation-tests.* characterisation-test-changes true
             packages/message-forwarder/.* message-forwarder-changes true
+            packages/nginx-auth-proxy/.* nginx-auth-proxy-changes true
+            packages/s3-web-proxy/.* s3-web-proxy-changes true
             packages/ui/.* ui-changes true
             packages/user-service/.* user-service-changes true
-            packages/s3-web-proxy/.* s3-web-proxy-changes true
       - run:
           name: Scan parameters and enable Docker layer caching (DLC)
           command: |
@@ -54,5 +55,8 @@ jobs:
 
 workflows:
   always-run:
+    when:
+      not:
+        equal: [main, << pipeline.git.branch >>]
     jobs:
       - set_parameters
