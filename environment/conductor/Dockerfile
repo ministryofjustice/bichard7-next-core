@@ -26,7 +26,7 @@ RUN npm install --legacy-peer-deps --ignore-scripts --no-audit && \
 # ===========================================================================================================
 # 2. Java Builder stage
 # ===========================================================================================================
-FROM eclipse-temurin:21-jdk-jammy@sha256:ce5767b7222312d42395f5bab033cd91f09e44032a2f21bdfd7b5b912dbe1e77 AS builder
+FROM eclipse-temurin:25-jdk-jammy@sha256:02eecc58b9c7cb20e55765c7bcdcdee0c6d210440aca1b0a1fbd81ecfe8e772e AS builder
 
 COPY --from=src /conductor /conductor
 
