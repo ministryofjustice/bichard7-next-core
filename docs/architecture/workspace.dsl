@@ -49,6 +49,10 @@ workspace "Bichard" {
           }
         }
 
+        apiGateway = container "API Gateway" "" "Amazon API Gateway" {
+          tags "API"
+        }
+
         eventHandler = container "Event Handler Step Function" {
           tags "Step Function"
 
@@ -240,8 +244,9 @@ workspace "Bichard" {
 
     # Bichard API
     bichardApi -> dynamoDB
-    bichardApi -> ledsProxyLambda "Encrypted via HTTPS"
-    bichardApi -> niam "via Internet" "Gets auth token to access LEDS API"
+
+    # API Gateway
+    apiGateway -> niam "via Internet" "Gets auth token to access LEDS API"
 
     # Reporting
     automationReport -> bichardApi
@@ -267,6 +272,9 @@ workspace "Bichard" {
     pncApi -> beanconnect
 
     conductor -> database
+    conductor -> ledsProxyLambda "" "Encrypted via HTTPS"
+    conductor -> apiGateway
+
     messageTransfer -> conductor
 
     # Inside conductor
@@ -288,8 +296,8 @@ workspace "Bichard" {
     bichardApi -> phaseTwo "Resubmits court case"
 
     # LEDS proxy
-    ledsProxyLambda -> ledsTgw "" "Encrypted via mTLS"
-    ledsTgw -> leds "" "Encrypted via mTLS"
+    ledsProxyLambda -> ledsTgw "" "Encrypted via HTTPS"
+    ledsTgw -> leds "" "Encrypted via HTTPS"
 
     # Static file service
     s3WebProxy -> staticFilesS3Bucket
@@ -315,18 +323,18 @@ workspace "Bichard" {
       title "Hybrid Bichard"
     }
 
-    container bichard "OldBichard" {
-      include * pnc
-      exclude slack pagerDuty bichardUI conductor bichardApi niam leds ledsProxy
-      autoLayout
-      title "Old Bichard"
-    }
-
     container bichard "FutureBichard" {
       include *
       exclude pnc pncApi beanconnect activeMQ bichardJavaApplication auditLogApi messageForwarder eventHandler
       autoLayout
       title "Future Bichard"
+    }
+
+    container bichard "OldBichard" {
+      include * pnc
+      exclude slack pagerDuty bichardUI conductor bichardApi niam leds ledsProxy
+      autoLayout
+      title "Old Bichard"
     }
 
     component conductor {
