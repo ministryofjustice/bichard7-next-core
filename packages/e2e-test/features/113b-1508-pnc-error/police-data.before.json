@@ -7,17 +7,17 @@
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100002792H",
+          "arrestSummonsReference": "26/0000/00/100019871X",
           "chargeStatusMarker": "A",
           "cjsOffenceCode": "TH68010",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/2576/000853D",
-          "crimeReference": "0B27NYUCJVKTRJW",
+          "courtCaseReferenceNumber": "26/2576/020556V",
+          "crimeReference": "EEBI/XRIYSDDON9",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
-            "locationText": "1 Kingston High Street",
+            "locationText": "Kingston High Street",
             "locationType": "description"
           },
           "locationFSCode": "01ZD",
@@ -28,37 +28,17 @@
           "qualifiedCjsCode": "TH68010",
           "results": [],
           "roleQualifier": [],
-          "startDate": "2010-09-25"
+          "startDate": "2010-10-01"
         }
       ],
-      "convictionDate": "2011-10-01",
+      "convictionDate": "2011-10-26",
       "court": {
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/000853D",
+      "courtCaseReference": "26/2576/020556V",
       "subsequentAppearances": []
     }
   ],
-  "remands": [
-    {
-      "appearanceResult": "remanded-on-bail",
-      "currentAppearance": {
-        "court": {
-          "courtCode": "2576",
-          "courtIdentityType": "code"
-        }
-      },
-      "nextAppearance": {
-        "court": {
-          "courtCode": "2576",
-          "courtIdentityType": "code"
-        },
-        "date": "2012-02-01"
-      },
-      "ownerCode": "01YZ",
-      "remandConditions": [],
-      "remandDate": "2011-10-01"
-    }
-  ]
+  "remands": []
 }

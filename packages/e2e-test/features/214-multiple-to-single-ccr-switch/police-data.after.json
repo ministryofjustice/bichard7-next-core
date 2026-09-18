@@ -36,7 +36,8 @@
         "courtIdentityType": "name",
         "courtName": "Magistrates' Courts London Croydon"
       },
-      "courtCaseReference": "26/9998/001660K"
+      "courtCaseReference": "26/9998/001660K",
+      "subsequentAppearances": []
     },
     {
       "caseStatusMarker": "A",
@@ -74,7 +75,8 @@
         "courtIdentityType": "name",
         "courtName": "Magistrates' Courts London Croydon"
       },
-      "courtCaseReference": "26/9998/001661L"
+      "courtCaseReference": "26/9998/001661L",
+      "subsequentAppearances": []
     }
   ],
   "remands": []
