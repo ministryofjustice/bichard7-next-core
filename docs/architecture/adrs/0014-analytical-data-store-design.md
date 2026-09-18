@@ -21,7 +21,7 @@ Comprised of:
 1. Focus on a POC first, before adding engineering rigor to enable stakeholder/user facing use cases
    - allows the internal Bichard team to gain insights quicker, prove out the data store, and work in an agile way
    - building a user facing data store straight away would take a long time to deliver value, and come with many unknowns
-      - the POC would prove out data linking, and determine whether postgres needs to be included at all
+     - the POC would prove out data linking, and determine whether postgres needs to be included at all
    - without users/stakeholders depending on the data store, the schema can be iterated on quickly
    - using production data early will enable internal team members to gain valuable insights, while load testing the system with real volume/velocity of data
 
@@ -40,14 +40,14 @@ Comprised of:
    - easy to migrate to MoJ cloud platform if needed
 
 4. Initial design to use delta tables in s3 as the storage format
-   - designed for analytics 
+   - designed for analytics
    - low storage cost compared to traditional databases
    - good partitioning/chunking strategy can lead to lots of data skipping on query (less compute, quicker query time)
    - columnar format works well with analytical workloads (column skipping)
    - ACID compliant
    - Delta tables and the underlying parquet file format is open source, this opens up options for query engines, reduces vendor lock in
 
-6. Use Athena for ad hoc queries
+5. Use Athena for ad hoc queries
    - duckdb could have been used locally on team member's laptops. Free and simple to set up but poses a security risk, and requires lots of data transfer to/from S3
    - With AWS Athena, data doesn't leave the AWS account. Charged per GB scanned. The POC will help us understand the cost, and whether Athena would be inappropriate for production use cases
 
