@@ -1,4 +1,4 @@
-# 14. analytical-data-store-design
+# 14. Analytical data store design
 
 Date: 2026-09-07
 
