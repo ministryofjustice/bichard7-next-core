@@ -244,8 +244,6 @@ workspace "Bichard" {
 
     # Bichard API
     bichardApi -> dynamoDB
-    bichardApi -> ledsProxyLambda "" "Encrypted via HTTPS"
-    bichardApi -> apiGateway
 
     # API Gateway
     apiGateway -> niam "via Internet" "Gets auth token to access LEDS API"
@@ -274,6 +272,9 @@ workspace "Bichard" {
     pncApi -> beanconnect
 
     conductor -> database
+    conductor -> ledsProxyLambda "" "Encrypted via HTTPS"
+    conductor -> apiGateway
+
     messageTransfer -> conductor
 
     # Inside conductor
