@@ -3,6 +3,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
 import { isError } from "@moj-bichard7/common/types/Result"
+import UnlockReason from "@moj-bichard7/common/types/UnlockReason"
 
 import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
 import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
@@ -16,6 +17,7 @@ import { NotFoundError } from "../../types/errors/NotFoundError"
 import createAuditLogEvents from "../createAuditLogEvents"
 import { getAllTriggers } from "./getCase/getAllTriggers"
 import { markTriggersAsCompleteAndAuditLog } from "./getCase/markTriggersAsCompleteAndAuditLog"
+import { unlockAndAppendAuditEvents } from "./getCase/unlockAndAppendAuditEvents"
 import { updateTriggers } from "./getCase/updateTriggers"
 
 const resolveTriggers = async (
@@ -108,14 +110,21 @@ const resolveTriggers = async (
         }
       }
 
-      // Waiting on Tim's PR
-      /*    if (allTriggersVisibleToUserResolved) {
-      const unlockResult = await updateLockStatusToUnlocked(tx, courtCase, user, UnlockReason.Trigger, events)
+      if (allTriggersVisibleToUserResolved) {
+        const unlockResult = await unlockAndAppendAuditEvents(
+          tx,
+          user,
+          courtCaseId,
+          UnlockReason.Trigger,
+          auditLogEvents,
+          null,
+          courtCase.triggerLockedByUsername
+        )
 
-      if (isError(unlockResult)) {
-        throw unlockResult
+        if (isError(unlockResult)) {
+          throw unlockResult
+        }
       }
-    } */
 
       if (auditLogEvents.length > 0) {
         const caseMessageId = await selectMessageId(tx, user, courtCaseId)
