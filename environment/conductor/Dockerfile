@@ -4,7 +4,7 @@ ARG CONDUCTOR_VERSION="v3.32.1"
 # ===========================================================================================================
 # 0. Source stage
 # ===========================================================================================================
-FROM alpine/git@sha256:a299a963fbe31628ab481ca42907bcf0691d004f86734c02638abdf513691d42 AS src
+FROM alpine/git@sha256:0b5f57d22181e8b8fbe8ac5ca8754faa0d577f101b9857418f1acc43955ad464 AS src
 ARG CONDUCTOR_VERSION
 
 RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor
@@ -12,7 +12,7 @@ RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss
 # ===========================================================================================================
 # 1. UI Builder stage
 # ===========================================================================================================
-FROM node:24-alpine@sha256:e67514e5d0f6c46656005e1b693b2ec9d52e80b641307de684d4a015ba7a4eaf AS ui-builder
+FROM node:26-alpine@sha256:ef24c5053d50fdc3e4e56eb4e7ddb7861874ab0fdc797046ba897581deb8e868 AS ui-builder
 
 COPY --from=src /conductor/ui /conductor/ui
 
@@ -33,12 +33,17 @@ COPY --from=src /conductor /conductor
 WORKDIR /conductor
 
 RUN printf '%s\n' \
-    'ext["tomcat.version"] = "10.1.55"' \
+    'ext["tomcat.version"] = "10.1.59"' \
     'subprojects {' \
     '    configurations.all {' \
     '        resolutionStrategy.eachDependency { d ->' \
     '            if (d.requested.group == "org.bouncycastle") {' \
     '                d.useVersion "1.84"' \
+    '                d.because "Fix CVE-2025-14813"' \
+    '            }' \
+    '            if (d.requested.group == "io.netty" && d.requested.version?.startsWith("4.1.")) {' \
+    '                d.useVersion "4.1.137.Final"' \
+    '                d.because "Fix CVE-2026-75595"' \
     '            }' \
     '        }' \
     '    }' \

@@ -3,14 +3,19 @@ name: MoJ Code Formatter
 on:
   pull_request:
 
+permissions:
+  contents: write
+
 jobs:
   format-code:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: ⛓️ SLSA Supply Chain Security
-        uses: ministryofjustice/devsecops-actions/sca/slsa@8c77d3a65a46d1d4b5416eafae5b84371ecd797d # v1.5.0
+        uses: ministryofjustice/devsecops-actions/sca/slsa@7dc13c20e2bf541b8a77fa1320a04983b18846f6 # v1.6.0
 
       - uses: ministryofjustice/github-actions/code-formatter@db1a54895bf5fb975c60af47e5a3aab96505ca3e #v18.6.0
         with:
