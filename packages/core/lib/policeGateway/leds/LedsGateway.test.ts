@@ -1,7 +1,6 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
-import axios from "axios"
 import { randomUUID } from "node:crypto"
 
 import type DisposalUpdatedPncUpdateRequest from "../../../phase3/types/DisposalUpdatedPncUpdateRequest"
@@ -14,7 +13,6 @@ import type PoliceApiError from "../PoliceApiError"
 import generateAhoFromOffenceList from "../../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import generateFakePncUpdateDataset from "../../../phase2/tests/fixtures/helpers/generateFakePncUpdateDataset"
 import { PncUpdateType } from "../../../phase3/types/HearingDetails"
-import ledsAsnQueryResponse from "../../../tests/fixtures/leds-asn-query-response-001.json"
 import LedsActionCode from "../../../types/leds/LedsActionCode"
 import LedsAuthentication from "../../../types/leds/LedsAuthentication"
 import CoreAuditLogger from "../../auditLog/CoreAuditLogger"
@@ -106,11 +104,12 @@ describe("LedsGateway", () => {
 
   describe("query", () => {
     it("should return police query result and update query time", async () => {
-      const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
+      const fetch = jest.spyOn(global, "fetch").mockResolvedValue({
         status: 200,
-        data: ledsAsnQueryResponse
-      })
-
+        json: jest.fn().mockResolvedValue({
+          randomField: "randomValue"
+        })
+      } as unknown as Response)
       expect(ledsGateway.queryTime).toBeUndefined()
 
       const correlationId = randomUUID()
@@ -179,12 +178,12 @@ describe("LedsGateway", () => {
     })
 
     it("should return an error when http status code is 200 but data is in wrong format", async () => {
-      jest.spyOn(axios, "post").mockResolvedValue({
+      jest.spyOn(global, "fetch").mockResolvedValue({
         status: 200,
-        data: {
+        json: jest.fn().mockResolvedValue({
           randomField: "randomValue"
-        }
-      })
+        })
+      } as unknown as Response)
 
       const result = (await ledsGateway.query("dummy-asn", randomUUID(), aho)) as PoliceApiError
 
@@ -374,7 +373,7 @@ describe("LedsGateway", () => {
       const result = await ledsGateway.update(request, correlationId, pncUpdateDataset)
 
       expect(result).toBeUndefined()
-      expect(axiosMock.mock.calls[0][0]).toBe(
+      expect(jest.mocked(fetch)).toBe(
         `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
       )
       expect(JSON.parse(JSON.stringify(axiosMock.mock.calls[0][1]))).toEqual({
