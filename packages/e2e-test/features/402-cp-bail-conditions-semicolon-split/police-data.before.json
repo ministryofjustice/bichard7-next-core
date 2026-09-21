@@ -7,13 +7,13 @@
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100002819M",
+          "arrestSummonsReference": "26/0000/00/100020724Z",
           "chargeStatusMarker": "A",
           "cjsOffenceCode": "CJ88116",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/2576/000876D",
-          "crimeReference": "WFMTZMTX-AIV1HW",
+          "courtCaseReferenceNumber": "26/2576/021385W",
+          "crimeReference": "U3CDP T2TE/5KBD",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -36,7 +36,8 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/000876D"
+      "courtCaseReference": "26/2576/021385W",
+      "subsequentAppearances": []
     }
   ],
   "remands": []

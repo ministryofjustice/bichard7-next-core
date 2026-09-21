@@ -1,98 +1,78 @@
 {
   "disposals": [
     {
-      "id": "32ca8432-20f1-4c3b-aaa5-0c90cc0d045f",
-      "court": {
-        "courtIdentityType": "name",
-        "courtName": "Magistrates' Courts London Croydon"
-      },
-      "convictionDate": "2011-10-10",
-      "courtCaseReference": "26/9998/000820Q",
       "caseStatusMarker": "C",
       "charges": [
         {
-          "offenceId": "b60c0b13-1237-4181-b48e-5c294461f49d",
-          "arrestSummonsId": "5f75196f-1b40-4f84-a790-b76f8e60f8e9",
-          "adjudication": "G",
-          "npccOffenceCode": "RT88004",
-          "cjsOffenceCode": "RT88004",
-          "qualifiedCjsCode": "RT88004",
-          "offenceDescription": [],
-          "offenceRoleQualifiers": [],
-          "offenceLegislationQualifiers": [],
-          "offenceChargeNumber": 1,
           "additionalMarker": false,
-          "disposals": [
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 1,
+          "arrestSummonsReference": "26/0000/00/100020709H",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "RT88004",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 1,
+          "courtCaseReferenceNumber": "26/2576/021367B",
+          "crimeReference": "QYLYXXOMLRD41OG",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "offenceChargeNumber": 1,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "RT88004",
+          "results": [
             {
-              "id": "a34a2f39-c2f0-4d1b-abfa-206fc7625912",
               "disposalCode": "4011",
-              "disposalQualifierCodes": ["BA"],
+              "disposalQualifierCodes": [
+                "BA"
+              ],
               "effectiveDate": "2012-01-05"
             }
           ],
-          "offence": {
-            "version": "iw56NobQXWK0Sxf87sLGf5L0BDCl4OT7G7qYEefFZDy3XDtMUHe5ibEV5izPS4F/9h0kaAgOreHutT9MOyLtTQ==",
-            "arrestSummonsReference": "26/0000/00/00000001487M",
-            "arrestChargeNumber": 1,
-            "chargeStatusMarker": "C",
-            "committedOnBail": false,
-            "plea": "2",
-            "courtCaseReferenceNumber": "26/9998/000820Q",
-            "courtCaseChargeNumber": 1,
-            "forceStationChargeOrig": "01ZD",
-            "crimeReference": "",
-            "locationFSCode": "01ZD",
-            "locationAddress": {
-              "locationType": "description",
-              "locationText": "Kingston High Street"
-            },
-            "offencesTakenIntoConsideration": 0,
-            "adjudication": "G",
-            "othersCharged": [],
-            "brcRecord": false,
-            "hasDisposalResults": true,
-            "additionalOffenceMarker": false,
-            "npccOffenceCode": "RT88004",
-            "cjsOffenceCode": "RT88004",
-            "qualifiedCjsCode": "RT88004",
-            "startDate": "2010-11-28",
-            "roleQualifier": [],
-            "legislationQualifier": [],
-            "id": "b60c0b13-1237-4181-b48e-5c294461f49d"
-          }
+          "roleQualifier": [],
+          "startDate": "2010-11-28"
         }
       ],
+      "convictionDate": "2011-10-10",
+      "court": {
+        "courtCode": "2576",
+        "courtIdentityType": "code"
+      },
+      "courtCaseReference": "26/2576/021367B",
       "subsequentAppearances": []
     }
   ],
   "remands": [
     {
       "appearanceResult": "remanded-on-bail",
-      "ownerCode": "01YZ",
-      "remandDate": "2011-10-10",
       "currentAppearance": {
         "court": {
-          "courtIdentityType": "code",
-          "courtCode": "2576"
+          "courtCode": "2576",
+          "courtIdentityType": "code"
         }
       },
       "nextAppearance": {
-        "date": "2012-01-05",
         "court": {
-          "courtIdentityType": "code",
-          "courtCode": "2576"
-        }
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        },
+        "date": "2012-01-05"
       },
+      "ownerCode": "01YZ",
       "remandConditions": [
-        "Exclusion: not to contact directly or indirectly  ",
-        "Some One save via a solicitor to arrange contact  ",
-        "with child",
-        "Exclusion: not to enter Some Road or Some Lane in ",
-        "Some Place until he has attended in the company of",
-        "a Police oficer to confirm Some One has left the  ",
-        "area",
-        "With Electronic Tagging"
-      ]
+        "Exclusion: not to contact directly or indirectly\nSome One save via a solicitor to arrange contact\nwith child\n",
+        "Exclusion: not to enter Some Road or Some Lane in\nSome Place until he has attended in the company of\na Police oficer to confirm Some One has left the\narea",
+        "With Electronic Tagging\n\n\n"
+      ],
+      "remandDate": "2011-10-10"
     }
   ]
 }
