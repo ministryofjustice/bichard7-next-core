@@ -575,7 +575,9 @@ jobs:
     steps:
       - unless:
           condition:
-            <<: *any_change
+            or:
+              - << pipeline.parameters.circleci-changes >>
+              - << pipeline.parameters.nginx-auth-proxy-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
