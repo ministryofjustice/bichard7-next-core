@@ -1,19 +1,20 @@
 {
   "disposals": [
     {
-      "caseStatusMarker": "A",
+      "caseStatusMarker": "C",
       "charges": [
         {
           "additionalMarker": false,
           "additionalOffenceMarker": false,
+          "adjudication": "G",
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100002074C",
-          "chargeStatusMarker": "A",
+          "arrestSummonsReference": "26/0000/00/100020948T",
+          "chargeStatusMarker": "C",
           "cjsOffenceCode": "TH68010",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/9998/001660K",
-          "crimeReference": "MF3YEFNZCXVIHDR",
+          "courtCaseReferenceNumber": "26/2576/021682U",
+          "crimeReference": "/HKBILVZZWNEPLL",
           "forceStationChargeOrig": "01VK",
           "legislationQualifier": [],
           "locationAddress": {
@@ -24,35 +25,56 @@
           "npccOffenceCode": "5.5.8.1",
           "offenceChargeNumber": 1,
           "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
           "othersCharged": [],
+          "plea": "2",
           "qualifiedCjsCode": "TH68010",
-          "results": [],
+          "results": [
+            {
+              "disposalCode": "1002",
+              "disposalDuration": {
+                "count": 12,
+                "units": "months"
+              },
+              "disposalQualifierCodes": []
+            },
+            {
+              "disposalCode": "3025",
+              "disposalDuration": {
+                "count": 1,
+                "units": "life"
+              },
+              "disposalQualifierCodes": [],
+              "disposalText": "SEA MONKEY"
+            }
+          ],
           "roleQualifier": [],
           "startDate": "2011-09-25"
         }
       ],
-      "convictionDate": "2011-10-01",
+      "convictionDate": "2011-11-01",
       "court": {
-        "courtIdentityType": "name",
-        "courtName": "Magistrates' Courts London Croydon"
+        "courtCode": "2576",
+        "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/9998/001660K",
+      "courtCaseReference": "26/2576/021682U",
       "subsequentAppearances": []
     },
     {
-      "caseStatusMarker": "A",
+      "caseStatusMarker": "C",
       "charges": [
         {
           "additionalMarker": false,
           "additionalOffenceMarker": false,
+          "adjudication": "G",
           "arrestChargeNumber": 2,
-          "arrestSummonsReference": "26/0000/00/100002074C",
-          "chargeStatusMarker": "A",
+          "arrestSummonsReference": "26/0000/00/100020948T",
+          "chargeStatusMarker": "C",
           "cjsOffenceCode": "CJ88001",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/9998/001661L",
-          "crimeReference": "4P/T7HEXJVACO1N",
+          "courtCaseReferenceNumber": "26/2576/021683V",
+          "crimeReference": "CZMYVMRMEX44X8I",
           "forceStationChargeOrig": "01VK",
           "legislationQualifier": [],
           "locationAddress": {
@@ -63,19 +85,34 @@
           "npccOffenceCode": "1.8.11.1",
           "offenceChargeNumber": 1,
           "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
           "othersCharged": [],
+          "plea": "2",
           "qualifiedCjsCode": "CJ88001",
-          "results": [],
+          "results": [
+            {
+              "disposalCode": "1002",
+              "disposalDuration": {
+                "count": 14,
+                "units": "months"
+              },
+              "disposalQualifierCodes": []
+            },
+            {
+              "disposalCode": "3107",
+              "disposalQualifierCodes": []
+            }
+          ],
           "roleQualifier": [],
           "startDate": "2011-09-25"
         }
       ],
-      "convictionDate": "2011-10-01",
+      "convictionDate": "2011-11-01",
       "court": {
-        "courtIdentityType": "name",
-        "courtName": "Magistrates' Courts London Croydon"
+        "courtCode": "2576",
+        "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/9998/001661L",
+      "courtCaseReference": "26/2576/021683V",
       "subsequentAppearances": []
     }
   ],
