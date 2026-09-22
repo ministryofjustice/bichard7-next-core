@@ -3,6 +3,7 @@ import type { FastifyBaseLogger } from "fastify"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 
 import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
 
@@ -81,14 +82,19 @@ describe("resolveTriggers", () => {
     `
     expect(notes.length).toBeGreaterThan(0)
     expect(notes[0].user_id).toBe("System")
-    expect(notes[0].note_text).toContain(
-      `${user.username}: Portal Action: Resolved Trigger. Code: ${insertedTriggers[0].triggerCode}`
-    )
+
+    const shortTrigger = getShortTriggerCode(insertedTriggers[0].triggerCode)
+    expect(notes[0].note_text).toContain(`${user.username}: Portal Action: Resolved Trigger. Code: ${shortTrigger}`)
   })
 
-  it("should fully complete triggers and audit log when resolved", async () => {
+  it("should fully complete triggers and audit log when all triggers are resolved", async () => {
     const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
-    const caseObj = await createCase(testDatabaseGateway, { triggerLockedById: user.username })
+    const caseObj = await createCase(testDatabaseGateway, {
+      errorCount: 0,
+      errorLockedById: null,
+      errorStatus: null,
+      triggerLockedById: user.username
+    })
 
     const insertedTriggers = [{ triggerCode: "TRPR0001", triggerId: 1 }]
     await createTriggers(testDatabaseGateway, caseObj.errorId, insertedTriggers)
@@ -110,7 +116,33 @@ describe("resolveTriggers", () => {
     expect(caseRecord[0].trigger_status).toBe(ResolutionStatusNumber.Resolved)
     expect(caseRecord[0].resolution_ts).not.toBeNull()
 
-    // Should have events for resolving the trigger and for all triggers resolved
+    expect(mockAuditLogGateway.update).toHaveBeenCalled()
+  })
+
+  it("should not have a resolution timestamp if triggers are resolved but there are unresolved exceptions", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
+    const caseObj = await createCase(testDatabaseGateway, { triggerLockedById: user.username })
+
+    const insertedTriggers = [{ triggerCode: "TRPR0001", triggerId: 1 }]
+    await createTriggers(testDatabaseGateway, caseObj.errorId, insertedTriggers)
+
+    const result = await resolveTriggers(
+      testDatabaseGateway.writable,
+      mockLogger,
+      [insertedTriggers[0].triggerId],
+      caseObj.errorId,
+      user,
+      mockAuditLogGateway
+    )
+
+    expect(isError(result)).toBe(false)
+
+    const caseRecord = await testDatabaseGateway.writable.connection`
+      SELECT trigger_status, resolution_ts FROM br7own.error_list WHERE error_id = ${caseObj.errorId}
+    `
+    expect(caseRecord[0].trigger_status).toBe(ResolutionStatusNumber.Resolved)
+    expect(caseRecord[0].resolution_ts).toBeNull()
+
     expect(mockAuditLogGateway.update).toHaveBeenCalled()
   })
 
