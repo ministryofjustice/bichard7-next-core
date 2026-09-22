@@ -22,7 +22,8 @@ const mockLogger = {
 } as unknown as FastifyBaseLogger
 
 const mockAuditLogGateway = {
-  createMany: jest.fn().mockResolvedValue(undefined)
+  fetchOne: jest.fn().mockResolvedValue(true),
+  update: jest.fn().mockResolvedValue(true)
 } as unknown as AuditLogDynamoGateway
 
 describe("resolveTriggers", () => {
@@ -80,10 +81,12 @@ describe("resolveTriggers", () => {
     `
     expect(notes.length).toBeGreaterThan(0)
     expect(notes[0].user_id).toBe("System")
-    expect(notes[0].note_text).toContain("TRPR0001 (1)")
+    expect(notes[0].note_text).toContain(
+      `${user.username}: Portal Action: Resolved Trigger. Code: ${insertedTriggers[0].triggerCode}`
+    )
   })
 
-  it("should fully complete triggers and audit log when resolving the final open trigger", async () => {
+  it("should fully complete triggers and audit log when resolved", async () => {
     const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
     const caseObj = await createCase(testDatabaseGateway, { triggerLockedById: user.username })
 
@@ -108,7 +111,7 @@ describe("resolveTriggers", () => {
     expect(caseRecord[0].resolution_ts).not.toBeNull()
 
     // Should have events for resolving the trigger and for all triggers resolved
-    expect(mockAuditLogGateway.createMany).toHaveBeenCalled()
+    expect(mockAuditLogGateway.update).toHaveBeenCalled()
   })
 
   it("should return a NotFoundError if no matching unresolved triggers exist", async () => {
@@ -142,6 +145,6 @@ describe("resolveTriggers", () => {
     )
 
     expect(isError(result)).toBe(true)
-    expect((result as Error).message).toContain(`Couldn't fetch case id ${nonExistentCaseId} for user ${user.username}`)
+    expect((result as Error).message).toContain(`Case id ${nonExistentCaseId} for user ${user.username} not found`)
   })
 })

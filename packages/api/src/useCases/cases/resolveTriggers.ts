@@ -52,8 +52,7 @@ const resolveTriggers = async (
 
       const unresolvedTriggerIds = triggersToResolve.map((trigger) => trigger.triggerId)
 
-      // refactor into separate function?
-      if (!!courtCase.triggerLockedByUsername && courtCase.triggerLockedByUsername === user.username) {
+      if (courtCase.triggerLockedByUsername !== user.username) {
         throw Error(`Triggers are not locked by the user - ${courtCaseId}`)
       }
 
