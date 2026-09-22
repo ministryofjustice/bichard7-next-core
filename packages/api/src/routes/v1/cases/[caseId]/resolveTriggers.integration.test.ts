@@ -8,6 +8,7 @@ import build from "../../../../app"
 import AuditLogDynamoGateway from "../../../../services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import { createCase } from "../../../../tests/helpers/caseHelper"
 import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
+import { createTriggers } from "../../../../tests/helpers/triggerHelper"
 import { createUserAndJwtToken } from "../../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../../tests/testGateways/e2ePostgres"
 
@@ -15,6 +16,7 @@ describe("resolveTriggers", () => {
   let app: FastifyInstance
   const testDatabaseGateway = new End2EndPostgres()
   const auditLogGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
+  const insertedTriggers = [{ triggerCode: "TRPR0001", triggerId: 1 }]
 
   beforeAll(async () => {
     app = await build({ auditLogGateway, database: testDatabaseGateway })
@@ -23,7 +25,6 @@ describe("resolveTriggers", () => {
 
   beforeEach(async () => {
     await testDatabaseGateway.clearDb()
-    await createCase(testDatabaseGateway)
   })
 
   afterAll(async () => {
@@ -32,13 +33,20 @@ describe("resolveTriggers", () => {
   })
 
   it("returns 200 OK when triggers are successfully resolved", async () => {
-    const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
+    const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
+    const caseObj = await createCase(testDatabaseGateway, { triggerLockedById: user.username })
+    await createTriggers(testDatabaseGateway, caseObj.errorId, insertedTriggers)
 
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
-      url: V1.CasesResolveTriggers.replace(":caseId", "1")
+      payload: {
+        triggerIds: [insertedTriggers[0].triggerId]
+      },
+      url: V1.CasesResolveTriggers.replace(":caseId", caseObj.errorId.toString())
     })
+
+    console.log(response.statusCode, response.body)
 
     expect(response.statusCode).toBe(OK)
   })
@@ -49,22 +57,29 @@ describe("resolveTriggers", () => {
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
+      payload: {
+        triggerIds: [insertedTriggers[0].triggerId]
+      },
       url: V1.CasesResolveTriggers.replace(":caseId", "999")
     })
 
     expect(response.statusCode).toBe(NOT_FOUND)
   })
 
-  it("returns 422 Unprocessable Entity when the case has no triggers to resolve", async () => {
+  it("returns 404 Not Found when the case has no triggers to resolve", async () => {
     const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
+    const caseObj = await createCase(testDatabaseGateway)
 
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
-      url: V1.CasesResolveTriggers.replace(":caseId", "1")
+      payload: {
+        triggerIds: [insertedTriggers[0].triggerId]
+      },
+      url: V1.CasesResolveTriggers.replace(":caseId", caseObj.errorId.toString())
     })
 
-    expect(response.statusCode).toBe(422)
+    expect(response.statusCode).toBe(404)
   })
 
   it("returns 500 Internal Server Error when an unexpected error occurs", async () => {
@@ -73,6 +88,9 @@ describe("resolveTriggers", () => {
     const response = await app.inject({
       headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
       method: "POST",
+      payload: {
+        triggerIds: [insertedTriggers[0].triggerId]
+      },
       url: V1.CasesResolveTriggers.replace(":caseId", "invalid-case-id")
     })
 
