@@ -99,10 +99,9 @@
     "lint-staged": "^16.4.0",
     "npm-check-updates": "^21.0.2",
     "typescript": "^6.0.3",
-    "zod": "^4.6.5"
+    "zod": "^4.3.6"
   },
   "overrides": {
-    "zod": "^4.6.5",
     "@io-orkes/conductor-javascript": {
       "zod": "$zod"
     }
