@@ -12,9 +12,9 @@ To improve Bichard we are continually asking more complex questions of our data.
 
 Comprised of:
 
-- data ingestion (i.e. ETL jobs)
+- data ingestion
 - data storage
-- data access (i.e. query engine(s))
+- query engine
 
 ## Decision
 
@@ -39,17 +39,20 @@ Comprised of:
    - low/no change needed to integrate with operational systems
    - easy to migrate to MoJ cloud platform if needed
 
-4. Initial design to use delta tables in s3 as the storage format
-   - designed for analytics
+4. Use delta tables in s3 as the storage format, with a medallion architecture
+   - delta tables are designed for analytics
    - low storage cost compared to traditional databases
    - good partitioning/chunking strategy can lead to lots of data skipping on query (less compute, quicker query time)
    - columnar format works well with analytical workloads (column skipping)
    - ACID compliant
-   - Delta tables and the underlying parquet file format is open source, this opens up options for query engines, reduces vendor lock in
+   - delta tables and the underlying parquet file format is open source, this opens up options for query engines, reduces vendor lock in
+   - the POC will focus on the "landing zone" and "bronze" layers of the medallion architecture
+     - data in the landing zone should be in the original source format with minimal/no processing. This allows us to identify if issues have been caused by the source system, or the analytical data store processing
+     - all data in the bronze layer will be in the delta table format
 
 5. Use Athena for ad hoc queries
    - duckdb could have been used locally on team member's laptops. Free and simple to set up but poses a security risk, and requires lots of data transfer to/from S3
-   - With AWS Athena, data doesn't leave the AWS account. Charged per GB scanned. The POC will help us understand the cost, and whether Athena would be inappropriate for production use cases
+   - with AWS Athena, data doesn't leave the AWS account. Charged per GB scanned. The POC will help us evaluate the cost and effectiveness of Athena for our use cases
 
 ## Consequences
 
@@ -59,4 +62,5 @@ Comprised of:
   - Bichard naturally has relatively small data volumes (10s - 100s of GB)
 - Duplication of data. Good CDC reduces/eliminates the risk of stale data. AWS provides CDC for DynamoDB and RDS.
 - Untested/unvalidated data while we work through the POC. Clear "internal" naming and communication across the team ensures this is not used for operational/user facing workloads
+  - limit access to Data Engineer/Analyst while prototyping. Insights to be validated before passing to external stakeholders, this helps build trust while in the POC phase
   - can be superseeded in future once ready for wider consumption
