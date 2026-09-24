@@ -18,9 +18,11 @@ runs:
 
     - name: Check Branch exists and is not a fork.
       id: branch-exists
+      env:
+        GITHUB_REF: ${{ github.head.ref }}
       run: |
         git fetch origin
-        branch_name=${{ github.head_ref }}
+        branch_name=${{ env.GITHUB_REF }}
         echo "branch_name=$branch_name" >> $GITHUB_ENV
         if [[ $( git rev-parse --verify origin/$branch_name ) ]]; then
           echo "result=$((0))" >> ${GITHUB_OUTPUT}
@@ -36,7 +38,7 @@ runs:
       run: |
         if [[ ${{ steps.branch-exists.outputs.result }} == 0 ]];
         then
-          npm install --location=global prettier
+          npm install --location=global --ignore-scripts prettier@3.9.8
           pipx install --cooldown 3 autopep8
         fi
       shell: bash
@@ -48,6 +50,8 @@ runs:
         terraform_wrapper: false
 
     - name: Get PR changed files via Git and code format files
+      env:
+        GITHUB_REF: ${{ github.head.ref }}
       run: |
         if [[ ${{ steps.branch-exists.outputs.result }} == 0 ]];
         then
@@ -55,7 +59,7 @@ runs:
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git fetch origin $GITHUB_BASE_REF --depth=50
           base_branch_sha=${{ github.event.pull_request.base.sha }}
-          git fetch origin ${{ github.head_ref }} --depth=50
+          git fetch origin ${{ env.GITHUB_REF }} --depth=50
           head_branch_sha=${{ github.event.pull_request.head.sha }}
           echo $base_branch_sha
           echo $head_branch_sha
