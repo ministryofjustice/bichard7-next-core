@@ -198,4 +198,40 @@ describe("resolveCaseTriggers", () => {
     expect(isError(result)).toBe(true)
     expect(result).toBeInstanceOf(NotAllowedError)
   })
+
+  it("should roll back the transaction if an error occurs during the resolveCaseTriggers process", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
+    const caseObj = await createCase(testDatabaseGateway, { triggerLockedById: user.username })
+
+    const insertedTriggers = [{ triggerCode: "TRPR0001", triggerId: 1 }]
+    await createTriggers(testDatabaseGateway, caseObj.errorId, insertedTriggers)
+
+    const mockFailingAuditLogGateway = {
+      fetchOne: jest.fn().mockResolvedValue(new Error("Simulated Audit Log Error")),
+      update: jest.fn().mockResolvedValue(new Error("Simulated Audit Log Error"))
+    } as unknown as AuditLogDynamoGateway
+
+    const result = await resolveCaseTriggers(
+      testDatabaseGateway.writable,
+      mockLogger,
+      [insertedTriggers[0].triggerId],
+      caseObj.errorId,
+      user,
+      mockFailingAuditLogGateway
+    )
+
+    expect(isError(result)).toBe(true)
+    expect((result as Error).message).toContain("Simulated Audit Log Error")
+
+    const updatedTriggers = await testDatabaseGateway.writable.connection`
+      SELECT trigger_id, status, resolved_by FROM br7own.error_list_triggers WHERE error_id = ${caseObj.errorId} ORDER BY trigger_id
+    `
+    expect(updatedTriggers[0].status).toBe(ResolutionStatusNumber.Unresolved)
+    expect(updatedTriggers[0].resolved_by).toBeNull()
+
+    const notes = await testDatabaseGateway.writable.connection`
+      SELECT note_text, user_id FROM br7own.error_list_notes WHERE error_id = ${caseObj.errorId}
+    `
+    expect(notes).toHaveLength(0)
+  })
 })
