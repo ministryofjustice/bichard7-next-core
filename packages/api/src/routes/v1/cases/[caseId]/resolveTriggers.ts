@@ -20,7 +20,7 @@ import {
 import useZod from "../../../../server/useZod"
 import { NotFoundError } from "../../../../types/errors/NotFoundError"
 import { UnprocessableEntityError } from "../../../../types/errors/UnprocessableEntityError"
-import resolveTriggers from "../../../../useCases/cases/resolveTriggers"
+import resolveCaseTriggers from "../../../../useCases/cases/resolve/resolveCaseTriggers"
 
 type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway
@@ -49,7 +49,7 @@ const schema = {
 } satisfies FastifyZodOpenApiSchema
 
 const handler = async ({ auditLogGateway, caseId, database, logger, reply, triggerIds, user }: HandlerProps) => {
-  const resolveTriggersResult = await resolveTriggers(
+  const resolveTriggersResult = await resolveCaseTriggers(
     database.writable,
     logger,
     triggerIds,

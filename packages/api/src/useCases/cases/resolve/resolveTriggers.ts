@@ -11,7 +11,7 @@ import type { TransactionConnection } from "../../../types/DatabaseGateway"
 import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
 import buildAuditLogEvent from "../../auditLog/buildAuditLogEvent"
 
-export const updateTriggers = async (
+export const resolveTriggers = async (
   tx: TransactionConnection,
   user: User,
   unresolvedTriggerIds: number[],

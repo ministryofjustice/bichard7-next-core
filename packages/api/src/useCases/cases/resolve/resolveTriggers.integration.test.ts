@@ -11,7 +11,7 @@ import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
 import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
-import { updateTriggers } from "./updateTriggers"
+import { resolveTriggers } from "./resolveTriggers"
 
 const testDatabaseGateway = new End2EndPostgres()
 
@@ -43,7 +43,7 @@ describe("updateTriggers", () => {
     let result: Error | number | undefined
 
     await testDatabaseGateway.writable.transaction(async (tx) => {
-      result = await updateTriggers(tx, user, triggerIds, auditLogEvents)
+      result = await resolveTriggers(tx, user, triggerIds, auditLogEvents)
     })
 
     expect(isError(result)).toBe(false)
@@ -84,7 +84,7 @@ describe("updateTriggers", () => {
     let result: Error | number | undefined
 
     await testDatabaseGateway.writable.transaction(async (tx) => {
-      result = await updateTriggers(tx, user, [triggerId], auditLogEvents)
+      result = await resolveTriggers(tx, user, [triggerId], auditLogEvents)
     })
 
     expect(isError(result)).toBe(true)
@@ -108,7 +108,7 @@ describe("updateTriggers", () => {
       })
     }
 
-    const result = await updateTriggers(brokenTx as any, user, triggerIds, auditLogEvents)
+    const result = await resolveTriggers(brokenTx as any, user, triggerIds, auditLogEvents)
 
     expect(isError(result)).toBe(true)
     expect(result).toBeInstanceOf(Error)

@@ -5,22 +5,22 @@ import type { FastifyBaseLogger } from "fastify"
 import { isError } from "@moj-bichard7/common/types/Result"
 import UnlockReason from "@moj-bichard7/common/types/UnlockReason"
 
-import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
-import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
-import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
+import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
+import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
+import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
-import fetchCase from "../../services/db/cases/fetchCase"
-import getSystemNotesForTriggerCodes from "../../services/db/cases/getSystemNotesForTriggerCodes"
-import insertNotes from "../../services/db/cases/insertNotes"
-import selectMessageId from "../../services/db/cases/selectMessageId"
-import { NotFoundError } from "../../types/errors/NotFoundError"
-import createAuditLogEvents from "../createAuditLogEvents"
-import { getAllTriggers } from "./getCase/getAllTriggers"
-import { markTriggersAsCompleteAndAuditLog } from "./getCase/markTriggersAsCompleteAndAuditLog"
-import { unlockAndAppendAuditEvents } from "./getCase/unlockAndAppendAuditEvents"
-import { updateTriggers } from "./getCase/updateTriggers"
+import fetchCase from "../../../services/db/cases/fetchCase"
+import getSystemNotesForTriggerCodes from "../../../services/db/cases/getSystemNotesForTriggerCodes"
+import insertNotes from "../../../services/db/cases/insertNotes"
+import selectMessageId from "../../../services/db/cases/selectMessageId"
+import { NotFoundError } from "../../../types/errors/NotFoundError"
+import createAuditLogEvents from "../../createAuditLogEvents"
+import { getAllTriggers } from "../getCase/getAllTriggers"
+import { markTriggersAsCompleteAndAuditLog } from "../getCase/markTriggersAsCompleteAndAuditLog"
+import { unlockAndAppendAuditEvents } from "../getCase/unlockAndAppendAuditEvents"
+import { resolveTriggers } from "./resolveTriggers"
 
-const resolveTriggers = async (
+const resolveCaseTriggers = async (
   database: WritableDatabaseConnection,
   logger: FastifyBaseLogger,
   triggerIds: number[],
@@ -56,7 +56,7 @@ const resolveTriggers = async (
         throw Error(`Triggers are not locked by the user - ${courtCaseId}`)
       }
 
-      const updateTriggersResult = await updateTriggers(tx, user, unresolvedTriggerIds, auditLogEvents)
+      const updateTriggersResult = await resolveTriggers(tx, user, unresolvedTriggerIds, auditLogEvents)
       if (isError(updateTriggersResult)) {
         throw updateTriggersResult
       }
@@ -140,4 +140,4 @@ const resolveTriggers = async (
     .catch((error: Error) => error)
 }
 
-export default resolveTriggers
+export default resolveCaseTriggers

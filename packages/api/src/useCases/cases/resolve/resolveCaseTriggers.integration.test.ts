@@ -5,14 +5,14 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 
-import type { AuditLogDynamoGateway } from "../../services/gateways/dynamo"
+import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 
-import { createCase } from "../../tests/helpers/caseHelper"
-import { createTriggers } from "../../tests/helpers/triggerHelper"
-import { createUser } from "../../tests/helpers/userHelper"
-import End2EndPostgres from "../../tests/testGateways/e2ePostgres"
-import { NotFoundError } from "../../types/errors/NotFoundError"
-import resolveTriggers from "./resolveTriggers"
+import { createCase } from "../../../tests/helpers/caseHelper"
+import { createTriggers } from "../../../tests/helpers/triggerHelper"
+import { createUser } from "../../../tests/helpers/userHelper"
+import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
+import { NotFoundError } from "../../../types/errors/NotFoundError"
+import resolveCaseTriggers from "./resolveCaseTriggers"
 
 const testDatabaseGateway = new End2EndPostgres()
 
@@ -27,7 +27,7 @@ const mockAuditLogGateway = {
   update: jest.fn().mockResolvedValue(true)
 } as unknown as AuditLogDynamoGateway
 
-describe("resolveTriggers", () => {
+describe("resolveCaseTriggers", () => {
   afterAll(async () => {
     await testDatabaseGateway.close()
   })
@@ -53,7 +53,7 @@ describe("resolveTriggers", () => {
 
     const triggerToResolve = insertedTriggers[0].triggerId
 
-    const result = await resolveTriggers(
+    const result = await resolveCaseTriggers(
       testDatabaseGateway.writable,
       mockLogger,
       [triggerToResolve],
@@ -99,7 +99,7 @@ describe("resolveTriggers", () => {
     const insertedTriggers = [{ triggerCode: "TRPR0001", triggerId: 1 }]
     await createTriggers(testDatabaseGateway, caseObj.errorId, insertedTriggers)
 
-    const result = await resolveTriggers(
+    const result = await resolveCaseTriggers(
       testDatabaseGateway.writable,
       mockLogger,
       [insertedTriggers[0].triggerId],
@@ -126,7 +126,7 @@ describe("resolveTriggers", () => {
     const insertedTriggers = [{ triggerCode: "TRPR0001", triggerId: 1 }]
     await createTriggers(testDatabaseGateway, caseObj.errorId, insertedTriggers)
 
-    const result = await resolveTriggers(
+    const result = await resolveCaseTriggers(
       testDatabaseGateway.writable,
       mockLogger,
       [insertedTriggers[0].triggerId],
@@ -150,7 +150,7 @@ describe("resolveTriggers", () => {
     const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
     const caseObj = await createCase(testDatabaseGateway, { triggerLockedById: user.username })
 
-    const result = await resolveTriggers(
+    const result = await resolveCaseTriggers(
       testDatabaseGateway.writable,
       mockLogger,
       [9999],
@@ -167,7 +167,7 @@ describe("resolveTriggers", () => {
     const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
     const nonExistentCaseId = 999
 
-    const result = await resolveTriggers(
+    const result = await resolveCaseTriggers(
       testDatabaseGateway.writable,
       mockLogger,
       [1],
