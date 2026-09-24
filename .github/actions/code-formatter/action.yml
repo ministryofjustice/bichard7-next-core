@@ -38,29 +38,11 @@ runs:
         then
           npm install --location=global prettier
           pipx install --cooldown 3 autopep8
-          FILE2=Gemfile
-          if [ -f "$FILE2" ]; then
-            echo "$FILE2 already exists."
-            if grep -q standardrb "$FILE2"; then
-              echo "standardrb already exists."
-            else
-              bundle add standardrb
-            fi
-            if grep -q erb_lint "$FILE2"; then
-              echo "erb_lint already exists."
-            else
-              bundle add erb_lint
-            fi
-          else
-            bundle init
-            bundle add standardrb
-            bundle add erb_lint
-          fi
         fi
       shell: bash
 
     - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v3.1.2 # v3.1.2
+      uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
       with:
         terraform_version: "${{ inputs.terraform-version }}"
         terraform_wrapper: false
@@ -120,12 +102,8 @@ runs:
                 echo "Cannot format .github/workflow files."
               elif [[ $file == *".py"* ]]; then
                 ~/.local/bin/autopep8 --in-place $file
-              elif [[ $file == *".rb"* ]]; then
-                bundle exec standardrb --fix $file
               elif [[ $file == *".tf" ]] || [[ $file == *".tfvars" ]]; then
                 terraform fmt $file
-              elif [[ $file == *".html.md.erb" ]]; then
-                bundle exec erblint -a $file
               elif [[ $file == *".yaml" || $file == *".yml" || $file == *".md" || $file == *".html.md" || $file == *".json" ]]; then
                 npx prettier --print-width=150 --write $file
               fi
@@ -138,14 +116,11 @@ runs:
       run: |
         if [[ ${{ steps.branch-exists.outputs.result }} == 0 ]];
         then
-          rm -rf Gemfile
-          rm -rf Gemfile.lock
           rm -rf package-lock.json
           rm -rf package.json
           rm -rf node_modules
           rm -rf namespaces
           rm -rf modified_files.txt
-          rm -rf .ruby-version
         fi
       shell: bash
 
