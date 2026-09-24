@@ -19,7 +19,7 @@ runs:
     - name: Check Branch exists and is not a fork.
       id: branch-exists
       env:
-        GITHUB_REF: ${{ github.head.ref }}
+        GITHUB_REF: ${{ github.head_ref }}
       run: |
         git fetch origin
         branch_name=${{ env.GITHUB_REF }}
