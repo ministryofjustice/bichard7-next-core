@@ -2,8 +2,10 @@ import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
+import Permission from "@moj-bichard7/common/types/Permission"
 import { isError } from "@moj-bichard7/common/types/Result"
 import UnlockReason from "@moj-bichard7/common/types/UnlockReason"
+import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
@@ -13,7 +15,9 @@ import fetchCase from "../../../services/db/cases/fetchCase"
 import getSystemNotesForTriggerCodes from "../../../services/db/cases/getSystemNotesForTriggerCodes"
 import insertNotes from "../../../services/db/cases/insertNotes"
 import selectMessageId from "../../../services/db/cases/selectMessageId"
+import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
+import { UnprocessableEntityError } from "../../../types/errors/UnprocessableEntityError"
 import createAuditLogEvents from "../../createAuditLogEvents"
 import { getAllTriggers } from "../getCase/getAllTriggers"
 import { markTriggersAsCompleteAndAuditLog } from "../getCase/markTriggersAsCompleteAndAuditLog"
@@ -31,15 +35,15 @@ const resolveCaseTriggers = async (
   const resolver = user.username
   const auditLogEvents: ApiAuditLogEvent[] = []
 
+  if (!userAccess(user)[Permission.Triggers]) {
+    return new NotAllowedError()
+  }
+
   return await database
     .transaction<Error | void>(async (tx) => {
       const courtCase = await fetchCase(tx, user, courtCaseId, logger)
       if (isError(courtCase)) {
         throw courtCase
-      }
-
-      if (!courtCase) {
-        throw Error("Court case not found")
       }
 
       const triggersToResolve = courtCase.triggers.filter(
@@ -53,7 +57,7 @@ const resolveCaseTriggers = async (
       const unresolvedTriggerIds = triggersToResolve.map((trigger) => trigger.triggerId)
 
       if (courtCase.triggerLockedByUsername !== user.username) {
-        throw Error(`Triggers are not locked by the user - ${courtCaseId}`)
+        throw new Error(`Triggers are not locked by the user - ${courtCaseId}`)
       }
 
       const updateTriggersResult = await resolveTriggers(tx, user, unresolvedTriggerIds, auditLogEvents)
@@ -62,7 +66,7 @@ const resolveCaseTriggers = async (
       }
 
       if (updateTriggersResult !== unresolvedTriggerIds.length) {
-        throw Error(`Failed to resolve triggers - ${courtCaseId}`)
+        throw new UnprocessableEntityError(`Failed to resolve triggers - ${courtCaseId}`)
       }
 
       const addNoteResult = await insertNotes(

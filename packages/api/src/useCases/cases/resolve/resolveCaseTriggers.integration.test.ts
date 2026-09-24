@@ -11,6 +11,7 @@ import { createCase } from "../../../tests/helpers/caseHelper"
 import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
 import End2EndPostgres from "../../../tests/testGateways/e2ePostgres"
+import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import { NotFoundError } from "../../../types/errors/NotFoundError"
 import resolveCaseTriggers from "./resolveCaseTriggers"
 
@@ -178,5 +179,23 @@ describe("resolveCaseTriggers", () => {
 
     expect(isError(result)).toBe(true)
     expect((result as Error).message).toContain(`Case id ${nonExistentCaseId} for user ${user.username} not found`)
+  })
+
+  it("should throw a NotAllowedError if the user does not have permission to resolve triggers", async () => {
+    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.ExceptionHandler], username: "test_user" })
+
+    const caseObj = await createCase(testDatabaseGateway)
+
+    const result = await resolveCaseTriggers(
+      testDatabaseGateway.writable,
+      mockLogger,
+      [1],
+      caseObj.errorId,
+      user,
+      mockAuditLogGateway
+    )
+
+    expect(isError(result)).toBe(true)
+    expect(result).toBeInstanceOf(NotAllowedError)
   })
 })
