@@ -38,19 +38,19 @@
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-core#readme",
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.1126.0",
-    "@aws-sdk/client-s3": "^3.1126.0",
-    "@aws-sdk/lib-dynamodb": "^3.1126.0",
+    "@aws-sdk/client-dynamodb": "^3.1136.0",
+    "@aws-sdk/client-s3": "^3.1136.0",
+    "@aws-sdk/lib-dynamodb": "^3.1136.0",
     "@io-orkes/conductor-javascript": "^4.0.0",
     "lodash.ismatch": "^4.4.0",
-    "zod": "^4.5.4"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@aws-sdk/client-sqs": "^3.1126.0",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.420",
+    "@aws-sdk/client-sqs": "^3.1136.0",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.427",
     "@stomp/stompjs": "^7.3.0",
     "esbuild": "~0.28.1",
-    "jest": "^30.5.1",
+    "jest": "^30.5.2",
     "mailhog": "^4.16.0",
     "postgres": "3.4.9",
     "ts-jest": "^29.4.12",

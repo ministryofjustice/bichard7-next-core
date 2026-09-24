@@ -21,8 +21,8 @@
   "dependencies": {
     "cli-color": "^2.0.4",
     "commander": "^15.0.0",
-    "inquirer": "^14.2.1",
-    "notifications-node-client": "^8.4.0",
+    "inquirer": "^14.2.2",
+    "notifications-node-client": "^8.5.0",
     "nunjucks": "^3.2.4",
     "pg": "^8.23.0"
   },
@@ -31,8 +31,8 @@
     "@types/cli-color": "^2.0.6",
     "@types/inquirer": "^9.0.10",
     "@types/jest": "^30.0.0",
-    "@types/node": "^26.4.1",
-    "jest": "^30.5.1",
+    "@types/node": "^26.6.2",
+    "jest": "^30.5.2",
     "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
     "typeorm": "^1.1.1"
