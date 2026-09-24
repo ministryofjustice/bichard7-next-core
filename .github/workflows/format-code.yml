@@ -1,4 +1,4 @@
-name: MoJ Code Formatter
+name: Code Formatter
 
 on:
   pull_request:
