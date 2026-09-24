@@ -1,4 +1,3 @@
-import type { Case } from "@moj-bichard7/common/types/Case"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
@@ -21,7 +20,7 @@ const testDatabaseGateway = new End2EndPostgres()
 describe("updateTriggers", () => {
   let auditLogEvents: ApiAuditLogEvent[]
   let user: User
-  let triggersToResolve: { triggerCode: string; triggerId: number }[]
+  let triggersToResolve: { triggerCode: string; triggerId: number; triggerItemIdentity: number | undefined }[]
   let triggerIds: number[]
 
   afterAll(async () => {
@@ -35,8 +34,8 @@ describe("updateTriggers", () => {
     user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
 
     triggersToResolve = [
-      { triggerCode: "TRPR0001", triggerId: 1 },
-      { triggerCode: "TRPR0002", triggerId: 2 }
+      { triggerCode: "TRPR0001", triggerId: 1, triggerItemIdentity: 1 },
+      { triggerCode: "TRPR0002", triggerId: 2, triggerItemIdentity: undefined }
     ]
     triggerIds = triggersToResolve.map((trigger) => trigger.triggerId)
   })
