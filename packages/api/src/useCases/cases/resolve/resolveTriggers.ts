@@ -18,7 +18,7 @@ export const resolveTriggers = async (
   triggersToResolve: {
     triggerCode: string
     triggerId: number
-    triggerItemIdentity: number | undefined
+    triggerItemIdentity?: number | undefined
   }[],
 
   auditLogEvents: ApiAuditLogEvent[]
