@@ -108,6 +108,7 @@ describe("markTriggersAsCompleteAndAuditLog", () => {
       WHERE error_id = ${caseObj.errorId}
     `
 
+    expect(updatedCase[0].trigger_status).toBe(ResolutionStatusNumber.Resolved)
     expect(updatedCase[0].trigger_resolved_by).toBe("test_user")
     expect(updatedCase[0].trigger_resolved_ts).not.toBeNull()
     expect(updatedCase[0].resolution_ts).toBeNull()
@@ -119,13 +120,8 @@ describe("markTriggersAsCompleteAndAuditLog", () => {
     const caseObj = await createCase(testDatabaseGateway, { triggerResolvedBy: "someone_else" })
     const allTriggers = [] as TriggerRow[]
 
-    await testDatabaseGateway.writable.transaction(async (tx) => {
-      await markTriggersAsCompleteAndAuditLog(tx, caseObj.errorId, false, user, allTriggers, [])
-    })
-
     let result: Error | number | undefined
 
-    // Try to complete the same trigger again
     await testDatabaseGateway.writable.transaction(async (tx) => {
       result = await markTriggersAsCompleteAndAuditLog(tx, caseObj.errorId, false, user, allTriggers, auditLogEvents)
     })

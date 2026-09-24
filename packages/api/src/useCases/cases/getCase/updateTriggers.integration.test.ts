@@ -1,5 +1,6 @@
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 
@@ -57,7 +58,11 @@ describe("updateTriggers", () => {
 
     const triggerRecords = await testDatabaseGateway.writable
       .connection`SELECT status, resolved_by, resolved_ts FROM br7own.error_list_triggers WHERE trigger_id IN (${triggerIds[0]}, ${triggerIds[1]})`
+
     expect(triggerRecords).toHaveLength(2)
+    expect(triggerRecords[0].status).toBe(ResolutionStatusNumber.Resolved)
+    expect(triggerRecords[0].resolved_by).toBe("test_user")
+    expect(triggerRecords[0].resolved_ts).not.toBeNull()
   })
 
   it("should return an UnprocessableEntityError if the trigger is already resolved", async () => {
@@ -66,15 +71,18 @@ describe("updateTriggers", () => {
     const caseObj = await createCase(testDatabaseGateway)
     const triggerId = 1
 
-    await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: "TRPR0001", triggerId: triggerId }])
-
-    await testDatabaseGateway.writable.transaction(async (tx) => {
-      await updateTriggers(tx, user, [triggerId], [])
-    })
+    await createTriggers(testDatabaseGateway, caseObj.errorId, [
+      {
+        resolvedAt: new Date(),
+        resolvedBy: "someone_else",
+        status: ResolutionStatusNumber.Resolved,
+        triggerCode: "TRPR0001",
+        triggerId: triggerId
+      }
+    ])
 
     let result: Error | number | undefined
 
-    // Try to resolve the same trigger again
     await testDatabaseGateway.writable.transaction(async (tx) => {
       result = await updateTriggers(tx, user, [triggerId], auditLogEvents)
     })
