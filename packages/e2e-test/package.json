@@ -39,8 +39,8 @@
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-tests#readme",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1135.0",
-    "@aws-sdk/lib-storage": "^3.1135.0",
+    "@aws-sdk/client-s3": "^3.1126.0",
+    "@aws-sdk/lib-storage": "^3.1126.0",
     "@babel/core": "^8.0.5",
     "@babel/preset-env": "^8.0.5",
     "@cucumber/cucumber": "^9.5.1",
