@@ -22,7 +22,7 @@ runs:
         GITHUB_REF: ${{ github.head_ref }}
       run: |
         git fetch origin
-        branch_name=${{ env.GITHUB_REF }}
+        branch_name=$GITHUB_REF
         echo "branch_name=$branch_name" >> $GITHUB_ENV
         if [[ $( git rev-parse --verify origin/$branch_name ) ]]; then
           echo "result=$((0))" >> ${GITHUB_OUTPUT}
@@ -51,7 +51,7 @@ runs:
 
     - name: Get PR changed files via Git and code format files
       env:
-        GITHUB_REF: ${{ github.head.ref }}
+        GITHUB_REF: ${{ github.head_ref }}
       run: |
         if [[ ${{ steps.branch-exists.outputs.result }} == 0 ]];
         then
@@ -59,7 +59,7 @@ runs:
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git fetch origin $GITHUB_BASE_REF --depth=50
           base_branch_sha=${{ github.event.pull_request.base.sha }}
-          git fetch origin ${{ env.GITHUB_REF }} --depth=50
+          git fetch origin $GITHUB_REF --depth=50
           head_branch_sha=${{ github.event.pull_request.head.sha }}
           echo $base_branch_sha
           echo $head_branch_sha
