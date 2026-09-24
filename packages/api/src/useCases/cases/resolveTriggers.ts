@@ -10,7 +10,7 @@ import type { ApiAuditLogEvent } from "../../types/AuditLogEvent"
 import type { WritableDatabaseConnection } from "../../types/DatabaseGateway"
 
 import fetchCase from "../../services/db/cases/fetchCase"
-import getSystemNotesForTriggers from "../../services/db/cases/getSystemNotesForTriggers"
+import getSystemNotesForTriggerCodes from "../../services/db/cases/getSystemNotesForTriggerCodes"
 import insertNotes from "../../services/db/cases/insertNotes"
 import selectMessageId from "../../services/db/cases/selectMessageId"
 import { NotFoundError } from "../../types/errors/NotFoundError"
@@ -67,7 +67,7 @@ const resolveTriggers = async (
 
       const addNoteResult = await insertNotes(
         tx,
-        getSystemNotesForTriggers(
+        getSystemNotesForTriggerCodes(
           triggersToResolve.map((a) => a.triggerCode),
           resolver
         ),

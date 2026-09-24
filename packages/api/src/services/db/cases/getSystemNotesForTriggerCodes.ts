@@ -1,6 +1,6 @@
 import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 
-const getSystemNotesForTriggers = (triggerCodes: string[], resolver: string): string[] => {
+const getSystemNotesForTriggerCodes = (triggerCodes: string[], resolver: string): string[] => {
   const notes: string[] = []
   const portalActionText = `${resolver}: Portal Action: Resolved Trigger. Code:`
 
@@ -14,4 +14,4 @@ const getSystemNotesForTriggers = (triggerCodes: string[], resolver: string): st
   return notes
 }
 
-export default getSystemNotesForTriggers
+export default getSystemNotesForTriggerCodes
