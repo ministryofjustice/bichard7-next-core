@@ -17,7 +17,7 @@ jobs:
       - name: ⛓️ SLSA Supply Chain Security
         uses: ministryofjustice/devsecops-actions/sca/slsa@7dc13c20e2bf541b8a77fa1320a04983b18846f6 # v1.6.0
 
-      - uses: ministryofjustice/github-actions/code-formatter@db1a54895bf5fb975c60af47e5a3aab96505ca3e #v18.6.0
+      - uses: ./.github/actions/code-formatter
         with:
           ignore-files: "**/tests/fixtures/e2e-comparison/*.json,**/help/**/*.md,*.py,docs/architecture/workspace.json"
         env:
