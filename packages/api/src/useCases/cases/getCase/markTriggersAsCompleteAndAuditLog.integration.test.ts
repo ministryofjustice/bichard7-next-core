@@ -53,8 +53,6 @@ describe("markTriggersAsCompleteAndAuditLog", () => {
       )
     })
 
-    console.log("Result:", result)
-
     expect(isError(result)).toBe(false)
     expect(result).toBe(1)
 

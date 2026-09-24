@@ -16,8 +16,6 @@ describe("getSystemNotesForTriggerCodes", () => {
 
     const result = getSystemNotesForTriggerCodes(triggerCodes, resolver)
 
-    console.log(result)
-
     expect(result).toContain(`${resolver}: Portal Action: Resolved Trigger. Code: PR01`)
   })
 

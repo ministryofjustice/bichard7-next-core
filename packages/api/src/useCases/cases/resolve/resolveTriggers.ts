@@ -15,7 +15,12 @@ import buildAuditLogEvent from "../../auditLog/buildAuditLogEvent"
 export const resolveTriggers = async (
   tx: TransactionConnection,
   user: User,
-  unresolvedTriggerIds: number[],
+  triggersToResolve: {
+    triggerCode: string
+    triggerId: number
+    triggerItemIdentity?: number | undefined
+  }[],
+
   auditLogEvents: ApiAuditLogEvent[]
 ): PromiseResult<number> => {
   const resolver = user.username
@@ -27,7 +32,7 @@ export const resolveTriggers = async (
     status: ResolutionStatusNumber.Resolved
   }
 
-  const stringifiedIds = unresolvedTriggerIds.map(String)
+  const stringifiedIds = triggersToResolve.map((trigger) => String(trigger.triggerId))
 
   const updateResult = await tx.connection`
     UPDATE br7own.error_list_triggers
@@ -36,21 +41,21 @@ export const resolveTriggers = async (
   `.catch((error: Error) => error)
 
   if (isError(updateResult)) {
-    return new Error(`Couldn't update triggers trigger ids:${unresolvedTriggerIds}: ${updateResult.message}`)
+    return new Error(`Couldn't update triggers trigger ids:${stringifiedIds}: ${updateResult.message}`)
   }
 
   if (updateResult.count === 0) {
-    return new UnprocessableEntityError(`Couldn't update triggers ids: ${unresolvedTriggerIds}`)
+    return new UnprocessableEntityError(`Couldn't update triggers ids: ${stringifiedIds}`)
   }
 
   auditLogEvents.push(
     buildAuditLogEvent(EventCode.TriggersResolved, EventCategory.information, "Bichard New UI", {
       auditLogVersion: 2,
-      "Number Of Triggers": unresolvedTriggerIds.length,
+      "Number Of Triggers": triggersToResolve.length,
       ...generateTriggersAttributes(
-        unresolvedTriggerIds.map((triggerId) => ({
-          triggerCode: triggerId.toString(),
-          triggerItemIdentity: undefined
+        triggersToResolve.map((trigger) => ({
+          triggerCode: trigger.triggerCode,
+          triggerItemIdentity: trigger.triggerItemIdentity === null ? undefined : Number(trigger.triggerItemIdentity)
         }))
       ),
       user: user.username

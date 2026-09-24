@@ -46,8 +46,6 @@ describe("resolveTriggers", () => {
       url: V1.CasesResolveTriggers.replace(":caseId", caseObj.errorId.toString())
     })
 
-    console.log(response.statusCode, response.body)
-
     expect(response.statusCode).toBe(OK)
   })
 

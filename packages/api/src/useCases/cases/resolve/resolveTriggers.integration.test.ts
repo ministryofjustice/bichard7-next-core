@@ -1,3 +1,6 @@
+import type { Case } from "@moj-bichard7/common/types/Case"
+import type { User } from "@moj-bichard7/common/types/User"
+
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
@@ -16,12 +19,26 @@ import { resolveTriggers } from "./resolveTriggers"
 const testDatabaseGateway = new End2EndPostgres()
 
 describe("updateTriggers", () => {
+  let auditLogEvents: ApiAuditLogEvent[]
+  let user: User
+  let triggersToResolve: { triggerCode: string; triggerId: number }[]
+  let triggerIds: number[]
+
   afterAll(async () => {
     await testDatabaseGateway.close()
   })
 
   beforeEach(async () => {
     await testDatabaseGateway.clearDb()
+
+    auditLogEvents = []
+    user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
+
+    triggersToResolve = [
+      { triggerCode: "TRPR0001", triggerId: 1 },
+      { triggerCode: "TRPR0002", triggerId: 2 }
+    ]
+    triggerIds = triggersToResolve.map((trigger) => trigger.triggerId)
   })
 
   afterEach(() => {
@@ -29,11 +46,7 @@ describe("updateTriggers", () => {
   })
 
   it("should successfully resolve unresolved triggers and append an audit log event", async () => {
-    const auditLogEvents: ApiAuditLogEvent[] = []
-    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
-
     const caseObj = await createCase(testDatabaseGateway)
-    const triggerIds = [1, 2]
 
     await createTriggers(testDatabaseGateway, caseObj.errorId, [
       { triggerCode: "TRPR0001", triggerId: triggerIds[0] },
@@ -43,7 +56,7 @@ describe("updateTriggers", () => {
     let result: Error | number | undefined
 
     await testDatabaseGateway.writable.transaction(async (tx) => {
-      result = await resolveTriggers(tx, user, triggerIds, auditLogEvents)
+      result = await resolveTriggers(tx, user, triggersToResolve, auditLogEvents)
     })
 
     expect(isError(result)).toBe(false)
@@ -66,10 +79,7 @@ describe("updateTriggers", () => {
   })
 
   it("should return an UnprocessableEntityError if the trigger is already resolved", async () => {
-    const auditLogEvents: ApiAuditLogEvent[] = []
-    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
     const caseObj = await createCase(testDatabaseGateway)
-    const triggerId = 1
 
     await createTriggers(testDatabaseGateway, caseObj.errorId, [
       {
@@ -77,27 +87,23 @@ describe("updateTriggers", () => {
         resolvedBy: "someone_else",
         status: ResolutionStatusNumber.Resolved,
         triggerCode: "TRPR0001",
-        triggerId: triggerId
+        triggerId: triggerIds[0]
       }
     ])
 
     let result: Error | number | undefined
 
     await testDatabaseGateway.writable.transaction(async (tx) => {
-      result = await resolveTriggers(tx, user, [triggerId], auditLogEvents)
+      result = await resolveTriggers(tx, user, triggersToResolve, auditLogEvents)
     })
 
     expect(isError(result)).toBe(true)
     expect(result).toBeInstanceOf(UnprocessableEntityError)
-    expect((result as Error).message).toContain(`Couldn't update triggers ids: ${triggerId}`)
+    expect((result as Error).message).toContain(`Couldn't update triggers ids: ${triggerIds.join(",")}`)
     expect(auditLogEvents).toHaveLength(0)
   })
 
   it("should return an error if the database query fails", async () => {
-    const auditLogEvents: ApiAuditLogEvent[] = []
-    const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
-    const triggerIds = [1, 2]
-
     const brokenTx = {
       connection: jest.fn().mockImplementation((stringsOrData) => {
         if (Array.isArray(stringsOrData)) {
@@ -108,7 +114,7 @@ describe("updateTriggers", () => {
       })
     }
 
-    const result = await resolveTriggers(brokenTx as any, user, triggerIds, auditLogEvents)
+    const result = await resolveTriggers(brokenTx as any, user, triggersToResolve, auditLogEvents)
 
     expect(isError(result)).toBe(true)
     expect(result).toBeInstanceOf(Error)

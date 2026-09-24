@@ -54,18 +54,16 @@ const resolveCaseTriggers = async (
         return new NotFoundError()
       }
 
-      const unresolvedTriggerIds = triggersToResolve.map((trigger) => trigger.triggerId)
-
       if (courtCase.triggerLockedByUsername !== user.username) {
         throw new Error(`Triggers are not locked by the user - ${courtCaseId}`)
       }
 
-      const updateTriggersResult = await resolveTriggers(tx, user, unresolvedTriggerIds, auditLogEvents)
+      const updateTriggersResult = await resolveTriggers(tx, user, triggersToResolve, auditLogEvents)
       if (isError(updateTriggersResult)) {
         throw updateTriggersResult
       }
 
-      if (updateTriggersResult !== unresolvedTriggerIds.length) {
+      if (updateTriggersResult !== triggersToResolve.length) {
         throw new UnprocessableEntityError(`Failed to resolve triggers - ${courtCaseId}`)
       }
 
