@@ -1,0 +1,232 @@
+name: "Code-Formatter"
+description: "Format Ruby, Terraform, YAML/YML, Python, Markdown, JSON and html.md.erb files within a PR"
+inputs:
+  ignore-files:
+    description: "Files to ignore"
+    required: false
+    default: ""
+  terraform-version:
+    description: "Version of Terraform to use for formatting"
+    required: false
+    default: "latest"
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      with:
+        repository: ${{ github.repository }}
+
+    - name: Check Branch exists and is not a fork.
+      id: branch-exists
+      env:
+        GITHUB_REF: ${{ github.head_ref }}
+      run: |
+        git fetch origin
+        branch_name=$GITHUB_REF
+        echo "branch_name=$branch_name" >> $GITHUB_ENV
+        if [[ $( git rev-parse --verify origin/$branch_name ) ]]; then
+          echo "result=$((0))" >> ${GITHUB_OUTPUT}
+        else
+          echo "Warning: Cannot code-format a forked branch or cannot find the branch!"
+          echo $branch_name
+          echo "Finished: no Code Formatter changes."
+          echo "result=$((1))" >> ${GITHUB_OUTPUT}
+        fi
+      shell: bash
+
+    - name: Install dependencies
+      run: |
+        if [[ ${{ steps.branch-exists.outputs.result }} == 0 ]];
+        then
+          npm install --location=global --ignore-scripts prettier@3.9.8
+          pipx install --cooldown 3 autopep8
+        fi
+      shell: bash
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+      with:
+        terraform_version: "${{ inputs.terraform-version }}"
+        terraform_wrapper: false
+
+    - name: Get PR changed files via Git and code format files
+      env:
+        GITHUB_REF: ${{ github.head_ref }}
+      run: |
+        if [[ ${{ steps.branch-exists.outputs.result }} == 0 ]];
+        then
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git fetch origin $GITHUB_BASE_REF --depth=50
+          base_branch_sha=${{ github.event.pull_request.base.sha }}
+          git fetch origin $GITHUB_REF --depth=50
+          head_branch_sha=${{ github.event.pull_request.head.sha }}
+          echo $base_branch_sha
+          echo $head_branch_sha
+
+          git diff-tree -r --no-commit-id --name-only --diff-filter=ACMRT $base_branch_sha $head_branch_sha > modified_files.txt
+          chmod 755 modified_files.txt
+          [ -n "$(tail -c1 modified_files.txt)" ] && echo >> modified_files.txt
+          modified_files=()
+          while IFS= read -r file
+          do
+            modified_files+=("$file")
+          done < modified_files.txt
+
+          ignore_files_string=${{ inputs.ignore-files }}
+          ignore_files_length=${#ignore_files_string}
+
+          if [ $ignore_files_length -gt 0 ]; then
+            ignore_files=()
+
+            IFS=,
+            for ignore_file in "${ignore_files_string[@]}";
+            do
+              ignore_files+=("$ignore_file")
+            done
+
+            for modified_file in "${modified_files[@]}";
+            do
+              file_name=$(basename $modified_file)
+              for ignore_file in ${ignore_files[@]};
+              do
+                if [[ $file_name == $ignore_file ]]; then
+                  echo "Ignore file: $ignore_file"
+                  modified_files=("${modified_files[@]/$ignore_file}")
+                fi
+              done
+            done
+          fi
+
+          for file in "${modified_files[@]}";
+          do
+            if [ ${#file} -gt 0 ]; then
+              echo "Checking file: $file"
+              if [[ $file == *".github"* ]]; then
+                echo "Cannot format .github/workflow files."
+              elif [[ $file == *".py"* ]]; then
+                ~/.local/bin/autopep8 --in-place $file
+              elif [[ $file == *".tf" ]] || [[ $file == *".tfvars" ]]; then
+                terraform fmt $file
+              elif [[ $file == *".yaml" || $file == *".yml" || $file == *".md" || $file == *".html.md" || $file == *".json" ]]; then
+                npx prettier --print-width=150 --write $file
+              fi
+            fi
+          done
+        fi
+      shell: bash
+
+    - name: Remove non needed files from new commit
+      run: |
+        if [[ ${{ steps.branch-exists.outputs.result }} == 0 ]];
+        then
+          rm -rf package-lock.json
+          rm -rf package.json
+          rm -rf node_modules
+          rm -rf namespaces
+          rm -rf modified_files.txt
+        fi
+      shell: bash
+
+    - name: Commit new files or finish script
+      run: |
+        if [[ ${{ steps.branch-exists.outputs.result }} == 0 ]];
+        then
+          git ls-files --deleted -z | git update-index --assume-unchanged -z --stdin
+          if [ -n "$(git status --porcelain=1 --untracked-files=no)" ]; then
+
+            # Stage the changes
+            git add --ignore-removal .
+
+            # Get the amended file names and save them.
+            git diff --staged --name-only > changed_files.txt
+            echo "List files amended by formatter"
+            cat changed_files.txt
+
+            commit_oid=$(git rev-parse HEAD)
+            echo "commit_oid=$commit_oid" >> $GITHUB_ENV
+
+            # Initialize an empty JSON object for the additions
+            files_for_commit='{"additions": []}'
+
+            # Read the changed files from changed_files.txt
+            while IFS= read -r file; do
+              if [[ -f "$file" ]]; then
+                # Get the content for the file
+                file_content="$(cat "$file")"
+
+                # Base64 encode the contents of the file
+                base64_content=$(base64 -w 0 <<< "$file_content")
+
+                # Construct a JSON object for this file and append it to the additions array
+                files_for_commit=$(echo "$files_for_commit" | jq --arg path "$file" --arg content "$base64_content" \
+                '.additions += [{ "path": $path, "contents": $content }]')
+              fi
+            done < changed_files.txt
+
+            # Output the final JSON array
+            echo "$files_for_commit" > files_for_commit.json
+
+            # Error handling for `jq` output
+            echo "Check for valid json output"
+            if ! jq . files_for_commit.json; then
+              echo "Error reading files_for_commit.json"
+              exit 1
+            fi
+
+            # Get the Repo Owner and Name
+            repo_owner=$(echo $GITHUB_REPOSITORY | cut -d'/' -f1)
+            repo_name=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+            echo "The calling repo is $repo_owner/$repo_name"
+
+            commit_message="Commit changes made by code formatters"
+
+            # Prepare the mutation payload
+            mutation_payload=$(jq -n \
+              --arg branch_name "$branch_name" \
+              --arg commit_oid "$commit_oid" \
+              --arg repo_id "$repo_id" \
+              --arg commit_message "$commit_message" \
+              --arg repo_owner "$repo_owner" \
+              --arg repo_name "$repo_name" \
+              --argjson fileChanges "$(jq -c . < files_for_commit.json)" \
+              '{
+                query: "mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }",
+                variables: {
+                  input: {
+                    branch: {
+                      repositoryNameWithOwner: "\($repo_owner)/\($repo_name)",
+                      branchName: $branch_name
+                    },
+                    message: {
+                      headline: $commit_message
+                    },
+                    fileChanges: $fileChanges,
+                    expectedHeadOid: $commit_oid
+                  }
+                }
+              }')
+
+            echo "Mutation Payload: $mutation_payload"    
+
+            # Send the mutation request to GitHub's GraphQL API and capture the response
+            RESPONSE=$(curl -X POST -H "Authorization: bearer $GITHUB_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d "$mutation_payload" https://api.github.com/graphql)
+
+            # Parse the commit OID from the response
+            COMMIT_OID=$(echo "$RESPONSE" | jq -r ".data.createCommitOnBranch.commit.oid")
+
+            # Check if the commit was successfully created
+            if [ "$COMMIT_OID" != "null" ]; then
+              echo "Commit successfully created with OID: $COMMIT_OID"
+            else
+              echo "Error creating commit: $RESPONSE"
+            fi
+
+            echo "Finished: Code Formatter changes applied."
+          else
+            echo "Finished: no Code Formatter changes."
+          fi
+        fi
+      shell: bash
