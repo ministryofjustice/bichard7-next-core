@@ -4,6 +4,7 @@ import EventCategory from "@moj-bichard7/common/types/EventCategory"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+import { generateTriggersAttributes } from "@moj-bichard7/common/utils/generateTriggersAttributes"
 
 import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 import type { TransactionConnection } from "../../../types/DatabaseGateway"
@@ -46,6 +47,12 @@ export const resolveTriggers = async (
     buildAuditLogEvent(EventCode.TriggersResolved, EventCategory.information, "Bichard New UI", {
       auditLogVersion: 2,
       "Number Of Triggers": unresolvedTriggerIds.length,
+      ...generateTriggersAttributes(
+        unresolvedTriggerIds.map((triggerId) => ({
+          triggerCode: triggerId.toString(),
+          triggerItemIdentity: undefined
+        }))
+      ),
       user: user.username
     })
   )
