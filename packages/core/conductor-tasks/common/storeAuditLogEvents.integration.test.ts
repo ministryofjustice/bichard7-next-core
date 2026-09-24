@@ -45,7 +45,7 @@ describe("storeAuditLogEvents", () => {
       isSanitised: 0,
       messageId: correlationId,
       messageHash: "dummy",
-      receivedDate: "2025-02-03T09:11Z"
+      receivedDate: "2025-02-03T09:11:00Z"
     })
   })
 
