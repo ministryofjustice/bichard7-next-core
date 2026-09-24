@@ -1,3 +1,4 @@
+import type { TriggerDto } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
@@ -15,11 +16,7 @@ import buildAuditLogEvent from "../../auditLog/buildAuditLogEvent"
 export const resolveTriggers = async (
   tx: TransactionConnection,
   user: User,
-  triggersToResolve: {
-    triggerCode: string
-    triggerId: number
-    triggerItemIdentity?: number | undefined
-  }[],
+  triggersToResolve: TriggerDto[],
 
   auditLogEvents: ApiAuditLogEvent[]
 ): PromiseResult<number> => {
