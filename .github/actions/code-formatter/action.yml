@@ -141,6 +141,10 @@ runs:
       if: steps.branch-exists.outputs.result == '0'
       shell: bash
       run: |
+        # Strip 'refs/heads/' prefix if present to ensure a clean branch name
+        CLEAN_BRANCH="${BRANCH_NAME#refs/heads/}"
+        echo "Target branch: $CLEAN_BRANCH"
+      
         git ls-files --deleted -z | git update-index --assume-unchanged -z --stdin
         if [ -n "$(git status --porcelain=1 --untracked-files=no)" ]; then
           # Stage the changes
@@ -191,9 +195,8 @@ runs:
 
           # Prepare the mutation payload
           mutation_payload=$(jq -n \
-            --arg branch_name "$branch_name" \
+            --arg branch_name "$CLEAN_BRANCH" \
             --arg commit_oid "$commit_oid" \
-            --arg repo_id "$repo_id" \
             --arg commit_message "$commit_message" \
             --arg repo_owner "$repo_owner" \
             --arg repo_name "$repo_name" \
