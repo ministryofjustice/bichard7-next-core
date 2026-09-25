@@ -19,11 +19,26 @@ Feature: {214} BR7 R5.4-RCD471-Multiple CCR to Single CCR switch between PNC sub
 		Given the data for this test is in the PNC
 			And "input-message" is received with an invalid ASN
 
-	@Could
+	@Could @ExcludedOnLeds
 	Scenario: Switching from a multiple CCR to a single CCR case between submissions
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
 		Then I see exception "HO100209" in the exception list table
+		When I open the record for "TOSINGLECCRX MULTIPLECCR"
+			And I click the "Defendant" tab
+			And I correct "ASN" to "1101ZD0100000445720M"
+			And I correct "Court PNCID" to "2012/0000029N"
+			And I submit the record
+			And the PNC updates the record
+		When I reload until I see "PS02 - Check address"
+		Then I see trigger "PR06 - Imprisoned" in the exception list table
+			And I see trigger "PR21 - Disq. non-motoring" in the exception list table
+
+	@Could @ExcludedOnPnc
+	Scenario: Switching from a multiple CCR to a single CCR case between submissions
+		Given I am logged in as "supervisor"
+			And I view the list of exceptions
+		Then I see exception "HO100301" in the exception list table
 		When I open the record for "TOSINGLECCRX MULTIPLECCR"
 			And I click the "Defendant" tab
 			And I correct "ASN" to "1101ZD0100000445720M"

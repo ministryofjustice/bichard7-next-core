@@ -546,7 +546,17 @@ export const returnToCaseListUnlock = async function (this: Bichard) {
   }
 }
 
-export const correctOffenceException = async function (this: Bichard, field: string, newValue: string) {
+export const correctOffenceException = async function (
+  this: Bichard,
+  field: string,
+  newValue: string,
+  useNewValue = false
+) {
+  let newValueToSet = newValue
+  if (!useNewValue && field.toUpperCase() === "ASN") {
+    newValueToSet = this.policeApi.getAsn() ?? newValue
+  }
+
   await this.browser.page.$$("#br7_exception_details_court_data_table .resultsTable tbody tr").then((rows) =>
     rows.map((row) =>
       row.evaluate(
@@ -565,7 +575,7 @@ export const correctOffenceException = async function (this: Bichard, field: str
           }
         },
         field,
-        newValue
+        newValueToSet
       )
     )
   )

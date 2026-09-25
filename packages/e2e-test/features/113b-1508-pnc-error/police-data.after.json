@@ -7,13 +7,13 @@
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100020722X",
+          "arrestSummonsReference": "26/0000/00/100019871X",
           "chargeStatusMarker": "A",
-          "cjsOffenceCode": "CD71041",
+          "cjsOffenceCode": "TH68010",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/2576/021382T",
-          "crimeReference": "ZBNP7HUYR8NMOT0",
+          "courtCaseReferenceNumber": "26/2576/020556V",
+          "crimeReference": "EEBI/XRIYSDDON9",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -21,22 +21,22 @@
             "locationType": "description"
           },
           "locationFSCode": "01ZD",
-          "npccOffenceCode": "3.2.38.1",
+          "npccOffenceCode": "5.5.8.1",
           "offenceChargeNumber": 1,
           "offenceDescription": [],
           "othersCharged": [],
-          "qualifiedCjsCode": "CD71041",
+          "qualifiedCjsCode": "TH68010",
           "results": [],
           "roleQualifier": [],
-          "startDate": "2010-11-28"
+          "startDate": "2010-10-01"
         }
       ],
-      "convictionDate": "2011-09-26",
+      "convictionDate": "2011-10-26",
       "court": {
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/021382T",
+      "courtCaseReference": "26/2576/020556V",
       "subsequentAppearances": []
     }
   ],
