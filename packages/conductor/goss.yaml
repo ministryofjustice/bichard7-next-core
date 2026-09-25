@@ -23,6 +23,6 @@ command:
   node --version:
     exit-status: 0
     stdout:
-      - v24.14.0
+      - v24.21.0
     stderr: []
     timeout: 10000
