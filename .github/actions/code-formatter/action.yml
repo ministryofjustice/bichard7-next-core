@@ -33,20 +33,6 @@ runs:
           echo "result=0" >> $GITHUB_OUTPUT
         fi
 
-    - name: Install dependencies
-      if: steps.branch-exists.outputs.result == '0'
-      shell: bash
-      run: |
-        npm install --location=global --ignore-scripts prettier@3.9.8
-        pipx install --cooldown 3 autopep8
-
-    - name: Setup Terraform
-      if: steps.branch-exists.outputs.result == '0'
-      uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
-      with:
-        terraform_version: "${{ inputs.terraform-version }}"
-        terraform_wrapper: false
-
     - name: Get PR changed files
       id: detect-files
       if: steps.branch-exists.outputs.result == '0'
@@ -106,6 +92,23 @@ runs:
         [ -s .py_files.txt ] && echo "has_python=true" >> $GITHUB_OUTPUT || echo "has_python=false" >> $GITHUB_OUTPUT
         [ -s .tf_files.txt ] && echo "has_terraform=true" >> $GITHUB_OUTPUT || echo "has_terraform=false" >> $GITHUB_OUTPUT
         [ -s .prettier_files.txt ] && echo "has_prettier=true" >> $GITHUB_OUTPUT || echo "has_prettier=false" >> $GITHUB_OUTPUT
+
+    - name: Install Python Formatter
+      if: steps.detect-files.outputs.has_python == 'true'
+      shell: bash
+      run: pipx install --cooldown 3 autopep8
+
+    - name: Setup Terraform
+      if: steps.detect-files.outputs.has_terraform == 'true'
+      uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+      with:
+        terraform_version: "${{ inputs.terraform-version }}"
+        terraform_wrapper: false
+
+    - name: Install Prettier
+      if: steps.detect-files.outputs.has_prettier == 'true'
+      shell: bash
+      run: npm install --location=global --ignore-scripts prettier@3.9.8
 
     - name: Get PR changed files via Git and code format files
       if: steps.branch-exists.outputs.result == '0'
