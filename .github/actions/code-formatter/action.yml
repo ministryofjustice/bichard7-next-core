@@ -18,6 +18,7 @@ runs:
         IS_FORK: ${{ github.event.pull_request.head.repo.full_name != github.repository && github.event.pull_request.head.repo.full_name != '' }}
         IS_BRANCH: ${{ github.ref_type == 'branch' || github.event_name == 'pull_request' }}
         GITHUB_REF: ${{ github.head_ref || github.ref_name }}
+      shell: bash
       run: |
         echo "branch_name=$GITHUB_REF" >> $GITHUB_ENV
 
@@ -31,14 +32,13 @@ runs:
         else
           echo "result=0" >> $GITHUB_OUTPUT
         fi
-      shell: bash
 
     - name: Install dependencies
       if: steps.branch-exists.outputs.result == '0'
+      shell: bash
       run: |
         npm install --location=global --ignore-scripts prettier@3.9.8
         pipx install --cooldown 3 autopep8
-      shell: bash
 
     - name: Setup Terraform
       if: steps.branch-exists.outputs.result == '0'
@@ -47,10 +47,70 @@ runs:
         terraform_version: "${{ inputs.terraform-version }}"
         terraform_wrapper: false
 
+    - name: Get PR changed files
+      id: detect-files
+      if: steps.branch-exists.outputs.result == '0'
+      shell: bash
+      run: |
+        # Handle both Pull Request and Push event diff refs safely
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+        else
+          BASE_SHA="${{ github.event.before }}"
+          HEAD_SHA="${{ github.event.after }}"
+          if [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            BASE_SHA="HEAD~1"
+          fi
+        fi
+        
+        # Get raw changed file list
+        git diff --name-only --diff-filter=ACMRT "$BASE_SHA" "$HEAD_SHA" > .all_changed.txt || true
+        
+        # Filter out ignored files and workflow files
+        IGNORE_FILES="${{ inputs.ignore-files }}"
+        > .filtered_changed.txt
+        
+        while IFS= read -r file; do
+          [ -z "$file" ] && continue
+        
+          if [[ "$file" == .github/* ]]; then
+            continue
+          fi
+        
+          filename=$(basename "$file")
+          skip=false
+          if [ -n "$IGNORE_FILES" ]; then
+            IFS=',' read -ra IGNORES <<< "$IGNORE_FILES"
+            for ignore in "${IGNORES[@]}"; do
+              ignore_trimmed=$(echo "$ignore" | xargs)
+              if [[ "$filename" == "$ignore_trimmed" ]]; then
+                skip=true
+                break
+              fi
+            done
+          fi
+        
+          if [ "$skip" = "false" ]; then
+            echo "$file" >> .filtered_changed.txt
+          fi
+        done < .all_changed.txt
+        
+        # Group into file lists
+        grep -E '\.py$' .filtered_changed.txt > .py_files.txt || true
+        grep -E '\.(tf|tfvars)$' .filtered_changed.txt > .tf_files.txt || true
+        grep -E '\.(yaml|yml|md|html\.md|json)$' .filtered_changed.txt > .prettier_files.txt || true
+        
+        # Output booleans for execution conditions
+        [ -s .py_files.txt ] && echo "has_python=true" >> $GITHUB_OUTPUT || echo "has_python=false" >> $GITHUB_OUTPUT
+        [ -s .tf_files.txt ] && echo "has_terraform=true" >> $GITHUB_OUTPUT || echo "has_terraform=false" >> $GITHUB_OUTPUT
+        [ -s .prettier_files.txt ] && echo "has_prettier=true" >> $GITHUB_OUTPUT || echo "has_prettier=false" >> $GITHUB_OUTPUT
+
     - name: Get PR changed files via Git and code format files
       if: steps.branch-exists.outputs.result == '0'
       env:
         GITHUB_REF: ${{ github.head_ref }}
+      shell: bash
       run: |
         git config user.name 'github-actions[bot]'
         git config user.email 'github-actions[bot]@users.noreply.github.com'
@@ -110,20 +170,20 @@ runs:
             fi
           fi
         done
-      shell: bash
 
     - name: Remove non needed files from new commit
       if: steps.branch-exists.outputs.result == '0'
+      shell: bash
       run: |
         rm -rf package-lock.json
         rm -rf package.json
         rm -rf node_modules
         rm -rf namespaces
         rm -rf modified_files.txt
-      shell: bash
 
     - name: Commit new files or finish script
       if: steps.branch-exists.outputs.result == '0'
+      shell: bash
       run: |
         git ls-files --deleted -z | git update-index --assume-unchanged -z --stdin
         if [ -n "$(git status --porcelain=1 --untracked-files=no)" ]; then
@@ -220,4 +280,3 @@ runs:
         else
           echo "Finished: no Code Formatter changes."
         fi
-      shell: bash
