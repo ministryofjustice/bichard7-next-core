@@ -1,5 +1,6 @@
-name: "Code-Formatter"
-description: "Format Ruby, Terraform, YAML/YML, Python, Markdown, JSON and html.md.erb files within a PR"
+name: "Code Formatter"
+description: "Format files within a PR"
+
 inputs:
   ignore-files:
     description: "Files to ignore"
@@ -9,6 +10,7 @@ inputs:
     description: "Version of Terraform to use for formatting"
     required: false
     default: "latest"
+
 runs:
   using: "composite"
   steps:
