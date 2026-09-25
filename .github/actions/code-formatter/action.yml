@@ -59,6 +59,7 @@ runs:
         else
           BASE_SHA="${{ github.event.before }}"
           HEAD_SHA="${{ github.event.after }}"
+          # Fallback to compare against the parent commit
           if [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ]; then
             BASE_SHA="HEAD~1"
           fi
