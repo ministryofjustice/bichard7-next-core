@@ -93,10 +93,12 @@ runs:
         [ -s .tf_files.txt ] && echo "has_terraform=true" >> $GITHUB_OUTPUT || echo "has_terraform=false" >> $GITHUB_OUTPUT
         [ -s .prettier_files.txt ] && echo "has_prettier=true" >> $GITHUB_OUTPUT || echo "has_prettier=false" >> $GITHUB_OUTPUT
 
-    - name: Install Python Formatter
+    - name: Format Python files
       if: steps.detect-files.outputs.has_python == 'true'
       shell: bash
-      run: pipx install --cooldown 3 autopep8
+      run: |
+        pipx install --cooldown 3 autopep8
+        xargs autopep8 --in-place < .py_files.txt
 
     - name: Setup Terraform
       if: steps.detect-files.outputs.has_terraform == 'true'
@@ -104,6 +106,14 @@ runs:
       with:
         terraform_version: "${{ inputs.terraform-version }}"
         terraform_wrapper: false
+
+    - name: Format Terraform files
+      if: steps.detect-files.outputs.has_terraform == 'true'
+      shell: bash
+      run: |
+        while IFS= read -r file; do
+          terraform fmt "$file"
+        done < .tf_files.txt
 
     - name: Install Prettier
       if: steps.detect-files.outputs.has_prettier == 'true'
