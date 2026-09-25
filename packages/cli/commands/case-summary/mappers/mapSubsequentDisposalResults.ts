@@ -24,14 +24,9 @@ const mapSubsequentDisposalResults = async (
     "Person URN": sensitive(request.longPersonUrn, true),
     "Force owner": request.ownerCode,
     "Appearance date": `${request.appearanceDate}`,
-    Court:
-      request.court?.courtIdentityType === "code"
-        ? await getCourtDetailsByLjaCode(request.court.courtCode)
-        : request.court?.courtName,
+    Court: request.court?.courtIdentityType === "code" ? await getCourtDetailsByLjaCode(request.court.courtCode) : request.court?.courtName,
     Offences: request.offences
-      ? await Promise.all(
-          request.offences?.map((offence, offenceIndex) => mapOffence(offence, offenceIndex, sensitive))
-        )
+      ? await Promise.all(request.offences?.map((offence, offenceIndex) => mapOffence(offence, offenceIndex, sensitive)))
       : undefined
   }
 }

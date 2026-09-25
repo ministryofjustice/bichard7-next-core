@@ -51,12 +51,10 @@ export const getCourtDetailsByOrganisationUnit = async (orgUnit?: string): Promi
   const thirdLevelCode = orgUnit.slice(3, 5)
   const bottomLevelCode = orgUnit.slice(5, 7)
   const filteredOrganisationUnits = organisationUnits.filter(
-    (ou) =>
-      ou.topLevelCode === topLevelCode && ou.secondLevelCode === secondLevelCode && ou.thirdLevelCode === thirdLevelCode
+    (ou) => ou.topLevelCode === topLevelCode && ou.secondLevelCode === secondLevelCode && ou.thirdLevelCode === thirdLevelCode
   )
 
-  const organisationUnit =
-    filteredOrganisationUnits.find((ou) => ou.bottomLevelCode === bottomLevelCode) ?? filteredOrganisationUnits[0]
+  const organisationUnit = filteredOrganisationUnits.find((ou) => ou.bottomLevelCode === bottomLevelCode) ?? filteredOrganisationUnits[0]
   if (organisationUnit) {
     const { topLevelName, secondLevelName, thirdLevelName, bottomLevelName } = organisationUnit
     title = [topLevelName, secondLevelName, thirdLevelName, bottomLevelName].filter(Boolean).join(" ")

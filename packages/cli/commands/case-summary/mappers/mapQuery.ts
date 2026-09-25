@@ -6,12 +6,7 @@ import { getCourtDetailsByLjaCode } from "../utils/courtDetails"
 import getOffenceCodeDetails from "../utils/getOffenceCodeDetails"
 import getResultCodeDetails from "../utils/getResultCodeDetails"
 
-const mapQuery = async (
-  response: AsnQueryResponse | ErrorResponse,
-  errors: string[],
-  timestamp: string,
-  sensitive: SensitiveFn
-) => {
+const mapQuery = async (response: AsnQueryResponse | ErrorResponse, errors: string[], timestamp: string, sensitive: SensitiveFn) => {
   const metadata: Metadata = {
     title: `${errors.length > 0 ? "❌" : "✅"} Bichard Query: Existing PNC offences and results`,
     timestamp: timestamp,
@@ -48,9 +43,7 @@ const mapQuery = async (
               "Disposal code": await getResultCodeDetails(disposalResult.disposalCode),
               "Disposal text": sensitive(disposalResult.disposalText),
               "Effective date": disposalResult.disposalEffectiveDate,
-              Fine: disposalResult.disposalFine
-                ? `${disposalResult.disposalFine.amount} ${disposalResult.disposalFine.units}`
-                : undefined,
+              Fine: disposalResult.disposalFine ? `${disposalResult.disposalFine.amount} ${disposalResult.disposalFine.units}` : undefined,
               Duration: disposalResult.disposalDuration
                 ? `${disposalResult.disposalDuration.count} ${disposalResult.disposalDuration.units}`
                 : undefined,
@@ -83,10 +76,7 @@ const mapQuery = async (
         "Court case ID": disposal.courtCaseId && disposal.courtCaseId !== "-" ? disposal.courtCaseId : undefined,
         "Other TIC": disposal.otherTicTotal,
         "User reference": disposal.userReference,
-        Court:
-          disposal.court.courtIdentityType === "code"
-            ? await getCourtDetailsByLjaCode(disposal.court.courtCode)
-            : disposal.court.courtName,
+        Court: disposal.court.courtIdentityType === "code" ? await getCourtDetailsByLjaCode(disposal.court.courtCode) : disposal.court.courtName,
         Offences: offences
       })
     }

@@ -1,14 +1,7 @@
 import type { S3Client } from "@aws-sdk/client-s3"
 import { GetObjectCommand } from "@aws-sdk/client-s3"
-import {
-  lookupModeOfTrialReasonBySpiCode,
-  lookupPleaStatusBySpiCode,
-  lookupVerdictBySpiCode
-} from "@moj-bichard7/common/aho/dataLookup/dataLookup"
-import {
-  extractIncomingMessage,
-  getResultedCaseMessage
-} from "@moj-bichard7/common/aho/parse/transformSpiToAho/extractIncomingMessageData"
+import { lookupModeOfTrialReasonBySpiCode, lookupPleaStatusBySpiCode, lookupVerdictBySpiCode } from "@moj-bichard7/common/aho/dataLookup/dataLookup"
+import { extractIncomingMessage, getResultedCaseMessage } from "@moj-bichard7/common/aho/parse/transformSpiToAho/extractIncomingMessageData"
 import type { fullResultedCaseMessageParsedXmlSchema } from "@moj-bichard7/common/schemas/spiResult"
 import type { SpiOffence, SpiResult } from "@moj-bichard7/common/types/SpiResult"
 import type z from "zod"
@@ -53,9 +46,7 @@ const mapResult = async (result: SpiResult, resultIndex: number, sensitive: Sens
             ? {
                 "Start date": durationStartDate,
                 "End date": durationEndDate,
-                Value: outcome.Duration.DurationValue
-                  ? `${outcome.Duration.DurationValue}${outcome.Duration.DurationUnit ?? ""}`
-                  : undefined,
+                Value: outcome.Duration.DurationValue ? `${outcome.Duration.DurationValue}${outcome.Duration.DurationUnit ?? ""}` : undefined,
                 "Secondary value": outcome.Duration.SecondaryDurationValue
                   ? `${outcome.Duration.SecondaryDurationValue}${outcome.Duration.SecondaryDurationUnit ?? ""}`
                   : undefined
@@ -90,18 +81,14 @@ const mapOffence = async (offence: SpiOffence, offenceIndex: number, sensitive: 
     Code: await getOffenceCodeDetails(offence.BaseOffenceDetails.OffenceCode),
     Title: sensitive(offence.BaseOffenceDetails.OffenceTitle),
     "Start date and time": `${offenceStart.OffenceDateStartDate}${offenceStart.OffenceStartTime ? ` ${offenceStart.OffenceStartTime}` : ""}`,
-    "Emd date and time": offenceEnd
-      ? `${offenceEnd.OffenceEndDate}${offenceEnd.OffenceEndTime ? ` ${offenceEnd.OffenceEndTime}` : ""}`
-      : undefined,
+    "Emd date and time": offenceEnd ? `${offenceEnd.OffenceEndDate}${offenceEnd.OffenceEndTime ? ` ${offenceEnd.OffenceEndTime}` : ""}` : undefined,
     "Arrest date": offence.BaseOffenceDetails.ArrestDate,
     "Charge date": offence.BaseOffenceDetails.ChargeDate,
     "Conviction date": offence.ConvictionDate,
     "Convicting court": await getCourtDetailsByLjaCode(offence.ConvictingCourt),
     "Finding (Verdict)": offence.Finding ? lookupVerdictBySpiCode(offence.Finding ?? "")?.description : undefined,
     Plea: offence.Plea ? lookupPleaStatusBySpiCode(offence.Plea)?.description : undefined,
-    "Mode of trial": offence.ModeOfTrial
-      ? lookupModeOfTrialReasonBySpiCode(offence.ModeOfTrial ?? "")?.description
-      : undefined,
+    "Mode of trial": offence.ModeOfTrial ? lookupModeOfTrialReasonBySpiCode(offence.ModeOfTrial ?? "")?.description : undefined,
     Results: await Promise.all(results.map((result, resultIndex) => mapResult(result, resultIndex, sensitive)))
   }
 }

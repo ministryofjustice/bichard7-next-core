@@ -7,9 +7,7 @@ import awsVault from "../../utils/awsVault"
 export function caseSummary(): Command {
   return new Command("case-summary")
     .name("case-summary")
-    .description(
-      "Generate a case summary report containing the SPI hearing outcome, Bichard query details, and update details"
-    )
+    .description("Generate a case summary report containing the SPI hearing outcome, Bichard query details, and update details")
     .usage("<message-id>")
     .addArgument(new Argument("<message-id>", "Bichard's message ID of the case"))
     .option("--redact-sensitive", "Removes the sensitive data from the summary")

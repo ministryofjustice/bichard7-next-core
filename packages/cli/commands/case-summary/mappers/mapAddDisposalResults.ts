@@ -4,12 +4,7 @@ import type SensitiveFn from "../types/SensitiveFn"
 import { getCourtDetailsByLjaCode } from "../utils/courtDetails"
 import mapOffence from "./mapOffence"
 
-const mapAddDisposalResults = async (
-  request: AddDisposalRequest,
-  errors: string[],
-  timestamp: string,
-  sensitive: SensitiveFn
-) => {
+const mapAddDisposalResults = async (request: AddDisposalRequest, errors: string[], timestamp: string, sensitive: SensitiveFn) => {
   const metadata: Metadata = {
     title: `${errors.length > 0 ? "❌" : "✅"} Bichard Update: Add Disposal Results`,
     timestamp: timestamp,
@@ -33,16 +28,12 @@ const mapAddDisposalResults = async (
       : undefined,
     "Referred to court case reference": request.referToCourtCase?.text,
     Offences: request.offences
-      ? await Promise.all(
-          request.offences?.map((offence, offenceIndex) => mapOffence(offence, offenceIndex, sensitive))
-        )
+      ? await Promise.all(request.offences?.map((offence, offenceIndex) => mapOffence(offence, offenceIndex, sensitive)))
       : undefined,
     "Additional Offences":
       request.additionalArrestOffences && request.additionalArrestOffences.length > 0
         ? await Promise.all(
-            request.additionalArrestOffences[0].additionalOffences.map((offence, offenceIndex) =>
-              mapOffence(offence, offenceIndex, sensitive)
-            )
+            request.additionalArrestOffences[0].additionalOffences.map((offence, offenceIndex) => mapOffence(offence, offenceIndex, sensitive))
           )
         : undefined
   }
