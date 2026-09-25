@@ -114,6 +114,7 @@ runs:
       shell: bash
       run: |
         while IFS= read -r file; do
+          echo "Formatting $file"
           terraform fmt "$file"
         done < .tf_files.txt
 

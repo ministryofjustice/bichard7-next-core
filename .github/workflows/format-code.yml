@@ -20,6 +20,6 @@ jobs:
 
       - uses: ./.github/actions/code-formatter
         with:
-          ignore-files: "**/tests/fixtures/e2e-comparison/*.json,**/help/**/*.md,*.py,docs/architecture/workspace.json"
+          ignore-files: "**/tests/fixtures/e2e-comparison/*.json,**/help/**/*.md,docs/architecture/workspace.json"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
