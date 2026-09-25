@@ -115,11 +115,6 @@ runs:
           terraform fmt "$file"
         done < .tf_files.txt
 
-    - name: Install Prettier
-      if: steps.detect-files.outputs.has_prettier == 'true'
-      shell: bash
-      run: npm install --location=global --ignore-scripts prettier@3.9.8
-
     - name: Format files with Prettier
       if: steps.detect-files.outputs.has_prettier == 'true'
       shell: bash
