@@ -12,10 +12,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-      with:
-        repository: ${{ github.repository }}
-
     - name: Check Branch exists and is not a fork.
       id: branch-exists
       env:
