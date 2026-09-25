@@ -1,4 +1,0 @@
-removed {
-  from = ""
-   to = ""
-}
