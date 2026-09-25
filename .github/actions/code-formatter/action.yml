@@ -19,11 +19,8 @@ runs:
       env:
         IS_FORK: ${{ github.event.pull_request.head.repo.full_name != github.repository && github.event.pull_request.head.repo.full_name != '' }}
         IS_BRANCH: ${{ github.ref_type == 'branch' || github.event_name == 'pull_request' }}
-        GITHUB_REF: ${{ github.head_ref || github.ref_name }}
       shell: bash
       run: |
-        echo "branch_name=$GITHUB_REF" >> $GITHUB_ENV
-
         if [ "$IS_FORK" = "true" ]; then
           echo "Warning: Cannot code-format a forked branch!"
           echo "Finished: no Code Formatter changes."
@@ -141,9 +138,19 @@ runs:
       if: steps.branch-exists.outputs.result == '0'
       shell: bash
       run: |
-        # Strip 'refs/heads/' prefix if present to ensure a clean branch name
-        CLEAN_BRANCH="${BRANCH_NAME#refs/heads/}"
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          TARGET_BRANCH="${{ github.event.pull_request.head.ref }}"
+        else
+          TARGET_BRANCH="${{ github.ref_name }}"
+        fi
+
+        CLEAN_BRANCH="${TARGET_BRANCH#refs/heads/}"
         echo "Target branch: $CLEAN_BRANCH"
+        
+        if [ -z "$CLEAN_BRANCH" ] || [[ "$CLEAN_BRANCH" == *"/merge" ]]; then
+          echo "Error: Cannot commit to merge ref: '$CLEAN_BRANCH'"
+          exit 1
+        fi
       
         git ls-files --deleted -z | git update-index --assume-unchanged -z --stdin
         if [ -n "$(git status --porcelain=1 --untracked-files=no)" ]; then
