@@ -6,6 +6,7 @@ export const Endpoints = {
   AuditLogEvents: "/audit-logs/:correlationId/events",
   AuditLogs: "/audit-logs",
   Case: "/cases/:caseId",
+  CaseAmendments: "/cases/:caseId/amendments",
   CaseAudit: "/cases/:caseId/audit",
   CaseExceptionsResolve: "/cases/:caseId/exceptions/resolve",
   CaseNote: "/cases/:caseId/note",
