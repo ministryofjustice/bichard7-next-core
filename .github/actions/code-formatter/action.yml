@@ -15,18 +15,21 @@ runs:
     - name: Check Branch exists and is not a fork.
       id: branch-exists
       env:
+        IS_FORK: ${{ github.event.pull_request.head.repo.full_name != github.repository && github.event.pull_request.head.repo.full_name != '' }}
+        IS_BRANCH: ${{ github.ref_type == 'branch' || github.event_name == 'pull_request' }}
         GITHUB_REF: ${{ github.head_ref || github.ref_name }}
       run: |
-        git fetch origin
-        branch_name=$GITHUB_REF
-        echo "branch_name=$branch_name" >> $GITHUB_ENV
-        if [[ $( git rev-parse --verify origin/$branch_name ) ]]; then
-          echo "result=$((0))" >> ${GITHUB_OUTPUT}
-        else
-          echo "Warning: Cannot code-format a forked branch or cannot find the branch!"
-          echo $branch_name
+        echo "branch_name=$GITHUB_REF" >> $GITHUB_ENV
+
+        if [ "$IS_FORK" = "true" ]; then
+          echo "Warning: Cannot code-format a forked branch!"
           echo "Finished: no Code Formatter changes."
-          echo "result=$((1))" >> ${GITHUB_OUTPUT}
+          echo "result=1" >> $GITHUB_OUTPUT
+        elif [ "$IS_BRANCH" != "true" ]; then
+          echo "Warning: Triggered by a tag, skipping formatting."
+          echo "result=1" >> $GITHUB_OUTPUT
+        else
+          echo "result=0" >> $GITHUB_OUTPUT
         fi
       shell: bash
 
