@@ -88,7 +88,7 @@ runs:
         # Group into file lists
         grep -E '\.py$' .filtered_changed.txt > .py_files.txt || true
         grep -E '\.(tf|tfvars)$' .filtered_changed.txt > .tf_files.txt || true
-        grep -E '\.(yaml|yml|md|html\.md|json)$' .filtered_changed.txt > .prettier_files.txt || true
+        grep -E '\.(yaml|yml|md|html\.md|json|js|jsx|cjs|mjs|ts|tsx|cts|mts)$' .filtered_changed.txt > .prettier_files.txt || true
         
         # Output booleans for execution conditions
         [ -s .py_files.txt ] && echo "has_python=true" >> $GITHUB_OUTPUT || echo "has_python=false" >> $GITHUB_OUTPUT
