@@ -131,7 +131,11 @@ runs:
         rm -rf package.json
         rm -rf node_modules
         rm -rf namespaces
-        rm -rf modified_files.txt
+        rm -rf .all_changed.txt
+        rm -rf .filtered_changed.txt
+        rm -rf .prettier_files.txt
+        rm -rf .py_files.txt
+        rm -rf .tf_files.txt
 
     - name: Commit new files or finish script
       if: steps.branch-exists.outputs.result == '0'
