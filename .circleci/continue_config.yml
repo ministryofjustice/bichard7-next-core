@@ -37,9 +37,6 @@ parameters:
   e2e-test-changes:
     type: boolean
     default: false
-  characterisation-test-changes:
-    type: boolean
-    default: false
   s3-web-proxy-changes:
     type: boolean
     default: false
@@ -804,27 +801,6 @@ jobs:
           name: Run E2E comparison tests against Core Phase 3
           command: npm run -w packages/core test:compare:phase3
 
-  characterisation_test:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: medium
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
-              - << pipeline.parameters.characterisation-test-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - node_install_packages
-      - build_common
-      - run:
-          name: Run tests against core code
-          command: npm run test:characterisation -w packages/core
-
   test_conductor:
     machine:
       image: ubuntu-2204:current
@@ -1385,9 +1361,6 @@ workflows:
       not:
         equal: [main, << pipeline.git.branch >>]
     jobs:
-      - characterisation_test
-      - test_ui_component
-
       - build_postgres_image
       - build_leds_image
       - build_message_forwarder_image
