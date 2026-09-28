@@ -86,9 +86,7 @@ describe("storeAuditLogEvents", () => {
     expect(auditLog.events).toHaveLength(2)
 
     phase1Result.auditLogEvents.forEach((expectedEvent) => {
-      const actualEvent = auditLog.events.find(
-        (e) => e.eventCode === expectedEvent.eventCode && e.eventSource === expectedEvent.eventSource
-      )
+      const actualEvent = auditLog.events.find((e) => e.eventCode === expectedEvent.eventCode && e.eventSource === expectedEvent.eventSource)
 
       expect(actualEvent).toBeDefined()
       expect(actualEvent).toMatchObject({
@@ -149,8 +147,6 @@ describe("storeAuditLogEvents", () => {
     })
 
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
-    expect(result.logs?.map((l) => l.log)).toContain(
-      "InputData error: Expected string for auditLogEvents.0.eventSource"
-    )
+    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for auditLogEvents.0.eventSource")
   })
 })
