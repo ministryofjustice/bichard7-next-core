@@ -10,6 +10,10 @@ const semver = new RegExp(
     - changed the Change type to require extra values
   - undici
     - v6 supports node v20. Higher versions need > node v20
+  - eslint (Keep on v9 until ready for v10)
+  - eslint-plugin-perfectionist
+  - eslint-plugin-cypress (v7+ requires ESLint 10)
+  - eslint-plugin-mocha (v12+ requires ESLint 10)
 
   Ignored:
   - p-limit
@@ -24,7 +28,17 @@ const semver = new RegExp(
   - fast-xml-parser
     - Breaks above 5.7.2 due to encoding issues. Does not follow semver
 */
-const pinned = ["chalk", "@types/diff", "eslint", "eslint-plugin-perfectionist", "undici"]
+
+const pinned = [
+  "chalk",
+  "@types/diff",
+  "eslint",
+  "eslint-plugin-perfectionist",
+  "eslint-plugin-cypress",
+  "eslint-plugin-mocha",
+  "undici"
+]
+
 const ignored = [
   "p-limit",
   "esbuild",
@@ -37,17 +51,16 @@ const ignored = [
 ]
 
 module.exports = {
-  target: (package) => {
-    if (pinned.some((p) => new RegExp(`^${p}$`).test(package))) {
+  target: (packageName) => {
+    if (pinned.some((p) => new RegExp(`^${p}$`).test(packageName))) {
       const res = "minor"
-      console.log(` ${package} is pinned to ${res} upgrades only (.ncurc.js)`)
+      console.log(` ${packageName} is pinned to ${res} upgrades only (.ncurc.js)`)
       return res
     }
     return "latest"
   },
-
-  filterResults: (package) => {
-    if (ignored.some((p) => new RegExp(`^${p}$`).test(package))) {
+  reject: (packageName) => {
+    if (ignored.some((p) => new RegExp(`^${p}$`).test(packageName))) {
       return
     }
     return true
