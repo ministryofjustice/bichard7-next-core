@@ -13,6 +13,7 @@ import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import fetchCase from "../../../services/db/cases/fetchCase"
 import { NotAllowedError } from "../../../types/errors/NotAllowedError"
+import createForceOwner from "../../createForceOwner"
 
 export const amendCourtCase = async (
   amendments: Partial<Amendments>,
@@ -39,22 +40,20 @@ export const amendCourtCase = async (
         return new Error("Exception is locked by another user")
       }
 
-      // CourtCase does not bring back updatedHearingOutcome or hearingOutcome
-      // Do we need to pass through the caseId only or can we pass through the case like the original does?
-      // const ahoResult = parseHearingOutcome(courtCase.updatedHearingOutcome ?? courtCase.hearingOutcome)
-      // if (isError(ahoResult)) {
-      //   return ahoResult
-      // }
+      const ahoResult = courtCase.aho
+      if (isError(ahoResult)) {
+        return ahoResult
+      }
 
-      // const ahoForceOwner = ahoResult.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner
-      // if (ahoForceOwner === undefined || !ahoForceOwner.OrganisationUnitCode) {
-      //   const organisationUnitCodes = createForceOwner(courtCase.orgForPoliceFilter || "")
-      //   if (isError(organisationUnitCodes)) {
-      //     return organisationUnitCodes
-      //   }
+      const ahoForceOwner = ahoResult.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner
+      if (ahoForceOwner === undefined || !ahoForceOwner.OrganisationUnitCode) {
+        const organisationUnitCodes = createForceOwner(courtCase.orgForPoliceFilter || "")
+        if (isError(organisationUnitCodes)) {
+          return organisationUnitCodes
+        }
 
-      //   ahoResult.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = organisationUnitCodes
-      // }
+        ahoResult.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = organisationUnitCodes
+      }
 
       // const updatedAho = applyAmendmentsToAho(amendments, ahoResult)
       // if (isError(updatedAho)) {
@@ -66,25 +65,22 @@ export const amendCourtCase = async (
       //   return updateResult
       // }
 
-      // const updatedCourtCase = await getCourtCase(dataSource, courtCase.errorId)
-      // if (isError(updatedCourtCase)) {
-      //   return updatedCourtCase
-      // }
       const updatedCourtCase = await fetchCase(tx, user, caseId, logger)
       if (isError(updatedCourtCase)) {
         return updatedCourtCase
       }
 
-      // if (!updatedCourtCase) {
-      //   return Error(`Couldn't find the court case id ${courtCase.errorId}`)
-      // }
+      if (!updatedCourtCase) {
+        return Error(`Couldn't find the court case id ${courtCase.errorId}`)
+      }
 
+      // Get system notes and convert to strings insertNotes(databases, notesToStrings, userDetails.username, caseId)
       // const addNoteResult = await insertNotes(database, getSystemNotes(amendments, userDetails, courtCase.errorId))
       // if (isError(addNoteResult)) {
       //   return addNoteResult
       // }
 
-      // return updatedCourtCase
+      return updatedCourtCase
     })
     .catch((error: Error) => error)
 }
