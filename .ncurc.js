@@ -1,7 +1,3 @@
-const semver = new RegExp(
-  /(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?/
-) // https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
-
 /*
   Pinned:
   - chalk
@@ -29,7 +25,7 @@ const semver = new RegExp(
     - Breaks above 5.7.2 due to encoding issues. Does not follow semver
 */
 
-const pinned = [
+const pinned = new Set([
   "chalk",
   "@types/diff",
   "eslint",
@@ -37,9 +33,9 @@ const pinned = [
   "eslint-plugin-cypress",
   "eslint-plugin-mocha",
   "undici"
-]
+])
 
-const ignored = [
+const ignored = new Set([
   "p-limit",
   "esbuild",
   "@cucumber/cucumber",
@@ -48,21 +44,17 @@ const ignored = [
   "@typescript-eslint/eslint-plugin",
   "cypress-circleci-reporter",
   "fast-xml-parser"
-]
+])
 
 module.exports = {
-  target: (packageName) => {
-    if (pinned.some((p) => new RegExp(`^${p}$`).test(packageName))) {
-      const res = "minor"
-      console.log(` ${packageName} is pinned to ${res} upgrades only (.ncurc.js)`)
-      return res
+  target: (pkg) => {
+    if (pinned.has(pkg)) {
+      console.log(` ${pkg} is pinned to minor upgrades only (.ncurc.js)`)
+      return "minor"
     }
     return "latest"
   },
-  reject: (packageName) => {
-    if (ignored.some((p) => new RegExp(`^${p}$`).test(packageName))) {
-      return
-    }
-    return true
+  reject: (pkg) => {
+    return ignored.has(pkg)
   }
 }
