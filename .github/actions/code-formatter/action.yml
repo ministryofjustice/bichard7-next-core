@@ -49,21 +49,21 @@ runs:
             BASE_SHA="HEAD~1"
           fi
         fi
-        
+
         # Get raw changed file list
         git diff --name-only --diff-filter=ACMRT "$BASE_SHA" "$HEAD_SHA" > .all_changed.txt || true
-        
+
         # Filter out ignored files and workflow files
         IGNORE_FILES="${{ inputs.ignore-files }}"
         > .filtered_changed.txt
-        
+
         while IFS= read -r file; do
           [ -z "$file" ] && continue
-        
+
           if [[ "$file" == .github/* ]]; then
             continue
           fi
-        
+
           filename=$(basename "$file")
           skip=false
           if [ -n "$IGNORE_FILES" ]; then
@@ -76,17 +76,17 @@ runs:
               fi
             done
           fi
-        
+
           if [ "$skip" = "false" ]; then
             echo "$file" >> .filtered_changed.txt
           fi
         done < .all_changed.txt
-        
+
         # Group into file lists
         grep -E '\.py$' .filtered_changed.txt > .py_files.txt || true
         grep -E '\.(tf|tfvars)$' .filtered_changed.txt > .tf_files.txt || true
         grep -E '\.(yaml|yml|md|json|js|jsx|cjs|mjs|ts|tsx|cts|mts)$' .filtered_changed.txt > .prettier_files.txt || true
-        
+
         # Output booleans for execution conditions
         [ -s .py_files.txt ] && echo "has_python=true" >> $GITHUB_OUTPUT || echo "has_python=false" >> $GITHUB_OUTPUT
         [ -s .tf_files.txt ] && echo "has_terraform=true" >> $GITHUB_OUTPUT || echo "has_terraform=false" >> $GITHUB_OUTPUT
@@ -118,7 +118,7 @@ runs:
     - name: Format files with Prettier
       if: steps.detect-files.outputs.has_prettier == 'true'
       shell: bash
-      run: xargs npx prettier --print-width=150 --write < .prettier_files.txt
+      run: xargs npx prettier --write < .prettier_files.txt
 
     - name: Remove non needed files from new commit
       if: steps.branch-exists.outputs.result == '0'
@@ -150,12 +150,12 @@ runs:
 
         CLEAN_BRANCH="${TARGET_BRANCH#refs/heads/}"
         echo "Target branch: $CLEAN_BRANCH"
-        
+
         if [ -z "$CLEAN_BRANCH" ] || [[ "$CLEAN_BRANCH" == *"/merge" ]]; then
           echo "Error: Cannot commit to merge ref: '$CLEAN_BRANCH'"
           exit 1
         fi
-      
+
         git ls-files --deleted -z | git update-index --assume-unchanged -z --stdin
         if [ -n "$(git status --porcelain=1 --untracked-files=no)" ]; then
           # Stage the changes
