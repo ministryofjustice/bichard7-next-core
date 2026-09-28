@@ -6,11 +6,7 @@ import { getCourtDetailsByLjaCode } from "../utils/courtDetails"
 import getOffenceCodeDetails from "../utils/getOffenceCodeDetails"
 import getResultCodeDetails from "../utils/getResultCodeDetails"
 
-const mapDisposalResult = async (
-  disposalResult: DisposalResult,
-  disposalResultIndex: number,
-  sensitive: SensitiveFn
-) => ({
+const mapDisposalResult = (disposalResult: DisposalResult, disposalResultIndex: number, sensitive: SensitiveFn) => ({
   "Disposal Result": `#${disposalResultIndex + 1}`,
   "Disposal code": getResultCodeDetails(disposalResult.disposalCode),
   "Disposal text": sensitive(disposalResult.disposalText),
@@ -38,10 +34,8 @@ const mapOffence = async (offence: Offence, offenceIndex: number, sensitive: Sen
 
   const adjudication = offence.adjudications?.sort((a, b) => (a.appearanceNumber < b.appearanceNumber ? 1 : -1))[0]
   const disposalResults = offence.disposalResults
-    ? await Promise.all(
-        offence.disposalResults.map((disposalResult, disposalResultIndex) =>
-          mapDisposalResult(disposalResult, disposalResultIndex, sensitive)
-        )
+    ? offence.disposalResults.map((disposalResult, disposalResultIndex) =>
+        mapDisposalResult(disposalResult, disposalResultIndex, sensitive)
       )
     : undefined
 

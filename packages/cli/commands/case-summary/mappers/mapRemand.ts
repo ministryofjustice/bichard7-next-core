@@ -3,7 +3,7 @@ import type Metadata from "../types/Metadata"
 import type SensitiveFn from "../types/SensitiveFn"
 import { getCourtDetailsByLjaCode } from "../utils/courtDetails"
 
-const mapRemand = async (request: RemandRequest, errors: string[], timestamp: string, sensitive: SensitiveFn) => {
+const mapRemand = (request: RemandRequest, errors: string[], timestamp: string, sensitive: SensitiveFn) => {
   const metadata: Metadata = {
     title: `${errors.length > 0 ? "❌" : "✅"} Bichard Update: Add remand`,
     timestamp: timestamp,

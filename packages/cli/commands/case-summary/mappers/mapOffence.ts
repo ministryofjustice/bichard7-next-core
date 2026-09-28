@@ -17,24 +17,22 @@ const mapOffence = async (offence: AdditionalOffence | Offence, offenceIndex: nu
   const offenceEndTime = offence.offenceEndTime ? ` ${offence.offenceEndTime}` : ""
   const offenceEndDateTime = offence.offenceEndDate ? `${offence.offenceEndDate}${offenceEndTime}` : undefined
 
-  const disposalResults = await Promise.all(
-    offence.disposalResults.map(async (disposalResult, disposalIndex) => ({
-      Disposal: `#${disposalIndex + 1}`,
-      "Disposal code": getResultCodeDetails(disposalResult.disposalCode),
-      "Disposal text": sensitive(disposalResult.disposalText),
-      "Effective date": disposalResult.disposalEffectiveDate,
-      Fine: disposalResult.disposalFine
-        ? `${disposalResult.disposalFine.amount} ${disposalResult.disposalFine.units}`
-        : undefined,
-      Duration: disposalResult.disposalDuration
-        ? `${disposalResult.disposalDuration.count} ${disposalResult.disposalDuration.units}`
-        : undefined,
-      Qualifiers: disposalResult.disposalQualifiers,
-      "Qualifier duration": disposalResult.disposalQualifierDuration
-        ? `${disposalResult.disposalQualifierDuration.count} ${disposalResult.disposalQualifierDuration.units}`
-        : undefined
-    }))
-  )
+  const disposalResults = offence.disposalResults.map((disposalResult, disposalIndex) => ({
+    Disposal: `#${disposalIndex + 1}`,
+    "Disposal code": getResultCodeDetails(disposalResult.disposalCode),
+    "Disposal text": sensitive(disposalResult.disposalText),
+    "Effective date": disposalResult.disposalEffectiveDate,
+    Fine: disposalResult.disposalFine
+      ? `${disposalResult.disposalFine.amount} ${disposalResult.disposalFine.units}`
+      : undefined,
+    Duration: disposalResult.disposalDuration
+      ? `${disposalResult.disposalDuration.count} ${disposalResult.disposalDuration.units}`
+      : undefined,
+    Qualifiers: disposalResult.disposalQualifiers,
+    "Qualifier duration": disposalResult.disposalQualifierDuration
+      ? `${disposalResult.disposalQualifierDuration.count} ${disposalResult.disposalQualifierDuration.units}`
+      : undefined
+  }))
 
   return {
     Offence: `#${offenceIndex + 1}`,

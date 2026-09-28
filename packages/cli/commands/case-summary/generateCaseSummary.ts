@@ -100,7 +100,7 @@ const generateCaseSummaryByMessageId = async (
         } else if (requestType === "NEWREM") {
           operationKey = generateOperationKey("Remand", errors)
           const content = convertPncToLeds(String(event.attributes?.["PNC Request Message"]), "Remand")
-          eventDetails.push(await mapRemand(content, errors, event.timestamp, sensitive))
+          eventDetails.push(mapRemand(content, errors, event.timestamp, sensitive))
         } else if (requestType === "SUBVAR") {
           operationKey = generateOperationKey("Subsequently Varied", errors)
           const content = convertPncToLeds(String(event.attributes?.["PNC Request Message"]), "Subsequently Varied")

@@ -54,7 +54,7 @@ const mapOutcome = (result: SpiResult) => {
   }
 }
 
-const mapResult = async (result: SpiResult, resultIndex: number, sensitive: SensitiveFn) => {
+const mapResult = (result: SpiResult, resultIndex: number, sensitive: SensitiveFn) => {
   const resultCodeQualifiers = convertToArray(result.ResultCodeQualifier)
   const nextHearingDetails = result.NextHearing?.NextHearingDetails
 
@@ -100,7 +100,7 @@ const mapOffence = async (offence: SpiOffence, offenceIndex: number, sensitive: 
     "Mode of trial": offence.ModeOfTrial
       ? lookupModeOfTrialReasonBySpiCode(offence.ModeOfTrial ?? "")?.description
       : undefined,
-    Results: await Promise.all(results.map((result, resultIndex) => mapResult(result, resultIndex, sensitive)))
+    Results: results.map((result, resultIndex) => mapResult(result, resultIndex, sensitive))
   }
 }
 
