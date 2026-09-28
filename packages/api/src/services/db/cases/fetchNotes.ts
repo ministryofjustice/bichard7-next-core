@@ -10,7 +10,7 @@ import mapNoteRowToNote from "../mapNoteRowToNote"
 
 export default async (database: DatabaseConnection, caseIds: number[]): PromiseResult<Note[]> => {
   const result = await database.connection`
-    SELECT DISTINCT ON (eln.error_id)
+    SELECT
       eln.note_id,
       eln.error_id,
       eln.note_text,
