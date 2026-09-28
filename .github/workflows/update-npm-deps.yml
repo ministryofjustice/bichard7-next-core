@@ -30,7 +30,7 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Update dependencies
-        run: npm run update-deps --workspaces
+        run: npm run update-deps
 
       - name: Report Status
         if: failure()
