@@ -151,6 +151,7 @@ describe("storeAuditLogEvents", () => {
     })
 
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
+    // prettier-ignore
     expect(result.logs?.map((l) => l.log)).toContain(
       "InputData error: Expected string for auditLogEvents.0.eventSource"
     )
