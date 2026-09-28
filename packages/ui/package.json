@@ -105,7 +105,6 @@
     "lodash.sample": "^4.2.1",
     "mocha": "^12.0.2",
     "mockdate": "^3.0.5",
-    "npm-check-updates": "^23.1.0",
     "pg-promise": "^12.7.1",
     "postgres": "^3.4.9",
     "sass": "^1.105.0",
