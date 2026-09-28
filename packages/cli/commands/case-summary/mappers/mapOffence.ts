@@ -25,8 +25,12 @@ const mapOffence = async (offence: AdditionalOffence | Offence, offenceIndex: nu
       "Disposal code": await getResultCodeDetails(disposalResult.disposalCode),
       "Disposal text": sensitive(disposalResult.disposalText),
       "Effective date": disposalResult.disposalEffectiveDate,
-      Fine: disposalResult.disposalFine ? `${disposalResult.disposalFine.amount} ${disposalResult.disposalFine.units}` : undefined,
-      Duration: disposalResult.disposalDuration ? `${disposalResult.disposalDuration.count} ${disposalResult.disposalDuration.units}` : undefined,
+      Fine: disposalResult.disposalFine
+        ? `${disposalResult.disposalFine.amount} ${disposalResult.disposalFine.units}`
+        : undefined,
+      Duration: disposalResult.disposalDuration
+        ? `${disposalResult.disposalDuration.count} ${disposalResult.disposalDuration.units}`
+        : undefined,
       Qualifiers: disposalResult.disposalQualifiers,
       "Qualifier duration": disposalResult.disposalQualifierDuration
         ? `${disposalResult.disposalQualifierDuration.count} ${disposalResult.disposalQualifierDuration.units}`

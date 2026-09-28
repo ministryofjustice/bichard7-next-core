@@ -51,7 +51,10 @@ const extractErrorMessages = (event: ApiAuditLogEvent) => {
   return errors
 }
 
-const generateCaseSummaryByMessageId = async (messageId: string, options: FullGenerateCaseSummaryOptions): Promise<GenerateCaseSummaryResult> => {
+const generateCaseSummaryByMessageId = async (
+  messageId: string,
+  options: FullGenerateCaseSummaryOptions
+): Promise<GenerateCaseSummaryResult> => {
   const output: GenerateCaseSummaryResult = {
     operations: {},
     asn: "",
@@ -101,11 +104,15 @@ const generateCaseSummaryByMessageId = async (messageId: string, options: FullGe
         } else if (requestType === "SUBVAR") {
           operationKey = generateOperationKey("Subsequently Varied", errors)
           const content = convertPncToLeds(String(event.attributes?.["PNC Request Message"]), "Subsequently Varied")
-          eventDetails.push(await mapSubsequentDisposalResults(content, "Subsequently Varied", errors, event.timestamp, sensitive))
+          eventDetails.push(
+            await mapSubsequentDisposalResults(content, "Subsequently Varied", errors, event.timestamp, sensitive)
+          )
         } else if (requestType === "SENDEF") {
           operationKey = generateOperationKey("Sentence Deferred", errors)
           const content = convertPncToLeds(String(event.attributes?.["PNC Request Message"]), "Sentence Deferred")
-          eventDetails.push(await mapSubsequentDisposalResults(content, "Sentence Deferred", errors, event.timestamp, sensitive))
+          eventDetails.push(
+            await mapSubsequentDisposalResults(content, "Sentence Deferred", errors, event.timestamp, sensitive)
+          )
         } else if (requestType === "PENHRG") {
           operationKey = generateOperationKey("Penalty Hearing", errors)
           const content = String(event.attributes?.["PNC Request Message"])
@@ -188,7 +195,10 @@ const fetchAuditLog = async (messageId: string) => {
   return auditLog
 }
 
-const generateCaseSummary = async (messageId: string, options?: GenerateCaseSummaryOptions): Promise<GenerateCaseSummaryResult[]> => {
+const generateCaseSummary = async (
+  messageId: string,
+  options?: GenerateCaseSummaryOptions
+): Promise<GenerateCaseSummaryResult[]> => {
   const auditLog = await fetchAuditLog(messageId)
 
   if (options?.usePtiUrnToFindAllCases) {
