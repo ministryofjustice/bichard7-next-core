@@ -24,8 +24,7 @@
     "test:server": "NODE_OPTIONS=--experimental-vm-modules NODE_ENV=test ts-node scripts/testServer.ts",
     "test:e2e": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-worker.yml -f environment/docker-compose-e2e-tests.yml run e2e-tests npm run test:chunk",
     "test:e2e:ci": "docker-compose --project-name bichard -f environment/docker-compose.yml -f environment/docker-compose-e2e-tests.yml run e2e-tests npm run test:chunk",
-    "test:characterisation": "cd characterisation-tests && jest --runInBand --workerThreads=true",
-    "update-deps": "ncu -u --cooldown 3d && npm install"
+    "test:characterisation": "cd characterisation-tests && jest --runInBand --workerThreads=true"
   },
   "repository": {
     "type": "git",
