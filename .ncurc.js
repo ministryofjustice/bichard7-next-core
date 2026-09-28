@@ -10,6 +10,7 @@
   - eslint-plugin-perfectionist
   - eslint-plugin-cypress (v7+ requires ESLint 10)
   - eslint-plugin-mocha (v12+ requires ESLint 10)
+  - typescript
 
   Ignored:
   - p-limit
@@ -32,7 +33,8 @@ const pinned = new Set([
   "eslint-plugin-perfectionist",
   "eslint-plugin-cypress",
   "eslint-plugin-mocha",
-  "undici"
+  "undici",
+  "typescript"
 ])
 
 const ignored = new Set([
