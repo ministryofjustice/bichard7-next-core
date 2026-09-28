@@ -108,7 +108,6 @@
     "npm-check-updates": "^23.1.0",
     "pg-promise": "^12.7.1",
     "postgres": "^3.4.9",
-    "prettier": "^3.9.6",
     "sass": "^1.104.0",
     "stylelint": "^17.14.1",
     "stylelint-config-standard-scss": "^17.0.0",
