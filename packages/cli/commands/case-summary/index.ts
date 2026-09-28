@@ -1,5 +1,5 @@
 import { Argument, Command } from "commander"
-import path from "path"
+import path from "node:path"
 import type { Environment } from "../../config"
 import { env } from "../../config"
 import awsVault from "../../utils/awsVault"

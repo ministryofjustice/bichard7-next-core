@@ -8,16 +8,14 @@ type AdditionalOffence = AdditionalArrestOffences["additionalOffences"][0]
 const mapOffence = async (offence: AdditionalOffence | Offence, offenceIndex: number, sensitive: SensitiveFn) => {
   const additionalOffence = offence as AdditionalOffence
   let offenceCode = (offence as Offence).cjsOffenceCode
-  if (additionalOffence.offenceCode && additionalOffence.offenceCode.offenceCodeType === "cjs") {
+  if (additionalOffence.offenceCode?.offenceCodeType === "cjs") {
     offenceCode = await getOffenceCodeDetails(additionalOffence.offenceCode.cjsOffenceCode)
   }
 
-  const offenceStartDateTime = offence.offenceStartDate
-    ? `${offence.offenceStartDate}${offence.offenceStartTime ? ` ${offence.offenceStartTime}` : ""}`
-    : undefined
-  const offenceEndDateTime = offence.offenceEndDate
-    ? `${offence.offenceEndDate}${offence.offenceEndTime ? ` ${offence.offenceEndTime}` : ""}`
-    : undefined
+  const offenceStartTime = offence.offenceStartTime ? ` ${offence.offenceStartTime}` : ""
+  const offenceStartDateTime = offence.offenceStartDate ? `${offence.offenceStartDate}${offenceStartTime}` : undefined
+  const offenceEndTime = offence.offenceEndTime ? ` ${offence.offenceEndTime}` : ""
+  const offenceEndDateTime = offence.offenceEndDate ? `${offence.offenceEndDate}${offenceEndTime}` : undefined
 
   const disposalResults = await Promise.all(
     offence.disposalResults.map(async (disposalResult, disposalIndex) => ({

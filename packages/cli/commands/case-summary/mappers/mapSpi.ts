@@ -24,47 +24,45 @@ type ResultedCaseMessage = z.infer<typeof fullResultedCaseMessageParsedXmlSchema
 
 const workspace = process.env.WORKSPACE ?? "production"
 
-const mapResult = async (result: SpiResult, resultIndex: number, sensitive: SensitiveFn) => {
+const convertToArray = <T>(obj?: T | T[]): T[] => (obj ? (Array.isArray(obj) ? obj : [obj]) : [])
+
+const mapOutcome = (result: SpiResult) => {
   const outcome = result.Outcome
-  const durationStartDate = outcome?.Duration?.DurationStartDate
-    ? Array.isArray(outcome.Duration.DurationStartDate)
-      ? outcome.Duration.DurationStartDate
-      : [outcome.Duration.DurationStartDate]
-    : []
-  const durationEndDate = outcome?.Duration?.DurationEndDate
-    ? Array.isArray(outcome.Duration.DurationEndDate)
-      ? outcome.Duration.DurationEndDate
-      : [outcome.Duration.DurationEndDate]
-    : []
-  const resultCodeQualifiers = result.ResultCodeQualifier
-    ? Array.isArray(result.ResultCodeQualifier)
-      ? result.ResultCodeQualifier
-      : [result.ResultCodeQualifier]
-    : []
+  if (!outcome) {
+    return undefined
+  }
+
+  const durationStartDate = convertToArray(outcome?.Duration?.DurationStartDate)
+  const durationEndDate = convertToArray(outcome?.Duration?.DurationEndDate)
+  const duration = outcome?.Duration
+    ? {
+        "Start date": durationStartDate,
+        "End date": durationEndDate,
+        Value: outcome.Duration.DurationValue
+          ? `${outcome.Duration.DurationValue}${outcome.Duration.DurationUnit ?? ""}`
+          : undefined,
+        "Secondary value": outcome.Duration.SecondaryDurationValue
+          ? `${outcome.Duration.SecondaryDurationValue}${outcome.Duration.SecondaryDurationUnit ?? ""}`
+          : undefined
+      }
+    : undefined
+
+  return {
+    Duration: duration,
+    "Penalty points": outcome?.PenaltyPoints,
+    Amount: outcome?.ResultAmountSterling ? `£${outcome.ResultAmountSterling}` : undefined
+  }
+}
+
+const mapResult = async (result: SpiResult, resultIndex: number, sensitive: SensitiveFn) => {
+  const resultCodeQualifiers = convertToArray(result.ResultCodeQualifier)
   const nextHearingDetails = result.NextHearing?.NextHearingDetails
 
   return {
     Result: `#${resultIndex + 1}`,
     "Result code": await getResultCodeDetails(result.ResultCode),
     "Result text": sensitive(result.ResultText),
-    Outcome: result.Outcome
-      ? {
-          Duration: outcome?.Duration
-            ? {
-                "Start date": durationStartDate,
-                "End date": durationEndDate,
-                Value: outcome.Duration.DurationValue
-                  ? `${outcome.Duration.DurationValue}${outcome.Duration.DurationUnit ?? ""}`
-                  : undefined,
-                "Secondary value": outcome.Duration.SecondaryDurationValue
-                  ? `${outcome.Duration.SecondaryDurationValue}${outcome.Duration.SecondaryDurationUnit ?? ""}`
-                  : undefined
-              }
-            : undefined,
-          "Penalty points": outcome?.PenaltyPoints,
-          Amount: outcome?.ResultAmountSterling ? `£${outcome.ResultAmountSterling}` : undefined
-        }
-      : undefined,
+    Outcome: mapOutcome(result),
     Qualifiers: resultCodeQualifiers,
     "Next hearing": result.NextHearing
       ? {
@@ -80,7 +78,7 @@ const mapResult = async (result: SpiResult, resultIndex: number, sensitive: Sens
 }
 
 const mapOffence = async (offence: SpiOffence, offenceIndex: number, sensitive: SensitiveFn) => {
-  const results = offence.Result ? (Array.isArray(offence.Result) ? offence.Result : [offence.Result]) : []
+  const results = convertToArray(offence.Result)
   const offenceStart = offence.BaseOffenceDetails.OffenceTiming.OffenceStart
   const offenceEnd = offence.BaseOffenceDetails.OffenceTiming.OffenceEnd
 
@@ -166,7 +164,7 @@ const mapSpi = async (s3Client: S3Client, s3Path: string, receivedDate: string, 
     }
   }
 
-  const offences = defendant.Offence ? (Array.isArray(defendant.Offence) ? defendant.Offence : [defendant.Offence]) : []
+  const offences = convertToArray(defendant.Offence)
 
   return {
     metadata,

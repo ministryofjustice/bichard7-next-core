@@ -64,7 +64,7 @@ const generateCaseSummaryByMessageId = async (
   const sensitive = sensitiveFn(!!options?.redactSensitiveData)
   const events = await dynamoGateway.getEvents(messageId)
   if (events instanceof Error) {
-    throw Error(`Failed to get events from Dynamodb for message ID ${messageId}. ${events.message}`)
+    throw new Error(`Failed to get events from Dynamodb for message ID ${messageId}. ${events.message}`)
   }
 
   const generateOperationKey = (name: string, errors: string[]) => `${errors.length > 0 ? "❌" : "✅"} ${name}`
@@ -189,7 +189,7 @@ const fetchAuditLog = async (messageId: string) => {
   }
 
   if (!auditLog) {
-    throw Error(`Could not find audit log for message ID ${messageId}`)
+    throw new Error(`Could not find audit log for message ID ${messageId}`)
   }
 
   return auditLog

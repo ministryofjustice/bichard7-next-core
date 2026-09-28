@@ -2,7 +2,7 @@ import type Metadata from "./types/Metadata"
 import textStyle from "./utils/textStyle"
 
 let isLastLineAnEmptyLine = false
-const fieldsToHighlight = ["Code", "Result code", "Disposal code"]
+const fieldsToHighlight = new Set(["Code", "Result code", "Disposal code"])
 
 const printOnlyOneNewLine = () => {
   if (isLastLineAnEmptyLine) {
@@ -79,7 +79,7 @@ const printSummary = (obj: object, level = 0) => {
       return
     }
 
-    if (fieldsToHighlight.includes(key)) {
+    if (fieldsToHighlight.has(key)) {
       print(`${key}: ${value}`, level, textStyle.brightWhite)
     } else {
       print(`${textStyle.midGrey}${key}: ${textStyle.default}${value}${textStyle.reset}`, level)
