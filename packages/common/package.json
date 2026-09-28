@@ -64,7 +64,7 @@
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
     "jest": "^30.5.2",
-    "ts-jest": "^29.4.13",
+    "ts-jest": "^29.4.14",
     "ts-node": "^10.9.2"
   }
 }
