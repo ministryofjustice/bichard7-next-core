@@ -60,14 +60,14 @@ const mapResult = async (result: SpiResult, resultIndex: number, sensitive: Sens
 
   return {
     Result: `#${resultIndex + 1}`,
-    "Result code": await getResultCodeDetails(result.ResultCode),
+    "Result code": getResultCodeDetails(result.ResultCode),
     "Result text": sensitive(result.ResultText),
     Outcome: mapOutcome(result),
     Qualifiers: resultCodeQualifiers,
     "Next hearing": result.NextHearing
       ? {
           "Bail status for offence": result.NextHearing.BailStatusOffence
-            ? await getRemandStatusBySpiCode(result.NextHearing.BailStatusOffence)
+            ? getRemandStatusBySpiCode(result.NextHearing.BailStatusOffence)
             : undefined,
           "Next hearing date and time": nextHearingDetails
             ? `${nextHearingDetails.DateOfHearing}${nextHearingDetails.TimeOfHearing ? ` ${nextHearingDetails.TimeOfHearing}` : ""}`
@@ -94,7 +94,7 @@ const mapOffence = async (offence: SpiOffence, offenceIndex: number, sensitive: 
     "Arrest date": offence.BaseOffenceDetails.ArrestDate,
     "Charge date": offence.BaseOffenceDetails.ChargeDate,
     "Conviction date": offence.ConvictionDate,
-    "Convicting court": await getCourtDetailsByLjaCode(offence.ConvictingCourt),
+    "Convicting court": getCourtDetailsByLjaCode(offence.ConvictingCourt),
     "Finding (Verdict)": offence.Finding ? lookupVerdictBySpiCode(offence.Finding ?? "")?.description : undefined,
     Plea: offence.Plea ? lookupPleaStatusBySpiCode(offence.Plea)?.description : undefined,
     "Mode of trial": offence.ModeOfTrial
@@ -159,7 +159,7 @@ const mapSpi = async (s3Client: S3Client, s3Path: string, receivedDate: string, 
       "Date of birth": sensitive(individualDefendant.PersonDefendant.BasePersonDetails.Birthdate),
       "Present at hearing": individualDefendant.PresentAtHearing,
       "Bail conditions": individualDefendant.PersonDefendant.BailConditions,
-      "Bail status": await getRemandStatusBySpiCode(individualDefendant.BailStatus),
+      "Bail status": getRemandStatusBySpiCode(individualDefendant.BailStatus),
       "Reason for bail conditions or custody": individualDefendant.ReasonForBailConditionsOrCustody
     }
   }
@@ -172,8 +172,8 @@ const mapSpi = async (s3Client: S3Client, s3Path: string, receivedDate: string, 
     ...(individualDefendantJson ? { "Individual defendant": individualDefendantJson } : {}),
     "Hearing details": {
       "Date and time": `${courtHearing.Hearing.DateOfHearing} ${courtHearing.Hearing.TimeOfHearing}`,
-      Location: await getCourtDetailsByOrganisationUnit(courtHearing.Hearing.CourtHearingLocation),
-      "PSA code": await getCourtDetailsByLjaCode(courtHearing.PSAcode)
+      Location: getCourtDetailsByOrganisationUnit(courtHearing.Hearing.CourtHearingLocation),
+      "PSA code": getCourtDetailsByLjaCode(courtHearing.PSAcode)
     },
     Offences: await Promise.all(offences.map((offence, offenceIndex) => mapOffence(offence, offenceIndex, sensitive)))
   }

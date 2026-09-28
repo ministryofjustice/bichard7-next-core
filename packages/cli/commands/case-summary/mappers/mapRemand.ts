@@ -19,7 +19,7 @@ const mapRemand = async (request: RemandRequest, errors: string[], timestamp: st
     "Current appearance": {
       Court:
         request.currentAppearance.court?.courtIdentityType === "code"
-          ? await getCourtDetailsByLjaCode(request.currentAppearance.court.courtCode)
+          ? getCourtDetailsByLjaCode(request.currentAppearance.court.courtCode)
           : request.currentAppearance.court?.courtName,
       Force: request.currentAppearance.forceStationCode
     },
@@ -28,7 +28,7 @@ const mapRemand = async (request: RemandRequest, errors: string[], timestamp: st
           Date: request.nextAppearance.date,
           Court:
             request.nextAppearance.court?.courtIdentityType === "code"
-              ? await getCourtDetailsByLjaCode(request.nextAppearance.court.courtCode)
+              ? getCourtDetailsByLjaCode(request.nextAppearance.court.courtCode)
               : request.nextAppearance.court?.courtName
         }
       : undefined,

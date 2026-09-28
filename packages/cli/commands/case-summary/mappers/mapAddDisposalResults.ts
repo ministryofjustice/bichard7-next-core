@@ -27,7 +27,7 @@ const mapAddDisposalResults = async (
           "Appearance date": `${request.carryForward.appearanceDate}`,
           Court:
             request.carryForward.court?.courtIdentityType === "code"
-              ? await getCourtDetailsByLjaCode(request.carryForward.court.courtCode)
+              ? getCourtDetailsByLjaCode(request.carryForward.court.courtCode)
               : request.carryForward.court?.courtName
         }
       : undefined,

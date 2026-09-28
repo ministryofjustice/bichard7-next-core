@@ -26,7 +26,7 @@ const mapSubsequentDisposalResults = async (
     "Appearance date": `${request.appearanceDate}`,
     Court:
       request.court?.courtIdentityType === "code"
-        ? await getCourtDetailsByLjaCode(request.court.courtCode)
+        ? getCourtDetailsByLjaCode(request.court.courtCode)
         : request.court?.courtName,
     Offences: request.offences
       ? await Promise.all(

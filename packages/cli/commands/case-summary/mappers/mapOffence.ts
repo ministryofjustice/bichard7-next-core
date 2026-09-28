@@ -20,7 +20,7 @@ const mapOffence = async (offence: AdditionalOffence | Offence, offenceIndex: nu
   const disposalResults = await Promise.all(
     offence.disposalResults.map(async (disposalResult, disposalIndex) => ({
       Disposal: `#${disposalIndex + 1}`,
-      "Disposal code": await getResultCodeDetails(disposalResult.disposalCode),
+      "Disposal code": getResultCodeDetails(disposalResult.disposalCode),
       "Disposal text": sensitive(disposalResult.disposalText),
       "Effective date": disposalResult.disposalEffectiveDate,
       Fine: disposalResult.disposalFine

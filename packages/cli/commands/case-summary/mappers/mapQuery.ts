@@ -12,7 +12,7 @@ const mapDisposalResult = async (
   sensitive: SensitiveFn
 ) => ({
   "Disposal Result": `#${disposalResultIndex + 1}`,
-  "Disposal code": await getResultCodeDetails(disposalResult.disposalCode),
+  "Disposal code": getResultCodeDetails(disposalResult.disposalCode),
   "Disposal text": sensitive(disposalResult.disposalText),
   "Effective date": disposalResult.disposalEffectiveDate,
   Fine: disposalResult.disposalFine
@@ -93,7 +93,7 @@ const mapQuery = async (
         "User reference": disposal.userReference,
         Court:
           disposal.court.courtIdentityType === "code"
-            ? await getCourtDetailsByLjaCode(disposal.court.courtCode)
+            ? getCourtDetailsByLjaCode(disposal.court.courtCode)
             : disposal.court.courtName,
         Offences: offences
       }
