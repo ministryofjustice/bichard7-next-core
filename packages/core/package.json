@@ -64,7 +64,7 @@
     "esbuild": "~0.28.1",
     "esbuild-plugin-ignore": "^1.1.1",
     "express": "^5.2.1",
-    "jest": "^30.5.1",
+    "jest": "^30.5.2",
     "jest-mock-server": "^0.1.0",
     "jest-xml-matcher": "^1.2.0",
     "lodash.ismatch": "^4.4.0",
@@ -75,13 +75,13 @@
     "pg-promise": "^12.7.1",
     "promise-poller": "^1.9.1",
     "ts-command-line-args": "^2.5.1",
-    "ts-jest": "^29.4.12",
+    "ts-jest": "^29.4.13",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.1126.0",
-    "@aws-sdk/client-s3": "^3.1126.0",
+    "@aws-sdk/client-dynamodb": "^3.1140.0",
+    "@aws-sdk/client-s3": "^3.1140.0",
     "@io-orkes/conductor-javascript": "^4.0.0",
     "@moj-bichard7-developers/bichard7-next-data": "^2.0.420",
     "aws-sdk": "^2.1693.0",
@@ -97,7 +97,7 @@
     "postgres": "3.4.9",
     "pretty-data": "github:vkiryukhin/pretty-data#22a34a534745714ea974f72db2e9bf7561b3fdc7",
     "stompit": "^1.0.0",
-    "zod": "^4.4.3",
+    "zod": "^4.6.5",
     "zod-validation-error": "^5.0.0"
   },
   "optionalDependencies": {

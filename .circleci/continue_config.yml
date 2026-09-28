@@ -1153,6 +1153,19 @@ jobs:
       - load_nginx_auth_proxy_image
       - node/install
       - node_install_packages
+      - restore_cache:
+          keys:
+            - v1-cypress-{{ checksum "package-lock.json" }}
+            - v1-cypress-
+
+      - run:
+          name: Install Cypress
+          command: npx cypress install
+
+      - save_cache:
+          key: v1-cypress-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.cache/Cypress
       - run:
           name: Install Cypress
           command: ./.circleci/scripts/install-cypress.sh 2>&1
