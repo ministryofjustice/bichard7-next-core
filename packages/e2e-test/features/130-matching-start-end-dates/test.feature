@@ -17,7 +17,7 @@ Feature: {130} BR7 R5.1-RCD411-Offence Matching-Start-End-Dates Match
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@Could @NextUI
+	@Could @NextUI @ExcludeOnLegacyUI
 	Scenario: Handling exceptions when start and end dates match
 		Given I am logged in as "generalhandler"
 		When I view the list of exceptions

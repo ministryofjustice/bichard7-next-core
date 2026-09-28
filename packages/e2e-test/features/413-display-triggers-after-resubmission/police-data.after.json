@@ -1,19 +1,21 @@
 {
   "disposals": [
     {
-      "caseStatusMarker": "A",
+      "caseStatusMarker": "C",
       "charges": [
         {
           "additionalMarker": false,
           "additionalOffenceMarker": false,
+          "adjudication": "G",
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100002715Z",
-          "chargeStatusMarker": "A",
+          "arrestSummonsReference": "26/0000/00/100021514H",
+          "chargeStatusMarker": "C",
           "cjsOffenceCode": "TH68006",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/2576/000758A",
-          "crimeReference": "VLSVO66AERWCLEA",
+          "courtCaseReferenceNumber": "26/2576/022214X",
+          "crimeReference": "-WFPZGSAVJCGWNH",
+          "endDate": "2010-12-08",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -24,50 +26,32 @@
           "npccOffenceCode": "5.5.5.1",
           "offenceChargeNumber": 1,
           "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
           "othersCharged": [],
+          "plea": "2",
           "qualifiedCjsCode": "TH68006",
-          "results": [],
+          "results": [
+            {
+              "disposalCode": "1016",
+              "disposalQualifierCodes": []
+            }
+          ],
           "roleQualifier": [],
           "startDate": "2010-11-28"
         },
         {
           "additionalMarker": false,
           "additionalOffenceMarker": false,
+          "adjudication": "G",
           "arrestChargeNumber": 2,
-          "arrestSummonsReference": "26/0000/00/100002715Z",
-          "chargeStatusMarker": "A",
-          "cjsOffenceCode": "TH68151",
-          "committedOnBail": false,
-          "courtCaseChargeNumber": 2,
-          "courtCaseReferenceNumber": "26/2576/000758A",
-          "crimeReference": "IHAOKVIKF9HXLIJ",
-          "forceStationChargeOrig": "01ZD",
-          "legislationQualifier": [],
-          "locationAddress": {
-            "locationText": "Kingston High Street",
-            "locationType": "description"
-          },
-          "locationFSCode": "01ZD",
-          "npccOffenceCode": "5.7.11.10",
-          "offenceChargeNumber": 2,
-          "offenceDescription": [],
-          "othersCharged": [],
-          "qualifiedCjsCode": "TH68151",
-          "results": [],
-          "roleQualifier": [],
-          "startDate": "2010-11-28"
-        },
-        {
-          "additionalMarker": false,
-          "additionalOffenceMarker": false,
-          "arrestChargeNumber": 3,
-          "arrestSummonsReference": "26/0000/00/100002715Z",
-          "chargeStatusMarker": "A",
+          "arrestSummonsReference": "26/0000/00/100021514H",
+          "chargeStatusMarker": "C",
           "cjsOffenceCode": "RT88191",
           "committedOnBail": false,
-          "courtCaseChargeNumber": 3,
-          "courtCaseReferenceNumber": "26/2576/000758A",
-          "crimeReference": "DYYOFZBS-IMGCTH",
+          "courtCaseChargeNumber": 2,
+          "courtCaseReferenceNumber": "26/2576/022214X",
+          "crimeReference": "BPESHXKGKBLFB9G",
+          "endDate": "2010-12-08",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -76,11 +60,56 @@
           },
           "locationFSCode": "01ZD",
           "npccOffenceCode": "12.15.13.1",
+          "offenceChargeNumber": 2,
+          "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
+          "othersCharged": [],
+          "plea": "2",
+          "qualifiedCjsCode": "RT88191",
+          "results": [
+            {
+              "disposalCode": "1015",
+              "disposalQualifierCodes": [],
+              "fineAmount": 200
+            }
+          ],
+          "roleQualifier": [],
+          "startDate": "2010-11-28"
+        },
+        {
+          "additionalMarker": false,
+          "additionalOffenceMarker": false,
+          "adjudication": "G",
+          "arrestChargeNumber": 3,
+          "arrestSummonsReference": "26/0000/00/100021514H",
+          "chargeStatusMarker": "C",
+          "cjsOffenceCode": "TH68151",
+          "committedOnBail": false,
+          "courtCaseChargeNumber": 3,
+          "courtCaseReferenceNumber": "26/2576/022214X",
+          "crimeReference": "G21RLZKQDWEA-HL",
+          "endDate": "2010-12-08",
+          "forceStationChargeOrig": "01ZD",
+          "legislationQualifier": [],
+          "locationAddress": {
+            "locationText": "Kingston High Street",
+            "locationType": "description"
+          },
+          "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.7.11.10",
           "offenceChargeNumber": 3,
           "offenceDescription": [],
+          "offencesTakenIntoConsideration": 0,
           "othersCharged": [],
-          "qualifiedCjsCode": "RT88191",
-          "results": [],
+          "plea": "2",
+          "qualifiedCjsCode": "TH68151",
+          "results": [
+            {
+              "disposalCode": "1015",
+              "disposalQualifierCodes": [],
+              "fineAmount": 100
+            }
+          ],
           "roleQualifier": [],
           "startDate": "2010-11-28"
         }
@@ -90,7 +119,7 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/000758A",
+      "courtCaseReference": "26/2576/022214X",
       "subsequentAppearances": []
     }
   ],

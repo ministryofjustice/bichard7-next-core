@@ -7,13 +7,13 @@
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100002074C",
+          "arrestSummonsReference": "26/0000/00/100020948T",
           "chargeStatusMarker": "A",
           "cjsOffenceCode": "TH68010",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/9998/001660K",
-          "crimeReference": "MF3YEFNZCXVIHDR",
+          "courtCaseReferenceNumber": "26/2576/021682U",
+          "crimeReference": "/HKBILVZZWNEPLL",
           "forceStationChargeOrig": "01VK",
           "legislationQualifier": [],
           "locationAddress": {
@@ -33,10 +33,11 @@
       ],
       "convictionDate": "2011-10-01",
       "court": {
-        "courtIdentityType": "name",
-        "courtName": "Magistrates' Courts London Croydon"
+        "courtCode": "2576",
+        "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/9998/001660K"
+      "courtCaseReference": "26/2576/021682U",
+      "subsequentAppearances": []
     },
     {
       "caseStatusMarker": "A",
@@ -45,13 +46,13 @@
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 2,
-          "arrestSummonsReference": "26/0000/00/100002074C",
+          "arrestSummonsReference": "26/0000/00/100020948T",
           "chargeStatusMarker": "A",
           "cjsOffenceCode": "CJ88001",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/9998/001661L",
-          "crimeReference": "4P/T7HEXJVACO1N",
+          "courtCaseReferenceNumber": "26/2576/021683V",
+          "crimeReference": "CZMYVMRMEX44X8I",
           "forceStationChargeOrig": "01VK",
           "legislationQualifier": [],
           "locationAddress": {
@@ -71,10 +72,11 @@
       ],
       "convictionDate": "2011-10-01",
       "court": {
-        "courtIdentityType": "name",
-        "courtName": "Magistrates' Courts London Croydon"
+        "courtCode": "2576",
+        "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/9998/001661L"
+      "courtCaseReference": "26/2576/021683V",
+      "subsequentAppearances": []
     }
   ],
   "remands": []

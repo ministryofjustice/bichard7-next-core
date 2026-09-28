@@ -20,6 +20,7 @@ Feature: {113b} BR7 R5.1-RCD422-Breach of Suspended Sentence-Order to Continue
 			And "input-message" is received
 
 	@Could
+	@ExcludedOnLeds
 	Scenario: PNC Error for result code 1508
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions
@@ -28,4 +29,16 @@ Feature: {113b} BR7 R5.1-RCD422-Breach of Suspended Sentence-Order to Continue
 		When I open the record for "TOCONTINUEB ORDER"
 			And I click the "PNC Errors" tab
 		Then I see "I0001 - THE FOLLOWING ELEMENT(S) IN THE DIS SEGMENT CONTAIN INVALID DATA: DISPOSAL TYPE , DISPOSAL QUANTITY" in the "Error" row of the results table
+			And the PNC record has not been updated
+
+	@Could
+	@ExcludedOnPnc
+	Scenario: PNC Error for result code 1508
+		Given I am logged in as "supervisor"
+			And I view the list of exceptions
+		Then I see exception "HO100402" in the exception list table
+			And I see trigger "PR20 - Breach" in the exception list table
+		When I open the record for "TOCONTINUEB ORDER"
+			And I click the "PNC Errors" tab
+		Then I see "must be a valid disposal code" in the "Error" row of the results table
 			And the PNC record has not been updated

@@ -93,7 +93,8 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/000829C"
+      "courtCaseReference": "26/2576/000829C",
+      "subsequentAppearances": []
     }
   ],
   "remands": []
