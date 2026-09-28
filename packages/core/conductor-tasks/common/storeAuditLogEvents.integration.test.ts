@@ -151,8 +151,6 @@ describe("storeAuditLogEvents", () => {
     })
 
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
-    expect(result.logs?.map((l) => l.log)).toContain(
-      "InputData error: Expected string for auditLogEvents.0.eventSource"
-    )
+    expect(result.logs?.map((l) => l.log)).toContain("InputData error: Expected string for auditLogEvents.0.eventSource")
   })
 })
