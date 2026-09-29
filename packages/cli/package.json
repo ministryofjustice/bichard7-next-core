@@ -30,9 +30,9 @@
     "@types/cli-color": "^2.0.6",
     "@types/inquirer": "^9.0.10",
     "@types/jest": "^30.0.0",
-    "@types/node": "^26.4.1",
+    "@types/node": "^26.6.3",
     "jest": "^30.5.2",
-    "ts-jest": "^29.4.13",
+    "ts-jest": "^29.4.14",
     "ts-node": "^10.9.2",
     "typeorm": "^1.1.1"
   }
