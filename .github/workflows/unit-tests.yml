@@ -60,7 +60,9 @@ jobs:
           node-version-file: .nvmrc
 
       - name: ⛓️ SLSA Supply Chain Security
-        uses: ministryofjustice/devsecops-actions/sca/slsa@8c77d3a65a46d1d4b5416eafae5b84371ecd797d # v1.4.0
+        uses: ministryofjustice/devsecops-actions/sca/slsa@7dc13c20e2bf541b8a77fa1320a04983b18846f6 # v1.6.0
+        with:
+          security-patch-package-exclusion: '@moj-bichard7-developers/bichard7-next-data' # for release workflow
 
       - name: Install dependencies
         run: npm ci --ignore-scripts
@@ -84,7 +86,9 @@ jobs:
           node-version-file: .nvmrc
 
       - name: ⛓️ SLSA Supply Chain Security
-        uses: ministryofjustice/devsecops-actions/sca/slsa@8c77d3a65a46d1d4b5416eafae5b84371ecd797d # v1.4.0
+        uses: ministryofjustice/devsecops-actions/sca/slsa@7dc13c20e2bf541b8a77fa1320a04983b18846f6 # v1.6.0
+        with:
+          security-patch-package-exclusion: '@moj-bichard7-developers/bichard7-next-data' # for release workflow
 
       - name: Install dependencies
         run: npm ci --ignore-scripts
@@ -107,7 +111,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@1e31de5234b9f8995739874a8ce0492dc87873e2 # v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup node version
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
@@ -115,7 +119,9 @@ jobs:
           node-version-file: .nvmrc
 
       - name: ⛓️ SLSA Supply Chain Security
-        uses: ministryofjustice/devsecops-actions/sca/slsa@8c77d3a65a46d1d4b5416eafae5b84371ecd797d # v1.4.0
+        uses: ministryofjustice/devsecops-actions/sca/slsa@7dc13c20e2bf541b8a77fa1320a04983b18846f6 # v1.6.0
+        with:
+          security-patch-package-exclusion: '@moj-bichard7-developers/bichard7-next-data' # for release workflow
 
       - name: Install dependencies
         run: npm ci --ignore-scripts
@@ -137,7 +143,7 @@ jobs:
           TZ: "Europe/London"
 
       - name: Publish Cypress Test Report
-        uses: dorny/test-reporter@31a54ee7ebcacc03a09ea97a7e5465a47b84aea5 # v1.9.1
+        uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
         if: always()
         with:
           name: UI Component Tests               

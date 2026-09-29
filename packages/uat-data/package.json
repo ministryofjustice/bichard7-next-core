@@ -4,8 +4,7 @@
   "description": "Sample data to seed to an environment to user acceptance testing",
   "scripts": {
     "build": "npx tsc --noEmit --skipLibCheck",
-    "lint": "eslint --fix .",
-    "update-deps": "ncu -u --cooldown 3d -x eslint && npm install"
+    "lint": "eslint --fix ."
   },
   "license": "MIT",
   "lint-staged": {
