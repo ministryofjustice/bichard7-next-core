@@ -14,6 +14,7 @@ import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 import fetchCase from "../../../services/db/cases/fetchCase"
 import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import createForceOwner from "../../createForceOwner"
+import applyAmendmentsToAho from "./applyAmendmentsToAho"
 
 export const amendCourtCase = async (
   amendments: Partial<Amendments>,
@@ -55,10 +56,10 @@ export const amendCourtCase = async (
         ahoResult.AnnotatedHearingOutcome.HearingOutcome.Case.ForceOwner = organisationUnitCodes
       }
 
-      // const updatedAho = applyAmendmentsToAho(amendments, ahoResult)
-      // if (isError(updatedAho)) {
-      //   return updatedAho
-      // }
+      const updatedAho = applyAmendmentsToAho(amendments, ahoResult)
+      if (isError(updatedAho)) {
+        return updatedAho
+      }
 
       // const updateResult = await updateCourtCaseAho(dataSource, courtCase.errorId, updatedAho)
       // if (isError(updateResult)) {
