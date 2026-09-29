@@ -18,16 +18,12 @@ const mapOffence = async (offence: AdditionalOffence | Offence, offenceIndex: nu
   const offenceEndDateTime = offence.offenceEndDate ? `${offence.offenceEndDate}${offenceEndTime}` : undefined
 
   const disposalResults = offence.disposalResults.map((disposalResult, disposalIndex) => ({
-    Disposal: `#${disposalIndex + 1}`,
+    "Disposal result": `#${disposalIndex + 1}`,
     "Disposal code": getResultCodeDetails(disposalResult.disposalCode),
     "Disposal text": sensitive(disposalResult.disposalText),
     "Effective date": disposalResult.disposalEffectiveDate,
-    Fine: disposalResult.disposalFine
-      ? `${disposalResult.disposalFine.amount} ${disposalResult.disposalFine.units}`
-      : undefined,
-    Duration: disposalResult.disposalDuration
-      ? `${disposalResult.disposalDuration.count} ${disposalResult.disposalDuration.units}`
-      : undefined,
+    Fine: disposalResult.disposalFine ? `£${disposalResult.disposalFine.amount}` : undefined,
+    Duration: disposalResult.disposalDuration ? `£${disposalResult.disposalDuration.count}` : undefined,
     Qualifiers: disposalResult.disposalQualifiers,
     "Qualifier duration": disposalResult.disposalQualifierDuration
       ? `${disposalResult.disposalQualifierDuration.count} ${disposalResult.disposalQualifierDuration.units}`
@@ -37,9 +33,9 @@ const mapOffence = async (offence: AdditionalOffence | Offence, offenceIndex: nu
   return {
     Offence: `#${offenceIndex + 1}`,
     "Court offence sequence number": offence.courtOffenceSequenceNumber,
-    Code: offenceCode,
+    Code: await getOffenceCodeDetails(offenceCode),
     Description: sensitive(additionalOffence.offenceDescription),
-    "Number of offences taken into consideration (TIC)": offence.offenceTic,
+    "Number of offences taken into consideration (TIC)": offence.offenceTic || undefined,
     "Start date and time": offenceStartDateTime,
     "End date and time": offenceEndDateTime,
     "Role qualifiers": offence.roleQualifiers,

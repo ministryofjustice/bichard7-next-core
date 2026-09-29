@@ -158,9 +158,9 @@ const mapSpi = async (s3Client: S3Client, s3Path: string, receivedDate: string, 
       Gender: sensitive(await getGenderDetails(individualDefendant.PersonDefendant.BasePersonDetails.Gender)),
       "Date of birth": sensitive(individualDefendant.PersonDefendant.BasePersonDetails.Birthdate),
       "Present at hearing": individualDefendant.PresentAtHearing,
-      "Bail conditions": individualDefendant.PersonDefendant.BailConditions,
+      "Bail conditions": sensitive(individualDefendant.PersonDefendant.BailConditions, true),
       "Bail status": getRemandStatusBySpiCode(individualDefendant.BailStatus),
-      "Reason for bail conditions or custody": individualDefendant.ReasonForBailConditionsOrCustody
+      "Reason for bail conditions or custody": sensitive(individualDefendant.ReasonForBailConditionsOrCustody, true)
     }
   }
 

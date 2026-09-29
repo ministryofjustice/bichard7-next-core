@@ -172,6 +172,14 @@ const findAuditLogsByPtiUrn = async (ptiUrn: string) => {
     throw result
   }
 
+  if ((result.Items?.length ?? 0) > 20) {
+    console.log(
+      `${textStyle.fg.red}${textStyle.bold}Too many cases found for PTIURN ${ptiUrn} (Total cases: ${result.Items?.length ?? 0})${textStyle.reset}`
+    )
+
+    return []
+  }
+
   return (result.Items ?? [])
     .map((item) => ({
       messageId: item.messageId.S!,

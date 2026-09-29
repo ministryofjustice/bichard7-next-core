@@ -81,7 +81,7 @@ const mapQuery = async (
       return {
         "Court case": `#${disposalIndex + 1}`,
         "Conviction date": disposal.convictionDate,
-        "Court case reference": disposal.courtCaseReference,
+        "Court case reference": sensitive(disposal.courtCaseReference),
         "Court case ID": disposal.courtCaseId && disposal.courtCaseId !== "-" ? disposal.courtCaseId : undefined,
         "Other TIC": disposal.otherTicTotal,
         "User reference": disposal.userReference,
