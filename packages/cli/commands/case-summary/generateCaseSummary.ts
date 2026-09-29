@@ -34,6 +34,7 @@ type FullGenerateCaseSummaryOptions = GenerateCaseSummaryOptions & {
   s3Path: string
   caseId: string
   receivedDate: string
+  messageIndex?: number
 }
 
 const workspace = process.env.WORKSPACE ?? "production"
@@ -147,8 +148,12 @@ const generateCaseSummaryByMessageId = async (
   output.summary = summary
 
   if (options?.doNotPrintSummary !== true) {
-    const line = `${textStyle.boldWhite}${"═".repeat(60)}${textStyle.reset}`
-    process.stdout.write([line, line].join("\n") + "\n\n")
+    if (options.messageIndex) {
+      const line = `${textStyle.fg.yellow}${textStyle.bold}${"═".repeat(60)}${textStyle.reset}`
+      const messageTitle = `${textStyle.fg.yellow}${textStyle.bold}→ Message ${options.messageIndex}${textStyle.reset}`
+      process.stdout.write([line, messageTitle, line].join("\n") + "\n\n")
+    }
+
     printSummary(summary.metadata)
     summary.events.forEach((event) => printSummary(event))
   }
@@ -212,13 +217,15 @@ const generateCaseSummary = async (
   if (options?.usePtiUrnToFindAllCases) {
     const auditLogs = await findAuditLogsByPtiUrn(auditLog.caseId)
     const result = []
+    let messageIndex = 1
     for (const record of auditLogs) {
       result.push(
         await generateCaseSummaryByMessageId(record.messageId, {
           ...(options ?? {}),
           s3Path: record.s3Path,
           receivedDate: record.receivedDate,
-          caseId: record.caseId
+          caseId: record.caseId,
+          messageIndex: messageIndex++
         })
       )
     }
