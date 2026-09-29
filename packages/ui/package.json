@@ -34,7 +34,6 @@
     "test:file": "jest --runInBand --workerThreads=true --testPathPatterns",
     "test:ui:e2e": "concurrently --kill-others --success first \"npm run start\" \"npm run cypress:run\"",
     "install:hooks": "./scripts/install-git-hooks.sh",
-    "update-deps": "ncu -u --cooldown 3d && npm install",
     "seed-data": "ts-node ./scripts/seed-data.ts",
     "zap": "./scripts/zap/zap-scan.sh"
   },
@@ -105,7 +104,6 @@
     "lodash.sample": "^4.2.1",
     "mocha": "^12.0.2",
     "mockdate": "^3.0.5",
-    "npm-check-updates": "^23.1.0",
     "pg-promise": "^12.7.1",
     "postgres": "^3.4.9",
     "sass": "^1.105.0",

@@ -17,9 +17,6 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version-file: '.nvmrc'
-        
-      - name: Print node version  
-        run: node -v
 
       - name: ⛓️ SLSA Supply Chain Security
         uses: ministryofjustice/devsecops-actions/sca/slsa@7dc13c20e2bf541b8a77fa1320a04983b18846f6 # v1.6.0
@@ -30,7 +27,22 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Update dependencies
-        run: npm run update-deps --workspaces
+        run: npm run update-deps
+
+      - name: Create pull request
+        id: cpr
+        uses: ./.github/actions/create-pull-request
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "auto/update-npm-deps"
+          commit_message: "Update npm dependencies"
+          pr_title: "Update npm dependencies"
+          update_type: "npm dependency updates"
+
+      - name: Check PR information
+        run: |
+          echo "PR #${{ steps.cpr.outputs.pull-request-number}}"
+          echo "${{ steps.cpr.outputs.pull-request-url }}"
 
       - name: Report Status
         if: failure()
@@ -52,18 +64,3 @@ jobs:
                         text: "Linked to Repo <${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
-
-      - name: Create pull request
-        id: cpr
-        uses: ./.github/actions/create-pull-request
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: "auto/update-npm-deps"
-          commit_message: "Update npm dependencies"
-          pr_title: "Update npm dependencies"
-          update_type: "npm dependency updates"
-
-      - name: Check PR information
-        run: |
-          echo "PR #${{ steps.cpr.outputs.pull-request-number}}"
-          echo "${{ steps.cpr.outputs.pull-request-url }}"

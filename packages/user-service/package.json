@@ -23,8 +23,7 @@
     "test:integration": "jest --testPathPatterns=\"integration\" --runInBand",
     "test:integration:update": "npm run test:integration -- -u",
     "test:file": "jest --runInBand --testPathPatterns",
-    "test:ui:e2e": "concurrently --kill-others --success first \"npm run start\" \"npm run cypress:run\"",
-    "update-deps": "ncu -u --cooldown 3d && npm install"
+    "test:ui:e2e": "concurrently --kill-others --success first \"npm run start\" \"npm run cypress:run\""
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^11.1.0",
@@ -72,7 +71,6 @@
     "jest": "^30.5.2",
     "jest-environment-jsdom": "^30.5.2",
     "lint-staged": "^17.5.1",
-    "npm-check-updates": "^23.1.0",
     "sass": "^1.105.0",
     "ts-jest": "^29.4.13",
     "ts-node": "^10.9.2",
