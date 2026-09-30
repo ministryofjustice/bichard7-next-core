@@ -19,8 +19,8 @@ const mapAddDisposalResults = async (
   return {
     metadata,
     "Conviction date": request.dateOfConviction,
-    "Court case reference": sensitive(request.courtCaseReference, true),
-    "Person URN": sensitive(request.longPersonUrn, true),
+    "Court case reference": sensitive(request.courtCaseReference),
+    "Person URN": sensitive(request.longPersonUrn),
     "Force owner": request.ownerCode,
     "Carried forward": request.carryForward
       ? {
