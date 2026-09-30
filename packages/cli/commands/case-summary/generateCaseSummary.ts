@@ -209,13 +209,15 @@ const fetchAuditLog = async (messageId: string) => {
 }
 
 const generateCaseSummary = async (
-  messageId: string,
+  messageIdOrPtiUrn: string,
   options?: GenerateCaseSummaryOptions
 ): Promise<GenerateCaseSummaryResult[]> => {
-  const auditLog = await fetchAuditLog(messageId)
+  const isMessageId = messageIdOrPtiUrn.length === 36
 
-  if (options?.usePtiUrnToFindAllCases) {
-    const auditLogs = await findAuditLogsByPtiUrn(auditLog.caseId)
+  const auditLog = isMessageId ? await fetchAuditLog(messageIdOrPtiUrn) : undefined
+
+  if (options?.usePtiUrnToFindAllCases || !isMessageId) {
+    const auditLogs = await findAuditLogsByPtiUrn(auditLog?.caseId ?? messageIdOrPtiUrn)
     const result = []
     let messageIndex = 1
     for (const record of auditLogs) {
@@ -233,8 +235,13 @@ const generateCaseSummary = async (
     return result
   }
 
+  if (!auditLog) {
+    console.log("Couldn't find audit log for message Id")
+    return []
+  }
+
   return [
-    await generateCaseSummaryByMessageId(messageId, {
+    await generateCaseSummaryByMessageId(messageIdOrPtiUrn, {
       ...(options ?? {}),
       s3Path: auditLog.s3Path!,
       receivedDate: auditLog.receivedDate,
