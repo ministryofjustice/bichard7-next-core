@@ -20,8 +20,8 @@ const mapSubsequentDisposalResults = async (
   return {
     metadata,
     "Reason for appearance": request.reasonForAppearance,
-    "Court case reference": sensitive(request.courtCaseReference, true),
-    "Person URN": sensitive(request.longPersonUrn, true),
+    "Court case reference": sensitive(request.courtCaseReference),
+    "Person URN": sensitive(request.longPersonUrn),
     "Force owner": request.ownerCode,
     "Appearance date": `${request.appearanceDate}`,
     Court:

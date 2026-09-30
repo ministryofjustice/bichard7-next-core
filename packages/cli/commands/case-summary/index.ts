@@ -11,7 +11,7 @@ export function caseSummary(): Command {
       "Generate a case summary report containing the SPI hearing outcome, Bichard query details, and update details"
     )
     .usage("<message-id>")
-    .addArgument(new Argument("<message-id>", "Bichard's message ID of the case"))
+    .addArgument(new Argument("<message-id or ptiurn>", "Bichard's message ID or PTIURN of the case"))
     .option("--redact-sensitive", "Removes the sensitive data from the summary")
     .option("--find-all-by-ptiurn", "Generates the summary for all cases sharing the same PTIURN as the passed message")
     .action(async (messageId, options) => {
