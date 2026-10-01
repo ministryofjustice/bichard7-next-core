@@ -64,6 +64,7 @@ export const setupLegacySteps = () => {
   })
   When("I match the offence to PNC offence {string}", legacy.matchOffence)
   When("I match the offence to PNC offence {string} in case {string}", legacy.matchOffenceAndCcr)
+  When("I match the offence to relevant PNC offence", legacy.matchRelevantOffence)
   When("I match the offence as Added In Court", () => {})
   When("I prepend {string} with {string}", legacy.correctOffenceFreeTextException)
   When("I wait for {string} in the list of records", legacy.waitForRecordStep)

@@ -25,7 +25,7 @@ Feature: {130} BR7 R5.1-RCD411-Offence Matching-Start-End-Dates Match
 		When I open the record for "STARTENDDATES OFFENCEMATCH"
 			And I click the "Offences" tab
 			And I view offence "1"
-			And I match the offence to PNC offence "2"
+			And I match the offence to relevant PNC offence
 			And I return to the offence list
 			And I view offence "4"
 			And I match the offence as Added In Court

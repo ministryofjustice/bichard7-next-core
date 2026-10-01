@@ -590,6 +590,34 @@ export const matchOffenceAndCcr = async function (this: Bichard, sequenceNumber:
   await correctOffenceException.bind(this)("Court Case Ref", ccr)
 }
 
+export const matchRelevantOffence = async function (this: Bichard) {
+  const offenceCode = await this.browser.page.$eval(
+    "#br7_exception_details_court_data_table .resultsTable tbody tr td:nth-child(2)",
+    (el) => el.textContent.trim()
+  )
+
+  const pncRows = await this.browser.page.$$("#br7_exception_details_pnc_data_table .resultsTable tbody tr")
+  let targetValue = undefined
+
+  for (let i = 0; i < pncRows.length; i++) {
+    const firstTdText = await pncRows[i].$eval("td:nth-child(1)", (el) => el.textContent.trim())
+    const secondTdText = await pncRows[i].$eval("td:nth-child(2)", (el) => el.textContent.trim())
+
+    if (firstTdText === "CJS Code" && secondTdText === offenceCode) {
+      const targetRowIndex = i + 4
+      targetValue = await pncRows[targetRowIndex].$eval("td:nth-child(2)", (el) => el.textContent.trim())
+
+      break
+    }
+  }
+
+  if (!targetValue) {
+    return
+  }
+
+  await correctOffenceException.bind(this)("Sequence Number", targetValue.replace(/^0+/, ""))
+}
+
 export const correctOffenceFreeTextException = async function (this: Bichard, field: string, newValue: string) {
   await this.browser.page.$$("#br7_exception_details_court_data_table .resultsTable tbody tr").then((rows) =>
     rows.map((row) =>
