@@ -24,6 +24,7 @@
       - 0.4.0 changed to module type
   - fast-xml-parser
     - Breaks above 5.7.2 due to encoding issues. Does not follow semver
+  - eslint-plugin-cypress (flagging up new errors that we will fix when we bump to Cypress v16)
 */
 
 const pinned = new Set([
@@ -45,7 +46,8 @@ const ignored = new Set([
   "http-status",
   "@typescript-eslint/eslint-plugin",
   "cypress-circleci-reporter",
-  "fast-xml-parser"
+  "fast-xml-parser",
+  "eslint-plugin-cypress"
 ])
 
 module.exports = {
