@@ -38,18 +38,18 @@
   },
   "homepage": "https://github.com/ministryofjustice/bichard7-next-tests#readme",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1140.0",
-    "@aws-sdk/lib-storage": "^3.1140.0",
+    "@aws-sdk/client-s3": "^3.1141.0",
+    "@aws-sdk/lib-storage": "^3.1141.0",
     "@babel/core": "^8.0.6",
     "@babel/preset-env": "^8.0.6",
     "@cucumber/cucumber": "^9.5.1",
     "@cucumber/pretty-formatter": "^1.0.1",
     "@faker-js/faker": "^10.6.0",
     "@io-orkes/conductor-javascript": "^4.0.0",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.427",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.428",
     "@types/jest": "^30.0.0",
     "axios": "^1.20.0",
-    "csv-parse": "^7.0.2",
+    "csv-parse": "^7.0.3",
     "date-fns": "^4.4.0",
     "expect": "^30.5.2",
     "fast-xml-parser": "5.7.2",
@@ -65,7 +65,7 @@
     "puppeteer-mass-screenshots": "^1.0.15",
     "stompit": "^1.0.0",
     "tiny-glob": "^0.2.9",
-    "ts-jest": "^29.4.13",
+    "ts-jest": "^29.4.14",
     "ts-node": "^10.9.2",
     "zod": "^4.6.5"
   },
@@ -75,13 +75,13 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash.merge": "^4.6.9",
     "@types/lodash.orderby": "^4.6.9",
-    "@types/node": "^26.4.1",
+    "@types/node": "^26.6.3",
     "@types/nunjucks": "^3.2.6",
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
     "gherkin-lint": "^4.2.4",
     "husky": "^9.1.7",
-    "lint-staged": "^17.5.1"
+    "lint-staged": "^17.6.0"
   },
   "lint-staged": {
     "*.js": [

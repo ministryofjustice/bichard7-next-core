@@ -1,4 +1,4 @@
-const pinned = new Set(["cookie", "word-list"])
+const pinned = new Set(["cookie", "word-list", "cypress"])
 const ignored = new Set(["cypress-circleci-reporter", "raw-body"])
 
 module.exports = {

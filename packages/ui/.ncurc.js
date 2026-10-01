@@ -6,6 +6,7 @@
     - v5 contains breaking changes
   - undici
     - v6 supports node v20. Higher versions need > node v20
+  - cypress (pinning as we need to fix linting errors when upgrading)
 
   Ignored:
     - cypress-circleci-reporter
@@ -14,7 +15,7 @@
       - v4 breaks our CI
 */
 
-const pinned = new Set(["cookie", "cookies-next", "undici"])
+const pinned = new Set(["cookie", "cookies-next", "undici", "cypress"])
 const ignored = new Set(["cypress-circleci-reporter", "raw-body"])
 
 module.exports = {
