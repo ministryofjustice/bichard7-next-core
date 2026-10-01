@@ -7,25 +7,23 @@ import Permission from "@moj-bichard7/common/types/Permission"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import { isError } from "lodash"
 
-import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
-import type { ApiAuditLogEvent } from "../../../types/AuditLogEvent"
 import type { WritableDatabaseConnection } from "../../../types/DatabaseGateway"
 
 import fetchCase from "../../../services/db/cases/fetchCase"
+import insertNotes from "../../../services/db/cases/insertNotes"
 import { NotAllowedError } from "../../../types/errors/NotAllowedError"
 import createForceOwner from "../../createForceOwner"
 import applyAmendmentsToAho from "./applyAmendmentsToAho"
+import { updateCourtCaseAho } from "./updateCourtCaseAho"
+import getSystemNotes from "./utils/getSystemNotes"
 
 export const amendCourtCase = async (
   amendments: Partial<Amendments>,
-  auditLogGateway: AuditLogDynamoGateway,
   caseId: number,
   database: WritableDatabaseConnection,
   logger: FastifyBaseLogger,
   user: User
 ): PromiseResult<void> => {
-  const auditLogEvents: ApiAuditLogEvent[] = []
-
   if (!userAccess(user)[Permission.Exceptions]) {
     return new NotAllowedError()
   }
@@ -61,10 +59,10 @@ export const amendCourtCase = async (
         return updatedAho
       }
 
-      // const updateResult = await updateCourtCaseAho(dataSource, courtCase.errorId, updatedAho)
-      // if (isError(updateResult)) {
-      //   return updateResult
-      // }
+      const updateResult = await updateCourtCaseAho(tx, caseId, updatedAho)
+      if (isError(updateResult)) {
+        return updateResult
+      }
 
       const updatedCourtCase = await fetchCase(tx, user, caseId, logger)
       if (isError(updatedCourtCase)) {
@@ -72,16 +70,17 @@ export const amendCourtCase = async (
       }
 
       if (!updatedCourtCase) {
-        return Error(`Couldn't find the court case id ${courtCase.errorId}`)
+        return Error(`Couldn't find the court case id ${caseId}`)
       }
 
-      // Get system notes and convert to strings insertNotes(databases, notesToStrings, userDetails.username, caseId)
-      // const addNoteResult = await insertNotes(database, getSystemNotes(amendments, userDetails, courtCase.errorId))
-      // if (isError(addNoteResult)) {
-      //   return addNoteResult
-      // }
+      const systemNotes = getSystemNotes(amendments, user.username)
+      const addNoteResult = await insertNotes(tx, systemNotes, "System", caseId)
+      if (isError(addNoteResult)) {
+        return addNoteResult
+      }
 
-      return updatedCourtCase
+      // The original endpoint returns the case, do we need to do that?
+      // return updatedCourtCase
     })
     .catch((error: Error) => error)
 }

@@ -8,7 +8,6 @@ import { isError } from "@moj-bichard7/common/types/Result"
 import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "http-status"
 import z from "zod"
 
-import type { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
 import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
 import auth from "../../../../server/schemas/auth"
@@ -25,7 +24,6 @@ import { amendCourtCase } from "../../../../useCases/cases/amendments/amendCourt
 
 type HandlerProps = {
   amendments: Partial<Amendments>
-  auditLogGateway: AuditLogDynamoGateway
   caseId: number
   database: DatabaseGateway
   logger: FastifyBaseLogger
@@ -50,15 +48,8 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ amendments, auditLogGateway, caseId, database, logger, reply, user }: HandlerProps) => {
-  const amendCourtCaseResult = await amendCourtCase(
-    amendments,
-    auditLogGateway,
-    caseId,
-    database.writable,
-    logger,
-    user
-  )
+const handler = async ({ amendments, caseId, database, logger, reply, user }: HandlerProps) => {
+  const amendCourtCaseResult = await amendCourtCase(amendments, caseId, database.writable, logger, user)
 
   if (isError(amendCourtCaseResult)) {
     reply.log.error(amendCourtCaseResult)
@@ -81,7 +72,6 @@ const route = async (fastify: FastifyInstance) => {
   useZod(fastify).post(V1.CaseAmendments, { schema }, async (req, reply) => {
     await handler({
       amendments: req.body.amendments,
-      auditLogGateway: req.auditLogGateway,
       caseId: Number(req.params.caseId),
       database: req.database,
       logger: req.log,
