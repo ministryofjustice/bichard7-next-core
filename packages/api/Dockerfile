@@ -12,6 +12,7 @@ WORKDIR /core
 
 COPY package*.json ./
 COPY packages/common/package.json ./packages/common/package.json
+COPY packages/core/package.json ./packages/core/package.json
 COPY packages/api/package.json ./packages/api/package.json
 
 RUN npm ci --ignore-scripts --no-audit \
@@ -28,6 +29,7 @@ COPY --from=deps ./core ./
 
 COPY tsconfig*.json ./
 COPY packages/common ./packages/common
+COPY packages/core ./packages/core
 COPY packages/api ./packages/api
 
 RUN npm run build:api
@@ -65,6 +67,10 @@ COPY --from=builder /core/node_modules ./node_modules
 COPY --from=builder /core/packages/common/package.json ./packages/common/package.json
 COPY --from=builder /core/packages/common/dist ./packages/common/dist
 COPY --from=builder /core/packages/common/node_modules ./packages/common/node_modules
+
+COPY --from=builder /core/packages/core/package.json ./packages/core/package.json
+COPY --from=builder /core/packages/core/dist ./packages/core/dist
+COPY --from=builder /core/packages/core/node_modules ./packages/core/node_modules
 
 COPY --from=builder /core/packages/api/dist ./packages/api/dist
 COPY --from=builder /core/packages/api/node_modules ./packages/api/node_modules
