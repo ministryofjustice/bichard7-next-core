@@ -21,17 +21,17 @@ import amendResultQualifierCode from "./utils/amendResultQualifierCode"
 import amendResultVariableText from "./utils/amendResultVariableText"
 import removeEmptyResultQualifierVariable from "./utils/removeEmptyResultQualifierVariable"
 
-jest.mock("utils/amendAsn")
-jest.mock("utils/amendOffenceReasonSequence")
-jest.mock("utils/amendCourtCaseReference")
-jest.mock("utils/amendResultQualifierCode")
-jest.mock("utils/amendNextResultSourceOrganisation")
-jest.mock("utils/amendNextHearingDate")
-jest.mock("utils/amendResultVariableText")
-jest.mock("utils/amendCourtReference")
-jest.mock("utils/amendCourtOffenceSequenceNumber")
-jest.mock("utils/amendForceOwner")
-jest.mock("utils/removeEmptyResultQualifierVariable")
+jest.mock("./utils/amendAsn")
+jest.mock("./utils/amendOffenceReasonSequence")
+jest.mock("./utils/amendCourtCaseReference")
+jest.mock("./utils/amendResultQualifierCode")
+jest.mock("./utils/amendNextResultSourceOrganisation")
+jest.mock("./utils/amendNextHearingDate")
+jest.mock("./utils/amendResultVariableText")
+jest.mock("./utils/amendCourtReference")
+jest.mock("./utils/amendCourtOffenceSequenceNumber")
+jest.mock("./utils/amendForceOwner")
+jest.mock("./utils/removeEmptyResultQualifierVariable")
 
 describe("applyAmendmentsToAho", () => {
   let aho: AnnotatedHearingOutcome
