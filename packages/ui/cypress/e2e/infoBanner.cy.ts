@@ -15,10 +15,12 @@ describe("infoBanner", () => {
   const doNotWait = false
   const wait = true
 
-  const visitWithBannerDate = (url: string, date: string, wait: boolean = false) => {
+  const visitWithBannerDate = (url: string, date: string, wait: boolean = false, forcesVisibleTo: string[] = []) => {
     cy.visit(url, {
       onBeforeLoad(window) {
         window.TEST_INFO_BANNER_FIRST_SHOWN = date
+        window.TEST_INFO_BANNER_LIFESPAN_DAYS = 5
+        window.TEST_INFO_BANNER_FORCES_VISIBLE_TO = forcesVisibleTo
       }
     })
 
@@ -100,6 +102,8 @@ describe("infoBanner", () => {
     cy.visit("/bichard", {
       onBeforeLoad(win) {
         win.TEST_INFO_BANNER_FIRST_SHOWN = firstShownDateYesterday.toISOString()
+        win.TEST_INFO_BANNER_FORCES_VISIBLE_TO = []
+        win.TEST_INFO_BANNER_LIFESPAN_DAYS = 5
         win.localStorage.setItem("infoBannerLastClosed", firstShownDateYesterday.toISOString())
       }
     })
@@ -185,6 +189,18 @@ describe("infoBanner", () => {
     visitWithBannerDate("/bichard", futureFirstShownDate.toISOString(), wait)
 
     cy.get("h2")
+    cy.get(".info-banner").should("not.exist")
+  })
+
+  it("appears for the current user when forcesVisibleTo contains their force", () => {
+    cy.loginAs("GeneralHandler")
+    visitWithBannerDate("/bichard", new Date().toISOString(), false, ["001"])
+    cy.get(".info-banner").should("exist")
+  })
+
+  it("is hidden for the current user when forcesVisibleTo is not empty, but doesn't contain their force", () => {
+    cy.loginAs("GeneralHandler")
+    visitWithBannerDate("/bichard", new Date().toISOString(), false, ["050"])
     cy.get(".info-banner").should("not.exist")
   })
 })
