@@ -15,7 +15,12 @@ export const REALLOCATE_CASE_TRIGGER_CODE = TriggerCode.TRPR0028
 export const OUT_OF_AREA_TRIGGER_CODE = TriggerCode.TRPR0027
 export const SWITCHING_FEEDBACK_FORM_FREQUENCY_IN_HOURS = 3
 export const COOKIES_SECURE_OPTION = (process.env.COOKIES_SECURE ?? "true") === "true"
-export const INFO_BANNER_FIRST_SHOWN = bannerFirstShownDate()
+export const INFO_BANNER_FIRST_SHOWN = bannerFirstShownDate(new Date("2026-10-13"))
+export const INFO_BANNER_FORCES_VISIBLE_TO: string[] = ["044", "030", "050", "032", "010"]
+export const INFO_BANNER_MESSAGE_NEW_FEATURES_AVAILABLE = "There are new features available on new Bichard."
+export const INFO_BANNER_MESSAGE_NEW_UI_SWITCH_OVER =
+  "Old Bichard7 is no longer available for your force. Thanks for helping us move to the new system"
+export const INFO_BANNER_LIFESPAN_DAYS = 1
 export const IS_AUDIT_PAGE_ACCESSIBLE = true // !isProduction
 
 export const API_LOCATION = process.env.API_URL ?? "https://localhost:3333"

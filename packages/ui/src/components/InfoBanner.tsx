@@ -1,16 +1,23 @@
+import { INFO_BANNER_FORCES_VISIBLE_TO, INFO_BANNER_LIFESPAN_DAYS } from "@/config"
 import { addDays, format, isAfter, isFuture } from "date-fns"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { Banner, CloseButton } from "./InfoBanner.styles"
 import { LocalStorageKey } from "types/Ui"
+import { Banner, CloseButton } from "./InfoBanner.styles"
 
 interface Props {
   firstShownDate: Date | undefined
   message: string
   href: string
+  visibleForces: string[]
 }
 
-const InfoBanner = ({ message, firstShownDate, href }: Props) => {
+function hasNoForcesInCommon(visibleForces: string[]): boolean {
+  const set1 = new Set(visibleForces)
+  return !INFO_BANNER_FORCES_VISIBLE_TO.some((item) => set1.has(item))
+}
+
+const InfoBanner = ({ message, firstShownDate, href, visibleForces }: Props) => {
   const [visible, setVisible] = useState(false)
   const [mounted, setMounted] = useState(false)
 
@@ -21,10 +28,12 @@ const InfoBanner = ({ message, firstShownDate, href }: Props) => {
       return
     }
 
-    const bannerLifespanDays = 5
+    if (INFO_BANNER_FORCES_VISIBLE_TO?.length > 0 && hasNoForcesInCommon(visibleForces)) {
+      return
+    }
 
     const bannerShownInFuture = isFuture(firstShownDate)
-    const bannerExpired = isAfter(new Date(), addDays(firstShownDate, bannerLifespanDays))
+    const bannerExpired = isAfter(new Date(), addDays(firstShownDate, INFO_BANNER_LIFESPAN_DAYS))
 
     if (bannerShownInFuture || bannerExpired) {
       return

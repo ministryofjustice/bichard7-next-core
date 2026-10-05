@@ -1,9 +1,10 @@
 import Permission from "@moj-bichard7/common/types/Permission"
-import { IS_AUDIT_PAGE_ACCESSIBLE, INFO_BANNER_FIRST_SHOWN } from "config"
+import { INFO_BANNER_FIRST_SHOWN, INFO_BANNER_MESSAGE_NEW_UI_SWITCH_OVER, IS_AUDIT_PAGE_ACCESSIBLE } from "config"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
+import { NavLink } from "types/NavLinks"
 import { LocalStorageKey, Ui } from "types/Ui"
 import { LinkButton } from "./Buttons/LinkButton"
 import Header from "./Header"
@@ -12,7 +13,6 @@ import { Banner, CrownContainer } from "./Layout.styles"
 import NavBar from "./NavBar"
 import PageTemplate from "./PageTemplate"
 import PhaseBanner from "./PhaseBanner"
-import { NavLink } from "types/NavLinks"
 
 interface BichardSwitchProps {
   href: string
@@ -86,8 +86,9 @@ const Layout = ({
 
         <InfoBanner
           firstShownDate={INFO_BANNER_FIRST_SHOWN}
-          message={"There are new features available on new Bichard."}
+          message={INFO_BANNER_MESSAGE_NEW_UI_SWITCH_OVER}
           href={NavLink.WhatsNew}
+          visibleForces={currentUser.visibleForces}
         />
 
         {children}
