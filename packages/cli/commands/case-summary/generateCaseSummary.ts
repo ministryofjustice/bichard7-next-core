@@ -34,6 +34,7 @@ type FullGenerateCaseSummaryOptions = GenerateCaseSummaryOptions & {
   s3Path: string
   caseId: string
   receivedDate: string
+  messageIndex?: number
 }
 
 const workspace = process.env.WORKSPACE ?? "production"
@@ -147,8 +148,12 @@ const generateCaseSummaryByMessageId = async (
   output.summary = summary
 
   if (options?.doNotPrintSummary !== true) {
-    const line = `${textStyle.boldWhite}${"═".repeat(60)}${textStyle.reset}`
-    process.stdout.write([line, line].join("\n") + "\n\n")
+    if (options.messageIndex) {
+      const line = `${textStyle.fg.yellow}${textStyle.bold}${"═".repeat(60)}${textStyle.reset}`
+      const messageTitle = `${textStyle.fg.yellow}${textStyle.bold}→ Message ${options.messageIndex}${textStyle.reset}`
+      process.stdout.write([line, messageTitle, line].join("\n") + "\n\n")
+    }
+
     printSummary(summary.metadata)
     summary.events.forEach((event) => printSummary(event))
   }
@@ -170,6 +175,14 @@ const findAuditLogsByPtiUrn = async (ptiUrn: string) => {
   const result = await dynamoDbClient.send(command).catch((error: Error) => error)
   if (result instanceof Error) {
     throw result
+  }
+
+  if ((result.Items?.length ?? 0) > 20) {
+    console.log(
+      `${textStyle.fg.red}${textStyle.bold}Too many cases found for PTIURN ${ptiUrn} (Total cases: ${result.Items?.length ?? 0})${textStyle.reset}`
+    )
+
+    return []
   }
 
   return (result.Items ?? [])
@@ -196,21 +209,25 @@ const fetchAuditLog = async (messageId: string) => {
 }
 
 const generateCaseSummary = async (
-  messageId: string,
+  messageIdOrPtiUrn: string,
   options?: GenerateCaseSummaryOptions
 ): Promise<GenerateCaseSummaryResult[]> => {
-  const auditLog = await fetchAuditLog(messageId)
+  const isMessageId = messageIdOrPtiUrn.length === 36
 
-  if (options?.usePtiUrnToFindAllCases) {
-    const auditLogs = await findAuditLogsByPtiUrn(auditLog.caseId)
+  const auditLog = isMessageId ? await fetchAuditLog(messageIdOrPtiUrn) : undefined
+
+  if (options?.usePtiUrnToFindAllCases || !isMessageId) {
+    const auditLogs = await findAuditLogsByPtiUrn(auditLog?.caseId ?? messageIdOrPtiUrn)
     const result = []
+    let messageIndex = 1
     for (const record of auditLogs) {
       result.push(
         await generateCaseSummaryByMessageId(record.messageId, {
           ...(options ?? {}),
           s3Path: record.s3Path,
           receivedDate: record.receivedDate,
-          caseId: record.caseId
+          caseId: record.caseId,
+          messageIndex: messageIndex++
         })
       )
     }
@@ -218,8 +235,13 @@ const generateCaseSummary = async (
     return result
   }
 
+  if (!auditLog) {
+    console.log("Couldn't find audit log for message Id")
+    return []
+  }
+
   return [
-    await generateCaseSummaryByMessageId(messageId, {
+    await generateCaseSummaryByMessageId(messageIdOrPtiUrn, {
       ...(options ?? {}),
       s3Path: auditLog.s3Path!,
       receivedDate: auditLog.receivedDate,

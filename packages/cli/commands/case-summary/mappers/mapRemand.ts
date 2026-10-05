@@ -5,14 +5,14 @@ import { getCourtDetailsByLjaCode } from "../utils/courtDetails"
 
 const mapRemand = (request: RemandRequest, errors: string[], timestamp: string, sensitive: SensitiveFn) => {
   const metadata: Metadata = {
-    title: `${errors.length > 0 ? "❌" : "✅"} Bichard Update: Add remand`,
+    title: `${errors.length > 0 ? "❌" : "✅"} Bichard Update: Add Remand`,
     timestamp: timestamp,
     errors
   }
 
   return {
     metadata,
-    "Person URN": sensitive(request.longPersonUrn, true),
+    "Person URN": sensitive(request.longPersonUrn),
     "Force owner": request.ownerCode,
     "Remand date": request.remandDate,
     "Appearance result": request.appearanceResult,

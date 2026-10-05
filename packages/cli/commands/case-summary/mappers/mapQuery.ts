@@ -72,8 +72,9 @@ const mapQuery = async (
     }
   }
 
+  const query = response as AsnQueryResponse
   const courtCases = await Promise.all(
-    (response as AsnQueryResponse).disposals.map(async (disposal, disposalIndex) => {
+    query.disposals.map(async (disposal, disposalIndex) => {
       const offences = await Promise.all(
         disposal.offences.map((offence, offenceIndex) => mapOffence(offence, offenceIndex, sensitive))
       )
@@ -81,7 +82,7 @@ const mapQuery = async (
       return {
         "Court case": `#${disposalIndex + 1}`,
         "Conviction date": disposal.convictionDate,
-        "Court case reference": disposal.courtCaseReference,
+        "Court case reference": sensitive(disposal.courtCaseReference),
         "Court case ID": disposal.courtCaseId && disposal.courtCaseId !== "-" ? disposal.courtCaseId : undefined,
         "Other TIC": disposal.otherTicTotal,
         "User reference": disposal.userReference,
@@ -96,6 +97,9 @@ const mapQuery = async (
 
   return {
     metadata,
+    "Person URN": sensitive(query.longPersonUrn),
+    "Person ID": sensitive(query.personId),
+    "Report ID": sensitive(query.reportId),
     "Court cases": courtCases
   }
 }
