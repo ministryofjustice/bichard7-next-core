@@ -87,8 +87,9 @@ const mapOffence = async (offence: SpiOffence, offenceIndex: number, sensitive: 
     "Court offence sequence number": offence.BaseOffenceDetails.OffenceSequenceNumber,
     Code: await getOffenceCodeDetails(offence.BaseOffenceDetails.OffenceCode),
     Title: sensitive(offence.BaseOffenceDetails.OffenceTitle),
+    "Offence description/wording": sensitive(offence.BaseOffenceDetails.OffenceWording),
     "Start date and time": `${offenceStart.OffenceDateStartDate}${offenceStart.OffenceStartTime ? ` ${offenceStart.OffenceStartTime}` : ""}`,
-    "Emd date and time": offenceEnd
+    "End date and time": offenceEnd
       ? `${offenceEnd.OffenceEndDate}${offenceEnd.OffenceEndTime ? ` ${offenceEnd.OffenceEndTime}` : ""}`
       : undefined,
     "Arrest date": offence.BaseOffenceDetails.ArrestDate,
