@@ -1,8 +1,6 @@
 declare global {
   interface Window {
     TEST_INFO_BANNER_FIRST_SHOWN?: string
-    TEST_INFO_BANNER_LIFESPAN_DAYS?: number
-    TEST_INFO_BANNER_FORCES_VISIBLE_TO?: string[]
   }
 }
 

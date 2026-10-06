@@ -1,4 +1,4 @@
-import { INFO_BANNER_FORCES_VISIBLE_TO, INFO_BANNER_LIFESPAN_DAYS } from "@/config"
+import { getInfoBannerForcesVisibleTo, INFO_BANNER_LIFESPAN_DAYS } from "@/config"
 import { addDays, format, isAfter, isFuture } from "date-fns"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -12,9 +12,12 @@ interface Props {
   visibleForces: string[]
 }
 
-function hasNoForcesInCommon(visibleForces: string[]): boolean {
-  const set1 = new Set(visibleForces)
-  return !INFO_BANNER_FORCES_VISIBLE_TO.some((item) => set1.has(item))
+function hasNoForcesThatShouldBeDisplayedTo(userForces: string[]): boolean {
+  if (getInfoBannerForcesVisibleTo().size === 0) {
+    return false
+  }
+
+  return !userForces.some((force) => getInfoBannerForcesVisibleTo().has(force))
 }
 
 const InfoBanner = ({ message, firstShownDate, href, visibleForces }: Props) => {
@@ -28,7 +31,7 @@ const InfoBanner = ({ message, firstShownDate, href, visibleForces }: Props) => 
       return
     }
 
-    if (INFO_BANNER_FORCES_VISIBLE_TO?.length > 0 && hasNoForcesInCommon(visibleForces)) {
+    if (hasNoForcesThatShouldBeDisplayedTo(visibleForces)) {
       return
     }
 
