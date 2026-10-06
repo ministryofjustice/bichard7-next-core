@@ -31,5 +31,11 @@ describe("infoBannerUtils", () => {
 
       expect(bannerForcesVisibleTo(visibleTo)).toBe(visibleTo)
     })
+
+    it("returns empty string when 'ALL' passed", () => {
+      const visibleTo = "ALL"
+
+      expect(bannerForcesVisibleTo(visibleTo)).toBe("")
+    })
   })
 })

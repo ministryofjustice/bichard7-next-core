@@ -23,9 +23,10 @@ export const bannerMessage = (message?: string): string | undefined => {
 }
 
 export const bannerForcesVisibleTo = (forcesVisibleTo: string): string => {
-  if (typeof window !== "undefined" && window.TEST_INFO_BANNER_FORCES_VISIBLE_TO) {
-    return window.TEST_INFO_BANNER_FORCES_VISIBLE_TO
-  }
+  const value =
+    typeof window !== "undefined" && window.TEST_INFO_BANNER_FORCES_VISIBLE_TO
+      ? window.TEST_INFO_BANNER_FORCES_VISIBLE_TO
+      : forcesVisibleTo
 
-  return forcesVisibleTo
+  return value === "ALL" ? "" : value
 }

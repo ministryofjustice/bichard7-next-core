@@ -199,6 +199,16 @@ describe("infoBanner", () => {
   })
 
   describe("Visible to forces", () => {
+    it("appears for the current user when forcesVisibleTo is empty", () => {
+      visitWithBannerParams("/bichard", new Date().toISOString(), true)
+      cy.get(".info-banner").should("exist")
+    })
+
+    it("appears for the current user when forcesVisibleTo is 'ALL'", () => {
+      visitWithBannerParams("/bichard", new Date().toISOString(), true, "ALL")
+      cy.get(".info-banner").should("exist")
+    })
+
     it("appears for the current user when forcesVisibleTo contains only their force", () => {
       visitWithBannerParams("/bichard", new Date().toISOString(), true, "01")
       cy.get(".info-banner").should("exist")
