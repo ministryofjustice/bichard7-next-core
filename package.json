@@ -104,6 +104,9 @@
     "typescript": "^6.0.3",
     "zod": "^4.6.5"
   },
+  "optionalDependencies": {
+    "@swc/core-linux-x64-gnu": "1.16.13"
+  },
   "overrides": {
     "@io-orkes/conductor-javascript": {
       "zod": "$zod"

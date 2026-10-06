@@ -64,14 +64,7 @@ commands:
             - v1-npm-deps-
       - run:
           name: Install Node Packages
-          command: |
-            npm ci --ignore-scripts --no-audit
-
-            # Run SWC postinstall directly if present (bypassing npm rebuild)
-            if [ -f node_modules/@swc/core/postinstall.js ]; then
-              echo "Initializing @swc/core native bindings..."
-              node node_modules/@swc/core/postinstall.js
-            fi
+          command: npm ci --ignore-scripts --no-audit --include=optional
       - save_cache:
           name: Save npm Cache
           key: v1-npm-deps-{{ checksum "package-lock.json" }}
