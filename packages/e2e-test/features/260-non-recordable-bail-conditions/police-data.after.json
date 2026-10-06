@@ -31,9 +31,7 @@
           "results": [
             {
               "disposalCode": "4011",
-              "disposalQualifierCodes": [
-                "BA"
-              ],
+              "disposalQualifierCodes": ["BA"],
               "effectiveDate": "2012-01-05"
             }
           ],
