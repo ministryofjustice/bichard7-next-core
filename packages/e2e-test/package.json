@@ -70,7 +70,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
-    "@swc/core": "^1.16.13",
+    "@swc/core": "1.16.2",
     "@swc/jest": "^0.2.39",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/lodash.merge": "^4.6.9",
