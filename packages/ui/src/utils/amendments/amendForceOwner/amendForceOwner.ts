@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import createForceOwner from "@moj-bichard7/common/utils/createForceOwner"
 import { isError } from "types/Result"
-import createForceOwner from "utils/createForceOwner"
 import { DEFAULT_STATION_CODE } from "./defaultStationCode"
 
 const amendForceOwner = (value: string, aho: AnnotatedHearingOutcome) => {

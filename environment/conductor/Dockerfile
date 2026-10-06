@@ -4,7 +4,7 @@ ARG CONDUCTOR_VERSION="v3.32.1"
 # ===========================================================================================================
 # 0. Source stage
 # ===========================================================================================================
-FROM alpine/git@sha256:a299a963fbe31628ab481ca42907bcf0691d004f86734c02638abdf513691d42 AS src
+FROM alpine/git@sha256:832b1cd1a271509f3d5272a1a62d4cb2ab1a53426ebde1f6c2cb7349f907dc6f AS src
 ARG CONDUCTOR_VERSION
 
 RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor
@@ -12,7 +12,7 @@ RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss
 # ===========================================================================================================
 # 1. UI Builder stage
 # ===========================================================================================================
-FROM node:24-alpine@sha256:e67514e5d0f6c46656005e1b693b2ec9d52e80b641307de684d4a015ba7a4eaf AS ui-builder
+FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS ui-builder
 
 COPY --from=src /conductor/ui /conductor/ui
 
@@ -26,19 +26,24 @@ RUN npm install --legacy-peer-deps --ignore-scripts --no-audit && \
 # ===========================================================================================================
 # 2. Java Builder stage
 # ===========================================================================================================
-FROM eclipse-temurin:21-jdk-jammy@sha256:ce5767b7222312d42395f5bab033cd91f09e44032a2f21bdfd7b5b912dbe1e77 AS builder
+FROM eclipse-temurin:21-jdk-jammy@sha256:6adefddd4a20bceef702cedb0b03952fcd7691f9c7ccffe27014992abc0b46bd AS builder
 
 COPY --from=src /conductor /conductor
 
 WORKDIR /conductor
 
 RUN printf '%s\n' \
-    'ext["tomcat.version"] = "10.1.55"' \
+    'ext["tomcat.version"] = "10.1.59"' \
     'subprojects {' \
     '    configurations.all {' \
     '        resolutionStrategy.eachDependency { d ->' \
     '            if (d.requested.group == "org.bouncycastle") {' \
     '                d.useVersion "1.84"' \
+    '                d.because "Fix CVE-2025-14813"' \
+    '            }' \
+    '            if (d.requested.group == "io.netty" && d.requested.version?.startsWith("4.1.")) {' \
+    '                d.useVersion "4.1.137.Final"' \
+    '                d.because "Fix CVE-2026-75595"' \
     '            }' \
     '        }' \
     '    }' \

@@ -1,7 +1,3 @@
-const semver = new RegExp(
-  /(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?/
-) // https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
-
 /*
   Pinned:
   - chalk
@@ -10,6 +6,11 @@ const semver = new RegExp(
     - changed the Change type to require extra values
   - undici
     - v6 supports node v20. Higher versions need > node v20
+  - eslint (Keep on v9 until ready for v10)
+  - eslint-plugin-perfectionist
+  - eslint-plugin-cypress (v7+ requires ESLint 10)
+  - eslint-plugin-mocha (v12+ requires ESLint 10)
+  - typescript
 
   Ignored:
   - p-limit
@@ -23,9 +24,21 @@ const semver = new RegExp(
       - 0.4.0 changed to module type
   - fast-xml-parser
     - Breaks above 5.7.2 due to encoding issues. Does not follow semver
+  - eslint-plugin-cypress (flagging up new errors that we will fix when we bump to Cypress v16)
 */
-const pinned = ["chalk", "@types/diff", "eslint", "eslint-plugin-perfectionist", "undici"]
-const ignored = [
+
+const pinned = new Set([
+  "chalk",
+  "@types/diff",
+  "eslint",
+  "eslint-plugin-perfectionist",
+  "eslint-plugin-cypress",
+  "eslint-plugin-mocha",
+  "undici",
+  "typescript"
+])
+
+const ignored = new Set([
   "p-limit",
   "esbuild",
   "@cucumber/cucumber",
@@ -33,23 +46,19 @@ const ignored = [
   "http-status",
   "@typescript-eslint/eslint-plugin",
   "cypress-circleci-reporter",
-  "fast-xml-parser"
-]
+  "fast-xml-parser",
+  "eslint-plugin-cypress"
+])
 
 module.exports = {
-  target: (package) => {
-    if (pinned.some((p) => new RegExp(`^${p}$`).test(package))) {
-      const res = "minor"
-      console.log(` ${package} is pinned to ${res} upgrades only (.ncurc.js)`)
-      return res
+  target: (pkg) => {
+    if (pinned.has(pkg)) {
+      console.log(` ${pkg} is pinned to minor upgrades only (.ncurc.js)`)
+      return "minor"
     }
     return "latest"
   },
-
-  filterResults: (package) => {
-    if (ignored.some((p) => new RegExp(`^${p}$`).test(package))) {
-      return
-    }
-    return true
+  reject: (pkg) => {
+    return ignored.has(pkg)
   }
 }

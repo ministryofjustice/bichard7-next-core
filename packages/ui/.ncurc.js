@@ -6,6 +6,7 @@
     - v5 contains breaking changes
   - undici
     - v6 supports node v20. Higher versions need > node v20
+  - cypress (pinning as we need to fix linting errors when upgrading)
 
   Ignored:
     - cypress-circleci-reporter
@@ -14,35 +15,18 @@
       - v4 breaks our CI
 */
 
-const pinned = ["cookie", "cookies-next", "undici"]
-const ignored = ["cypress-circleci-reporter", "raw-body"]
-const skipped = []
+const pinned = new Set(["cookie", "cookies-next", "undici", "cypress"])
+const ignored = new Set(["cypress-circleci-reporter", "raw-body"])
 
 module.exports = {
-  filter: (pkg) => {
-    if (ignored.some((ignore) => ignore === pkg)) {
-      return false
-    }
-
-    return true
-  },
-
   target: (pkg) => {
-    if (pinned.some((pin) => pin === pkg)) {
-      const res = "minor"
-      console.log(` ${pkg} is pinned to ${res} upgrades only (.ncurc.js)`)
-      return res
+    if (pinned.has(pkg)) {
+      console.log(` ${pkg} is pinned to minor upgrades only (.ncurc.js)`)
+      return "minor"
     }
     return "latest"
   },
-
-  filterResults: (pkg, { upgradedVersion }) => {
-    if (ignored.some((ignore) => ignore.pkg === pkg)) {
-      return false
-    }
-    if (skipped.some((skip) => skip.pkg === pkg && skip.version === upgradedVersion)) {
-      return false
-    }
-    return true
+  reject: (pkg) => {
+    return ignored.has(pkg)
   }
 }

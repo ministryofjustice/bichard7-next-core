@@ -25,7 +25,7 @@ export const NoteSchema = z.object({
   createdAt: dateLikeToDate,
   errorId: z.number(),
   noteId: z.number(),
-  noteText: z.string(),
+  noteText: z.string().trim().min(1, "Note text cannot be empty"),
   user: NoteUserSchema.optional(),
   userId: z.string()
 })
