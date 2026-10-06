@@ -67,10 +67,10 @@ commands:
           command: |
             npm ci --ignore-scripts --no-audit
 
-            # Only rebuild @swc/core if it is present in the dependency tree
-            if node -e "require.resolve('@swc/core/package.json')" >/dev/null 2>&1; then
-              echo "@swc/core detected. Rebuilding native bindings..."
-              npm rebuild @swc/core --workspaces --include-workspace-root
+            # Run SWC postinstall directly if present (bypassing npm rebuild)
+            if [ -f node_modules/@swc/core/postinstall.js ]; then
+              echo "Initializing @swc/core native bindings..."
+              node node_modules/@swc/core/postinstall.js
             fi
       - save_cache:
           name: Save npm Cache
