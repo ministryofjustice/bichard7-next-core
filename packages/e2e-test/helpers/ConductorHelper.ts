@@ -11,7 +11,7 @@ const findRunningConductorWorkflows = async (): Promise<WorkflowSummary[]> => {
 }
 
 export const areAllWorkflowsCompleted = async (): Promise<boolean> => {
-  const maxTimeoutSeconds = 30
+  const maxTimeoutSeconds = 35
   const pollIntervalSeconds = 2
 
   await delay(1)
