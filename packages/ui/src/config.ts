@@ -1,6 +1,6 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { formatForceEnvVariable } from "utils/forceNormalisation"
-import bannerFirstShownDate from "./utils/bannerFirstShownDate"
+import { bannerFirstShownDate, bannerForcesVisibleTo, bannerMessage } from "./utils/infoBannerUtils"
 
 const toBoolean = (val: number | string): boolean => val === "true" || val === "1" || val === 1
 
@@ -28,12 +28,15 @@ export const COOKIES_SECURE_OPTION = (process.env.COOKIES_SECURE ?? "true") === 
 export const INFO_BANNER_FIRST_SHOWN_DATE = bannerFirstShownDate(
   process.env.INFO_BANNER_FIRST_SHOWN_DATE ? parseDate(process.env.INFO_BANNER_FIRST_SHOWN_DATE) : undefined
 )
-export const INFO_BANNER_MESSAGE = process.env.INFO_BANNER_MESSAGE ?? "There are new features available on new Bichard."
+export const INFO_BANNER_MESSAGE = bannerMessage(
+  process.env.INFO_BANNER_MESSAGE ?? "There are new features available on new Bichard."
+)
 export const INFO_BANNER_LIFESPAN_DAYS = process.env.INFO_BANNER_LIFESPAN_DAYS
   ? Number(process.env.INFO_BANNER_LIFESPAN_DAYS)
   : 5
-export const getInfoBannerForcesVisibleTo = (): Set<string> =>
-  formatForceEnvVariable(process.env.INFO_BANNER_FORCES_VISIBLE_TO ?? "")
+export const INFO_BANNER_FORCES_VISIBLE_TO: Set<string> = formatForceEnvVariable(
+  bannerForcesVisibleTo(process.env.INFO_BANNER_FORCES_VISIBLE_TO ?? "")
+)
 
 export const IS_AUDIT_PAGE_ACCESSIBLE = true // !isProduction
 
