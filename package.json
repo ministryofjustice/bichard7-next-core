@@ -108,8 +108,5 @@
     "@io-orkes/conductor-javascript": {
       "zod": "$zod"
     }
-  },
-  "allowScripts": {
-    "@swc/core": true
   }
 }

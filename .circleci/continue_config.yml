@@ -64,7 +64,14 @@ commands:
             - v1-npm-deps-
       - run:
           name: Install Node Packages
-          command: npm ci --ignore-scripts --no-audit
+          command: |
+            npm ci --ignore-scripts --no-audit
+            
+            # Only rebuild @swc/core if it is present in the dependency tree
+            if node -e "require.resolve('@swc/core/package.json')" >/dev/null 2>&1; then
+              echo "@swc/core detected. Rebuilding native bindings..."
+              npm rebuild @swc/core --workspaces --include-workspace-root
+            fi
       - save_cache:
           name: Save npm Cache
           key: v1-npm-deps-{{ checksum "package-lock.json" }}
