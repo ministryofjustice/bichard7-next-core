@@ -66,7 +66,7 @@ commands:
           name: Install Node Packages
           command: |
             npm ci --ignore-scripts --no-audit
-            
+
             # Only rebuild @swc/core if it is present in the dependency tree
             if node -e "require.resolve('@swc/core/package.json')" >/dev/null 2>&1; then
               echo "@swc/core detected. Rebuilding native bindings..."
