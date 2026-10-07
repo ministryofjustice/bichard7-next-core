@@ -54,6 +54,10 @@ describe("infoBannerUtils", () => {
       it("returns false if message is undefined", () => {
         expect(shouldDisplayInfoBanner({ ...defaultParams, message: undefined })).toBe(false)
       })
+
+      it("returns true if message is provided", () => {
+        expect(shouldDisplayInfoBanner({ ...defaultParams })).toBe(true)
+      })
     })
 
     describe("Force filtering", () => {
