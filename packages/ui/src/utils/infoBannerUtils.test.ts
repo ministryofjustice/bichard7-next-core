@@ -1,6 +1,12 @@
 import { addDays, subDays } from "date-fns"
 import type { ShouldDisplayInfoBannerParams } from "./infoBannerUtils"
-import { bannerFirstShownDate, bannerForcesVisibleTo, bannerMessage, shouldDisplayInfoBanner } from "./infoBannerUtils"
+import {
+  bannerFirstShownDate,
+  bannerForcesVisibleTo,
+  bannerLifespan,
+  bannerMessage,
+  shouldDisplayInfoBanner
+} from "./infoBannerUtils"
 
 describe("infoBannerUtils", () => {
   describe("bannerFirstShownDate", () => {
@@ -34,6 +40,18 @@ describe("infoBannerUtils", () => {
       const visibleTo = "ALL"
 
       expect(bannerForcesVisibleTo(visibleTo)).toBe("")
+    })
+  })
+
+  describe("bannerLifespan", () => {
+    it("returns lifespan", () => {
+      const lifespan = 1
+
+      expect(bannerLifespan(lifespan)).toBe(lifespan)
+    })
+
+    it("returns undefined when called without arguments", () => {
+      expect(bannerLifespan()).toBeUndefined()
     })
   })
 
@@ -99,8 +117,12 @@ describe("infoBannerUtils", () => {
         jest.useRealTimers()
       })
 
-      it("returns false if firstShownDate is missing or undefined", () => {
+      it("returns false if firstShownDate is undefined", () => {
         expect(shouldDisplayInfoBanner({ ...defaultParams, firstShownDate: undefined })).toBe(false)
+      })
+
+      it("returns false if lifespan is undefined", () => {
+        expect(shouldDisplayInfoBanner({ ...defaultParams, lifespanDays: undefined })).toBe(false)
       })
 
       it("returns false when firstShownDate is in the future", () => {

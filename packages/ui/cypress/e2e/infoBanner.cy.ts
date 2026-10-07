@@ -1,6 +1,5 @@
 import { subDays } from "date-fns"
 import HO100206 from "../../test/test-data/HO100206.json"
-import { loginAndVisit } from "../support/helpers"
 
 describe("infoBanner", () => {
   beforeEach(() => {
@@ -12,21 +11,31 @@ describe("infoBanner", () => {
     cy.loginAs("GeneralHandler")
   })
 
-  const doNotWait = false
-  const wait = true
+  interface TestBannerParams {
+    url: string
+    date?: string
+    forcesVisibleTo?: string
+    message?: string
+    lifespanDays?: number
+    wait?: boolean
+  }
 
-  const visitWithBannerParams = (
-    url: string,
-    date: string,
-    wait: boolean = false,
-    forcesVisibleTo: string | undefined = undefined,
-    message: string | undefined = "Test message"
-  ) => {
+  const defaultBannerParams: TestBannerParams = {
+    url: "/bichard",
+    date: new Date().toISOString(),
+    forcesVisibleTo: "",
+    message: "Test message",
+    lifespanDays: 5,
+    wait: false
+  }
+
+  const visitWithBannerParams = ({ url, date, forcesVisibleTo, message, lifespanDays, wait }: TestBannerParams) => {
     cy.visit(url, {
       onBeforeLoad(window) {
         window.TEST_INFO_BANNER_FIRST_SHOWN = date
         window.TEST_INFO_BANNER_FORCES_VISIBLE_TO = forcesVisibleTo
-        window.TEST_INFO_BANNER_MESSAGE = message
+        window.TEST_INFO_BANNER_MESSAGE = message ?? undefined
+        window.TEST_INFO_BANNER_LIFESPAN = lifespanDays
       }
     })
 
@@ -37,10 +46,22 @@ describe("infoBanner", () => {
     }
   }
 
-  describe("Dates", () => {
+  describe("Dates and lifespan", () => {
     it("doesn't appear when first shown date is not set in config.ts", () => {
-      loginAndVisit()
+      cy.loginAs("GeneralHandler")
+      visitWithBannerParams({ ...defaultBannerParams, date: undefined })
+      cy.get(".info-banner").should("not.exist")
+    })
 
+    it("doesn't appear when lifespan is not set in config.ts", () => {
+      cy.loginAs("GeneralHandler")
+      visitWithBannerParams({ ...defaultBannerParams, lifespanDays: undefined })
+      cy.get(".info-banner").should("not.exist")
+    })
+
+    it("doesn't appear when lifespan is set to NaN in config.ts", () => {
+      cy.loginAs("GeneralHandler")
+      visitWithBannerParams({ ...defaultBannerParams, lifespanDays: NaN })
       cy.get(".info-banner").should("not.exist")
     })
 
@@ -49,39 +70,39 @@ describe("infoBanner", () => {
 
       const fourDaysAgo = new Date()
       fourDaysAgo.setDate(fourDaysAgo.getDate() - 4)
-      visitWithBannerParams("/bichard", new Date(fourDaysAgo).toISOString())
+      visitWithBannerParams({ ...defaultBannerParams, date: new Date(fourDaysAgo).toISOString() })
       cy.get(".info-banner").should("exist")
 
       const threeDaysAgo = new Date()
       threeDaysAgo.setDate(threeDaysAgo.getDate() - 3)
-      visitWithBannerParams("/bichard", new Date(threeDaysAgo).toISOString())
+      visitWithBannerParams({ ...defaultBannerParams, date: new Date(threeDaysAgo).toISOString() })
       cy.get(".info-banner").should("exist")
 
       const twoDaysAgo = new Date()
       twoDaysAgo.setDate(twoDaysAgo.getDate() - 2)
-      visitWithBannerParams("/bichard", new Date(twoDaysAgo).toISOString())
+      visitWithBannerParams({ ...defaultBannerParams, date: new Date(twoDaysAgo).toISOString() })
       cy.get(".info-banner").should("exist")
 
       const oneDayAgo = new Date()
       oneDayAgo.setDate(oneDayAgo.getDate() - 1)
-      visitWithBannerParams("/bichard", new Date(oneDayAgo).toISOString())
+      visitWithBannerParams({ ...defaultBannerParams, date: new Date(oneDayAgo).toISOString() })
       cy.get(".info-banner").should("exist")
 
       const today = new Date()
-      visitWithBannerParams("/bichard", new Date(today).toISOString())
+      visitWithBannerParams({ ...defaultBannerParams, date: new Date(today).toISOString() })
       cy.get(".info-banner").should("exist")
     })
 
     it("disappears after five days from the first shown date", () => {
       const fiveDaysAgo = new Date()
       fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5)
-      visitWithBannerParams("/bichard", new Date(fiveDaysAgo).toISOString(), wait)
+      visitWithBannerParams({ ...defaultBannerParams, date: new Date(fiveDaysAgo).toISOString() })
 
       cy.get(".info-banner").should("not.exist")
     })
 
     it("disappears when closed and does not reappear on that particular day", () => {
-      visitWithBannerParams("/bichard", new Date().toISOString())
+      visitWithBannerParams({ ...defaultBannerParams })
 
       cy.get(".info-banner").should("exist")
 
@@ -89,26 +110,29 @@ describe("infoBanner", () => {
       cy.get(".info-banner").should("not.exist")
 
       cy.reload()
-      visitWithBannerParams("/bichard", new Date().toISOString(), wait)
+      visitWithBannerParams({ ...defaultBannerParams, wait: true })
       cy.get(".info-banner").should("not.exist")
     })
 
     it("disappears when closed on today and does reappear on next day", () => {
       const firstShownDateYesterday = subDays(new Date(), 1)
 
-      visitWithBannerParams("/bichard", firstShownDateYesterday.toISOString())
+      visitWithBannerParams({ ...defaultBannerParams, date: firstShownDateYesterday.toISOString() })
 
       cy.get(".info-banner").should("exist")
 
       cy.get(".info-banner__close").click()
       cy.get(".info-banner").should("not.exist")
 
-      visitWithBannerParams("/bichard", firstShownDateYesterday.toISOString(), wait)
+      visitWithBannerParams({ ...defaultBannerParams, date: firstShownDateYesterday.toISOString() })
       cy.get(".info-banner").should("not.exist")
 
       cy.visit("/bichard", {
         onBeforeLoad(win) {
           win.TEST_INFO_BANNER_FIRST_SHOWN = firstShownDateYesterday.toISOString()
+          win.TEST_INFO_BANNER_LIFESPAN = 5
+          win.TEST_INFO_BANNER_MESSAGE = "message"
+
           win.localStorage.setItem("infoBannerLastClosed", firstShownDateYesterday.toISOString())
         }
       })
@@ -126,14 +150,14 @@ describe("infoBanner", () => {
         }
       ])
 
-      visitWithBannerParams("/bichard", new Date().toISOString())
+      visitWithBannerParams({ ...defaultBannerParams })
       cy.get(".info-banner").should("exist")
 
-      visitWithBannerParams("/bichard/court-cases/0", new Date().toISOString())
+      visitWithBannerParams({ ...defaultBannerParams, url: "/bichard/court-cases/0" })
       cy.get(".info-banner").should("exist")
 
       cy.get("a").contains("Mark as manually resolved").click()
-      visitWithBannerParams("/bichard/court-cases/0/resolve", new Date().toISOString())
+      visitWithBannerParams({ ...defaultBannerParams, url: "/bichard/court-cases/0" })
       cy.get(".info-banner").should("exist")
     })
 
@@ -147,17 +171,25 @@ describe("infoBanner", () => {
         }
       ])
 
-      visitWithBannerParams("/bichard", new Date().toISOString(), doNotWait)
+      visitWithBannerParams({ ...defaultBannerParams })
 
       cy.get(".info-banner").should("exist")
       cy.get(".info-banner__close").click()
       cy.get(".info-banner").should("not.exist")
 
-      visitWithBannerParams("/bichard/court-cases/0", new Date().toISOString(), wait)
+      visitWithBannerParams({
+        ...defaultBannerParams,
+        url: "/bichard/court-cases/0",
+        wait: true
+      })
       cy.get(".info-banner").should("not.exist")
 
       cy.get("a").contains("Mark as manually resolved").click()
-      visitWithBannerParams("/bichard/court-cases/0/resolve", new Date().toISOString(), wait)
+      visitWithBannerParams({
+        ...defaultBannerParams,
+        url: "/bichard/court-cases/0",
+        wait: true
+      })
       cy.get(".info-banner").should("not.exist")
     })
 
@@ -171,19 +203,27 @@ describe("infoBanner", () => {
         }
       ])
 
-      visitWithBannerParams("/bichard", new Date().toISOString(), doNotWait)
+      visitWithBannerParams({ ...defaultBannerParams })
       cy.get(".info-banner").should("exist")
 
-      visitWithBannerParams("/bichard/court-cases/0", new Date().toISOString(), wait)
+      visitWithBannerParams({
+        ...defaultBannerParams,
+        url: "/bichard/court-cases/0",
+        wait: true
+      })
       cy.get(".info-banner__close").click()
       cy.get(".info-banner").should("not.exist")
 
       cy.get("a").contains("Mark as manually resolved").click()
-      visitWithBannerParams("/bichard/court-cases/0/resolve", new Date().toISOString(), wait)
+      visitWithBannerParams({
+        ...defaultBannerParams,
+        url: "/bichard/court-cases/0",
+        wait: true
+      })
       cy.get(".info-banner").should("not.exist")
 
       cy.get("a").contains("Case list").click()
-      visitWithBannerParams("/bichard", new Date().toISOString(), wait)
+      visitWithBannerParams({ ...defaultBannerParams, wait: true })
       cy.get(".info-banner").should("not.exist")
     })
 
@@ -191,7 +231,7 @@ describe("infoBanner", () => {
       const futureFirstShownDate = new Date()
       futureFirstShownDate.setDate(futureFirstShownDate.getDate() + 5)
 
-      visitWithBannerParams("/bichard", futureFirstShownDate.toISOString(), wait)
+      visitWithBannerParams({ ...defaultBannerParams, date: futureFirstShownDate.toISOString(), wait: true })
 
       cy.get("h2")
       cy.get(".info-banner").should("not.exist")
@@ -200,35 +240,45 @@ describe("infoBanner", () => {
 
   describe("Visible to forces", () => {
     it("appears for the current user when forcesVisibleTo is empty", () => {
-      visitWithBannerParams("/bichard", new Date().toISOString(), true)
+      visitWithBannerParams({ ...defaultBannerParams, wait: true })
       cy.get(".info-banner").should("exist")
     })
 
     it("appears for the current user when forcesVisibleTo is 'ALL'", () => {
-      visitWithBannerParams("/bichard", new Date().toISOString(), true, "ALL")
+      visitWithBannerParams({ ...defaultBannerParams, wait: true, forcesVisibleTo: "ALL" })
       cy.get(".info-banner").should("exist")
     })
 
     it("appears for the current user when forcesVisibleTo contains only their force", () => {
-      visitWithBannerParams("/bichard", new Date().toISOString(), true, "01")
+      visitWithBannerParams({ ...defaultBannerParams, wait: true, forcesVisibleTo: "01" })
       cy.get(".info-banner").should("exist")
     })
 
     it("appears for the current user when forcesVisibleTo contains their force and other forces", () => {
-      visitWithBannerParams("/bichard", new Date().toISOString(), true, "01,099,66")
+      visitWithBannerParams({ ...defaultBannerParams, wait: true, forcesVisibleTo: "01,099,66" })
       cy.get(".info-banner").should("exist")
     })
 
     it("is hidden for the current user when forcesVisibleTo is not empty, but doesn't contain their force", () => {
-      visitWithBannerParams("/bichard", new Date().toISOString(), true, "099")
+      visitWithBannerParams({ ...defaultBannerParams, wait: true, forcesVisibleTo: "099" })
       cy.get(".info-banner").should("not.exist")
     })
   })
 
   describe("Message", () => {
     it("displays the specified message", () => {
-      visitWithBannerParams("/bichard", new Date().toISOString(), true, "01", "Different test message")
+      visitWithBannerParams({ ...defaultBannerParams, wait: true, message: "Different test message" })
       cy.get(".info-banner").should("contain", "Different test message")
+    })
+
+    it("does not display the banner if message is empty", () => {
+      visitWithBannerParams({ ...defaultBannerParams, wait: true, message: "" })
+      cy.get(".info-banner").should("not.exist")
+    })
+
+    it("does not display the banner if message is undefined", () => {
+      visitWithBannerParams({ ...defaultBannerParams, wait: true, message: undefined })
+      cy.get(".info-banner").should("not.exist")
     })
   })
 })

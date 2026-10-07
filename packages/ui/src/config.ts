@@ -1,7 +1,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { parse } from "date-fns"
 import { formatForceEnvVariable } from "utils/forceNormalisation"
-import { bannerFirstShownDate, bannerForcesVisibleTo, bannerMessage } from "./utils/infoBannerUtils"
+import { bannerFirstShownDate, bannerForcesVisibleTo, bannerLifespan, bannerMessage } from "./utils/infoBannerUtils"
 
 const toBoolean = (val: number | string): boolean => val === "true" || val === "1" || val === 1
 
@@ -23,7 +23,7 @@ export const INFO_BANNER_FIRST_SHOWN_DATE = bannerFirstShownDate(
     : undefined
 )
 export const INFO_BANNER_MESSAGE = bannerMessage(process.env.INFO_BANNER_MESSAGE)
-export const INFO_BANNER_LIFESPAN_DAYS = Number(process.env.INFO_BANNER_LIFESPAN_DAYS ?? 0)
+export const INFO_BANNER_LIFESPAN_DAYS = bannerLifespan(Number(process.env.INFO_BANNER_LIFESPAN_DAYS))
 export const INFO_BANNER_FORCES_VISIBLE_TO: Set<string> = formatForceEnvVariable(
   bannerForcesVisibleTo(process.env.INFO_BANNER_FORCES_VISIBLE_TO ?? "")
 )

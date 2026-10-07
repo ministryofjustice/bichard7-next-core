@@ -5,6 +5,7 @@ declare global {
     TEST_INFO_BANNER_FIRST_SHOWN?: string
     TEST_INFO_BANNER_MESSAGE?: string
     TEST_INFO_BANNER_FORCES_VISIBLE_TO?: string
+    TEST_INFO_BANNER_LIFESPAN?: number
   }
 }
 
@@ -24,6 +25,14 @@ export const bannerMessage = (message?: string): string | undefined => {
   return message
 }
 
+export const bannerLifespan = (days: number): number => {
+  if (typeof window !== "undefined" && window.TEST_INFO_BANNER_LIFESPAN) {
+    return window.TEST_INFO_BANNER_LIFESPAN
+  }
+
+  return days
+}
+
 export const bannerForcesVisibleTo = (forcesVisibleTo: string): string => {
   const value =
     typeof window !== "undefined" && window.TEST_INFO_BANNER_FORCES_VISIBLE_TO
@@ -38,7 +47,7 @@ export interface ShouldDisplayInfoBannerParams {
   userVisibleForces: string[]
   forcesFilter: Set<string>
   firstShownDate?: Date
-  lifespanDays: number
+  lifespanDays?: number
 }
 
 export const shouldDisplayInfoBanner = ({
@@ -48,7 +57,7 @@ export const shouldDisplayInfoBanner = ({
   firstShownDate,
   lifespanDays
 }: ShouldDisplayInfoBannerParams): boolean => {
-  if (!firstShownDate || !message) {
+  if (!firstShownDate || !message || !lifespanDays) {
     return false
   }
 
