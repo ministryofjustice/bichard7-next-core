@@ -1,4 +1,4 @@
-import { addDays, isAfter, isFuture } from "date-fns"
+import { addDays, isAfter, isFuture, isValid, parseISO } from "date-fns"
 
 declare global {
   interface Window {
@@ -9,12 +9,18 @@ declare global {
   }
 }
 
-export const bannerFirstShownDate = (firstShownDate?: Date): Date | undefined => {
-  if (typeof window !== "undefined" && window.TEST_INFO_BANNER_FIRST_SHOWN) {
-    return new Date(window.TEST_INFO_BANNER_FIRST_SHOWN)
+export const bannerFirstShownDate = (firstShownDate: string): Date | undefined => {
+  const value = parseISO(
+    typeof window !== "undefined" && window.TEST_INFO_BANNER_FIRST_SHOWN
+      ? window.TEST_INFO_BANNER_FIRST_SHOWN
+      : firstShownDate
+  )
+
+  if (!isValid(value)) {
+    return undefined
   }
 
-  return firstShownDate
+  return value
 }
 
 export const bannerMessage = (message?: string): string | undefined => {

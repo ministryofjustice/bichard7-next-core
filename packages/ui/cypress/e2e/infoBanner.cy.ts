@@ -49,7 +49,13 @@ describe("infoBanner", () => {
   describe("Dates and lifespan", () => {
     it("doesn't appear when first shown date is not set in config.ts", () => {
       cy.loginAs("GeneralHandler")
-      visitWithBannerParams({ ...defaultBannerParams, date: undefined })
+      visitWithBannerParams({ ...defaultBannerParams, date: undefined, wait: true })
+      cy.get(".info-banner").should("not.exist")
+    })
+
+    it("doesn't appear when first shown date is an invalid date", () => {
+      cy.loginAs("GeneralHandler")
+      visitWithBannerParams({ ...defaultBannerParams, date: "invalid date", wait: true })
       cy.get(".info-banner").should("not.exist")
     })
 

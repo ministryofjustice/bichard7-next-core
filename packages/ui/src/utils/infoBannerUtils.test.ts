@@ -10,14 +10,14 @@ import {
 
 describe("infoBannerUtils", () => {
   describe("bannerFirstShownDate", () => {
-    it("returns date when called with a date argument", () => {
-      const infoBannerFirstShown = new Date("2026-01-01T00:00:00Z")
+    it("returns date when called with a valid date argument", () => {
+      const infoBannerFirstShown = "2026-01-01T00:00:00Z"
 
-      expect(bannerFirstShownDate(infoBannerFirstShown)).toBe(infoBannerFirstShown)
+      expect(bannerFirstShownDate(infoBannerFirstShown)).toEqual(new Date(infoBannerFirstShown))
     })
 
-    it("returns undefined when called without arguments", () => {
-      expect(bannerFirstShownDate()).toBeUndefined()
+    it("returns undefined when called invalid date", () => {
+      expect(bannerFirstShownDate("invalid date")).toBeUndefined()
     })
   })
 

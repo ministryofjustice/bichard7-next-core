@@ -1,5 +1,4 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import { parse } from "date-fns"
 import { formatForceEnvVariable } from "utils/forceNormalisation"
 import { bannerFirstShownDate, bannerForcesVisibleTo, bannerLifespan, bannerMessage } from "./utils/infoBannerUtils"
 
@@ -17,11 +16,7 @@ export const OUT_OF_AREA_TRIGGER_CODE = TriggerCode.TRPR0027
 export const SWITCHING_FEEDBACK_FORM_FREQUENCY_IN_HOURS = 3
 export const COOKIES_SECURE_OPTION = (process.env.COOKIES_SECURE ?? "true") === "true"
 
-export const INFO_BANNER_FIRST_SHOWN_DATE = bannerFirstShownDate(
-  process.env.INFO_BANNER_FIRST_SHOWN_DATE
-    ? parse(process.env.INFO_BANNER_FIRST_SHOWN_DATE, "yyyy-MM-dd", new Date())
-    : undefined
-)
+export const INFO_BANNER_FIRST_SHOWN_DATE = bannerFirstShownDate(process.env.INFO_BANNER_FIRST_SHOWN_DATE ?? "")
 export const INFO_BANNER_MESSAGE = bannerMessage(process.env.INFO_BANNER_MESSAGE)
 export const INFO_BANNER_LIFESPAN_DAYS = bannerLifespan(Number(process.env.INFO_BANNER_LIFESPAN_DAYS))
 export const INFO_BANNER_FORCES_VISIBLE_TO: Set<string> = formatForceEnvVariable(
