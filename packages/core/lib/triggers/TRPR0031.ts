@@ -8,7 +8,7 @@ import generateTriggersFromResultCode from "./generateTriggersFromResultCode"
 
 const config: TriggerConfig = {
   triggerCode: TriggerCode.TRPR0031,
-  resultCodesForTrigger: [1030, 1032, 1115, 1116, 1336, 1507, 1508, 4575, 4576, 4577],
+  resultCodesForTrigger: [1030, 1032, 1115, 1116, 1134, 1507, 1508, 4575, 4576, 4577],
   triggerRecordable: TriggerRecordable.Both
 }
 
