@@ -13,12 +13,12 @@ interface Props {
   bannerLifespanDays: number
 }
 
-function hasNoForcesThatShouldBeDisplayedTo(userForces: string[]): boolean {
+function shouldDisplayBannerToUser(userForces: string[]): boolean {
   if (INFO_BANNER_FORCES_VISIBLE_TO.size === 0) {
-    return false
+    return true
   }
 
-  return !userForces.some((force) => INFO_BANNER_FORCES_VISIBLE_TO.has(force))
+  return userForces.some((force) => INFO_BANNER_FORCES_VISIBLE_TO.has(force))
 }
 
 const InfoBanner = ({ message, firstShownDate, href, visibleForces, bannerLifespanDays }: Props) => {
@@ -32,7 +32,7 @@ const InfoBanner = ({ message, firstShownDate, href, visibleForces, bannerLifesp
       return
     }
 
-    if (hasNoForcesThatShouldBeDisplayedTo(visibleForces)) {
+    if (!shouldDisplayBannerToUser(visibleForces)) {
       return
     }
 
