@@ -1,5 +1,10 @@
 import Permission from "@moj-bichard7/common/types/Permission"
-import { INFO_BANNER_FIRST_SHOWN_DATE, INFO_BANNER_MESSAGE, IS_AUDIT_PAGE_ACCESSIBLE } from "config"
+import {
+  INFO_BANNER_FIRST_SHOWN_DATE,
+  INFO_BANNER_LIFESPAN_DAYS,
+  INFO_BANNER_MESSAGE,
+  IS_AUDIT_PAGE_ACCESSIBLE
+} from "config"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { usePathname } from "next/navigation"
 import { useRouter } from "next/router"
@@ -87,6 +92,7 @@ const Layout = ({
         <InfoBanner
           firstShownDate={INFO_BANNER_FIRST_SHOWN_DATE}
           message={INFO_BANNER_MESSAGE}
+          bannerLifespanDays={INFO_BANNER_LIFESPAN_DAYS}
           href={NavLink.WhatsNew}
           visibleForces={currentUser.visibleForces}
         />

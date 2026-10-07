@@ -1,4 +1,4 @@
-import { INFO_BANNER_FORCES_VISIBLE_TO, INFO_BANNER_LIFESPAN_DAYS } from "@/config"
+import { INFO_BANNER_FORCES_VISIBLE_TO } from "@/config"
 import { addDays, format, isAfter, isFuture } from "date-fns"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -10,6 +10,7 @@ interface Props {
   message?: string
   href: string
   visibleForces: string[]
+  bannerLifespanDays: number
 }
 
 function hasNoForcesThatShouldBeDisplayedTo(userForces: string[]): boolean {
@@ -20,7 +21,7 @@ function hasNoForcesThatShouldBeDisplayedTo(userForces: string[]): boolean {
   return !userForces.some((force) => INFO_BANNER_FORCES_VISIBLE_TO.has(force))
 }
 
-const InfoBanner = ({ message, firstShownDate, href, visibleForces }: Props) => {
+const InfoBanner = ({ message, firstShownDate, href, visibleForces, bannerLifespanDays }: Props) => {
   const [visible, setVisible] = useState(false)
   const [mounted, setMounted] = useState(false)
 
@@ -36,7 +37,7 @@ const InfoBanner = ({ message, firstShownDate, href, visibleForces }: Props) => 
     }
 
     const bannerShownInFuture = isFuture(firstShownDate)
-    const bannerExpired = isAfter(new Date(), addDays(firstShownDate, INFO_BANNER_LIFESPAN_DAYS))
+    const bannerExpired = isAfter(new Date(), addDays(firstShownDate, bannerLifespanDays))
 
     if (bannerShownInFuture || bannerExpired) {
       return
