@@ -13,10 +13,11 @@
       - 0.4.0 changed to module type
     - raw-body
       - v4 breaks our CI
+    - @swc/core (we are getting issues with the native binary in 1.16.13)
 */
 
 const pinned = new Set(["cookie", "cookies-next", "undici", "cypress"])
-const ignored = new Set(["cypress-circleci-reporter", "raw-body"])
+const ignored = new Set(["cypress-circleci-reporter", "raw-body", "@swc/core"])
 
 module.exports = {
   target: (pkg) => {
