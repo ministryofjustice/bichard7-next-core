@@ -22,54 +22,12 @@ const generateMockAho = (resultCode: number) => {
 }
 
 describe("TRPR0031", () => {
-  it.each(reasonCodes)(
-    "Should generate a trigger when case has no recordable offence, no pnc query, and reason code is %s",
-    (reasonCode) => {
-      const result = TRPR0031(generateMockAho(reasonCode))
-      expect(result).toEqual([{ code: triggerCode }])
-    }
-  )
-
-  it.each(reasonCodes)(
-    "Should not generate a trigger when case has no recordable offence, has a pnc query, and reason code is %s",
-    (reasonCode) => {
-      const result = TRPR0031(generateMockAho(reasonCode))
-      expect(result).toHaveLength(0)
-    }
-  )
-
-  it.each(reasonCodes)(
-    "Should not generate a trigger when case has a recordable offence, has no pnc query, and reason code is %s",
-    (reasonCode) => {
-      const result = TRPR0031(generateMockAho(reasonCode))
-      expect(result).toHaveLength(0)
-    }
-  )
-
-  it.each(reasonCodes)(
-    "Should not generate a trigger when case has a recordable offence, has a pnc query, and reason code is %s",
-    (reasonCode) => {
-      const result = TRPR0031(generateMockAho(reasonCode))
-      expect(result).toHaveLength(0)
-    }
-  )
-
-  it("Should not generate a trigger when case has no recordable offence, no pnc query, and reason code is not from the list", () => {
-    const result = TRPR0031(generateMockAho(9999))
-    expect(result).toHaveLength(0)
+  it.each(reasonCodes)("Should generate a trigger when case has a reason code of %s", (reasonCode) => {
+    const result = TRPR0031(generateMockAho(reasonCode))
+    expect(result).toEqual([{ code: triggerCode }])
   })
 
-  it("Should not generate a trigger when case has no recordable offence, has a pnc query, and reason code is not from the list", () => {
-    const result = TRPR0031(generateMockAho(9999))
-    expect(result).toHaveLength(0)
-  })
-
-  it("Should not generate a trigger when case has a recordable offence, has no pnc query, and reason code is not from the list", () => {
-    const result = TRPR0031(generateMockAho(9999))
-    expect(result).toHaveLength(0)
-  })
-
-  it("Should not generate a trigger when case has a recordable offence, has a pnc query, and reason code is not from the list", () => {
+  it("Should not generate a trigger when case has a reason code that is not from the list", () => {
     const result = TRPR0031(generateMockAho(9999))
     expect(result).toHaveLength(0)
   })
