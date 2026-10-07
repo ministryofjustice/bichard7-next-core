@@ -22,7 +22,7 @@ describe("infoBannerUtils", () => {
   })
 
   describe("bannerForcesVisibleTo", () => {
-    it("returns default forcesVisibleTo string when passed", () => {
+    it("returns forcesVisibleTo string", () => {
       const visibleTo = "01"
 
       expect(bannerForcesVisibleTo(visibleTo)).toBe(visibleTo)
