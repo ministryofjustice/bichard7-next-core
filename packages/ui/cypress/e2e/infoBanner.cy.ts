@@ -34,7 +34,7 @@ describe("infoBanner", () => {
       onBeforeLoad(window) {
         window.TEST_INFO_BANNER_FIRST_SHOWN = date
         window.TEST_INFO_BANNER_FORCES_VISIBLE_TO = forcesVisibleTo
-        window.TEST_INFO_BANNER_MESSAGE = message ?? undefined
+        window.TEST_INFO_BANNER_MESSAGE = message
         window.TEST_INFO_BANNER_LIFESPAN = lifespanDays
       }
     })
