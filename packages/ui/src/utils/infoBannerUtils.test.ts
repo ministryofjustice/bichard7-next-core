@@ -15,13 +15,9 @@ describe("infoBannerUtils", () => {
 
   describe("bannerMessage", () => {
     it("returns message when called with a string", () => {
-      const message = "Scheduled Maintenance at Midnight"
+      const message = "There are new features available on new Bichard."
 
       expect(bannerMessage(message)).toBe(message)
-    })
-
-    it("returns undefined when called without arguments", () => {
-      expect(bannerMessage()).toBeUndefined()
     })
   })
 

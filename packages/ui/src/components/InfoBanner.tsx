@@ -7,7 +7,7 @@ import { Banner, CloseButton } from "./InfoBanner.styles"
 
 interface Props {
   firstShownDate: Date | undefined
-  message?: string
+  message: string
   href: string
   visibleForces: string[]
   bannerLifespanDays: number

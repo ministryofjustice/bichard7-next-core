@@ -14,7 +14,7 @@ export const bannerFirstShownDate = (firstShownDate?: Date): Date | undefined =>
   return firstShownDate
 }
 
-export const bannerMessage = (message?: string): string | undefined => {
+export const bannerMessage = (message: string): string => {
   if (typeof window !== "undefined" && window.TEST_INFO_BANNER_MESSAGE) {
     return window.TEST_INFO_BANNER_MESSAGE
   }
