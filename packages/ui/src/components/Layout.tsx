@@ -1,6 +1,8 @@
+import { shouldDisplayInfoBanner } from "@/utils/infoBannerUtils"
 import Permission from "@moj-bichard7/common/types/Permission"
 import {
   INFO_BANNER_FIRST_SHOWN_DATE,
+  INFO_BANNER_FORCES_VISIBLE_TO,
   INFO_BANNER_LIFESPAN_DAYS,
   INFO_BANNER_MESSAGE,
   IS_AUDIT_PAGE_ACCESSIBLE
@@ -57,6 +59,13 @@ const Layout = ({
 
   const isLockedToNewBichard = currentUser?.featureFlags?.onlyAccessToNewBichard ?? false
   const shouldDisplayBichardSwitchButton = bichardSwitch.display && isLockedToNewBichard === false
+  const displayInfoBanner = shouldDisplayInfoBanner({
+    message: INFO_BANNER_MESSAGE,
+    forcesFilter: INFO_BANNER_FORCES_VISIBLE_TO,
+    firstShownDate: INFO_BANNER_FIRST_SHOWN_DATE,
+    lifespanDays: INFO_BANNER_LIFESPAN_DAYS,
+    userVisibleForces: currentUser.visibleForces
+  })
 
   let bichardSwitchUrl = bichardSwitch.href ?? "/bichard-ui/RefreshListNoRedirect"
 
@@ -89,13 +98,7 @@ const Layout = ({
           {shouldDisplayBichardSwitchButton && <BichardSwitchButton href={bichardSwitchUrl} />}
         </Banner>
 
-        <InfoBanner
-          firstShownDate={INFO_BANNER_FIRST_SHOWN_DATE}
-          message={INFO_BANNER_MESSAGE}
-          bannerLifespanDays={INFO_BANNER_LIFESPAN_DAYS}
-          href={NavLink.WhatsNew}
-          visibleForces={currentUser.visibleForces}
-        />
+        {displayInfoBanner && <InfoBanner message={INFO_BANNER_MESSAGE} href={NavLink.WhatsNew} />}
 
         {children}
       </PageTemplate>

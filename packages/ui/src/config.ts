@@ -1,17 +1,9 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { parse } from "date-fns"
 import { formatForceEnvVariable } from "utils/forceNormalisation"
 import { bannerFirstShownDate, bannerForcesVisibleTo, bannerMessage } from "./utils/infoBannerUtils"
 
 const toBoolean = (val: number | string): boolean => val === "true" || val === "1" || val === 1
-
-const parseDate = (value?: string): Date | undefined => {
-  if (!value) {
-    return undefined
-  }
-
-  const parsed = new Date(value)
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed
-}
 
 export const isProduction = process.env.NEXT_PUBLIC_WORKSPACE === "production"
 
@@ -26,14 +18,12 @@ export const SWITCHING_FEEDBACK_FORM_FREQUENCY_IN_HOURS = 3
 export const COOKIES_SECURE_OPTION = (process.env.COOKIES_SECURE ?? "true") === "true"
 
 export const INFO_BANNER_FIRST_SHOWN_DATE = bannerFirstShownDate(
-  process.env.INFO_BANNER_FIRST_SHOWN_DATE ? parseDate(process.env.INFO_BANNER_FIRST_SHOWN_DATE) : undefined
+  process.env.INFO_BANNER_FIRST_SHOWN_DATE
+    ? parse(process.env.INFO_BANNER_FIRST_SHOWN_DATE, "yyyy-MM-dd", new Date())
+    : undefined
 )
-export const INFO_BANNER_MESSAGE = bannerMessage(
-  process.env.INFO_BANNER_MESSAGE ?? "There are new features available on new Bichard."
-)
-export const INFO_BANNER_LIFESPAN_DAYS = process.env.INFO_BANNER_LIFESPAN_DAYS
-  ? Number(process.env.INFO_BANNER_LIFESPAN_DAYS)
-  : 5
+export const INFO_BANNER_MESSAGE = bannerMessage(process.env.INFO_BANNER_MESSAGE)
+export const INFO_BANNER_LIFESPAN_DAYS = Number(process.env.INFO_BANNER_LIFESPAN_DAYS ?? 0)
 export const INFO_BANNER_FORCES_VISIBLE_TO: Set<string> = formatForceEnvVariable(
   bannerForcesVisibleTo(process.env.INFO_BANNER_FORCES_VISIBLE_TO ?? "")
 )

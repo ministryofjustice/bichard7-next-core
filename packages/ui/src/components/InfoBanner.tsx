@@ -1,47 +1,20 @@
-import { INFO_BANNER_FORCES_VISIBLE_TO } from "@/config"
-import { addDays, format, isAfter, isFuture } from "date-fns"
+import { format } from "date-fns"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 import { LocalStorageKey } from "types/Ui"
 import { Banner, CloseButton } from "./InfoBanner.styles"
 
 interface Props {
-  firstShownDate: Date | undefined
-  message: string
+  message?: string
   href: string
-  visibleForces: string[]
-  bannerLifespanDays: number
 }
 
-function shouldDisplayBannerToUser(userForces: string[]): boolean {
-  if (INFO_BANNER_FORCES_VISIBLE_TO.size === 0) {
-    return true
-  }
-
-  return userForces.some((force) => INFO_BANNER_FORCES_VISIBLE_TO.has(force))
-}
-
-const InfoBanner = ({ message, firstShownDate, href, visibleForces, bannerLifespanDays }: Props) => {
+const InfoBanner = ({ message, href }: Props) => {
   const [visible, setVisible] = useState(false)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
-
-    if (!firstShownDate) {
-      return
-    }
-
-    if (!shouldDisplayBannerToUser(visibleForces)) {
-      return
-    }
-
-    const bannerShownInFuture = isFuture(firstShownDate)
-    const bannerExpired = isAfter(new Date(), addDays(firstShownDate, bannerLifespanDays))
-
-    if (bannerShownInFuture || bannerExpired) {
-      return
-    }
 
     const lastClosed = localStorage.getItem(LocalStorageKey.InfoBannerLastClosed)
     const dateFormat = "yyyy-MM-dd"
@@ -51,7 +24,7 @@ const InfoBanner = ({ message, firstShownDate, href, visibleForces, bannerLifesp
     }
 
     setVisible(true)
-  }, [firstShownDate])
+  }, [])
 
   const handleClose = () => {
     setVisible(false)

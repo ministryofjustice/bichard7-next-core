@@ -1,3 +1,5 @@
+import { addDays, isAfter, isFuture } from "date-fns"
+
 declare global {
   interface Window {
     TEST_INFO_BANNER_FIRST_SHOWN?: string
@@ -14,7 +16,7 @@ export const bannerFirstShownDate = (firstShownDate?: Date): Date | undefined =>
   return firstShownDate
 }
 
-export const bannerMessage = (message: string): string => {
+export const bannerMessage = (message?: string): string | undefined => {
   if (typeof window !== "undefined" && window.TEST_INFO_BANNER_MESSAGE) {
     return window.TEST_INFO_BANNER_MESSAGE
   }
@@ -29,4 +31,39 @@ export const bannerForcesVisibleTo = (forcesVisibleTo: string): string => {
       : forcesVisibleTo
 
   return value === "ALL" ? "" : value
+}
+
+export interface ShouldDisplayInfoBannerParams {
+  message?: string
+  userVisibleForces: string[]
+  forcesFilter: Set<string>
+  firstShownDate?: Date
+  lifespanDays: number
+}
+
+export const shouldDisplayInfoBanner = ({
+  message,
+  userVisibleForces,
+  forcesFilter,
+  firstShownDate,
+  lifespanDays
+}: ShouldDisplayInfoBannerParams): boolean => {
+  if (!firstShownDate || !message) {
+    return false
+  }
+
+  const hasMatchingForce = forcesFilter.size === 0 || userVisibleForces.some((force) => forcesFilter.has(force))
+
+  if (!hasMatchingForce) {
+    return false
+  }
+
+  const bannerShownInFuture = isFuture(firstShownDate)
+  const bannerExpired = isAfter(new Date(), addDays(firstShownDate, lifespanDays))
+
+  if (bannerShownInFuture || bannerExpired) {
+    return false
+  }
+
+  return true
 }
