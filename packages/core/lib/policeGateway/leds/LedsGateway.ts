@@ -1,13 +1,11 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
-import type { AxiosError, AxiosResponse } from "axios"
 
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
-import axios, { HttpStatusCode } from "axios"
-import https from "https"
+import { Agent, fetch } from "undici"
 
 import type PoliceUpdateRequest from "../../../phase3/types/PoliceUpdateRequest"
 import type AuditLogger from "../../../types/AuditLogger"
@@ -24,7 +22,6 @@ import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
 import LedsActionCode from "../../../types/leds/LedsActionCode"
 import { ledsOperations, pncToLedsOperations } from "../../../types/LedsOperation"
 import PoliceApiError from "../PoliceApiError"
-import cleanObjectStrings from "./cleanObjectStrings"
 import convertAsnToLedsFormat from "./convertAsnToLedsFormat"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
@@ -35,31 +32,27 @@ import { normalDisposal } from "./processors/normalDisposal"
 import { remand } from "./processors/remand"
 import { subsequentDisposal } from "./processors/subsequentDisposal"
 
-const jsonTransformer = (data: string): unknown => {
-  try {
-    return JSON.parse(data)
-  } catch {
-    return data
-  }
-}
-
 const generateAuditLogAttributes = (
   requestType: LedsOperation,
   url: string,
   headers: Record<string, unknown>,
   body: Record<string, unknown>,
-  response: AxiosError | AxiosResponse,
+  response: Error | (Response & { data?: unknown }),
   requestStartTime: Date
-) => ({
-  "Response Time": Date.now() - requestStartTime.getTime(),
-  "Request Type": requestType,
-  "Request URL": url,
-  "Request Headers": { ...headers, Authorization: undefined },
-  "Request Message": body,
-  "Response Message": isError(response) ? response.response?.data || response.message : response.data,
-  "Response Status": response.status,
-  sensitiveAttributes: "Request Message,Response Message"
-})
+) => {
+  const isNetworkError = response instanceof Error
+
+  return {
+    "Response Time": Date.now() - requestStartTime.getTime(),
+    "Request Type": requestType,
+    "Request URL": url,
+    "Request Headers": { ...headers, Authorization: undefined },
+    "Request Message": body,
+    "Response Message": isNetworkError ? response.message : response.data,
+    "Response Status": isNetworkError ? undefined : response.status,
+    sensitiveAttributes: "Request Message,Response Message"
+  }
+}
 
 export default class LedsGateway implements PoliceGateway {
   queryTime: Date | undefined
@@ -89,15 +82,20 @@ export default class LedsGateway implements PoliceGateway {
     const asnQueryUrl = this.generateUrl(endpoints.asnQuery)
     const requestHeaders = generateRequestHeaders(correlationId, LedsActionCode.QueryByAsn, authToken)
     const startTime = performance.now()
-    const apiResponse = await axios
-      .post(asnQueryUrl, requestBody, {
-        headers: requestHeaders,
-        httpsAgent: new https.Agent({
-          rejectUnauthorized: false
-        }),
-        transformResponse: [jsonTransformer]
+    const apiResponse = await fetch(asnQueryUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...requestHeaders
+      },
+      body: JSON.stringify(requestBody),
+      dispatcher: new Agent({
+        connect: { rejectUnauthorized: false }
       })
-      .catch((error: AxiosError<ErrorResponse>) => error)
+    }).catch((error) => error)
+    if (!(apiResponse instanceof Error)) {
+      ;(apiResponse as Response & { data?: unknown }).data = await apiResponse.json().catch(() => null)
+    }
 
     const durationMs = performance.now() - startTime
 
@@ -115,19 +113,11 @@ export default class LedsGateway implements PoliceGateway {
       )
     )
 
-    if (isError(apiResponse)) {
-      if (apiResponse.response?.data) {
-        console.error(JSON.stringify(apiResponse.response.data, null, 2))
-        const errors = apiResponse.response.data?.leds?.errors.map((error) => error.message) ?? [
-          `ASN query failed with status code ${apiResponse.status}.`
-        ]
-        return new PoliceApiError(errors)
-      }
-
+    if (apiResponse instanceof Error) {
       return new PoliceApiError([apiResponse.message])
     }
 
-    if (apiResponse.status !== HttpStatusCode.Ok) {
+    if (apiResponse.status !== 200) {
       const errors = (apiResponse.data as ErrorResponse)?.leds?.errors.map((error) => error.message) ?? [
         `ASN query failed with status code ${apiResponse.status}.`
       ]
@@ -193,22 +183,26 @@ export default class LedsGateway implements PoliceGateway {
     }
 
     const updateUrl = this.generateUrl(endpoint)
-    const body = cleanObjectStrings(requestBody)
     const requestHeaders = generateRequestHeaders(correlationId, actionCode, authToken)
     const startTime = performance.now()
-    const apiResponse = await axios
-      .post(updateUrl, body, {
-        headers: requestHeaders,
-        httpsAgent: new https.Agent({
-          rejectUnauthorized: false
-        }),
-        transformResponse: [jsonTransformer]
+    const apiResponse = await fetch(updateUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...requestHeaders
+      },
+      body: JSON.stringify(requestBody),
+      dispatcher: new Agent({
+        connect: { rejectUnauthorized: false }
       })
-      .catch((error: AxiosError<ErrorResponse>) => error)
+    }).catch((error) => error)
+    if (!(apiResponse instanceof Error)) {
+      ;(apiResponse as any).data = await apiResponse.json().catch(() => null)
+    }
 
     const durationMs = performance.now() - startTime
 
-    logApiMetric(updateUrl, durationMs, correlationId, pncToLedsOperations[request.operation], apiResponse.status)
+    logApiMetric([request.operation], apiResponse.status)
 
     this.auditLogger.info(
       EventCode.PncResponseReceived,
@@ -222,19 +216,11 @@ export default class LedsGateway implements PoliceGateway {
       )
     )
 
-    if (isError(apiResponse)) {
-      if (apiResponse.response?.data) {
-        console.error(JSON.stringify(apiResponse.response.data, null, 2))
-        const errors = apiResponse.response.data?.leds?.errors.map((error) => error.message) ?? [
-          `LEDS update failed with status code ${apiResponse.status}.`
-        ]
-        return new PoliceApiError(errors)
-      }
-
+    if (apiResponse instanceof Error) {
       return new PoliceApiError([apiResponse.message])
     }
 
-    if (apiResponse.status !== HttpStatusCode.Created) {
+    if (apiResponse.status !== 201) {
       const errors = (apiResponse.data as ErrorResponse)?.leds?.errors.map((error) => error.message) ?? [
         `Update failed with status code ${apiResponse.status}.`
       ]
