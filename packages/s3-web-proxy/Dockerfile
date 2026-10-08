@@ -50,7 +50,7 @@ WORKDIR /core/packages/s3-web-proxy
 EXPOSE 8080
 EXPOSE 8443
 
-COPY conf/nginx.conf /etc/nginx/nginx.conf
-COPY conf/supervisord.conf /etc/supervisord.conf
+COPY packages/s3-web-proxy/conf/nginx.conf /etc/nginx/nginx.conf
+COPY packages/s3-web-proxy/conf/supervisord.conf /etc/supervisord.conf
 
 STOPSIGNAL SIGQUIT
