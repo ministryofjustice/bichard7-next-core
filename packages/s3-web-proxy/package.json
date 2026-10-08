@@ -2,8 +2,8 @@
   "name": "@moj-bichard7/s3-web-proxy",
   "version": "1.0.0",
   "description": "Serve the contents of a S3 bucket (private or public) over HTTP",
-  "bin": {
-    "s3-server": "src/bin/server.js"
+  "scripts": {
+    "lint": "eslint ."
   },
   "devDependencies": {},
   "dependencies": {
