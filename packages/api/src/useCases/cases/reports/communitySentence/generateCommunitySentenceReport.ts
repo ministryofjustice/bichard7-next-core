@@ -8,6 +8,7 @@ import type DatabaseGateway from "../../../../types/DatabaseGateway"
 
 import { communitySentenceReport } from "../../../../services/db/cases/reports/communitySentence"
 import { createReportHandler } from "../createReportHandler"
+import { createReportAuditLog } from "../utils/createReportAuditLog"
 
 export const generateCommunitySentenceReport = async (
   database: DatabaseGateway,
@@ -22,15 +23,15 @@ export const generateCommunitySentenceReport = async (
     return await createReportHandler(communitySentenceReport, async (totalRecords: number): PromiseResult<void> => {
       const duration = Date.now() - start
 
-      /*    return await createReportAuditLog({
+      return await createReportAuditLog({
         auditLogGateway,
         duration,
         fromDate: query.fromDate,
-        reportType: "community sentence",
+        reportType: "bails", // set as bails for
         toDate: query.toDate,
         totalRecords,
         user
-      }) */
+      })
     })(database, user, query, reply)
   } catch (err) {
     console.error("Stream failed, audit log not recorded", err)
