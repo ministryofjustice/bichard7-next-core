@@ -39,7 +39,7 @@ COPY --chown=node:node --from=deps ./core ./
 COPY --chown=node:node packages/s3-web-proxy/src ./packages/s3-web-proxy/src
 
 COPY packages/s3-web-proxy/conf/nginx.conf /etc/nginx/nginx.conf
-#COPY packages/s3-web-proxy/conf/supervisord.conf /etc/supervisord.conf
+COPY packages/s3-web-proxy/conf/supervisord.conf /etc/supervisord.conf
 
 USER node
 
