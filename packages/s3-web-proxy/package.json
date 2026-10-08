@@ -8,7 +8,7 @@
     "bucket",
     "server"
   ],
-  "main": "./bin/server.js",
+  "main": "bin/server.js",
   "devDependencies": {},
   "author": {
     "name": "Ozan Turgut",
@@ -16,7 +16,7 @@
     "url": "http://unsetbit.com"
   },
   "bin": {
-    "s3-server": "./bin/server.js"
+    "s3-server": "bin/server.js"
   },
   "scripts": {
     "test": "exit 0"
