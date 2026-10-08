@@ -59,6 +59,7 @@
     "packages/conductor",
     "packages/e2e-test",
     "packages/message-forwarder",
+    "packages/s3-web-proxy",
     "packages/uat-data",
     "packages/ui",
     "packages/user-service"
