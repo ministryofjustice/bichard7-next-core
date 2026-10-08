@@ -4,7 +4,7 @@ env:
   variables:
     REPOSITORY_NAME: "s3-web-proxy"
     SOURCE_REPOSITORY_NAME: "nginx-nodejs-24-2023-supervisord"
-    CONTEXT_DIR: "packages/s3-web-proxy"
+    DOCKERFILE: "packages/s3-web-proxy/Dockerfile"
   exported-variables:
     - S3_WEB_PROXY_IMAGE_HASH
 
