@@ -11,6 +11,7 @@ export const Endpoints = {
   Cases: "/cases",
   CasesAllocate: "/cases/:caseId/allocate",
   CasesReportsBails: "/cases/reports/bails",
+  CasesReportsCommunitySentence: "/cases/reports/community-sentence",
   CasesReportsDomesticViolence: "/cases/reports/domestic-violence",
   CasesReportsExceptions: "/cases/reports/exceptions",
   CasesReportsUserPerformanceDetail: "/cases/reports/user-performance-detail",
