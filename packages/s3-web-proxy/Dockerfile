@@ -1,15 +1,33 @@
 ARG BUILD_IMAGE="nginx-nodejs-24-2023-supervisord"
-FROM ${BUILD_IMAGE}
+FROM ${BUILD_IMAGE} as base
 
 LABEL org.opencontainers.image.authors="CJSE"
 
-COPY scripts/run_nginx.sh /bin/run_nginx
-COPY scripts/credentials.sh /usr/bin/credentials
-
-ARG NODE_DIR="/opt/s3-server"
-ARG NODE_USER="node"
+#########################################################
+FROM base AS deps
 
 USER root
+
+WORKDIR /core
+
+COPY package*.json ./
+COPY packages/s3-web-proxy/package.json ./packages/s3-web-proxy/package.json
+
+RUN npm ci --ignore-scripts --no-audit \
+    && npm cache clean --force
+
+#########################################################
+FROM base AS runner
+
+USER root
+
+COPY packages/s3-web-proxy/scripts/run_nginx.sh /bin/run_nginx
+COPY packages/s3-web-proxy/scripts/credentials.sh /usr/bin/credentials
+
+WORKDIR /core
+
+COPY --from=deps ./core ./
+COPY packages/s3-web-proxy/src ./packages/s3-web-proxy/src
 
 RUN yum install -y --setopt=install_weak_deps=False \
     cronie \
@@ -20,27 +38,14 @@ RUN yum install -y --setopt=install_weak_deps=False \
     chmod +x /bin/credentials && \
     yum clean all && \
     rm -rf /var/cache/yum && \
-    mkdir -p ${NODE_DIR} && \
-    chown -R ${NODE_USER} ${NODE_DIR}
+    chown -R node /core
 
+#USER root
+#RUN npm link
 
-USER ${NODE_USER}
+USER node
 
-WORKDIR ${NODE_DIR}
-
-COPY s3-server/package*.json ${NODE_DIR}
-
-RUN npm ci --ignore-scripts --no-audit \
-&& npm cache clean --force
-
-COPY s3-server ${NODE_DIR}
-
-USER root
-RUN npm link
-
-USER ${NODE_USER}
-
-WORKDIR /
+WORKDIR /core/packages/s3-web-proxy
 
 EXPOSE 8080
 EXPOSE 8443
