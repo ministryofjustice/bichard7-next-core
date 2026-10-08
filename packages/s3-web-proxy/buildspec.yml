@@ -16,7 +16,7 @@ phases:
   build:
     commands:
       - ./scripts/build-image.sh
-      - (cd "$CONTEXT_DIR" && make goss)
+      - (cd packages/s3-web-proxy && make goss)
 
   post_build:
     commands:
