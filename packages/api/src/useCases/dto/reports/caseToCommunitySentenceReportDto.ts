@@ -28,11 +28,15 @@ export function* caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Ge
   // receivedDate: z.string(),
   // suspendedSentenceOrderDuration: z.number()
 
-  return {
+  yield {
     dateOfBirth: dateOfBirth(aho),
-    dateOfSentence: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result?.DateSpecifiedInResult,
+    dateOfSentence: new Date().toDateString(), //aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result?.DateSpecifiedInResult,
     defendantName: row.defendant_name ?? null,
-    pncId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier,
-    receivedDate: formatDate(row.msg_received_ts, true, true)
+    domesticViolenceFlag: false,
+    expiryOfSentence: new Date().toDateString(),
+    offenceType: "Offence Type",
+    pncId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier ?? "",
+    receivedDate: formatDate(row.msg_received_ts, true, true),
+    suspendedSentenceOrderDuration: 0
   }
 }

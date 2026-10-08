@@ -41,7 +41,7 @@ export async function* communitySentenceReport(
       el.error_id,
       el.annotated_msg,
       el.defendant_name,
-      el.msg_received_ts,
+      el.msg_received_ts
     ORDER BY el.msg_received_ts
   `
 
