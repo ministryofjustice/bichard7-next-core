@@ -22,7 +22,7 @@ Feature: {409} BR7-R5.7-RCD603-AINT Result-Exception generation
 		Given the data for this test is in the PNC
 			And "input-message" is received
 
-	@ExcludeOnPreProd
+	@ExcludeOnPreProd @ExcludedOnLeds
 	Scenario: Handling unexpected errors for PNC update after resubmission
 		Given I am logged in as "supervisor"
 			And I view the list of exceptions

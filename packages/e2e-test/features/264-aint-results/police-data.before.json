@@ -7,13 +7,13 @@
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100020428C",
+          "arrestSummonsReference": "26/0000/00/100021156U",
           "chargeStatusMarker": "A",
-          "cjsOffenceCode": "RR84042",
+          "cjsOffenceCode": "TH68006",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/2576/021117E",
-          "crimeReference": "ZSBY8P JM5DYRKM",
+          "courtCaseReferenceNumber": "26/2576/021923F",
+          "crimeReference": "Y0ZZKAG2KIZQECN",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -21,10 +21,11 @@
             "locationType": "description"
           },
           "locationFSCode": "01ZD",
+          "npccOffenceCode": "5.5.5.1",
           "offenceChargeNumber": 1,
           "offenceDescription": [],
           "othersCharged": [],
-          "qualifiedCjsCode": "RR84042",
+          "qualifiedCjsCode": "TH68006",
           "results": [],
           "roleQualifier": [],
           "startDate": "2010-11-28"
@@ -35,7 +36,7 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/021117E",
+      "courtCaseReference": "26/2576/021923F",
       "subsequentAppearances": []
     }
   ],

@@ -36,7 +36,8 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/000636T"
+      "courtCaseReference": "26/2576/000636T",
+      "subsequentAppearances": []
     },
     {
       "caseStatusMarker": "A",
@@ -74,7 +75,8 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/000637U"
+      "courtCaseReference": "26/2576/000637U",
+      "subsequentAppearances": []
     },
     {
       "caseStatusMarker": "A",
@@ -112,7 +114,8 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/000638V"
+      "courtCaseReference": "26/2576/000638V",
+      "subsequentAppearances": []
     }
   ],
   "remands": []

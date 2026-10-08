@@ -542,12 +542,12 @@ export const correctOffenceException = async function (
   this: Bichard,
   field: string,
   newValue: string,
-  useExactValue = false
+  useHardcodedValueInTest = false
 ) {
   const { page } = this.browser
 
   let newValueToSet = newValue
-  if (!useExactValue && field.toUpperCase() === "ASN") {
+  if (!useHardcodedValueInTest && field.toUpperCase() === "ASN") {
     newValueToSet = this.policeApi.getAsn() ?? newValue
   }
 
