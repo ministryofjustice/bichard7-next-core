@@ -1,0 +1,83 @@
+import type {
+  AnnotatedHearingOutcome,
+  Offence,
+  ResultQualifierVariable
+} from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+
+import removeEmptyResultQualifierVariable from "./removeEmptyResultQualifierVariable"
+import createDummyAho from "./test/createDummyAho"
+import createDummyOffence from "./test/createDummyOffence"
+import { dummyResultQualifierVariable as dummyResultQualifierVariableArr } from "./test/createDummyResult"
+
+describe("remove empty result qualifier", () => {
+  let aho: AnnotatedHearingOutcome
+  let dummyOffence: Offence
+  let dummyResultQualifierVariable: ResultQualifierVariable[]
+
+  beforeEach(() => {
+    aho = createDummyAho() as AnnotatedHearingOutcome
+    dummyOffence = createDummyOffence() as Offence
+    dummyResultQualifierVariable = dummyResultQualifierVariableArr as ResultQualifierVariable[]
+  })
+
+  it("from defendant result", () => {
+    const resultQualifierIndex = 0
+    const defendantResult = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result
+
+    if (defendantResult) {
+      defendantResult.ResultQualifierVariable[resultQualifierIndex].Code = ""
+    }
+
+    expect(
+      aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.ResultQualifierVariable[
+        resultQualifierIndex
+      ].Code
+    ).toBe("")
+
+    removeEmptyResultQualifierVariable(aho)
+
+    expect(
+      aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Result?.ResultQualifierVariable[
+        resultQualifierIndex
+      ]
+    ).toBeUndefined()
+  })
+
+  it("from offence results", () => {
+    const offenceIndex = 2
+    const resultIndex = 0
+    const resultQualifierIndex = 2
+
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence = [
+      dummyOffence,
+      dummyOffence,
+      dummyOffence,
+      dummyOffence
+    ]
+
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].Result[
+      resultIndex
+    ].ResultQualifierVariable = [
+      ...dummyResultQualifierVariable,
+      ...dummyResultQualifierVariable,
+      ...dummyResultQualifierVariable,
+      ...dummyResultQualifierVariable
+    ]
+
+    aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[offenceIndex].Result[
+      resultIndex
+    ].ResultQualifierVariable[resultQualifierIndex].Code = ""
+
+    expect(
+      aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex]?.Result[resultIndex]
+        ?.ResultQualifierVariable[resultQualifierIndex].Code
+    ).toBe("")
+
+    removeEmptyResultQualifierVariable(aho)
+
+    expect(
+      aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant?.Offence[offenceIndex]?.Result[0]
+        ?.ResultQualifierVariable[resultQualifierIndex]
+    ).toBeUndefined()
+  })
+})

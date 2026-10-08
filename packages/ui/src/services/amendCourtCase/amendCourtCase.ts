@@ -8,6 +8,7 @@ import type { Amendments } from "types/Amendments"
 import type PromiseResult from "types/PromiseResult"
 import { isError } from "types/Result"
 import getSystemNotes from "utils/amendments/getSystemNotes"
+
 import type CourtCase from "../entities/CourtCase"
 import type User from "../entities/User"
 import applyAmendmentsToAho from "./applyAmendmentsToAho"
