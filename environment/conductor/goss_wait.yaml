@@ -14,3 +14,20 @@ http:
     status: 200
   http://bichard:password@127.0.0.1:4000/health:
     status: 200
+command:
+  supervisorctl status conductor:
+    exit-status: 0
+    stdout:
+      - RUNNING
+  supervisorctl status nginx:
+    exit-status: 0
+    stdout:
+      - RUNNING
+  supervisorctl status templates:
+    exit-status: 3
+    stdout:
+      - EXITED
+  supervisorctl status htpasswd:
+    exit-status: 3
+    stdout:
+      - EXITED

@@ -1,3 +1,4 @@
+import sendFeedbackEmail from "@/services/sendEmailFeedback"
 import { Button } from "components/Buttons/Button"
 import { FormGroup } from "components/FormGroup"
 import Layout from "components/Layout"
@@ -6,6 +7,7 @@ import RadioButton from "components/Radios/RadioButton"
 import { RadioGroups } from "components/Radios/RadioGroup"
 import { MAX_FEEDBACK_LENGTH } from "config"
 import { CurrentUserContext, CurrentUserContextType } from "context/CurrentUserContext"
+import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
 import Head from "next/head"
@@ -13,19 +15,14 @@ import { useRouter } from "next/router"
 import { ParsedUrlQuery } from "querystring"
 import { FormEventHandler, useState } from "react"
 import { userToDisplayFullUserDto } from "services/dto/userDto"
-import SurveyFeedback from "services/entities/SurveyFeedback"
-import getDataSource from "services/getDataSource"
-import insertSurveyFeedback from "services/insertSurveyFeedback"
 import AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
 import { isError } from "types/Result"
-import { SurveyFeedbackResponse, SurveyFeedbackType } from "types/SurveyFeedback"
 import { DisplayFullUser } from "types/display/Users"
 import { isPost } from "utils/http"
 import redirectTo from "utils/redirectTo"
 import Form from "../components/Form"
 import withCsrf from "../middleware/withCsrf/withCsrf"
 import CsrfServerSidePropsContext from "../types/CsrfServerSidePropsContext"
-import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 
 enum FeedbackExperienceKey {
   verySatisfied,
@@ -51,8 +48,6 @@ export const getServerSideProps = withMultipleServerSideProps(
       CsrfServerSidePropsContext
     const { previousPath } = query as { previousPath: string }
 
-    const dataSource = await getDataSource()
-
     const props = {
       csrfToken,
       user: userToDisplayFullUserDto(currentUser),
@@ -67,31 +62,39 @@ export const getServerSideProps = withMultipleServerSideProps(
         feedback: string
       }
 
-      if (isAnonymous && experience && feedback) {
-        const result = await insertSurveyFeedback(dataSource, {
-          feedbackType: SurveyFeedbackType.General,
-          userId: isAnonymous === "no" ? currentUser.id : null,
-          response: {
-            isAnonymous,
-            experience: +experience,
-            comment: feedback
-          } as SurveyFeedbackResponse
-        } as SurveyFeedback)
+      const isAnonymousHasError = !isAnonymous
+      const experienceHasError = !experience
+      const feedbackHasError = !feedback
 
-        if (!isError(result)) {
-          return redirectTo(previousPath)
-        } else {
-          throw result
+      if (isAnonymousHasError || experienceHasError || feedbackHasError) {
+        return {
+          props: {
+            ...props,
+            fields: {
+              isAnonymous: { hasError: isAnonymousHasError, value: isAnonymous ?? null },
+              experience: { hasError: experienceHasError, value: experience ?? null },
+              feedback: { hasError: feedbackHasError, value: feedback ?? "" }
+            }
+          }
         }
       }
 
-      return {
-        props: {
-          ...props,
-          fields: {
-            isAnonymous: { hasError: !isAnonymous, value: isAnonymous ?? null },
-            experience: { hasError: !experience, value: experience ?? null },
-            feedback: { hasError: !feedback, value: feedback }
+      const experienceText = FeedbackExperienceOptions[experience as unknown as FeedbackExperienceKey]
+      const userEmail = isAnonymous === "no" ? currentUser.email : null
+
+      const feedbackResult = await sendFeedbackEmail(experienceText, feedback, userEmail)
+
+      if (!isError(feedbackResult)) {
+        return redirectTo(previousPath)
+      } else {
+        return {
+          props: {
+            ...props,
+            fields: {
+              isAnonymous: { hasError: false, value: isAnonymous },
+              experience: { hasError: false, value: experience },
+              feedback: { hasError: false, value: feedback }
+            }
           }
         }
       }
@@ -105,6 +108,7 @@ interface Props {
   csrfToken: string
   user: DisplayFullUser
   previousPath: string
+  canUseTriggerAndExceptionQualityAuditing: boolean
   fields?: {
     isAnonymous: {
       hasError: boolean
@@ -119,7 +123,6 @@ interface Props {
       value: string
     }
   }
-  canUseTriggerAndExceptionQualityAuditing: boolean
 }
 
 const FeedbackPage: NextPage<Props> = ({

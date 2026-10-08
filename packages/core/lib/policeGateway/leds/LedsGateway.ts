@@ -17,16 +17,19 @@ import type { ErrorResponse } from "../../../types/leds/ErrorResponse"
 import type LedsApiConfig from "../../../types/leds/LedsApiConfig"
 import type { RemandRequest } from "../../../types/leds/RemandRequest"
 import type { SubsequentDisposalResultsRequest } from "../../../types/leds/SubsequentDisposalResultsRequest"
+import type LedsOperation from "../../../types/LedsOperation"
 import type PoliceGateway from "../../../types/PoliceGateway"
 
 import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
 import LedsActionCode from "../../../types/leds/LedsActionCode"
+import { ledsOperations, pncToLedsOperations } from "../../../types/LedsOperation"
 import PoliceApiError from "../PoliceApiError"
 import cleanObjectStrings from "./cleanObjectStrings"
 import convertAsnToLedsFormat from "./convertAsnToLedsFormat"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
 import generateRequestHeaders from "./generateRequestHeaders"
+import logApiMetric from "./logApiMetric"
 import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
 import { normalDisposal } from "./processors/normalDisposal"
 import { remand } from "./processors/remand"
@@ -40,17 +43,8 @@ const jsonTransformer = (data: string): unknown => {
   }
 }
 
-const requestTypes = {
-  [PncOperation.DISPOSAL_UPDATED]: "Subsequently Varied",
-  [PncOperation.NORMAL_DISPOSAL]: "Disposal Results",
-  [PncOperation.REMAND]: "Remand",
-  [PncOperation.SENTENCE_DEFERRED]: "Sentence Deferred",
-  AsnQuery: "ASN Query"
-} as const
-type RequestType = (typeof requestTypes)[keyof typeof requestTypes]
-
 const generateAuditLogAttributes = (
-  requestType: RequestType,
+  requestType: LedsOperation,
   url: string,
   headers: Record<string, unknown>,
   body: Record<string, unknown>,
@@ -94,6 +88,7 @@ export default class LedsGateway implements PoliceGateway {
 
     const asnQueryUrl = this.generateUrl(endpoints.asnQuery)
     const requestHeaders = generateRequestHeaders(correlationId, LedsActionCode.QueryByAsn, authToken)
+    const startTime = performance.now()
     const apiResponse = await axios
       .post(asnQueryUrl, requestBody, {
         headers: requestHeaders,
@@ -104,10 +99,14 @@ export default class LedsGateway implements PoliceGateway {
       })
       .catch((error: AxiosError<ErrorResponse>) => error)
 
+    const durationMs = performance.now() - startTime
+
+    logApiMetric(asnQueryUrl, durationMs, correlationId, ledsOperations.AsnQuery, apiResponse.status)
+
     this.auditLogger.info(
       EventCode.PncResponseReceived,
       generateAuditLogAttributes(
-        requestTypes.AsnQuery,
+        ledsOperations.AsnQuery,
         asnQueryUrl,
         requestHeaders,
         requestBody,
@@ -196,6 +195,7 @@ export default class LedsGateway implements PoliceGateway {
     const updateUrl = this.generateUrl(endpoint)
     const body = cleanObjectStrings(requestBody)
     const requestHeaders = generateRequestHeaders(correlationId, actionCode, authToken)
+    const startTime = performance.now()
     const apiResponse = await axios
       .post(updateUrl, body, {
         headers: requestHeaders,
@@ -206,10 +206,14 @@ export default class LedsGateway implements PoliceGateway {
       })
       .catch((error: AxiosError<ErrorResponse>) => error)
 
+    const durationMs = performance.now() - startTime
+
+    logApiMetric(updateUrl, durationMs, correlationId, pncToLedsOperations[request.operation], apiResponse.status)
+
     this.auditLogger.info(
       EventCode.PncResponseReceived,
       generateAuditLogAttributes(
-        requestTypes[request.operation],
+        pncToLedsOperations[request.operation],
         updateUrl,
         requestHeaders,
         requestBody,

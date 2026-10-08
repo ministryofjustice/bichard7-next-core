@@ -1,0 +1,28 @@
+version: 2
+registries:
+  dockerhub:
+    type: docker-registry
+    url: https://registry.hub.docker.com
+    username: ${{secrets.DOCKERHUB_USERNAME}}
+    password: ${{secrets.DOCKERHUB_TOKEN}}
+updates:
+  - package-ecosystem: "docker"
+    directories:
+      - "/environment/conductor"
+    registries:
+      - dockerhub
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 3
+    ignore:
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eclipse-temurin"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 3

@@ -4,18 +4,17 @@ process.env.DESTINATION_TYPE = "mq"
 import { randomUUID } from "crypto"
 import fs from "fs"
 
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
 import MqListener from "@moj-bichard7/common/test/mq/listener"
 
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
 import type { Sql } from "postgres"
 import createStompClient from "../createStompClient"
 import forwardMessage from "./forwardMessage"
 
 const mq = createMqConfig()
 const stompClient = createStompClient()
-const conductorClient = createConductorClient()
 const database = jest.fn() as unknown as Sql
 
 describe("forwardMessage", () => {
@@ -50,7 +49,9 @@ describe("forwardMessage", () => {
       "CORRELATION_ID",
       correlationId
     )
-    await forwardMessage(incomingMessage, stompClient, conductorClient, database)
+    const workflowExecutor = await createWorkflowExecutor()
+
+    await forwardMessage(incomingMessage, stompClient, workflowExecutor, database)
     const message = await mqListener.waitForMessage()
 
     expect(mqListener.messages).toHaveLength(1)

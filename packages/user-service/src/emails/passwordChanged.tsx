@@ -1,6 +1,6 @@
+import type EmailContent from "@moj-bichard7/common/email/EmailContent"
 import type { JSX } from "react"
 import ReactDOMServer from "react-dom/server"
-import type EmailContent from "types/EmailContent"
 import type User from "types/User"
 import EmailLayout from "./EmailLayout"
 

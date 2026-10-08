@@ -117,13 +117,18 @@ command:
   java --version:
     exit-status: 0
     stdout:
-      - /openjdk 17[\.\d]+ \d{4}-\d{2}-\d{2} LTS/
+      - /openjdk 21[\.\d]+ \d{4}-\d{2}-\d{2} LTS/
     timeout: 1000
   nginx_package_source:
     exec: "yum list installed nginx"
     exit-status: 0
     stdout:
       - "@nginx-mainline"
+  supervisord --version:
+    exit-status: 0
+    stdout:
+      - "4.3.0"
+    timeout: 10000
 package:
   nginx:
     installed: true

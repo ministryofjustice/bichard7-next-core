@@ -3,7 +3,7 @@ process.env.DESTINATION_TYPE = "conductor"
 const sourceQueue = "TEST_SOURCE_QUEUE"
 process.env.SOURCE_QUEUE = sourceQueue
 
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createMqConfig from "@moj-bichard7/common/mq/createMqConfig"
 import { createAuditLogRecord } from "@moj-bichard7/common/test/audit-log-api/createAuditLogRecord"
@@ -20,7 +20,6 @@ import { clearTables, insertCase } from "./test/setup/database"
 
 const stompClient = createStompClient()
 const mqConfig = createMqConfig()
-const conductorClient = createConductorClient()
 const database = postgres(createDbConfig(true))
 const testDatabase = postgres(createDbConfig())
 
@@ -32,7 +31,8 @@ describe("Server in conductor mode", () => {
   let messageForwarder: MessageForwarder
 
   beforeAll(async () => {
-    messageForwarder = new MessageForwarder(stompClient, conductorClient, database)
+    const workflowExecutor = await createWorkflowExecutor()
+    messageForwarder = new MessageForwarder(stompClient, workflowExecutor, database)
     await messageForwarder.start()
   })
 

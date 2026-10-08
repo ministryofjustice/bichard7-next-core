@@ -1,46 +1,62 @@
 ARG BUILD_IMAGE="amazon-linux2023-base"
+ARG CONDUCTOR_VERSION="v3.32.1"
 
-FROM node:20-alpine AS ui-builder
+# ===========================================================================================================
+# 0. Source stage
+# ===========================================================================================================
+FROM alpine/git@sha256:a4bb51f1a3553df194ce679fc1db721d8bfba2046fa1a88fe9d4ac551ffbce25 AS src
+ARG CONDUCTOR_VERSION
 
-ARG CONDUCTOR_VERSION="v3.21.14"
+RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor
 
-RUN apk add git && \
-    git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor
+# ===========================================================================================================
+# 1. UI Builder stage
+# ===========================================================================================================
+FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS ui-builder
+
+COPY --from=src /conductor/ui /conductor/ui
 
 WORKDIR /conductor/ui
 
-RUN npm install --legacy-peer-deps && \
+# Using `npm install` over `npm ci` as Conductors package.json and package-lock.json don't seem to be in sync
+RUN npm install --legacy-peer-deps --ignore-scripts --no-audit && \
     npm cache clean --force && \
     npm run build
 
 # ===========================================================================================================
-# 0. Builder stage
+# 2. Java Builder stage
 # ===========================================================================================================
-FROM eclipse-temurin:17-jdk-jammy AS builder
+FROM eclipse-temurin:21-jdk-jammy@sha256:e0c60c487345d1dc9d0fc7b6f0496f3cc941e5132e09296cc17a6decc71b902b AS builder
 
-ARG CONDUCTOR_VERSION="v3.21.14"
-
-RUN apt-get update && apt-get install -y --no-install-recommends git && \
-    git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor && \
-    rm -rf /var/lib/apt/lists/*
-
-# Build the server
+COPY --from=src /conductor /conductor
 
 WORKDIR /conductor
 
-RUN sed -i 's/^subprojects {$/ext["tomcat.version"] = "10.1.55"\n\n&/' build.gradle && \
-    sed -i "s/revRedisson = '3\.13\.3'/revRedisson = '3.22.0'/" dependencies.gradle
+RUN printf '%s\n' \
+    'ext["tomcat.version"] = "10.1.59"' \
+    'subprojects {' \
+    '    configurations.all {' \
+    '        resolutionStrategy.eachDependency { d ->' \
+    '            if (d.requested.group == "org.bouncycastle") {' \
+    '                d.useVersion "1.84"' \
+    '                d.because "Fix CVE-2025-14813"' \
+    '            }' \
+    '            if (d.requested.group == "io.netty" && d.requested.version?.startsWith("4.1.")) {' \
+    '                d.useVersion "4.1.137.Final"' \
+    '                d.because "Fix CVE-2026-75595"' \
+    '            }' \
+    '        }' \
+    '    }' \
+    '}' >> build.gradle
 
 RUN ./gradlew --version && \
     ./gradlew build --no-daemon -x test
 
 # ===========================================================================================================
-# 1. Bin stage
+# 3. Runner stage
 # ===========================================================================================================
-
-FROM ${BUILD_IMAGE}
-
-ARG CONDUCTOR_VERSION="v3.21.14"
+FROM ${BUILD_IMAGE} AS runner
+ARG CONDUCTOR_VERSION
 
 LABEL org.opencontainers.image.authors="CJSE"
 LABEL conductor_version=$CONDUCTOR_VERSION
@@ -48,14 +64,13 @@ LABEL conductor_version=$CONDUCTOR_VERSION
 USER root
 
 COPY files/openssl.cnf /tmp/openssl.cnf
-
 COPY files/nginx.repo /etc/yum.repos.d/nginx.repo
 
 RUN mkdir -p /certs /var/log/supervisor && \
-    yum install -y --setopt=install_weak_deps=False nginx httpd-tools gettext java-17-amazon-corretto && \
+    yum install -y --setopt=install_weak_deps=False nginx httpd-tools gettext java-21-amazon-corretto && \
     yum clean all && \
     rm -rf /var/cache/yum && \
-    pip install --no-cache-dir supervisor && \
+    pip install --no-cache-dir --only-binary=:all: supervisor==4.3.0 && \
     openssl req -x509 -nodes -days 730 -newkey rsa:4096 \
     -out /certs/server.crt -keyout /certs/server.key \
     -config /tmp/openssl.cnf -extensions 'v3_req' && \

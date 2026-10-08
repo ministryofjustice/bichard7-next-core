@@ -1,0 +1,36 @@
+name: "Dynamic Path Filter"
+description: "Evaluates dynamic path filters on PRs and outputs filter results."
+
+inputs:
+  filters:
+    description: "YAML multi-line string defining dorny/paths-filter rules"
+    required: true
+
+outputs:
+  filters:
+    description: "JSON string mapping filter names to boolean strings"
+    value: ${{ steps.evaluate.outputs.filters }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Path Filtering
+      uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+      id: paths-filter
+      with:
+        filters: ${{ inputs.filters }}
+
+    - name: Evaluate Run Condition
+      shell: bash
+      id: evaluate
+      run: |
+        FILTER_OUTPUTS='${{ toJson(steps.paths-filter.outputs) }}'
+
+        if [[ "${{ github.event_name }}" == "pull_request" || "${{ github.event_name }}" == "merge_group" ]]; then
+          FILTER_MAP="$FILTER_OUTPUTS"
+        else
+          # On push to main / workflow_dispatch, override all filters to true so tests run
+          FILTER_MAP=$(echo "$FILTER_OUTPUTS" | jq 'with_entries(.value = "true")')
+        fi
+
+        echo "filters=$(echo "$FILTER_MAP" | jq -c .)" >> $GITHUB_OUTPUT

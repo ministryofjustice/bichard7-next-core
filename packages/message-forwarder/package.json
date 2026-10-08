@@ -10,7 +10,6 @@
     "lint:fix": "eslint --fix .",
     "start": "ts-node src/server.ts",
     "esbuild": "node build.js",
-    "update-deps": "ncu -u && npm install",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --detectOpenHandles --runInBand"
   },
   "license": "MIT",
@@ -29,15 +28,15 @@
   },
   "devDependencies": {
     "@types/node-fetch": "^2.6.13",
-    "@types/ws": "^8.18.1",
+    "@types/ws": "^8.18.2",
     "esbuild": "~0.28.1",
     "ts-node": "^10.9.2"
   },
   "dependencies": {
-    "@io-orkes/conductor-javascript": "~2.1.5",
+    "@io-orkes/conductor-javascript": "^4.0.0",
     "@stomp/stompjs": "^7.3.0",
     "node-fetch": "^3.3.2",
-    "ws": "^8.21.3"
+    "ws": "^8.22.0"
   },
   "optionalDependencies": {
     "@esbuild/linux-arm64": "^0.28.2",

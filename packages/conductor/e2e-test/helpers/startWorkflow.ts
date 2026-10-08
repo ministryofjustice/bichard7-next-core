@@ -1,12 +1,16 @@
-import createConductorClient from "@moj-bichard7/common/conductor/createConductorClient"
-
-const conductorClient = createConductorClient()
+import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 
 const startWorkflow = async (
   workflowName: string,
   requestBody: Record<string, unknown>,
   correlationId: string
-): Promise<string> =>
-  await conductorClient.workflowResource.startWorkflow1(workflowName, requestBody, undefined, correlationId)
+): Promise<string> => {
+  const workflowExecutor = await createWorkflowExecutor()
+  return await workflowExecutor.startWorkflow({
+    correlationId,
+    input: requestBody,
+    name: workflowName
+  })
+}
 
 export default startWorkflow

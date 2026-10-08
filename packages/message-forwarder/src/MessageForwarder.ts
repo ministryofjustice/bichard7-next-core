@@ -1,10 +1,11 @@
-import type { ConductorClient } from "@io-orkes/conductor-javascript"
+import type { WorkflowExecutor } from "@io-orkes/conductor-javascript"
 import { isError } from "@moj-bichard7/common/types/Result"
 import logger from "@moj-bichard7/common/utils/logger"
 import type { Client, Message, StompSubscription } from "@stomp/stompjs"
 import type { Sql } from "postgres"
 import { WebSocket } from "ws"
 import forwardMessage from "./forwardMessage/forwardMessage"
+
 Object.assign(global, { WebSocket })
 
 const sourceQueue = process.env.SOURCE_QUEUE ?? "PHASE_1_RESUBMIT_QUEUE"
@@ -14,7 +15,7 @@ class MessageForwarder {
 
   constructor(
     private stompClient: Client,
-    private conductorClient: ConductorClient,
+    private workflowExecutor: WorkflowExecutor,
     private database: Sql
   ) {}
 
@@ -30,7 +31,7 @@ class MessageForwarder {
               const forwardMessageResult = await forwardMessage(
                 message.body,
                 this.stompClient,
-                this.conductorClient,
+                this.workflowExecutor,
                 this.database
               )
               if (isError(forwardMessageResult)) {

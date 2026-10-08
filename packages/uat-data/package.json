@@ -4,8 +4,7 @@
   "description": "Sample data to seed to an environment to user acceptance testing",
   "scripts": {
     "build": "npx tsc --noEmit --skipLibCheck",
-    "lint": "eslint --fix .",
-    "update-deps": "ncu -u -x eslint && npm install"
+    "lint": "eslint --fix ."
   },
   "license": "MIT",
   "lint-staged": {
@@ -15,7 +14,7 @@
     "tsconfig-paths": "^4.2.0"
   },
   "dependencies": {
-    "@faker-js/faker": "^9.9.0",
-    "@types/node": "^26.2.0"
+    "@faker-js/faker": "^10.6.0",
+    "@types/node": "^26.6.4"
   }
 }

@@ -37,10 +37,10 @@ parameters:
   e2e-test-changes:
     type: boolean
     default: false
-  characterisation-test-changes:
+  s3-web-proxy-changes:
     type: boolean
     default: false
-  s3-web-proxy-changes:
+  nginx-auth-proxy-changes:
     type: boolean
     default: false
 
@@ -161,6 +161,12 @@ commands:
       - run:
           name: Load conductor image
           command: docker image load < "images/conductor.tar.gz"
+
+  load_nginx_auth_proxy_image:
+    steps:
+      - run:
+          name: Load nginx auth proxy image
+          command: docker image load < "images/nginx-auth-proxy.tar.gz"
 
   start_services:
     parameters:
@@ -408,6 +414,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - run: sudo apt-get update && sudo apt-get install -y pigz
       - fetch_images:
@@ -422,6 +429,15 @@ jobs:
           command: |
             mkdir -p images
             docker image save "message-forwarder:latest" | pigz > "images/message-forwarder.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/message-forwarder
+          command: |
+            dgoss run \
+              -e MQ_URL="ws://mq" \
+              -e MQ_AUTH='{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}' \
+              -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
+              "message-forwarder:latest"
       - persist_to_workspace:
           root: .
           paths:
@@ -438,6 +454,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -452,6 +469,28 @@ jobs:
           command: |
             mkdir -p images
             docker image save "bichard-worker:${DOCKER_TAG}" | pigz > "images/worker.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/conductor
+          command: |
+            docker network inspect conductor-test-net >/dev/null 2>&1 || docker network create conductor-test-net
+            docker rm -f mock-conductor || true
+            docker run -d --name mock-conductor --network conductor-test-net \
+              nodejs-24-2023 \
+              node -e "require('http').createServer((req,res) => { res.writeHead(200, {'Content-Type': 'application/json'}); res.end('[]'); }).listen(4000, '0.0.0.0');"
+            dgoss run \
+              --network conductor-test-net \
+              -e PINO_LOG_LEVEL=info \
+              -e NODE_OPTIONS="--dns-result-order=ipv4first --unhandled-rejections=warn" \
+              -e TASK_DATA_BUCKET_NAME="conductor-task-data" \
+              -e AUDIT_LOG_API_KEY="xxx" \
+              -e AUDIT_LOG_API_URL="http://localhost:3000" \
+              -e MQ_URL="mq" \
+              -e MQ_AUTH='{"username": "${DEFAULT_USER}", "password": "${DEFAULT_PASSWORD}"}' \
+              -e INCOMING_BUCKET_NAME="incoming-messages" \
+              -e S3_REGION="eu-west-2" \
+              -e CONDUCTOR_URL="http://mock-conductor:4000" \
+              "bichard-worker:${DOCKER_TAG}"
       - persist_to_workspace:
           root: .
           paths:
@@ -468,6 +507,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -482,6 +522,10 @@ jobs:
           command: |
             mkdir -p images
             docker image save "api:${DOCKER_TAG}" | pigz > "images/api.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/api
+          command: dgoss run "api:${DOCKER_TAG}"
       - persist_to_workspace:
           root: .
           paths:
@@ -521,6 +565,50 @@ jobs:
           working_directory: packages/s3-web-proxy
           command: make goss
 
+  build_nginx_auth_proxy_image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - unless:
+          condition:
+            <<: *any_change
+          steps:
+            - run: circleci-agent step halt
+      - checkout
+      - install_goss
+      - enable_docker_container_image_store
+      - set_docker_tag
+      - run: sudo apt-get update && sudo apt-get install -y pigz
+      - fetch_images:
+          images: amazon-linux2023-base
+      - build_and_cache_image:
+          image_name: nginx-auth-proxy
+          dockerfile: packages/nginx-auth-proxy/Dockerfile
+          cache_key: buildkit-nginx-auth-proxy
+          context: packages/nginx-auth-proxy
+      - run:
+          name: Save Docker image
+          command: |
+            mkdir -p images
+            docker image save "nginx-auth-proxy:${DOCKER_TAG}" | pigz > "images/nginx-auth-proxy.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/nginx-auth-proxy
+          command: |
+            docker tag "nginx-auth-proxy:${DOCKER_TAG}" "nginx-auth-proxy:latest"
+            make goss
+      - fetch_images:
+          images: nodejs-24-2023
+      - run:
+          name: Run unit tests
+          working_directory: packages/nginx-auth-proxy
+          command: make unit-test-nginx
+      - persist_to_workspace:
+          root: .
+          paths:
+            - images
+
   build_ui_image:
     machine:
       image: ubuntu-2204:current
@@ -532,6 +620,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -546,6 +635,12 @@ jobs:
           command: |
             mkdir -p images
             docker image save "ui:${DOCKER_TAG}" | pigz > "images/ui.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/ui
+          command: |
+            docker tag "ui:${DOCKER_TAG}" "ui:latest"
+            make goss
       - persist_to_workspace:
           root: .
           paths:
@@ -562,6 +657,7 @@ jobs:
           steps:
             - run: circleci-agent step halt
       - checkout
+      - install_goss
       - enable_docker_container_image_store
       - set_docker_tag
       - run: sudo apt-get update && sudo apt-get install -y pigz
@@ -576,6 +672,12 @@ jobs:
           command: |
             mkdir -p images
             docker image save "user-service:${DOCKER_TAG}" | pigz > "images/user-service.tar.gz"
+      - run:
+          name: Run Goss Tests
+          working_directory: packages/user-service
+          command: |
+            docker tag "user-service:${DOCKER_TAG}" "user-service:latest"
+            make goss
       - persist_to_workspace:
           root: .
           paths:
@@ -699,27 +801,6 @@ jobs:
           name: Run E2E comparison tests against Core Phase 3
           command: npm run -w packages/core test:compare:phase3
 
-  characterisation_test:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: medium
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
-              - << pipeline.parameters.characterisation-test-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - node_install_packages
-      - build_common
-      - run:
-          name: Run tests against core code
-          command: npm run test:characterisation -w packages/core
-
   test_conductor:
     machine:
       image: ubuntu-2204:current
@@ -748,6 +829,7 @@ jobs:
       - load_audit_logging_image
       - load_conductor_image
       - load_leds_image
+      - load_nginx_auth_proxy_image
       - node/install
       - node_install_packages
       - build_core
@@ -786,6 +868,7 @@ jobs:
       - load_api_image
       - load_audit_logging_image
       - load_conductor_image
+      - load_nginx_auth_proxy_image
       - node/install
       - node_install_packages
       - build_core
@@ -815,6 +898,7 @@ jobs:
               - << pipeline.parameters.env-changes >>
               - << pipeline.parameters.message-forwarder-changes >>
               - << pipeline.parameters.user-service-changes >>
+              - << pipeline.parameters.nginx-auth-proxy-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -833,6 +917,7 @@ jobs:
       - load_leds_image
       - load_audit_logging_image
       - load_conductor_image
+      - load_nginx_auth_proxy_image
       - node_install_packages
       - build_core
       - run:
@@ -862,6 +947,7 @@ jobs:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.api-changes >>
               - << pipeline.parameters.common-changes >>
+              - << pipeline.parameters.core-changes >>
               - << pipeline.parameters.ui-changes >>
               - << pipeline.parameters.env-changes >>
           steps:
@@ -874,7 +960,7 @@ jobs:
       - load_worker_image
       - node/install
       - node_install_packages
-      - build_common
+      - build_core
       - fetch_images:
           images: conductor
       - run:
@@ -947,51 +1033,6 @@ jobs:
           name: Run integration tests
           command: nvm use && npm run -w packages/ui test:integration
 
-  test_ui_component:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: medium
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.ui-changes >>
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - node/install
-      - run:
-          name: Install Cypress
-          command: ./.circleci/scripts/install-cypress.sh 2>&1
-          background: true
-      - node_install_packages
-      - run:
-          name: Install GOV.UK Assets
-          command: npm run -w packages/ui install:assets
-      - build_core
-      - run:
-          name: Wait for cypress install to finish
-          command: until [ -f cypressInstalled ]; do sleep 1; done
-          no_output_timeout: 10m
-      - run:
-          name: Retrying installing Cypress
-          command: ./.circleci/scripts/install-cypress.sh
-      - run:
-          name: Run UI component tests
-          command: bash ./.circleci/scripts/ui-scripts/run-component-tests.sh
-          environment:
-            UI_IS_HTTPS: true
-            TZ: "Europe/London"
-      - store_test_results:
-          path: ~/project/packages/ui/cypress/results
-      - store_artifacts:
-          path: ~/project/packages/ui/cypress/videos
-      - store_artifacts:
-          path: ~/project/packages/ui/cypress/screenshots
-
   test_user_service:
     machine:
       image: ubuntu-2204:current
@@ -1002,6 +1043,7 @@ jobs:
             or:
               - << pipeline.parameters.circleci-changes >>
               - << pipeline.parameters.user-service-changes >>
+              - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.env-changes >>
           steps:
             - run: circleci-agent step halt
@@ -1014,6 +1056,7 @@ jobs:
       - node_install_packages
       - start_services:
           SERVICES: db-seed audit-log-api
+      - build_common
       - run:
           name: Run unit tests against user service code
           command: nvm use && npm run -w packages/user-service test:unit
@@ -1053,6 +1096,7 @@ jobs:
       - run:
           name: Install GOV.UK Assets
           command: npm run -w packages/user-service install:assets
+      - build_common
       - run:
           name: Build the user service
           command: npm run -w packages/user-service build
@@ -1086,6 +1130,7 @@ jobs:
               - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.nginx-auth-proxy-changes >>
               - << pipeline.parameters.env-changes >>
               - and:
                   - equal: [true, << pipeline.parameters.api-changes >>]
@@ -1106,14 +1151,13 @@ jobs:
       - load_audit_logging_image
       - load_worker_image
       - load_leds_image
-      - fetch_images:
-          images: nginx-auth-proxy
+      - load_nginx_auth_proxy_image
       - node/install
+      - node_install_packages
       - run:
           name: Install Cypress
           command: ./.circleci/scripts/install-cypress.sh 2>&1
           background: true
-      - node_install_packages
       - build_common
       - run:
           name: Wait for cypress install to finish
@@ -1178,6 +1222,7 @@ jobs:
               - << pipeline.parameters.e2e-test-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.nginx-auth-proxy-changes >>
               - << pipeline.parameters.env-changes >>
               - and:
                   - equal: [true, << pipeline.parameters.api-changes >>]
@@ -1200,6 +1245,7 @@ jobs:
       - load_leds_image
       - load_audit_logging_image
       - load_conductor_image
+      - load_nginx_auth_proxy_image
       - when:
           condition: << parameters.use-leds >>
           steps:
@@ -1239,6 +1285,7 @@ jobs:
               - << pipeline.parameters.user-service-changes >>
               - << pipeline.parameters.common-changes >>
               - << pipeline.parameters.core-changes >>
+              - << pipeline.parameters.nginx-auth-proxy-changes >>
           steps:
             - run: circleci-agent step halt
       - checkout
@@ -1250,11 +1297,10 @@ jobs:
       - load_user_service_image
       - load_api_image
       - load_audit_logging_image
+      - load_nginx_auth_proxy_image
       - node/install
       - node_install_packages
       - build_core
-      - fetch_images:
-          images: nginx-auth-proxy
       - run:
           name: Boot up infra
           command: bash .circleci/scripts/run-infrastructure.sh "ui user-service" ui
@@ -1267,10 +1313,10 @@ jobs:
 
 workflows:
   test-all:
+    when:
+      not:
+        equal: [main, << pipeline.git.branch >>]
     jobs:
-      - characterisation_test
-      - test_ui_component
-
       - build_postgres_image
       - build_leds_image
       - build_message_forwarder_image
@@ -1281,6 +1327,7 @@ workflows:
       - build_s3_web_proxy_image
       - build_audit_logging_images
       - build_conductor_image
+      - build_nginx_auth_proxy_image
 
       - comparison_test:
           requires:
@@ -1318,6 +1365,7 @@ workflows:
             - build_api_image
             - build_audit_logging_images
             - build_conductor_image
+            - build_nginx_auth_proxy_image
 
       - test_api:
           requires:
@@ -1336,6 +1384,7 @@ workflows:
             - build_audit_logging_images
             - build_leds_image
             - build_conductor_image
+            - build_nginx_auth_proxy_image
 
       - cypress_e2e_tests:
           name: cypress_e2e_tests
@@ -1347,6 +1396,7 @@ workflows:
             - build_leds_image
             - build_audit_logging_images
             - build_worker_image
+            - build_nginx_auth_proxy_image
       - cypress_e2e_tests:
           name: cypress_e2e_tests_api
           api: true
@@ -1363,6 +1413,7 @@ workflows:
             - build_audit_logging_images
             - build_worker_image
             - build_conductor_image
+            - build_nginx_auth_proxy_image
 
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests
@@ -1376,6 +1427,7 @@ workflows:
             - build_leds_image
             - build_audit_logging_images
             - build_conductor_image
+            - build_nginx_auth_proxy_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_leds
           use-leds: true
@@ -1389,6 +1441,7 @@ workflows:
             - build_api_image
             - build_audit_logging_images
             - build_conductor_image
+            - build_nginx_auth_proxy_image
       - cucumber_e2e_tests:
           name: cucumber_e2e_tests_api
           api: true
@@ -1406,6 +1459,7 @@ workflows:
             - build_leds_image
             - build_audit_logging_images
             - build_conductor_image
+            - build_nginx_auth_proxy_image
 
       - cucumber_e2e_legacy_tests:
           requires:
@@ -1418,6 +1472,7 @@ workflows:
             - build_audit_logging_images
             - build_leds_image
             - build_conductor_image
+            - build_nginx_auth_proxy_image
 
       - zap_scanner:
           requires:
@@ -1426,3 +1481,4 @@ workflows:
             - build_user_service_image
             - build_api_image
             - build_audit_logging_images
+            - build_nginx_auth_proxy_image

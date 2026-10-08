@@ -22,5 +22,6 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  transformIgnorePatterns: ["node_modules/(?!@faker-js)"]
 }
