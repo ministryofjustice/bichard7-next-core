@@ -1,8 +1,7 @@
 import type z from "zod"
 
-import { dateLikeToDate } from "@moj-bichard7/common/schemas/dateLikeToDate"
 import { CaseRowSchema } from "@moj-bichard7/common/types/Case"
-import { TriggerRowSchema } from "@moj-bichard7/common/types/Trigger"
+import zod from "zod"
 
 export const CommunitySentenceRowReportSchema = CaseRowSchema.pick({
   annotated_msg: true,
@@ -10,8 +9,7 @@ export const CommunitySentenceRowReportSchema = CaseRowSchema.pick({
   error_id: true,
   msg_received_ts: true
 }).extend({
-  court_date: dateLikeToDate,
-  triggers: TriggerRowSchema.array()
+  domestic_violence_flag: zod.boolean()
 })
 
 export type CommunitySentenceRowReport = z.infer<typeof CommunitySentenceRowReportSchema>

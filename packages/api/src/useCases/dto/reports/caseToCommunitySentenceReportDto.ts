@@ -17,26 +17,15 @@ export function* caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Ge
 
   // const aggregatedOffences = formatOffenceData(aho)
 
-  // caseRef: z.string(),
-  // dateOfBirth: z.string(),
-  // dateOfSentence: z.string(),
-  // defendantName: z.string().nullish(),
-  // domesticViolenceFlag: z.boolean(),
-  // expiryOfSentence: z.string(),
-  // offenceType: z.string(),
-  // pncId: z.string(),
-  // receivedDate: z.string(),
-  // suspendedSentenceOrderDuration: z.number()
-
   yield {
     dateOfBirth: dateOfBirth(aho),
     dateOfSentence: new Date().toDateString(), //aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Result?.DateSpecifiedInResult,
     defendantName: row.defendant_name ?? null,
-    domesticViolenceFlag: false,
-    expiryOfSentence: new Date().toDateString(),
-    offenceType: "Offence Type",
+    domesticViolenceFlag: row.domestic_violence_flag,
+    expiryOfSentence: new Date().toDateString(), // need to get
+    offenceType: "Offence Type", // need to get
     pncId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier ?? "",
     receivedDate: formatDate(row.msg_received_ts, true, true),
-    suspendedSentenceOrderDuration: 0
+    suspendedSentenceOrderDuration: 0 // need to get
   }
 }

@@ -49,7 +49,11 @@ describe("community sentence report e2e", () => {
       2: { courtDate: subDays(new Date(), 2), messageReceivedAt: subDays(new Date(), 2) }
     })
 
-    await createTriggers(helper.postgres, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0031 }])
+    await createTriggers(helper.postgres, caseObj.errorId, [
+      { triggerCode: TriggerCode.TRPR0031 },
+      { triggerCode: TriggerCode.TRPR0023 },
+      { triggerCode: TriggerCode.TRPR0024 }
+    ])
 
     const query = new URLSearchParams()
     query.append("fromDate", subDays(new Date(), 7).toISOString())

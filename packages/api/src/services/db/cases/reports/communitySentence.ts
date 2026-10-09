@@ -11,7 +11,8 @@ import type { CommunitySentenceRowReport } from "../../../../types/reports/Commu
 import { processCommunitySentenceReport } from "../../../../useCases/cases/reports/communitySentence/processCommunitySentenceReport"
 import { organisationUnitSql } from "../../organisationUnitSql"
 
-const COMMUNITY_SENTENCE_TRIGGERS = [TriggerCode.TRPR0031]
+const COMMUNITY_SENTENCE_TRIGGER = TriggerCode.TRPR0031
+const DOMESTIC_VIOLENCE_TRIGGERS = [TriggerCode.TRPR0024, TriggerCode.TRPR0023]
 
 export async function* communitySentenceReport(
   database: TransactionConnection,
@@ -19,31 +20,36 @@ export async function* communitySentenceReport(
   filters: CommunitySentenceReportQuery
 ): AsyncGenerator<CommunitySentenceReportDto[]> {
   const query = database.connection<CommunitySentenceRowReport[]>`
+  WITH trigger_summary AS (
     SELECT
-      el.error_id,
-      el.annotated_msg,
-      el.defendant_name,
-      el.msg_received_ts,
+      error_id,
+      bool_or(trigger_code = ANY (${DOMESTIC_VIOLENCE_TRIGGERS})) AS domestic_violence_flag,
+      bool_or(trigger_code = ${COMMUNITY_SENTENCE_TRIGGER}) AS has_community_sentence,
       json_agg(
         json_build_object(
-          'status', elt.status,
-          'resolved_ts', elt.resolved_ts,
-          'trigger_code', elt.trigger_code
-        ) ORDER BY elt.resolved_ts DESC
+          'status', status,
+          'resolved_ts', resolved_ts,
+          'trigger_code', trigger_code
+        ) ORDER BY resolved_ts DESC
       ) AS triggers
-    FROM br7own.error_list el
-    INNER JOIN br7own.error_list_triggers elt ON el.error_id = elt.error_id
-    WHERE
-      el.msg_received_ts BETWEEN ${startOfDay(filters.fromDate)} AND ${endOfDay(filters.toDate)}
-      AND elt.trigger_code = ANY (${COMMUNITY_SENTENCE_TRIGGERS})
-      AND (${organisationUnitSql(database, user)})
-    GROUP BY
-      el.error_id,
-      el.annotated_msg,
-      el.defendant_name,
-      el.msg_received_ts
-    ORDER BY el.msg_received_ts
-  `
+    FROM br7own.error_list_triggers
+    GROUP BY error_id
+  )
+  SELECT
+    el.error_id,
+    el.annotated_msg,
+    el.defendant_name,
+    el.msg_received_ts,
+    ts.domestic_violence_flag,
+    ts.triggers
+  FROM br7own.error_list el
+  INNER JOIN trigger_summary ts ON el.error_id = ts.error_id
+  WHERE
+    el.msg_received_ts BETWEEN ${startOfDay(filters.fromDate)} AND ${endOfDay(filters.toDate)}
+    AND ts.has_community_sentence = TRUE
+    AND (${organisationUnitSql(database, user)})
+  ORDER BY el.msg_received_ts
+`
 
   try {
     const cursor = query.cursor(100)
