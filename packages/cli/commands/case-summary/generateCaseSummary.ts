@@ -56,12 +56,12 @@ const extractErrorMessages = (event: ApiAuditLogEvent) => {
 const triggerRegex = /Trigger \d+ Details/
 const exceptionRegex = /Exception Type/
 
-const extractCodeFromAttributes = (attributes: AuditLogEventAttributes, codeRegex: RegExp): string | undefined => {
-  for (const [key, value] of Object.entries(attributes)) {
-    if (key.match(codeRegex)) {
-      return value.toString()
-    }
-  }
+const extractCodesFromAttributes = (attributes: AuditLogEventAttributes, codeRegex: RegExp): string => {
+  return Object.entries(attributes)
+    .filter(([key]) => key.match(codeRegex))
+    .map(([_, value]) => value.toString())
+    .sort()
+    .join(", ")
 }
 
 const generateCaseSummaryByMessageId = async (
@@ -136,7 +136,7 @@ const generateCaseSummaryByMessageId = async (
         operationKey = "Trigger generated"
         eventDetails.push({
           metadata: {
-            title: `Trigger generated (${extractCodeFromAttributes(event.attributes, triggerRegex)})`,
+            title: `✅ Trigger generated (${extractCodesFromAttributes(event.attributes, triggerRegex)})`,
             timestamp: event.timestamp,
             errors: []
           }
@@ -145,36 +145,37 @@ const generateCaseSummaryByMessageId = async (
         operationKey = "Triggers locked"
         eventDetails.push({
           metadata: {
-            title: `Triggers locked (${event.user})`,
+            title: "Triggers locked",
             timestamp: event.timestamp,
             errors: []
-          }
+          },
+          LockedBy: event.user
         })
       } else if (event.eventCode === EventCode.TriggersResolved && event.attributes) {
         operationKey = "Triggers resolved"
         eventDetails.push({
           metadata: {
-            title: `✅ Triggers resolved (${event.user})`,
+            title: `✅ Triggers resolved (${extractCodesFromAttributes(event.attributes, triggerRegex)})`,
             timestamp: event.timestamp,
             errors: []
           },
-          Details: extractCodeFromAttributes(event.attributes, triggerRegex)
+          ResolvedBy: event.user
         })
       } else if (event.eventCode === EventCode.TriggersDeleted && event.attributes) {
         operationKey = "Triggers deleted"
         eventDetails.push({
           metadata: {
-            title: `✅ Triggers deleted (${event.user})`,
+            title: `Triggers deleted (${extractCodesFromAttributes(event.attributes, triggerRegex)})`,
             timestamp: event.timestamp,
             errors: []
           },
-          Details: extractCodeFromAttributes(event.attributes, triggerRegex)
+          DeletedBy: event.user
         })
       } else if (event.eventCode === EventCode.ExceptionsGenerated && event.attributes) {
         operationKey = "Exception generated"
         eventDetails.push({
           metadata: {
-            title: `❌ Exception generated (${extractCodeFromAttributes(event.attributes, exceptionRegex)})`,
+            title: `❌ Exception generated (${extractCodesFromAttributes(event.attributes, exceptionRegex)})`,
             timestamp: event.timestamp,
             errors: []
           }
