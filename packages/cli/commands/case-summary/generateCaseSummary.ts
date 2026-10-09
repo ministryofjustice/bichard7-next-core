@@ -1,7 +1,7 @@
 import { DynamoDBClient, ExecuteStatementCommand } from "@aws-sdk/client-dynamodb"
 import { S3Client } from "@aws-sdk/client-s3"
 import AuditLogDynamoGateway from "@moj-bichard7/api/services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
-import type { ApiAuditLogEvent } from "@moj-bichard7/api/types/AuditLogEvent"
+import type { ApiAuditLogEvent, AuditLogEventAttributes } from "@moj-bichard7/api/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { convertPncJsonToLedsAsnQueryResponse } from "@moj-bichard7/e2e-tests/utils/converters/convertPncJsonToLeds/convertPncJsonToLedsAsnQueryResponse"
 import convertPncToLeds from "@moj-bichard7/e2e-tests/utils/converters/convertPncToLeds"
@@ -52,6 +52,16 @@ const extractErrorMessages = (event: ApiAuditLogEvent) => {
   return errors
 }
 
+const exceptionRegex = /Exception Type/
+
+const extractCodeFromAttributes = (attributes: AuditLogEventAttributes, codeRegex: RegExp): string | undefined => {
+  for (const [key, value] of Object.entries(attributes)) {
+    if (key.match(codeRegex)) {
+      return value.toString()
+    }
+  }
+}
+
 const generateCaseSummaryByMessageId = async (
   messageId: string,
   options: FullGenerateCaseSummaryOptions
@@ -72,10 +82,9 @@ const generateCaseSummaryByMessageId = async (
 
   let eventDetails: object[] = []
   await Promise.all(
-    events
-      .filter((event) => event.eventCode === EventCode.PncResponseReceived)
-      .map(async (event) => {
-        let operationKey = ""
+    events.map(async (event) => {
+      let operationKey = ""
+      if (event.eventCode === EventCode.PncResponseReceived) {
         const errors = extractErrorMessages(event)
         const requestType = event.attributes?.["PNC Request Type"]
         if (requestType === "ENQASI") {
@@ -119,11 +128,26 @@ const generateCaseSummaryByMessageId = async (
           const content = String(event.attributes?.["PNC Request Message"])
           eventDetails.push(mapPenaltyHearing(content, errors, event.timestamp, sensitive))
         }
+      }
 
-        if (operationKey) {
-          output.operations[operationKey] = (output.operations[operationKey] ?? 0) + 1
+      if (event.eventCode === EventCode.ExceptionsGenerated && event.attributes) {
+        operationKey = "Exception generated"
+        const code = extractCodeFromAttributes(event.attributes, exceptionRegex)
+        const metadata: Metadata = {
+          title: `❌ Exception generated (${code})`,
+          timestamp: event.timestamp,
+          errors: []
         }
-      })
+
+        eventDetails.push({
+          metadata
+        })
+      }
+
+      if (operationKey) {
+        output.operations[operationKey] = (output.operations[operationKey] ?? 0) + 1
+      }
+    })
   )
 
   eventDetails = eventDetails.sort((a, b) =>
