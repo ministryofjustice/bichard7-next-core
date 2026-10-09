@@ -1,51 +1,51 @@
 ARG BUILD_IMAGE="nginx-nodejs-24-2023-supervisord"
-FROM ${BUILD_IMAGE}
+FROM ${BUILD_IMAGE} AS base
 
 LABEL org.opencontainers.image.authors="CJSE"
 
-COPY scripts/run_nginx.sh /bin/run_nginx
-COPY scripts/credentials.sh /usr/bin/credentials
+#########################################################
+FROM base AS deps
 
-ARG NODE_DIR="/opt/s3-server"
-ARG NODE_USER="node"
+USER root
+
+WORKDIR /core
+
+COPY package*.json ./
+COPY packages/s3-web-proxy/package.json ./packages/s3-web-proxy/package.json
+
+RUN npm ci --ignore-scripts --no-audit \
+    && npm cache clean --force
+
+#########################################################
+FROM base AS runner
 
 USER root
 
 RUN yum install -y --setopt=install_weak_deps=False \
     cronie \
     git && \
-    mkdir -p /root/.aws && \
-    mkdir -p /nginx_auth && \
-    chmod +x /bin/run_nginx && \
-    chmod +x /bin/credentials && \
     yum clean all && \
-    rm -rf /var/cache/yum && \
-    mkdir -p ${NODE_DIR} && \
-    chown -R ${NODE_USER} ${NODE_DIR}
+    rm -rf /var/cache/yum
 
+COPY --chmod=755 packages/s3-web-proxy/scripts/run_nginx.sh /bin/run_nginx
+COPY --chmod=755 packages/s3-web-proxy/scripts/credentials.sh /usr/bin/credentials
 
-USER ${NODE_USER}
+RUN mkdir -p /root/.aws /nginx_auth /core && \
+    chown -R node:node /core
 
-WORKDIR ${NODE_DIR}
+WORKDIR /core
 
-COPY s3-server/package*.json ${NODE_DIR}
+COPY --chown=node:node --from=deps ./core ./
+COPY --chown=node:node packages/s3-web-proxy/src ./packages/s3-web-proxy/src
 
-RUN npm ci --ignore-scripts --no-audit \
-&& npm cache clean --force
+COPY packages/s3-web-proxy/conf/nginx.conf /etc/nginx/nginx.conf
+COPY packages/s3-web-proxy/conf/supervisord.conf /etc/supervisord.conf
 
-COPY s3-server ${NODE_DIR}
+USER node
 
-USER root
-RUN npm link
-
-USER ${NODE_USER}
-
-WORKDIR /
+WORKDIR /core/packages/s3-web-proxy
 
 EXPOSE 8080
 EXPOSE 8443
-
-COPY conf/nginx.conf /etc/nginx/nginx.conf
-COPY conf/supervisord.conf /etc/supervisord.conf
 
 STOPSIGNAL SIGQUIT

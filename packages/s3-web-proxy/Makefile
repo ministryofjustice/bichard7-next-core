@@ -4,7 +4,7 @@ DOCKER_TAG ?= latest
 .PHONY: build install-goss goss
 
 build:
-	bash build.sh
+	bash build-docker.sh
 
 # Install goss and dgoss using the script
 install-goss:
