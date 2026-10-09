@@ -3,7 +3,6 @@ import { S3Client } from "@aws-sdk/client-s3"
 import AuditLogDynamoGateway from "@moj-bichard7/api/services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import type { ApiAuditLogEvent, AuditLogEventAttributes } from "@moj-bichard7/api/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
-import eventCode from "@moj-bichard7/common/types/EventCode"
 import { convertPncJsonToLedsAsnQueryResponse } from "@moj-bichard7/e2e-tests/utils/converters/convertPncJsonToLeds/convertPncJsonToLedsAsnQueryResponse"
 import convertPncToLeds from "@moj-bichard7/e2e-tests/utils/converters/convertPncToLeds"
 import type { PncAsnQueryJson } from "@moj-bichard7/e2e-tests/utils/converters/convertPncXmlToJson/convertPncXmlToJson"
@@ -56,7 +55,7 @@ const extractErrorMessages = (event: ApiAuditLogEvent) => {
 
 const extractCodesFromAttributes = (attributes: AuditLogEventAttributes, codeRegex: RegExp): string[] => {
   return Object.entries(attributes)
-    .filter(([key]) => key.match(codeRegex))
+    .filter(([key]) => codeRegex.exec(key))
     .map(([_, value]) => value.toString())
     .sort()
 }
@@ -162,7 +161,7 @@ const generateCaseSummaryByMessageId = async (
           const content = String(event.attributes?.["PNC Request Message"])
           eventDetails.push(mapPenaltyHearing(content, errors, event.timestamp, sensitive))
         }
-      } else if (event.eventCode === eventCode.TriggersGenerated && event.attributes) {
+      } else if (event.eventCode === EventCode.TriggersGenerated && event.attributes) {
         operationKey = "Bichard Triggers Generated"
         eventDetails.push({
           metadata: {
