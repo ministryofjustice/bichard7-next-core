@@ -131,49 +131,49 @@ const generateCaseSummaryByMessageId = async (
           eventDetails.push(mapPenaltyHearing(content, errors, event.timestamp, sensitive))
         }
       } else if (event.eventCode === eventCode.TriggersGenerated && event.attributes) {
-        operationKey = "Trigger generated"
+        operationKey = "Bichard Triggers Generated"
         eventDetails.push({
           metadata: {
-            title: `✅ Trigger generated (${extractCodesFromAttributes(event.attributes, triggerRegex)})`,
+            title: `✅ Bichard Triggers Generated (${extractCodesFromAttributes(event.attributes, triggerRegex)})`,
             timestamp: event.timestamp,
             errors: []
           }
         })
       } else if (event.eventCode === EventCode.TriggersLocked) {
-        operationKey = "Triggers locked"
+        operationKey = "Bichard Triggers Locked"
         eventDetails.push({
           metadata: {
-            title: "Triggers locked",
+            title: "Bichard Triggers Locked",
             timestamp: event.timestamp,
             errors: []
           },
           LockedBy: event.user
         })
       } else if (event.eventCode === EventCode.TriggersResolved && event.attributes) {
-        operationKey = "Triggers resolved"
+        operationKey = "Bichard Triggers Resolved"
         eventDetails.push({
           metadata: {
-            title: `✅ Triggers resolved (${extractCodesFromAttributes(event.attributes, triggerRegex)})`,
+            title: `✅ Bichard Triggers Resolved (${extractCodesFromAttributes(event.attributes, triggerRegex)})`,
             timestamp: event.timestamp,
             errors: []
           },
           ResolvedBy: event.user
         })
       } else if (event.eventCode === EventCode.TriggersDeleted && event.attributes) {
-        operationKey = "Triggers deleted"
+        operationKey = "Bichard Triggers Deleted"
         eventDetails.push({
           metadata: {
-            title: `Triggers deleted (${extractCodesFromAttributes(event.attributes, triggerRegex)})`,
+            title: `Bichard Triggers Deleted (${extractCodesFromAttributes(event.attributes, triggerRegex)})`,
             timestamp: event.timestamp,
             errors: []
           },
           DeletedBy: event.user
         })
       } else if (event.eventCode === EventCode.ExceptionsGenerated && event.attributes) {
-        operationKey = "Exception generated"
+        operationKey = "Bichard Exceptions Generated"
         eventDetails.push({
           metadata: {
-            title: `❌ Exception generated (${extractCodesFromAttributes(event.attributes, exceptionRegex)})`,
+            title: `❌ Bichard Exceptions Generated (${extractCodesFromAttributes(event.attributes, exceptionRegex)})`,
             timestamp: event.timestamp,
             errors: []
           }
