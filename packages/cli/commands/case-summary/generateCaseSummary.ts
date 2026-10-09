@@ -132,15 +132,12 @@ const generateCaseSummaryByMessageId = async (
 
       if (event.eventCode === EventCode.ExceptionsGenerated && event.attributes) {
         operationKey = "Exception generated"
-        const code = extractCodeFromAttributes(event.attributes, exceptionRegex)
-        const metadata: Metadata = {
-          title: `❌ Exception generated (${code})`,
-          timestamp: event.timestamp,
-          errors: []
-        }
-
         eventDetails.push({
-          metadata
+          metadata: {
+            title: `❌ Exception generated (${extractCodeFromAttributes(event.attributes, exceptionRegex)})`,
+            timestamp: event.timestamp,
+            errors: []
+          }
         })
       }
 
