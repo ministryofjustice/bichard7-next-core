@@ -10,7 +10,7 @@ const https = require("node:https")
 const Mustache = require("mustache")
 
 // Load the list html
-const listHtmlFile = path.resolve(__dirname, "../lib/list.html")
+const listHtmlFile = path.resolve(__dirname, "./list.html")
 const listHtml = fs.readFileSync(listHtmlFile).toString()
 Mustache.parse(listHtml)
 

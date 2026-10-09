@@ -1,0 +1,15 @@
+{
+  "name": "@moj-bichard7/s3-web-proxy",
+  "version": "1.0.0",
+  "description": "Serve the contents of a S3 bucket (private or public) over HTTP",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "aws-sdk": "^2.1400.0",
+    "express": "^5.2.1",
+    "minimist": "^1.2.8",
+    "mustache": "^4.2.0"
+  }
+}
