@@ -5,5 +5,5 @@ import type { CommunitySentenceRowReport } from "../../../../types/reports/Commu
 import { caseToCommunitySentenceDto } from "../../../dto/reports/caseToCommunitySentenceReportDto"
 
 export const processCommunitySentenceReport = (row: CommunitySentenceRowReport[]): CommunitySentenceReportDto[] => {
-  return row.flatMap((caseRow) => [...caseToCommunitySentenceDto(caseRow)])
+  return row.flatMap((caseRow) => caseToCommunitySentenceDto(caseRow))
 }
