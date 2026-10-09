@@ -18,7 +18,7 @@ import printSummary from "./printSummary"
 import type Metadata from "./types/Metadata"
 import sensitiveFn from "./utils/sensitive"
 import textStyle from "./utils/textStyle"
-import { triggerDefinitions } from "@moj-bichard7-developers/bichard7-next-data/dist"
+import { exceptionDefinitions, triggerDefinitions } from "@moj-bichard7-developers/bichard7-next-data/dist"
 
 type GenerateCaseSummaryResult = {
   operations: Record<string, number>
@@ -54,9 +54,6 @@ const extractErrorMessages = (event: ApiAuditLogEvent) => {
   return errors
 }
 
-const triggerRegex = /Trigger \d+ Details/
-const exceptionRegex = /Exception Type/
-
 const extractCodesFromAttributes = (attributes: AuditLogEventAttributes, codeRegex: RegExp): string[] => {
   return Object.entries(attributes)
     .filter(([key]) => key.match(codeRegex))
@@ -65,10 +62,10 @@ const extractCodesFromAttributes = (attributes: AuditLogEventAttributes, codeReg
 }
 
 const extractTriggersFromAttributes = (attributes: AuditLogEventAttributes) => {
-  const triggerCodes = extractCodesFromAttributes(attributes, triggerRegex)
+  const triggerCodes = extractCodesFromAttributes(attributes, /Trigger \d+ Details/)
 
   return triggerCodes.reduce(
-    (acc: Record<string, string>, triggerCode) => {
+    (acc, triggerCode) => {
       const trigger = triggerDefinitions.find(({ code }) => code === triggerCode)
       if (trigger) {
         acc[trigger.code] = trigger.description
@@ -77,6 +74,25 @@ const extractTriggersFromAttributes = (attributes: AuditLogEventAttributes) => {
       return acc
     },
     {} as Record<string, string>
+  )
+}
+
+const extractExceptionsFromAttributes = (attributes: AuditLogEventAttributes) => {
+  const exceptionCodes = extractCodesFromAttributes(attributes, /Exception Type/)
+
+  return exceptionCodes.reduce(
+    (acc, exceptionCode) => {
+      const exception = exceptionDefinitions.find(({ code }) => code === exceptionCode)
+      if (exception) {
+        acc[exception.code] = {
+          description: exception.shortDescription,
+          cause: exception.cause
+        }
+      }
+
+      return acc
+    },
+    {} as Record<string, Record<string, string>>
   )
 }
 
@@ -192,10 +208,11 @@ const generateCaseSummaryByMessageId = async (
         operationKey = "Bichard Exceptions Generated"
         eventDetails.push({
           metadata: {
-            title: `❌ Bichard Exceptions Generated (${extractCodesFromAttributes(event.attributes, exceptionRegex)})`,
+            title: "❌ Bichard Exceptions Generated",
             timestamp: event.timestamp,
             errors: []
-          }
+          },
+          Exceptions: extractExceptionsFromAttributes(event.attributes)
         })
       }
 
