@@ -3,6 +3,7 @@ import { S3Client } from "@aws-sdk/client-s3"
 import AuditLogDynamoGateway from "@moj-bichard7/api/services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import type { ApiAuditLogEvent, AuditLogEventAttributes } from "@moj-bichard7/api/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
+import eventCode from "@moj-bichard7/common/types/EventCode"
 import { convertPncJsonToLedsAsnQueryResponse } from "@moj-bichard7/e2e-tests/utils/converters/convertPncJsonToLeds/convertPncJsonToLedsAsnQueryResponse"
 import convertPncToLeds from "@moj-bichard7/e2e-tests/utils/converters/convertPncToLeds"
 import type { PncAsnQueryJson } from "@moj-bichard7/e2e-tests/utils/converters/convertPncXmlToJson/convertPncXmlToJson"
@@ -17,7 +18,7 @@ import printSummary from "./printSummary"
 import type Metadata from "./types/Metadata"
 import sensitiveFn from "./utils/sensitive"
 import textStyle from "./utils/textStyle"
-import eventCode from "@moj-bichard7/common/types/EventCode"
+import { triggerDefinitions } from "@moj-bichard7-developers/bichard7-next-data/dist"
 
 type GenerateCaseSummaryResult = {
   operations: Record<string, number>
@@ -56,12 +57,27 @@ const extractErrorMessages = (event: ApiAuditLogEvent) => {
 const triggerRegex = /Trigger \d+ Details/
 const exceptionRegex = /Exception Type/
 
-const extractCodesFromAttributes = (attributes: AuditLogEventAttributes, codeRegex: RegExp): string => {
+const extractCodesFromAttributes = (attributes: AuditLogEventAttributes, codeRegex: RegExp): string[] => {
   return Object.entries(attributes)
     .filter(([key]) => key.match(codeRegex))
     .map(([_, value]) => value.toString())
     .sort()
-    .join(", ")
+}
+
+const extractTriggersFromAttributes = (attributes: AuditLogEventAttributes) => {
+  const triggerCodes = extractCodesFromAttributes(attributes, triggerRegex)
+
+  return triggerCodes.reduce(
+    (acc: Record<string, string>, triggerCode) => {
+      const trigger = triggerDefinitions.find(({ code }) => code === triggerCode)
+      if (trigger) {
+        acc[trigger.code] = trigger.description
+      }
+
+      return acc
+    },
+    {} as Record<string, string>
+  )
 }
 
 const generateCaseSummaryByMessageId = async (
@@ -134,10 +150,11 @@ const generateCaseSummaryByMessageId = async (
         operationKey = "Bichard Triggers Generated"
         eventDetails.push({
           metadata: {
-            title: `✅ Bichard Triggers Generated (${extractCodesFromAttributes(event.attributes, triggerRegex)})`,
+            title: "✅ Bichard Triggers Generated",
             timestamp: event.timestamp,
             errors: []
-          }
+          },
+          Triggers: extractTriggersFromAttributes(event.attributes)
         })
       } else if (event.eventCode === EventCode.TriggersLocked) {
         operationKey = "Bichard Triggers Locked"
@@ -153,21 +170,23 @@ const generateCaseSummaryByMessageId = async (
         operationKey = "Bichard Triggers Resolved"
         eventDetails.push({
           metadata: {
-            title: `✅ Bichard Triggers Resolved (${extractCodesFromAttributes(event.attributes, triggerRegex)})`,
+            title: "✅ Bichard Triggers Resolved",
             timestamp: event.timestamp,
             errors: []
           },
-          ResolvedBy: event.user
+          ResolvedBy: event.user,
+          Triggers: extractTriggersFromAttributes(event.attributes)
         })
       } else if (event.eventCode === EventCode.TriggersDeleted && event.attributes) {
         operationKey = "Bichard Triggers Deleted"
         eventDetails.push({
           metadata: {
-            title: `Bichard Triggers Deleted (${extractCodesFromAttributes(event.attributes, triggerRegex)})`,
+            title: "Bichard Triggers Deleted",
             timestamp: event.timestamp,
             errors: []
           },
-          DeletedBy: event.user
+          DeletedBy: event.user,
+          Triggers: extractTriggersFromAttributes(event.attributes)
         })
       } else if (event.eventCode === EventCode.ExceptionsGenerated && event.attributes) {
         operationKey = "Bichard Exceptions Generated"
