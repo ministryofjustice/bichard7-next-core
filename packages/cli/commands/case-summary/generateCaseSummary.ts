@@ -17,6 +17,7 @@ import printSummary from "./printSummary"
 import type Metadata from "./types/Metadata"
 import sensitiveFn from "./utils/sensitive"
 import textStyle from "./utils/textStyle"
+import eventCode from "@moj-bichard7/common/types/EventCode"
 
 type GenerateCaseSummaryResult = {
   operations: Record<string, number>
@@ -52,6 +53,7 @@ const extractErrorMessages = (event: ApiAuditLogEvent) => {
   return errors
 }
 
+const triggerRegex = /Trigger \d+ Details/
 const exceptionRegex = /Exception Type/
 
 const extractCodeFromAttributes = (attributes: AuditLogEventAttributes, codeRegex: RegExp): string | undefined => {
@@ -130,7 +132,45 @@ const generateCaseSummaryByMessageId = async (
         }
       }
 
-      if (event.eventCode === EventCode.ExceptionsGenerated && event.attributes) {
+      if (event.eventCode === eventCode.TriggersGenerated && event.attributes) {
+        operationKey = "Trigger generated"
+        eventDetails.push({
+          metadata: {
+            title: `Trigger generated (${extractCodeFromAttributes(event.attributes, triggerRegex)})`,
+            timestamp: event.timestamp,
+            errors: []
+          }
+        })
+      } else if (event.eventCode === EventCode.TriggersLocked) {
+        operationKey = "Triggers locked"
+        eventDetails.push({
+          metadata: {
+            title: `Triggers locked (${event.user})`,
+            timestamp: event.timestamp,
+            errors: []
+          }
+        })
+      } else if (event.eventCode === EventCode.TriggersResolved && event.attributes) {
+        operationKey = "Triggers resolved"
+        eventDetails.push({
+          metadata: {
+            title: `✅ Triggers resolved (${event.user})`,
+            timestamp: event.timestamp,
+            errors: []
+          },
+          Details: extractCodeFromAttributes(event.attributes, triggerRegex)
+        })
+      } else if (event.eventCode === EventCode.TriggersDeleted && event.attributes) {
+        operationKey = "Triggers deleted"
+        eventDetails.push({
+          metadata: {
+            title: `✅ Triggers deleted (${event.user})`,
+            timestamp: event.timestamp,
+            errors: []
+          },
+          Details: extractCodeFromAttributes(event.attributes, triggerRegex)
+        })
+      } else if (event.eventCode === EventCode.ExceptionsGenerated && event.attributes) {
         operationKey = "Exception generated"
         eventDetails.push({
           metadata: {
