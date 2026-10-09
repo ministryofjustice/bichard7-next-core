@@ -130,9 +130,7 @@ const generateCaseSummaryByMessageId = async (
           const content = String(event.attributes?.["PNC Request Message"])
           eventDetails.push(mapPenaltyHearing(content, errors, event.timestamp, sensitive))
         }
-      }
-
-      if (event.eventCode === eventCode.TriggersGenerated && event.attributes) {
+      } else if (event.eventCode === eventCode.TriggersGenerated && event.attributes) {
         operationKey = "Trigger generated"
         eventDetails.push({
           metadata: {
