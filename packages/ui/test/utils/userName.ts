@@ -1,4 +1,4 @@
-import { capitalizeString } from "../../src/utils/valueTransformers"
+import { capitalizeString } from "@moj-bichard7/common/utils/valueTransformers"
 
 export const formatForenames = (forenames: string) => {
   if (forenames) {

@@ -1,9 +1,8 @@
-import type { Duration } from "@moj-bichard7-developers/bichard7-next-data/dist/types/Duration"
 import type { CommunitySentenceReportDto } from "@moj-bichard7/common/types/reports/CommunitySentence"
 
-import { Durations } from "@moj-bichard7-developers/bichard7-next-data/dist/types/Duration"
 import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { isError } from "@moj-bichard7/common/types/Result"
+import { addDurationToDate, formatDuration } from "@moj-bichard7/common/utils/valueTransformers"
 
 import type { CommunitySentenceRowReport } from "../../../types/reports/CommunitySentence"
 
@@ -27,13 +26,13 @@ export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Com
     expiryOfSentence: "",
     offenceTitle: "",
     pncId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier ?? "",
-    receivedDate: formatDate(row.msg_received_ts, true, true)
+    receivedDate: formatDate(row.msg_received_ts, false, true)
   } as CommunitySentenceReportDto
 
   const reports = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.flatMap((offence) => {
     const offenceLevelDetails = {
       ...caseLevelDetails,
-      dateOfSentence: offence.ConvictionDate ? offence.ConvictionDate.toISOString() : "",
+      dateOfSentence: offence.ConvictionDate ? formatDate(offence.ConvictionDate, false, true) : "",
       offenceTitle: offence.OffenceTitle ?? ""
     }
 
@@ -48,16 +47,24 @@ export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Com
 
         // this is functionality copied from the UI, we should move to common
         const custodialDuration = custodialDurationObj
-          ? `${custodialDurationObj.DurationLength} ${Durations[custodialDurationObj.DurationUnit as Duration]}`
+          ? formatDuration(custodialDurationObj.DurationLength, custodialDurationObj.DurationUnit)
           : ""
         const suspendedDuration = suspendedDurationObj
-          ? `${suspendedDurationObj.DurationLength} ${Durations[suspendedDurationObj.DurationUnit as Duration]}`
+          ? formatDuration(suspendedDurationObj.DurationLength, suspendedDurationObj.DurationUnit)
           : ""
+        const expiryOfSentence =
+          suspendedDurationObj && offence.ConvictionDate
+            ? addDurationToDate(
+                offence.ConvictionDate,
+                suspendedDurationObj.DurationLength,
+                suspendedDurationObj.DurationUnit
+              )
+            : ""
 
         return {
           ...offenceLevelDetails,
           custodialSentenceDuration: custodialDuration,
-          expiryOfSentence: "", // need to get
+          expiryOfSentence: formatDate(expiryOfSentence, false, true),
           suspendedSentenceDuration: suspendedDuration
         } as CommunitySentenceReportDto
       })
