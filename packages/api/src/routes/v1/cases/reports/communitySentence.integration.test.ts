@@ -12,6 +12,7 @@ import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 
 import build from "../../../../app"
 import { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
+import { testSuspendedSentenceOrderAhoXml } from "../../../../tests/helpers/ahoHelper"
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
 import { createTriggers } from "../../../../tests/helpers/triggerHelper"
@@ -194,7 +195,7 @@ describe("community sentence report", () => {
     expect(json).toHaveLength(1)
   })
 
-  it("returns correct information when only trigger 31 present", async () => {
+  it("returns correct information when only trigger 31 present, suspended sentence order codes not present", async () => {
     const courtDate = subDays(new Date(), 3)
     const messageReceivedAt = subDays(new Date(), 2)
 
@@ -223,11 +224,14 @@ describe("community sentence report", () => {
 
     expect(reportItem).toEqual(
       expect.objectContaining({
+        custodialSentenceDuration: null,
         dateOfBirth: "11/11/1948",
         defendantName: caseObj.defendantName,
         domesticViolenceFlag: false,
+        expiryOfSentence: null,
         pncId: "2000/0448754K",
-        receivedDate: formatInTimeZone(caseObj.messageReceivedAt, "Europe/London", "dd/MM/yyyy HH:mm")
+        receivedDate: formatInTimeZone(caseObj.messageReceivedAt, "Europe/London", "dd/MM/yyyy HH:mm"),
+        suspendedSentenceDuration: null
       })
     )
   })
@@ -274,7 +278,7 @@ describe("community sentence report", () => {
     )
   })
 
-  it("validate domestic violence flags", async () => {
+  it("returns correct domestic violence flags", async () => {
     const courtDate = subDays(new Date(), 3)
     const messageReceivedAt = subDays(new Date(), 2)
 
@@ -322,5 +326,34 @@ describe("community sentence report", () => {
     expect(json[1].domesticViolenceFlag).toBe(true)
     expect(json[2].domesticViolenceFlag).toBe(true)
     expect(json[3].domesticViolenceFlag).toBe(true)
+  })
+
+  it("returns correct sentence duration and expiry date when result codes include suspended sentences", async () => {
+    const courtDate = subDays(new Date(), 3)
+    const messageReceivedAt = subDays(new Date(), 2)
+
+    const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+    const [caseObj] = await createCases(testDatabaseGateway, 1, {
+      0: { aho: testSuspendedSentenceOrderAhoXml, courtDate, messageReceivedAt }
+    })
+    await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0031 }])
+
+    const query = new URLSearchParams()
+    query.append("fromDate", subDays(new Date(), 7).toISOString())
+    query.append("toDate", new Date().toISOString())
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${jwt}` },
+      method: "GET",
+      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+    })
+
+    expect(response.statusCode).toBe(200)
+
+    const json = response.json() as CommunitySentenceReportDto[]
+    expect(json).toHaveLength(1)
+    expect(json[0].custodialSentenceDuration).toBe("8 weeks")
+    expect(json[0].suspendedSentenceDuration).toBe("18 months")
+    expect(json[0].expiryOfSentence).toBe("08/06/2025")
   })
 })
