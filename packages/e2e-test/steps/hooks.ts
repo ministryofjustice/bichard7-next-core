@@ -1,7 +1,11 @@
 import { BeforeAll } from "@cucumber/cucumber"
 import fs from "fs"
 import path from "path"
-import { terminateConductorWorkflows } from "../helpers/ConductorHelper"
+import {
+  resetWorkflowTimeout,
+  setWorkflowTimeoutSeconds,
+  terminateConductorWorkflows
+} from "../helpers/ConductorHelper"
 import { After, Before } from "../helpers/stepsHelpers"
 
 const recordComparisons = process.env.RECORD_COMPARISONS === "true"
@@ -62,6 +66,10 @@ export const setupHooks = () => {
     }
   })
 
+  Before({ tags: "@SlowWorkflows" }, function () {
+    setWorkflowTimeoutSeconds(60)
+  })
+
   After(async function (hook) {
     const status = hook.result?.status
 
@@ -93,5 +101,9 @@ export const setupHooks = () => {
       console.log("\nCorrelation IDs:")
       this.correlationIds.forEach((correlationId: string) => console.log(`- ${correlationId}`))
     }
+  })
+
+  After({ tags: "@SlowWorkflows" }, function () {
+    resetWorkflowTimeout()
   })
 }
