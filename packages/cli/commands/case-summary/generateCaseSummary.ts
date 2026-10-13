@@ -1,5 +1,6 @@
 import { DynamoDBClient, ExecuteStatementCommand } from "@aws-sdk/client-dynamodb"
 import { S3Client } from "@aws-sdk/client-s3"
+import { exceptionDefinitions, triggerDefinitions } from "@moj-bichard7-developers/bichard7-next-data/dist"
 import AuditLogDynamoGateway from "@moj-bichard7/api/services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import type { ApiAuditLogEvent, AuditLogEventAttributes } from "@moj-bichard7/api/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
@@ -17,7 +18,6 @@ import printSummary from "./printSummary"
 import type Metadata from "./types/Metadata"
 import sensitiveFn from "./utils/sensitive"
 import textStyle from "./utils/textStyle"
-import { exceptionDefinitions, triggerDefinitions } from "@moj-bichard7-developers/bichard7-next-data/dist"
 
 type GenerateCaseSummaryResult = {
   operations: Record<string, number>
@@ -66,9 +66,7 @@ const extractTriggersFromAttributes = (attributes: AuditLogEventAttributes) => {
   return triggerCodes.reduce(
     (acc, triggerCode) => {
       const trigger = triggerDefinitions.find(({ code }) => code === triggerCode)
-      if (trigger) {
-        acc[trigger.code] = trigger.description
-      }
+      acc[triggerCode] = trigger?.description ?? "⚠️ Definition missing from standing data"
 
       return acc
     },
@@ -82,16 +80,16 @@ const extractExceptionsFromAttributes = (attributes: AuditLogEventAttributes) =>
   return exceptionCodes.reduce(
     (acc, exceptionCode) => {
       const exception = exceptionDefinitions.find(({ code }) => code === exceptionCode)
-      if (exception) {
-        acc[exception.code] = {
-          description: exception.shortDescription,
-          cause: exception.cause
-        }
-      }
+      acc[exceptionCode] = exception
+        ? {
+            Description: exception.shortDescription,
+            Cause: exception.cause
+          }
+        : "⚠️ Definition missing from standing data"
 
       return acc
     },
-    {} as Record<string, Record<string, string>>
+    {} as Record<string, Record<string, string> | string>
   )
 }
 
@@ -179,7 +177,7 @@ const generateCaseSummaryByMessageId = async (
             timestamp: event.timestamp,
             errors: []
           },
-          LockedBy: event.user
+          "Locked by": event.user
         })
       } else if (event.eventCode === EventCode.TriggersResolved && event.attributes) {
         operationKey = "Bichard Triggers Resolved"
@@ -189,7 +187,7 @@ const generateCaseSummaryByMessageId = async (
             timestamp: event.timestamp,
             errors: []
           },
-          ResolvedBy: event.user,
+          "Resolved by": event.user,
           Triggers: extractTriggersFromAttributes(event.attributes)
         })
       } else if (event.eventCode === EventCode.TriggersDeleted && event.attributes) {
@@ -200,7 +198,7 @@ const generateCaseSummaryByMessageId = async (
             timestamp: event.timestamp,
             errors: []
           },
-          DeletedBy: event.user,
+          "Deleted by": event.user,
           Triggers: extractTriggersFromAttributes(event.attributes)
         })
       } else if (event.eventCode === EventCode.ExceptionsGenerated && event.attributes) {
@@ -212,6 +210,20 @@ const generateCaseSummaryByMessageId = async (
             errors: []
           },
           Exceptions: extractExceptionsFromAttributes(event.attributes)
+        })
+      } else if (event.eventCode.startsWith("hearing-outcome.ignored")) {
+        operationKey = "Bichard Ignored the Case"
+        eventDetails.push({
+          metadata: {
+            title: "Bichard Ignored the Case",
+            timestamp: event.timestamp,
+            errors: []
+          },
+          Reason: event.eventCode
+            .replace("hearing-outcome.ignored.", "")
+            .replace(/\./g, " ")
+            .replace(/-/g, " ")
+            .replace(/\b\w/g, (char) => char.toUpperCase())
         })
       }
 
