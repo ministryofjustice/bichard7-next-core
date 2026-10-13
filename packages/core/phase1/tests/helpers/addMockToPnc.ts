@@ -7,7 +7,7 @@ const addMockToPnc = async (matchRegex: string, response: string, count: null | 
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
   })
-  if (resp.status < 200 || resp.status >= 300) {
+  if (resp.ok) {
     throw new Error("Error setting mock in PNC Emulator")
   }
 
