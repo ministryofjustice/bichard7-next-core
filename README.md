@@ -27,6 +27,8 @@ Packages:
 - [e2e-test](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/e2e-test)
 - [help](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/help)
 - [message-forwarder](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/message-forwarder)
+- [nginx-auth-proxy](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/nginx-auth-proxy)
+- [s3-web-proxy](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/s3-web-proxy)
 - [uat-data](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/uat-data)
 - [ui](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/ui)
 - [user-service](https://github.com/ministryofjustice/bichard7-next-core/tree/main/packages/user-service)

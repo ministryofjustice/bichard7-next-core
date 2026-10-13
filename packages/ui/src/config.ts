@@ -1,6 +1,6 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import bannerFirstShownDate from "utils/bannerFirstShownDate"
 import { formatForceEnvVariable } from "utils/forceNormalisation"
+import { bannerFirstShownDate, bannerForcesVisibleTo, bannerLifespan, bannerMessage } from "./utils/infoBannerUtils"
 
 const toBoolean = (val: number | string): boolean => val === "true" || val === "1" || val === 1
 
@@ -15,7 +15,14 @@ export const REALLOCATE_CASE_TRIGGER_CODE = TriggerCode.TRPR0028
 export const OUT_OF_AREA_TRIGGER_CODE = TriggerCode.TRPR0027
 export const SWITCHING_FEEDBACK_FORM_FREQUENCY_IN_HOURS = 3
 export const COOKIES_SECURE_OPTION = (process.env.COOKIES_SECURE ?? "true") === "true"
-export const INFO_BANNER_FIRST_SHOWN = bannerFirstShownDate()
+
+export const INFO_BANNER_FIRST_SHOWN_DATE = bannerFirstShownDate(process.env.INFO_BANNER_FIRST_SHOWN_DATE ?? "")
+export const INFO_BANNER_MESSAGE = bannerMessage(process.env.INFO_BANNER_MESSAGE)
+export const INFO_BANNER_LIFESPAN_DAYS = bannerLifespan(Number(process.env.INFO_BANNER_LIFESPAN_DAYS))
+export const INFO_BANNER_FORCES_VISIBLE_TO: Set<string> = formatForceEnvVariable(
+  bannerForcesVisibleTo(process.env.INFO_BANNER_FORCES_VISIBLE_TO ?? "")
+)
+
 export const IS_AUDIT_PAGE_ACCESSIBLE = true // !isProduction
 
 export const API_LOCATION = process.env.API_URL ?? "https://localhost:3333"
