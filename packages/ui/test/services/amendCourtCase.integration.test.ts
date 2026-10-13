@@ -1,3 +1,4 @@
+import createForceOwner from "@moj-bichard7/common/utils/createForceOwner"
 import { readFileSync } from "fs"
 import amendCourtCase from "services/amendCourtCase"
 import CourtCase from "services/entities/CourtCase"
@@ -6,14 +7,13 @@ import type User from "services/entities/User"
 import getDataSource from "services/getDataSource"
 import updateCourtCaseAho from "services/updateCourtCaseAho"
 import type { DataSource } from "typeorm"
-import createForceOwner from "utils/createForceOwner"
 import getCourtCase from "../../src/services/getCourtCase"
 import deleteFromEntity from "../utils/deleteFromEntity"
 import { getDummyCourtCase, insertCourtCases, insertCourtCasesWithFields } from "../utils/insertCourtCases"
 
 jest.mock("services/getCourtCase")
 jest.mock("services/updateCourtCaseAho")
-jest.mock("utils/createForceOwner")
+jest.mock("@moj-bichard7/common/utils/createForceOwner")
 
 jest.setTimeout(60 * 60 * 1000)
 
@@ -55,7 +55,9 @@ describe("amend court case", () => {
     jest.clearAllMocks()
     ;(getCourtCase as jest.Mock).mockImplementation(jest.requireActual("services/getCourtCase").default)
     ;(updateCourtCaseAho as jest.Mock).mockImplementation(jest.requireActual("services/updateCourtCaseAho").default)
-    ;(createForceOwner as jest.Mock).mockImplementation(jest.requireActual("utils/createForceOwner").default)
+    ;(createForceOwner as jest.Mock).mockImplementation(
+      jest.requireActual("@moj-bichard7/common/utils/createForceOwner").default
+    )
   })
 
   afterAll(async () => {

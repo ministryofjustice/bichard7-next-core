@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 import { bold } from "cli-color"
 import { Command } from "commander"
+import { caseSummary } from "./commands/case-summary"
+import { cloudwatch } from "./commands/cloudwatch"
 import { conductor } from "./commands/conductor"
 import { devSgs } from "./commands/devSgs"
 import { fetchImage } from "./commands/fetchImage"
+import { importVpn } from "./commands/importVpn"
 import { messageProcessing } from "./commands/message-processing"
 import { status } from "./commands/status"
+import { userComms } from "./commands/user-comms"
 import { version } from "./package.json"
 import { applyEnvironmentOptionHooks } from "./utils/globalOptionsHook"
-import { cloudwatch } from "./commands/cloudwatch"
-import { importVpn } from "./commands/importVpn"
-import { userComms } from "./commands/user-comms"
 
 process.on("unhandledRejection", (reason) => {
   console.error(reason)
@@ -41,6 +42,7 @@ const cli = new Command()
   .addCommand(conductor())
   .addCommand(cloudwatch())
   .addCommand(userComms())
+  .addCommand(caseSummary())
 
 const skipCommands = ["wiki", "fetch-image", "dev-sgs", "cloudwatch", "import-vpn-profiles", "user-comms"]
 if (!skipCommands.some((c) => process.argv.includes(c))) {

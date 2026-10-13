@@ -1,0 +1,48 @@
+import type { AdditionalArrestOffences, Offence } from "@moj-bichard7/core/types/leds/DisposalRequest"
+import type SensitiveFn from "../types/SensitiveFn"
+import getOffenceCodeDetails from "../utils/getOffenceCodeDetails"
+import getResultCodeDetails from "../utils/getResultCodeDetails"
+
+type AdditionalOffence = AdditionalArrestOffences["additionalOffences"][0]
+
+const mapOffence = async (offence: AdditionalOffence | Offence, offenceIndex: number, sensitive: SensitiveFn) => {
+  const additionalOffence = offence as AdditionalOffence
+  let offenceCode = (offence as Offence).cjsOffenceCode
+  if (additionalOffence.offenceCode?.offenceCodeType === "cjs") {
+    offenceCode = await getOffenceCodeDetails(additionalOffence.offenceCode.cjsOffenceCode)
+  }
+
+  const offenceStartTime = offence.offenceStartTime ? ` ${offence.offenceStartTime}` : ""
+  const offenceStartDateTime = offence.offenceStartDate ? `${offence.offenceStartDate}${offenceStartTime}` : undefined
+  const offenceEndTime = offence.offenceEndTime ? ` ${offence.offenceEndTime}` : ""
+  const offenceEndDateTime = offence.offenceEndDate ? `${offence.offenceEndDate}${offenceEndTime}` : undefined
+
+  const disposalResults = offence.disposalResults.map((disposalResult, disposalIndex) => ({
+    "Disposal result": `#${disposalIndex + 1}`,
+    "Disposal code": getResultCodeDetails(disposalResult.disposalCode),
+    "Disposal text": sensitive(disposalResult.disposalText),
+    "Effective date": disposalResult.disposalEffectiveDate,
+    Fine: disposalResult.disposalFine ? `£${disposalResult.disposalFine.amount}` : undefined,
+    Duration: disposalResult.disposalDuration ? `£${disposalResult.disposalDuration.count}` : undefined,
+    Qualifiers: disposalResult.disposalQualifiers,
+    "Qualifier duration": disposalResult.disposalQualifierDuration
+      ? `${disposalResult.disposalQualifierDuration.count} ${disposalResult.disposalQualifierDuration.units}`
+      : undefined
+  }))
+
+  return {
+    Offence: `#${offenceIndex + 1}`,
+    "Court offence sequence number": offence.courtOffenceSequenceNumber,
+    Code: await getOffenceCodeDetails(offenceCode),
+    Description: sensitive(additionalOffence.offenceDescription),
+    "Number of offences taken into consideration (TIC)": offence.offenceTic || undefined,
+    "Start date and time": offenceStartDateTime,
+    "End date and time": offenceEndDateTime,
+    "Role qualifiers": offence.roleQualifiers,
+    Plea: offence.plea,
+    Adjudication: offence.adjudication,
+    "Disposal Results": disposalResults
+  }
+}
+
+export default mapOffence

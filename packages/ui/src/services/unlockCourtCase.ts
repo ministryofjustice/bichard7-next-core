@@ -1,7 +1,7 @@
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
+import type UnlockReason from "@moj-bichard7/common/types/UnlockReason"
 import type { DataSource, UpdateResult } from "typeorm"
 import { isError } from "types/Result"
-import type UnlockReason from "types/UnlockReason"
 import type User from "./entities/User"
 import getCourtCaseByOrganisationUnit from "./getCourtCaseByOrganisationUnit"
 import { storeMessageAuditLogEvents } from "./storeAuditLogEvents"

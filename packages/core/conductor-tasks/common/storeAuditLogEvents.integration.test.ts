@@ -45,7 +45,7 @@ describe("storeAuditLogEvents", () => {
       isSanitised: 0,
       messageId: correlationId,
       messageHash: "dummy",
-      receivedDate: "2025-02-03T09:11Z"
+      receivedDate: "2025-02-03T09:11:00Z"
     })
   })
 
@@ -86,6 +86,7 @@ describe("storeAuditLogEvents", () => {
     expect(auditLog.events).toHaveLength(2)
 
     phase1Result.auditLogEvents.forEach((expectedEvent) => {
+      // prettier-ignore
       const actualEvent = auditLog.events.find(
         (e) => e.eventCode === expectedEvent.eventCode && e.eventSource === expectedEvent.eventSource
       )
@@ -144,11 +145,13 @@ describe("storeAuditLogEvents", () => {
   })
 
   it("should fail with terminal error if the audit logs are invalid", async () => {
+    // prettier-ignore
     const result = await storeAuditLogEvents.execute({
       inputData: { correlationId: "foo", auditLogEvents: [invalidAuditLogEvent] }
     })
 
     expect(result.status).toBe("FAILED_WITH_TERMINAL_ERROR")
+    // prettier-ignore
     expect(result.logs?.map((l) => l.log)).toContain(
       "InputData error: Expected string for auditLogEvents.0.eventSource"
     )
