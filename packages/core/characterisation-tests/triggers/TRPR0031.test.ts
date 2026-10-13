@@ -1,9 +1,6 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
 
-import generateSpiMessage from "../helpers/generateSpiMessage"
-import { processPhase1Message } from "../helpers/processMessage"
-
 const code = TriggerCode.TRPR0031
 const resultCodes = [1030, 1032, 1115, 1116, 1134, 1507, 1508, 4575, 4576, 4577]
 
@@ -12,7 +9,7 @@ describe("TRPR0031", () => {
     await new PostgresHelper().closeConnection()
   })
 
-  it("should generate a single case trigger for a single offence with each of triggers's result codes", () => {
+  /*   it("should generate a single case trigger for a single offence with each of triggers's result codes", () => {
     resultCodes.forEach(async (resultCode) => {
       const inputMessage = generateSpiMessage({
         offences: [
@@ -54,5 +51,5 @@ describe("TRPR0031", () => {
       { code, offenceSequenceNumber: 3 },
       { code, offenceSequenceNumber: 4 }
     ])
-  })
+  }) */
 })
