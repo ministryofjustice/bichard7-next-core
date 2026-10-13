@@ -7,13 +7,13 @@
           "additionalMarker": false,
           "additionalOffenceMarker": false,
           "arrestChargeNumber": 1,
-          "arrestSummonsReference": "26/0000/00/100002832B",
+          "arrestSummonsReference": "26/0000/00/100021547U",
           "chargeStatusMarker": "A",
           "cjsOffenceCode": "TH68151",
           "committedOnBail": false,
           "courtCaseChargeNumber": 1,
-          "courtCaseReferenceNumber": "26/2576/000889T",
-          "crimeReference": "A1OEOHKN/LB1X3K",
+          "courtCaseReferenceNumber": "26/2576/022250L",
+          "crimeReference": "TMYYSCEURE5TUWT",
           "forceStationChargeOrig": "01ZD",
           "legislationQualifier": [],
           "locationAddress": {
@@ -36,8 +36,48 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/000889T"
+      "courtCaseReference": "26/2576/022250L",
+      "subsequentAppearances": []
     }
   ],
-  "remands": []
+  "remands": [
+    {
+      "appearanceResult": "remanded-on-bail",
+      "currentAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        }
+      },
+      "nextAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        },
+        "date": "2011-10-08"
+      },
+      "ownerCode": "01YZ",
+      "remandConditions": [],
+      "remandDate": "2011-09-26"
+    },
+    {
+      "appearanceResult": "remanded-on-bail",
+      "currentAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        }
+      },
+      "nextAppearance": {
+        "court": {
+          "courtCode": "2576",
+          "courtIdentityType": "code"
+        },
+        "date": "2011-10-15"
+      },
+      "ownerCode": "01YZ",
+      "remandConditions": [],
+      "remandDate": "2011-09-26"
+    }
+  ]
 }
