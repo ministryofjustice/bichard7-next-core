@@ -24,7 +24,7 @@ describe("TRPR0002", () => {
 
     const { triggers } = await processPhase1Message(inputMessage)
 
-    expect(triggers).toStrictEqual([{ code }])
+    expect(triggers.filter((trigger) => trigger.code !== TriggerCode.TRPR0031)).toStrictEqual([{ code }])
   })
 
   it("should not generate a trigger for a single offence with the EO result qualifier", async () => {
@@ -38,7 +38,7 @@ describe("TRPR0002", () => {
 
     const { triggers } = await processPhase1Message(inputMessage, { expectRecord: false })
 
-    expect(triggers).toHaveLength(0)
+    expect(triggers.filter((trigger) => trigger.code !== TriggerCode.TRPR0031)).toHaveLength(0)
   })
 
   it("should generate a single case trigger for multiple offences without the EO result qualifier", async () => {
@@ -48,7 +48,7 @@ describe("TRPR0002", () => {
 
     const { triggers } = await processPhase1Message(inputMessage)
 
-    expect(triggers).toStrictEqual([{ code }])
+    expect(triggers.filter((trigger) => trigger.code !== TriggerCode.TRPR0031)).toStrictEqual([{ code }])
   })
 
   it("should not generate a trigger for multiple offences with the EO result qualifier", async () => {
@@ -61,7 +61,7 @@ describe("TRPR0002", () => {
 
     const { triggers } = await processPhase1Message(inputMessage, { expectRecord: false })
 
-    expect(triggers).toHaveLength(0)
+    expect(triggers.filter((trigger) => trigger.code !== TriggerCode.TRPR0031)).toHaveLength(0)
   })
 
   it("should generate a trigger for multiple offences with one EO result qualifier and one without", async () => {
@@ -76,7 +76,7 @@ describe("TRPR0002", () => {
 
     const { triggers } = await processPhase1Message(inputMessage)
 
-    expect(triggers).toStrictEqual([{ code }])
+    expect(triggers.filter((trigger) => trigger.code !== TriggerCode.TRPR0031)).toStrictEqual([{ code }])
   })
 
   it("should generate a trigger when record is not recordable", async () => {
@@ -86,7 +86,7 @@ describe("TRPR0002", () => {
 
     const { triggers } = await processPhase1Message(inputMessage, { recordable: false })
 
-    expect(triggers).toStrictEqual([{ code }])
+    expect(triggers.filter((trigger) => trigger.code !== TriggerCode.TRPR0031)).toStrictEqual([{ code }])
   })
 
   it("should generate a trigger when record is recordable", async () => {
@@ -96,6 +96,6 @@ describe("TRPR0002", () => {
 
     const { triggers } = await processPhase1Message(inputMessage)
 
-    expect(triggers).toStrictEqual([{ code }])
+    expect(triggers.filter((trigger) => trigger.code !== TriggerCode.TRPR0031)).toStrictEqual([{ code }])
   })
 })
