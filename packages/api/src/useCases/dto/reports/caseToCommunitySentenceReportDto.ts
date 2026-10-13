@@ -2,7 +2,7 @@ import type { CommunitySentenceReportDto } from "@moj-bichard7/common/types/repo
 
 import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { addDurationToDate, formatDuration } from "@moj-bichard7/common/utils/valueTransformers"
+import { addDurationToDate, formatDuration, getYesOrNo } from "@moj-bichard7/common/utils/valueTransformers"
 
 import type { CommunitySentenceRowReport } from "../../../types/reports/CommunitySentence"
 
@@ -22,7 +22,7 @@ export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Com
     dateOfBirth: dateOfBirth(aho),
     dateOfSentence: "",
     defendantName: row.defendant_name ?? null,
-    domesticViolenceFlag: row.domestic_violence_flag,
+    domesticViolenceFlag: getYesOrNo(row.domestic_violence_flag),
     expiryOfSentence: "",
     offenceTitle: "",
     pncId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier ?? "",
@@ -45,13 +45,13 @@ export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Com
         const custodialDurationObj = result.Duration?.find((d) => d.DurationType === "Duration")
         const suspendedDurationObj = result.Duration?.find((d) => d.DurationType === "Suspended")
 
-        // this is functionality copied from the UI, we should move to common
         const custodialDuration = custodialDurationObj
-          ? formatDuration(custodialDurationObj.DurationLength, custodialDurationObj.DurationUnit)
+          ? formatDuration(custodialDurationObj.DurationLength, custodialDurationObj.DurationUnit, true)
           : ""
         const suspendedDuration = suspendedDurationObj
-          ? formatDuration(suspendedDurationObj.DurationLength, suspendedDurationObj.DurationUnit)
+          ? formatDuration(suspendedDurationObj.DurationLength, suspendedDurationObj.DurationUnit, true)
           : ""
+
         const expiryOfSentence =
           suspendedDurationObj && offence.ConvictionDate
             ? addDurationToDate(
@@ -63,9 +63,9 @@ export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Com
 
         return {
           ...offenceLevelDetails,
-          custodialSentenceDuration: custodialDuration,
+          custodialSentenceDurationMonths: custodialDuration,
           expiryOfSentence: formatDate(expiryOfSentence, false, true),
-          suspendedSentenceDuration: suspendedDuration
+          suspendedSentenceDurationMonths: suspendedDuration
         } as CommunitySentenceReportDto
       })
       return suspendedSentenceReports

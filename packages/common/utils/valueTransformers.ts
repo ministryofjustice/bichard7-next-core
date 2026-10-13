@@ -25,14 +25,34 @@ export const getNumberOfHours = (hours: number | undefined): string | undefined 
   return hours ? `${hours} Hours` : undefined
 }
 
-export const formatDuration = (durationLength: number, durationUnit: string): string => {
+const getDurationInMonths = (durationLength: number, durationUnit: string): number => {
+  switch (durationUnit) {
+    case "D":
+      return durationLength / 30
+    case "H":
+      return durationLength / 720
+    case "M":
+      return durationLength
+    case "W":
+      return durationLength / 4
+    case "Y":
+      return durationLength * 12
+    default:
+      throw new Error(`Unsupported duration unit: ${durationUnit}`)
+  }
+}
+
+export const formatDuration = (durationLength: number, durationUnit: string, forceMonths: boolean = false): string => {
+  if (forceMonths) {
+    return `${getDurationInMonths(durationLength, durationUnit)} ${Durations["M"]}`
+  }
+
   return `${durationLength} ${Durations[durationUnit as Duration]}`
 }
 
 export const addDurationToDate = (date: Date, durationLength: number, durationUnit: string): Date => {
   let updatedDate = date
   switch (durationUnit) {
-    // how to handle Life and Sessions?
     case "D":
       updatedDate = addDays(date, durationLength)
       break
