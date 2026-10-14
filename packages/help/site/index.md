@@ -5,18 +5,9 @@ title: Help
 
 Contact the Bichard team for support at [moj-bichard7@madetech.com](mailto:moj-bichard7@madetech.com)
 
-## What's New
-
-- [Improvements to Case List filtering](whats-new/case-list-filtering/)
-  <!-- - [Reports](whats-new/reports/) -->
-  <!-- - [User Management](whats-new/user-management/) -->
-
 ## User Login
 
-- [Logging in to Bichard](user-login/logging-in-to-bichard/)
-- [Resetting your password](user-login/resetting-password/)
 - [Changing your password](user-login/changing-your-password/)
-- [Setting up your account](user-login/new-account-setup/)
 
 ## Roles
 
