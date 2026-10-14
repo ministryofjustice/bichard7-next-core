@@ -21,13 +21,11 @@ const generateMockAho = (resultCode: number) => {
 }
 
 describe("TRPR0031", () => {
-  resultCodes.forEach((resultCode) => {
-    it(`should generate a trigger for resultCode: ${resultCode}`, () => {
-      const generatedHearingOutcome = generateMockAho(resultCode)
-      const result = TRPR0031(generatedHearingOutcome)
+  it.each(resultCodes)("should generate a trigger for resultCode: %s", (resultCode) => {
+    const generatedHearingOutcome = generateMockAho(resultCode)
+    const result = TRPR0031(generatedHearingOutcome)
 
-      expect(result).toEqual([{ code: triggerCode }])
-    })
+    expect(result).toEqual([{ code: triggerCode }])
   })
 
   it("should not generate a trigger for a result code not covered by this trigger", () => {
