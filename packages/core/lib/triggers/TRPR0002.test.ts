@@ -24,7 +24,7 @@ describe("TRPR0002", () => {
         }
       ] as Offence[])
 
-      const result = TRPR0002(generatedHearingOutcome).filter((trigger) => trigger.code !== TriggerCode.TRPR0031)
+      const result = TRPR0002(generatedHearingOutcome)
 
       expect(result).toEqual([{ code: TriggerCode.TRPR0002 }])
     }
@@ -48,7 +48,7 @@ describe("TRPR0002", () => {
         }
       ] as Offence[])
 
-      const result = TRPR0002(generatedHearingOutcome).filter((trigger) => trigger.code !== TriggerCode.TRPR0031)
+      const result = TRPR0002(generatedHearingOutcome)
 
       expect(result).toHaveLength(0)
     }
