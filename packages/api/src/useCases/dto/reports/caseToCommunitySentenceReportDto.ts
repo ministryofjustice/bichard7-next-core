@@ -2,14 +2,22 @@ import type { CommunitySentenceReportDto } from "@moj-bichard7/common/types/repo
 
 import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { isError } from "@moj-bichard7/common/types/Result"
-import { addDurationToDate, formatDuration, getYesOrNo } from "@moj-bichard7/common/utils/valueTransformers"
+import {
+  addDurationToDate,
+  formatDuration,
+  getPleaStatus,
+  getYesOrNo
+} from "@moj-bichard7/common/utils/valueTransformers"
 
 import type { CommunitySentenceRowReport } from "../../../types/reports/CommunitySentence"
 
 import { dateOfBirth } from "../../cases/reports/utils/dateOfBirth"
+import { defendantAddress } from "../../cases/reports/utils/defendantAddress"
 import { formatDate } from "../../cases/reports/utils/formatDate"
 
+// Move to trigger
 const SUSPENDED_SENTENCE_ORDER_RESULT_CODES = [1115, 1134, 1508, 1507]
+const SENTENCING_ACT_RESULT_CODES = [1030, 1032, 1115, 1116, 1134, 1507, 1508, 4575, 4576, 4577]
 
 export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): CommunitySentenceReportDto[] {
   const aho = parseHearingOutcome(row.annotated_msg)
@@ -20,11 +28,9 @@ export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Com
 
   const caseLevelDetails = {
     dateOfBirth: dateOfBirth(aho),
-    dateOfSentence: "",
     defendantName: row.defendant_name ?? null,
     domesticViolenceFlag: getYesOrNo(row.domestic_violence_flag),
-    expiryOfSentence: "",
-    offenceTitle: "",
+    homeAddress: defendantAddress(aho),
     pncId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier ?? "",
     receivedDate: formatDate(row.msg_received_ts, false, true)
   } as CommunitySentenceReportDto
@@ -32,16 +38,25 @@ export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Com
   const reports = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.flatMap((offence) => {
     const offenceLevelDetails = {
       ...caseLevelDetails,
+      arrestDate: offence.ArrestDate ? formatDate(offence.ArrestDate, false, true) : "",
+      chargeDate: offence.ChargeDate ? formatDate(offence.ChargeDate, false, true) : "",
       dateOfSentence: offence.ConvictionDate ? formatDate(offence.ConvictionDate, false, true) : "",
+      offenceAddress: offence.LocationOfOffence ?? "",
+      offenceStartDate: offence.ActualOffenceStartDate
+        ? formatDate(offence.ActualOffenceStartDate.StartDate, false, true)
+        : "",
       offenceTitle: offence.OffenceTitle ?? ""
     }
 
-    const suspendedResults = offence.Result.filter((result) =>
-      SUSPENDED_SENTENCE_ORDER_RESULT_CODES.includes(result.CJSresultCode)
-    )
+    const filtered = offence.Result.filter((result) => SENTENCING_ACT_RESULT_CODES.includes(result.CJSresultCode))
 
-    if (suspendedResults.length > 0) {
-      const suspendedSentenceReports = suspendedResults.map((result) => {
+    return filtered.map((result) => {
+      const resultLevelDetails = {
+        ...offenceLevelDetails,
+        plea: getPleaStatus(result.PleaStatus)
+      }
+
+      if (SUSPENDED_SENTENCE_ORDER_RESULT_CODES.includes(result.CJSresultCode)) {
         const custodialDurationObj = result.Duration?.find((d) => d.DurationType === "Duration")
         const suspendedDurationObj = result.Duration?.find((d) => d.DurationType === "Suspended")
 
@@ -62,16 +77,15 @@ export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Com
             : ""
 
         return {
-          ...offenceLevelDetails,
-          custodialSentenceDurationMonths: custodialDuration,
+          ...resultLevelDetails,
+          custodialSentenceDurationMonths: custodialDuration.toLowerCase(),
           expiryOfSentence: formatDate(expiryOfSentence, false, true),
-          suspendedSentenceDurationMonths: suspendedDuration
+          suspendedSentenceDurationMonths: suspendedDuration.toLowerCase()
         } as CommunitySentenceReportDto
-      })
-      return suspendedSentenceReports
-    } else {
-      return [offenceLevelDetails]
-    }
+      } else {
+        return resultLevelDetails
+      }
+    })
   })
 
   return reports
