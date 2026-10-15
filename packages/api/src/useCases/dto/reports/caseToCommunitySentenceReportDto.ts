@@ -53,7 +53,8 @@ export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Com
     return filtered.map((result) => {
       const resultLevelDetails = {
         ...offenceLevelDetails,
-        plea: getPleaStatus(result.PleaStatus)
+        plea: getPleaStatus(result.PleaStatus),
+        resultCode: result.CJSresultCode
       }
 
       if (SUSPENDED_SENTENCE_ORDER_RESULT_CODES.includes(result.CJSresultCode)) {

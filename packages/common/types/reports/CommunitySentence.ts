@@ -16,6 +16,7 @@ export const CommunitySentenceReportDtoSchema = z.object({
   plea: z.string().optional(),
   pncId: z.string(),
   receivedDate: z.string(),
+  resultCode: z.number(),
   suspendedSentenceDurationMonths: z.string().optional()
 })
 

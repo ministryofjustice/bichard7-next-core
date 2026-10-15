@@ -37,11 +37,20 @@ const communitySentenceAmendOffences = (aho: AnnotatedHearingOutcome) => {
           H: 17520
         }
 
-        function getRandomDuration(type: "Duration" | "Suspended") {
+        const UNIT_MIN_BOUNDS: Record<ValidUnit, number> = {
+          Y: 1,
+          M: 1,
+          W: 4,
+          D: 30,
+          H: 720
+        }
+
+        const getRandomDuration = (type: "Duration" | "Suspended") => {
           const randomUnit = VALID_UNITS[Math.floor(Math.random() * VALID_UNITS.length)]
           const maxBound = UNIT_MAX_BOUNDS[randomUnit]
+          const minBound = UNIT_MIN_BOUNDS[randomUnit]
 
-          const randomLength = Math.floor(Math.random() * maxBound) + 1
+          const randomLength = Math.floor(Math.random() * (maxBound - minBound + 1)) + minBound
 
           return {
             DurationLength: randomLength,

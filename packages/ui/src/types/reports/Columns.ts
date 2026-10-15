@@ -124,5 +124,6 @@ export const communitySentenceColumns: ReportColumn<CommunitySentenceReportDto>[
   { header: "Offence start date", key: "offenceStartDate" },
   { header: "Arrest date", key: "arrestDate" },
   { header: "Charge date", key: "chargeDate" },
-  { header: "Plea", key: "plea" }
+  { header: "Plea", key: "plea" },
+  { header: "Result code", key: "resultCode" }
 ] as const
