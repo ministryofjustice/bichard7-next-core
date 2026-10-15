@@ -3,6 +3,10 @@ import type { CommunitySentenceReportDto } from "@moj-bichard7/common/types/repo
 import { parseHearingOutcome } from "@moj-bichard7/common/aho/parseHearingOutcome"
 import { isError } from "@moj-bichard7/common/types/Result"
 import {
+  SUSPENDED_SENTENCE_ORDER_RESULT_CODES,
+  TRPR0031_RESULT_CODES
+} from "@moj-bichard7/common/utils/triggerConstants"
+import {
   addDurationToDate,
   formatDuration,
   getPleaStatus,
@@ -14,10 +18,6 @@ import type { CommunitySentenceRowReport } from "../../../types/reports/Communit
 import { dateOfBirth } from "../../cases/reports/utils/dateOfBirth"
 import { defendantAddress } from "../../cases/reports/utils/defendantAddress"
 import { formatDate } from "../../cases/reports/utils/formatDate"
-
-// Move to trigger
-const SUSPENDED_SENTENCE_ORDER_RESULT_CODES = [1115, 1134, 1508, 1507]
-const SENTENCING_ACT_RESULT_CODES = [1030, 1032, 1115, 1116, 1134, 1507, 1508, 4575, 4576, 4577]
 
 export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): CommunitySentenceReportDto[] {
   const aho = parseHearingOutcome(row.annotated_msg)
@@ -48,7 +48,7 @@ export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Com
       offenceTitle: offence.OffenceTitle ?? ""
     }
 
-    const filtered = offence.Result.filter((result) => SENTENCING_ACT_RESULT_CODES.includes(result.CJSresultCode))
+    const filtered = offence.Result.filter((result) => TRPR0031_RESULT_CODES.includes(result.CJSresultCode))
 
     return filtered.map((result) => {
       const resultLevelDetails = {
