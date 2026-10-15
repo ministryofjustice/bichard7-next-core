@@ -1,0 +1,41 @@
+name: Build and Test
+on:
+  workflow_dispatch:
+  pull_request:
+  merge_group:
+    types: [checks_requested]
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: read
+
+    outputs:
+      s3_web_proxy: ${{ fromJSON(steps.evaluate.outputs.filters).s3_web_proxy }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Evaluate Run Condition
+        id: evaluate
+        uses: ./.github/actions/path-filter
+        with:
+          filters: |
+            s3_web_proxy:
+              - '.github/**'
+              - 'packages/s3-web-proxy/**'
+
+  build_s3_web_proxy_image:
+    name: Test Common
+    needs: changes
+    if: needs.changes.outputs.s3_web_proxy == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
