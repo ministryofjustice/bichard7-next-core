@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 const SUSPENDED_SENTENCE_ORDER_RESULT_CODES = [1115, 1134, 1508, 1507]
-const SENTENCING_ACT_RESULT_CODES = [1030, 1032, 1115, 1116, 1134, 1507, 1508, 4575, 4576, 4577]
+const OTHER_SENTENCING_ACT_RESULT_CODES = [1030, 1032, 4575, 4576, 4577]
 const OTHER_RESULT_CODES = [1, 2, 3]
 
 // Updates result codes and duration (where applicable) to create dummy data specific to community sentences
@@ -10,7 +10,7 @@ const communitySentenceAmendResultCodes = (aho: AnnotatedHearingOutcome) => {
     offence.Result.forEach((result) => {
       const RESULT_CODE_GROUPS = [
         SUSPENDED_SENTENCE_ORDER_RESULT_CODES,
-        SENTENCING_ACT_RESULT_CODES,
+        OTHER_SENTENCING_ACT_RESULT_CODES,
         OTHER_RESULT_CODES
       ]
 
