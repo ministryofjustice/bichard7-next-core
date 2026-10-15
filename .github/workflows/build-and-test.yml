@@ -5,6 +5,10 @@ on:
   merge_group:
     types: [checks_requested]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   changes:
     runs-on: ubuntu-latest
