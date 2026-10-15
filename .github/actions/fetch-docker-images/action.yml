@@ -1,0 +1,14 @@
+name: "Fetch Docker Images"
+description: "Fetch Docker images from ECR"
+
+inputs:
+  images:
+    description: "The images to fetch"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Fetch images: ${{ inputs.images}}"
+      shell: bash
+      run: ./scripts/fetch-docker-images.sh ${{ inputs.images}}
