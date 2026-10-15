@@ -1,7 +1,8 @@
 import { DynamoDBClient, ExecuteStatementCommand } from "@aws-sdk/client-dynamodb"
 import { S3Client } from "@aws-sdk/client-s3"
+import { exceptionDefinitions, triggerDefinitions } from "@moj-bichard7-developers/bichard7-next-data/dist"
 import AuditLogDynamoGateway from "@moj-bichard7/api/services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
-import type { ApiAuditLogEvent } from "@moj-bichard7/api/types/AuditLogEvent"
+import type { ApiAuditLogEvent, AuditLogEventAttributes } from "@moj-bichard7/api/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { convertPncJsonToLedsAsnQueryResponse } from "@moj-bichard7/e2e-tests/utils/converters/convertPncJsonToLeds/convertPncJsonToLedsAsnQueryResponse"
 import convertPncToLeds from "@moj-bichard7/e2e-tests/utils/converters/convertPncToLeds"
@@ -52,6 +53,46 @@ const extractErrorMessages = (event: ApiAuditLogEvent) => {
   return errors
 }
 
+const extractCodesFromAttributes = (attributes: AuditLogEventAttributes, codeRegex: RegExp): string[] => {
+  return Object.entries(attributes)
+    .filter(([key]) => codeRegex.exec(key))
+    .map(([_, value]) => value.toString())
+    .sort()
+}
+
+const extractTriggersFromAttributes = (attributes: AuditLogEventAttributes) => {
+  const triggerCodes = extractCodesFromAttributes(attributes, /Trigger \d+ Details/)
+
+  return triggerCodes.reduce(
+    (acc, triggerCode) => {
+      const trigger = triggerDefinitions.find(({ code }) => code === triggerCode)
+      acc[triggerCode] = trigger?.description ?? "⚠️ Definition missing from standing data"
+
+      return acc
+    },
+    {} as Record<string, string>
+  )
+}
+
+const extractExceptionsFromAttributes = (attributes: AuditLogEventAttributes) => {
+  const exceptionCodes = extractCodesFromAttributes(attributes, /Exception Type/)
+
+  return exceptionCodes.reduce(
+    (acc, exceptionCode) => {
+      const exception = exceptionDefinitions.find(({ code }) => code === exceptionCode)
+      acc[exceptionCode] = exception
+        ? {
+            Description: exception.shortDescription,
+            Cause: exception.cause
+          }
+        : "⚠️ Definition missing from standing data"
+
+      return acc
+    },
+    {} as Record<string, Record<string, string> | string>
+  )
+}
+
 const generateCaseSummaryByMessageId = async (
   messageId: string,
   options: FullGenerateCaseSummaryOptions
@@ -72,10 +113,9 @@ const generateCaseSummaryByMessageId = async (
 
   let eventDetails: object[] = []
   await Promise.all(
-    events
-      .filter((event) => event.eventCode === EventCode.PncResponseReceived)
-      .map(async (event) => {
-        let operationKey = ""
+    events.map(async (event) => {
+      let operationKey = ""
+      if (event.eventCode === EventCode.PncResponseReceived) {
         const errors = extractErrorMessages(event)
         const requestType = event.attributes?.["PNC Request Type"]
         if (requestType === "ENQASI") {
@@ -119,11 +159,78 @@ const generateCaseSummaryByMessageId = async (
           const content = String(event.attributes?.["PNC Request Message"])
           eventDetails.push(mapPenaltyHearing(content, errors, event.timestamp, sensitive))
         }
+      } else if (event.eventCode === EventCode.TriggersGenerated && event.attributes) {
+        operationKey = "Bichard Triggers Generated"
+        eventDetails.push({
+          metadata: {
+            title: "✅ Bichard Triggers Generated",
+            timestamp: event.timestamp,
+            errors: []
+          },
+          Triggers: extractTriggersFromAttributes(event.attributes)
+        })
+      } else if (event.eventCode === EventCode.TriggersLocked) {
+        operationKey = "Bichard Triggers Locked"
+        eventDetails.push({
+          metadata: {
+            title: "Bichard Triggers Locked",
+            timestamp: event.timestamp,
+            errors: []
+          },
+          "Locked by": event.user
+        })
+      } else if (event.eventCode === EventCode.TriggersResolved && event.attributes) {
+        operationKey = "Bichard Triggers Resolved"
+        eventDetails.push({
+          metadata: {
+            title: "✅ Bichard Triggers Resolved",
+            timestamp: event.timestamp,
+            errors: []
+          },
+          "Resolved by": event.user,
+          Triggers: extractTriggersFromAttributes(event.attributes)
+        })
+      } else if (event.eventCode === EventCode.TriggersDeleted && event.attributes) {
+        operationKey = "Bichard Triggers Deleted"
+        eventDetails.push({
+          metadata: {
+            title: "Bichard Triggers Deleted",
+            timestamp: event.timestamp,
+            errors: []
+          },
+          "Deleted by": event.user,
+          Triggers: extractTriggersFromAttributes(event.attributes)
+        })
+      } else if (event.eventCode === EventCode.ExceptionsGenerated && event.attributes) {
+        operationKey = "Bichard Exceptions Generated"
+        eventDetails.push({
+          metadata: {
+            title: "❌ Bichard Exceptions Generated",
+            timestamp: event.timestamp,
+            errors: []
+          },
+          Exceptions: extractExceptionsFromAttributes(event.attributes)
+        })
+      } else if (event.eventCode.startsWith("hearing-outcome.ignored")) {
+        operationKey = "Bichard Ignored the Case"
+        eventDetails.push({
+          metadata: {
+            title: "Bichard Ignored the Case",
+            timestamp: event.timestamp,
+            errors: []
+          },
+          Reason: event.eventCode
+            .replace("hearing-outcome.ignored.", "")
+            .replace(/\./g, " ")
+            .replace(/-/g, " ")
+            .replace(/\b\w/g, (char) => char.toUpperCase())
+        })
+      }
 
-        if (operationKey) {
-          output.operations[operationKey] = (output.operations[operationKey] ?? 0) + 1
-        }
-      })
+      if (operationKey) {
+        output.operations[operationKey] = (output.operations[operationKey] ?? 0) + 1
+      }
+    })
   )
 
   eventDetails = eventDetails.sort((a, b) =>
