@@ -3,6 +3,27 @@ layout: default
 title: Exceptions
 ---
 
+Exceptions occur when the Bichard 7 system cannot automatically update PNC with the court hearing
+result. This may be because of an error, or because the result is complex.
+
+There are 2 types of exception:
+
+- **pre hearing outcome publication** <br>
+If errors are found when completing Bichard 7 checks. For example, an invalid ASN may mean the entry cannot be identified on PNC.
+
+- **post hearing outcome publication** <br>
+Where the entry has been correctly identified on PNC but the offence cannot be updated. For example, result may already be on the PNC.
+
+## Case ownership
+
+Forces are responsible for exceptions arising from their own cases. If a case is heard out of area, Bichard 7 will always attempt to pass the case back to the owning force.
+
+If this is not possible, the case will default back to the local force for the court. For example, if the ASN and PTIURN have not been recorded correctly at court.
+
+You can fix and resubmit a case if the correct Force Owner, ASN or PTIURN is available on paperwork or the PNC.
+
+If the exception is straightforward, the force that received it should result the case. Otherwise, send a copy of the register to the owning force and mark the exception as 'Manually Resolved'.
+
 ## Exceptions List
 
 Pre Hearing Publication Errors ('validation' errors) - Error Codes & Messages:
@@ -128,28 +149,3 @@ Post Hearing Outcome Publication ('update' errors):
 | HO200204 | Bail Condition Text too long |
 | HO200205 | Amount Specified In Result too large |
 | HO200212 | Offence has no valid PNC results |
-
-## About exceptions
-
-Exceptions occur when the Bichard 7 system cannot automatically update PNC with the court hearing 
-result. This may be because of an error, or because the result is complex.
-
-Exceptions fall into 2 main categories:
-
-- **pre hearing outcome publication**
-
-If errors are found when completing Bichard 7 checks. For example, an invalid ASN may mean the entry cannot be identified on PNC.
-
-- **post hearing outcome publication** 
-
-Where the entry has been correctly identified on PNC but the offence cannot be updated. For example, result may already be on the PNC.
-
-## Case ownership
-
-Forces are responsible for exceptions arising from their own cases. If a case is heard out of area, Bichard 7 will always attempt to pass the case back to the owning force.
-
-If this is not possible, the case will default back to the local force for the court. For example, if the ASN and PTIURN have not been recorded correctly at court.
-
-You can fix and resubmit a case if the correct Force Owner, ASN or PTIURN is available on paperwork or the PNC.
-
-If the exception is straightforward, the force that received it should result the case. Otherwise, send a copy of the register to the owning force and mark the exception as 'Manually Resolved'.

@@ -1,9 +1,7 @@
 ---
 layout: default
-title: Police National Computer (PNC)
+title: How Bichard updates the PNC
 ---
-
-## How Bichard updates the PNC
 
 Bichard 7 receives CJS result codes and result information from Libra and performs some validation checks. If the result passes the validation checks, Bichard 7 then uses the result information to send a PNC update message to the PNC. The update message lets PNC know to update one or more of the following PNC pages: arrest summons, disposal history, remand and defendant alias.
 

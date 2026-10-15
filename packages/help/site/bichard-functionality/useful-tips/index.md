@@ -30,12 +30,6 @@ The same ASN with the extra zeros, and no slashes in the agreed format is: 0988A
 
 Leading zeros should always be inserted before the actual case number, rather than after the year. For example, 10/0000/00/12345/Q - the additional zeros should be inserted before the "123…" as in 1000000000000012345Q. If the zeros are inserted in any other place within the ASN, then this impacts the actual number and causes a Dummy ASN to be created.
 
-## Missing triggers
-
-To receive a trigger the user must be configured to receive it and the force must be configured to have the trigger generated. If the configuration is incorrect then the trigger will not be received.
-
-The decision on whether to generate the trigger is based on the configuration of the force handling the exception. In out-of-area cases (and those brought by non- geographic forces) where Bichard 7 cannot identify the prosecuting force from the Force Owner, ASN and/or PTI-URN, and allocates the case to the force local to the court; then this may not be the same set of triggers as the prosecuting force.
-
 ## Non-recordable offences in the portal
 
 Non-recordable offences can appear in the portal due to the following reasons:

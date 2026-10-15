@@ -3,82 +3,221 @@ layout: default
 title: Triggers
 ---
 
-## What is a Trigger?
+The Bichard 7 system creates a trigger if a result needs manual intervention. For example, driver disqualifications. Triggers can also show another action is required even when the result is successfully added to the PNC. A case may have both an exception and a trigger. They can be handled separately.
 
-Triggers are created when a result is passed through the Bichard 7 solution that requires an external system to be updated, for example ViSOR (Violent and Sexual Offenders Register). Examples of triggers include Driver Disqualifications, certain types of orders, and particular disposals. They can also be a prompt to show another action is required although the result has been successfully passed to PNC.
+There are 2 types of triggers:
 
-If there is more than one trigger these may be dealt with by different handlers e.g. one user may update the Driver Disqualification screen and another user may update the Custody History. You should be aware that a case hearing in the portal may have an exception and a trigger. It is therefore possible that a trigger may be actioned before the exception has been rectified. E.g. the Custody History may be updated as a result of action indicated by a trigger before the impending prosecution is resulted if it has exceptioned.
+- **pre update** <br>
+Sent before the Bichard 7 validation check.
 
-Triggers are categorized into two groups: Pre-update and Post-update. The pre-update ones are sent before the Bichard 7 validation check and the post-update ones are sent after the result has been accepted by PNC.
+- **post update** <br>
+Sent after the result has been accepted by PNC.
 
-## How to resolve a trigger
+## Missing triggers
 
-Triggers are actioned outside the portal and should then be marked as complete in the portal.
+You may not see the triggers you normally see when handling cases from:
 
-Trigger processing is totally independent of the automated resulting/exception handling process. A result should be automatically updated on the PNC even if it is also being routed to the portal as a 'trigger'. All triggers on the error list start with the code PR or PS. You can filter for specific triggers by searching for them using their FULL code, e.g. 'TRPR0001'.
+- outside your force area
+- non-geographic forces
 
-Select and click on the name of the defendant for the trigger you wish to update.
+This is because different forces and users are set up to see different triggers.
 
-![Trigger list](image1.png)
+## Trigger List
 
-A yellow triangle in the trigger tab indicates action is required and the status is shown as 'outstanding'.
+| Trigger ID | TRPR0001 |
+|------------|----------|
+| Trigger description | Driver Disqualification |
+| PNC screen to update | Driver Disqualification |
+| CJS result code | {::nomarkdown}<ul></li> <li>3028 Disqualification limited to</li><li>3030 Driving license restored with effect from</li><li>3050 Reduced Disqualification from Driving after Completing Course</li><li>3051 Reduced Disqualification from Driving - special reasons or mitigating circumstances</li><li>3070 Disqualified from Driving - Obligatory</li><li>3071 Disqualified from Driving - Discretionary</li><li>3072 Disqualified from Driving - Points (Totting)</li><li>3073 Disqualified from Driving until Ordinary Test Passed</li><li>3074 Disqualified from Driving until Extended Test Passed</li><li>3094 Disqualified from Driving non motoring offence</li><li>3095 Disqualified from Driving - vehicle used in Crime</li><li>3096 Interim Disqualification from Driving</li></ul>{:/} |
 
-![View Trigger](image2.png)
+| Trigger ID | TRPR0002 |
+|------------|----------|
+| Trigger description | Warrant issued |
+| PNC screen to update | Wanted / Missing |
+| CJS result code | {::nomarkdown}<ul><li>4575 Warrant for Offence Backed for Bail (Dated) *</li><li>4576 Warrant for Offence Not Backed for Bail (Undated) *</li><li>4577 Warrant for Offence Backed for Bail (Undated) *</li><li>4585 Warrant for Arrest of Parent / Guardian *</li><li>4586 Warrant for Arrest of Witness *</li><li>*AND Result Qualifier is not 'EO' - Warrant allocated to civilian enforcement officer</li></ul>{:/} |
 
-Click on the trigger tab and the update screen is shown. The text next to the trigger number will indicate to you what action is required.
+| Trigger ID | TRPR0003 |
+|------------|----------|
+| Trigger description | Order issues |
+| PNC screen to update | Wanted / Missing |
+| CJS result code | {::nomarkdown}<ul><li>1100 Exclusion Order</li><li>1177 Criminal Behaviour Order</li><li>1178 Interim Criminal Behaviour Order</li><li>3034 Order to keep Dog Under Control</li><li>3041 Licensed premises Exclusion Order</li><li>3047 Restraining Order Protection from Harassment</li><li>3068 Football Banning Order</li><li>3078 Travel Restriction Order</li><li>3080 Anti-Social Behaviour Order</li><li>3082 Contingent Destruction Order</li><li>3100 Interim ASBO</li><li>3106 Exclusion Requirement</li><li>3121 Serious Crime Prevention Order</li><li>3122 Interim Violent Offender Order</li><li>3123 Violent Offender Order</li><li>3124 Interim Drinking Banning Order</li><li>3125 Drinking Banning Order</li><li>3133 Foreign Travel Restriction Order</li><li>3284 Interim Slavery and Trafficking Prevention Order</li><li>3285 Slavery and Trafficking Prevention Order</li><li>3326 Domestic Abuse Protection Order (trial)</li><li>4590 Interim Anti-Social Behaviour Order</li><li>OR the offence contains a Youth Rehabilitation Order result (one of 1141, 1142 or 1143) together with a curfew, residence or prohibited activity requirement (one of 3104, 3105 or 3107)</li></ul>{:/} |
 
-![Trigger list on record](image3.png)
+| Trigger ID | TRPR0004 |
+|------------|----------|
+| Trigger description | Convicted of Sexual Offence or Sexual Order made |
+| PNC screen to update | Markers and Register(s) as appropriate |
+| CJS result code | {::nomarkdown}<ul><li>3052 Sex Offenders Notice</li><li>3081Restraining Order Sexual Offence</li><li>3085 Notification Order - sex offender</li><li>3086 Sexual offences prevention order</li><li>3087 Foreign Travel Order</li><li>3088 Risk of sexual harm order</li><li>3089 Risk of sexual harm order</li><li>3090 Interim sexual offences prevention order</li><li>1179 Sexual Harm Prevention Order</li><li>1181 Interim Sexual Harm Prevention Order</li><li>3281 Interim Sexual Risk Order</li><li>3282 Sexual Risk Order</li><li>3091 Interim Risk of sexual harm order</li><li>OR the verdict is 'Guilty' and the offence code is one of the following: SX56001, SX56005, SX56006, SX56010, SX56013 to SX56015, SX56021 to SX56031, SX56047 to SX56050, IC60005 to IC60008, CL77015, PK78001 to PK78008, CJ88115, SA00001, SA00002, SX03001 to SX03111, SX03123 to SX03137, SX03156 to SX03179, SX03181 to SX03201, SX03208, SX03209, SX03224, SX03225, SX03226, SX03227, SX03228, SX03229, SX03230, SX03231, SX03232, CE79180, CE79161, CD98001, CD98055, CD98056</li><li>OR the result text contains the following words: "sex offender" or "sex offences act"</li></ul>{:/} |
 
-When you have successfully completed that action check the box immediately to the right of the outstanding status (where the case has several triggers the "select all triggers" option can be used as a quick way to select all outstanding triggers). Click on the 'mark selected complete' button, this changes the status to 'complete'.
+| Trigger ID | TRPR0005 |
+|------------|----------|
+| Trigger description | Defendant remanded in Custody |
+| PNC screen to update | Custody History |
+| CJS result code | {::nomarkdown}<ul><li>4012 Remittal for Sentence in Custody</li><li>4016 Commit to Crown Court for Sentence in Custody</li><li>4028 Remand In Custody</li><li>4032 Remittal To Youth Court In Custody</li><li>4049 Remand in Custody after Bail Appeal by Prosecutor</li><li>4050 Remand in Custody to Customs Detention</li><li>4051 Remand in Custody to Hospital (Mental Health Act)</li><li>4053 Mental Health - Commit to Crown Court for Restriction (Remand to prison)</li><li>4054 Committed to Crown Court for Sentence in Youth Detention Accommodation</li><li>4056 Remitted to Youth Court in Youth Detention Accommodation</li><li>4057 Commit/Transfer/Send for Trial to CC in Youth Detention Accommodation</li><li>4058 Remanded in Youth Detention Accommodation</li><li>4541 Remand in Police Custody</li><li>4560 Commit/Transfer/Send to Crown Court for Trial in Custody</li><li>4564 Commit/Transfer/Send to Crown Court for Trial in Custody (Transfer Direction)</li><li>4588 Remittal for Trial - In Custody</li></ul>{:/} |
 
-Note that only those triggers which have been set up in your profile will have a checkbox. Any other outstanding triggers on the case will need to be completed by a user from the appropriate team.
+| Trigger ID | TRPR0006 |
+|------------|----------|
+| Trigger description | Defendant imprisoned |
+| PNC screen to update | Custody History |
+| CJS result code | {::nomarkdown}<ul><li>1002 Imprisonment</li><li>1003 Detained during HM Pleasure</li><li>1004 Restriction Order</li><li>1007 Detention</li><li>1008 Hospital Order</li><li>1024 Young Offenders Institution</li><li>1055 Unserved from Original Sentence</li><li>1056 Detained in Place approved by Sec. Of State</li><li>1058 Training School Order (NI)</li><li>1073 Detained without Limit of Time</li><li>1074 Criminal Procedure (Scotland) Act 1975</li><li>1075 Order under Prisoner & Criminal Proceedings (Scotland) Act 1993 s.16</li><li>1077 Youth Custody (Guernsey)</li><li>1080 Secure Training Order</li><li>1081 Detention and Training Order</li><li>1088 Hospital & Limitation Directions</li><li>1091 Detained during Secretary of State's pleasure (NI)</li><li>1092 Young Offenders Centre (NI)</li><li>1093 Juvenile Justice Centre (NI)</li><li>1110 Return to Detention</li><li>1111 Return to Prison</li><li>1121 Indeterminate Sentence Minimum</li><li>1126 One Days Detention</li><li>1133 Return to YOI</li><li>1507 Suspended Sentence Implemented</li><li>3053 Secure Accommodation Order</li><li>3132 Interim Hospital Order</li></ul>{:/} |
 
-![Complete triggers](image4.png)
+| Trigger ID | TRPR0007 |
+|------------|----------|
+| Trigger description | Defendant Dead |
+| PNC screen to update | Death Marker |
+| CJS result code | 2065 Death |
 
-If, having clicked the 'mark selected as complete' button, there are no further actions available - all the triggers within your profile have been completed and there is no exception outstanding (or your role is a trigger handler so you cannot resolve it) - then you will be returned to the error report list and this case will be removed from your list.
+| Trigger ID | TRPR0008 |
+|------------|----------|
+| Trigger description | Defendant has breached bail |
+| PNC screen to update | Breach of bail marker |
+| CJS result code | The defendant is guilty of one of the following offences: BA76004, BA76005 |
 
-If you wish, you can leave the case partially resolved with some of the triggers (or an exception) outstanding by clicking one of the 'Return To List' buttons which takes you to a confirmation screen. Clicking either 'yes' or 'no' takes you to your error report list, but 'no' does not save the changes so any triggers which you marked as complete will still be outstanding.
+| Trigger ID | TRPR0010 |
+|------------|----------|
+| Trigger description | Bail conditions imposed/varied/ cancelled |
+| PNC screen to update | Remand Screen |
+| CJS result code | {::nomarkdown}<ul><li>Bail conditions are present on the case - as held in the Bail Condition field(s) on the Defendant tab within the Portal</li><li>OR 4597 Police bail variation</li><li>OR a result on the case contains the LI (bail conditions cancelled) qualifier</li></ul>{:/} |
 
-As there are outstanding actions remaining, the case remains in the listing indicating what action is required. The case will not be removed from your list until all actions have been completed.
+| Trigger ID | TRPR0012 |
+|------------|----------|
+| Trigger description | Warrant not executed / Withdrawn |
+| PNC screen to update | Wanted / Missing |
+| CJS result code | 2509 Warrant not executed |
 
-![Return to list](image5.png)
+| Trigger ID | TRPR0015 |
+|------------|----------|
+| Trigger description | Personal details changed |
+| PNC screen to update | Personal details |
+| CJS result code | 4592 Defendant's personal details changed |
 
-## Adding Notes To A Trigger
+| Trigger ID | TRPR0016 |
+|------------|----------|
+| Trigger description | Forfeiture order made |
+| PNC screen to update | Destruction register |
+| CJS result code | {::nomarkdown}<ul><li>3055 Deprivation</li><li>3056 Confiscation</li><li>3134 Forfeiture of cash</li><li>3135 Forfeiture and destruction</li><li>3136 Forfeiture of license</li><li>3137 Forfeiture and sale</li><li>3138 Forfeiture of vehicle</li></ul>{:/} |
 
-If you have taken action on a trigger but cannot resolve it immediately, the actions you have taken should be entered via the 'notes' tab. By clicking on the 'notes' tab the resultant screen allows you to enter the details in a dialogue box.
+| Trigger ID | TRPR0017 |
+|------------|----------|
+| Trigger description | Adjourned Sine Die |
+| PNC screen to update | Update case details |
+| CJS result code | 2007 Adjourned Sine Die |
 
-![Trigger notes](image6.png)
+| Trigger ID | TRPR0018 |
+|------------|----------|
+| Trigger description | Update offence dates on PNC |
+| PNC screen to update | Offence dates |
+| CJS result code | Offence date range from court falls within date range on PNC, but is not an exact match |
 
-By clicking on the 'add note' button you are presented with a confirmation screen. 'Yes' updates the notes for the case and returns you to the summary error list. 'No' returns you to the summary error list without updating the case record within Bichard 7.
+| Trigger ID | TRPR0019 |
+|------------|----------|
+| Trigger description | Remanded in custody with bail direction |
+| PNC screen to update | Bail screen |
+| CJS result code | {::nomarkdown}<ul><li>4017 Commit to Crown Court for sentence in custody with bail direction</li><li>4046 Remand in custody with direction to release on bail</li><li>4055 Remand In Youth Detention Accommodation With Bail Direction</li><li>4561 Commit/Transfer/Send to Crown Court for Trial in custody with direction to release on bail</li></ul>{:/} |
 
-![Trigger notes](image7.png)
+| Trigger ID | TRPR0020 |
+|------------|----------|
+| Trigger description | Breach offence |
+| PNC screen to update | Update original case with conviction and sentence details |
+| CJS result code | {::nomarkdown}<ul><li>1029 Order Revoked</li><li>1030 Order Varied</li><li>1031 Order Extended</li><li>1032 Order Amended</li><li>3501 Dealt with for Original Offence</li><li>OR The defendant is being sentenced for one of the following offences:<br>CD98001, CD98019, CD98020, CD98021, CD98058, CJ03506, CJ03507, CJ03510, CJ03511, CJ03522, CJ03523, CJ08507, CJ08512, CJ08519, CJ08521, CJ08526, CJ91001, CJ91002, CJ91028, CJ91029, CJ91031, CJ91039, CS97001, FB89004, LP80001, MC80002, MC80508, MC80601, PC00003, PC00004, PC00005, PC00006, PC00007, PC00008, PC00009, PC00010, PC00501, PC00502, PC00504, PC00505, PC00515, PC00525, PC00535, PC00545, PC00555, PC00565, PC00575, PC00585, PC00595, PC00605, PC00615, PC00625, PC00635, PC00645, PC00655, PC00665, PC00700, PC00702, PC73003, PU86051, PU86089, PU86118, SC07001, SO59501, SX03202, SX03220, SX03221, SX03222, SX03223</li></ul>{:/} |
 
-If a note is longer than 1000 characters it will appear split into multiple notes. The notes will be split at the nearest word boundary to 1000 characters, to prevent a word from being cut in half.
+| Trigger ID | TRPR0021 |
+|------------|----------|
+| Trigger description | Disqualification or Revocation Order made (not motoring) |
+| PNC screen to update | Relevant 'Order' screen |
+| CJS result code | {::nomarkdown}<ul><li>3002 Disqualified from being Company Director</li><li>3022 Disqualified from keeping a dog</li><li>3023 Disqualified from Having Custody of a Dog</li><li>3025 Disqualified from keeping animal</li><li>3035 Firearm certificate revoked</li><li>3115 Disqualification relating to animals</li></ul>{:/} |
 
-Each new note will start with a count to indicate which note in the sequence it is (i.e. "(1/2) …") and the new notes will be ordered such that when read, they follow on logically from one to the next. If a new note has a note after it in the sequence (i.e. note 1 out of 2), it will have an ellipsis (…) appended to the note text to indicate that the note/sentence continues in the next note. Similarly, if a new note has a note prior to it in the sequence (i.e. note 2 out of 2), it will have an ellipsis prepended to the note text to indicate that it is the continuation of a previous note/sentence.
+| Trigger ID | TRPR0022 |
+|------------|----------|
+| Trigger description | Extradition ordered or Proceedings pending |
+| PNC screen to update | Invoke local processes |
+| CJS result code | {::nomarkdown}<ul><li>4022 Extradited</li><li>4067 Extradition ordered</li><li>4068 Extradition proceedings pending</li></ul>{:/} |
 
-Note: Text in the Notes Field is not archived and therefore not recoverable once the case has been archived
+| Trigger ID | TRPR0023 |
+|------------|----------|
+| Trigger description | Domestic Violence Case |
+| PNC screen to update | Invoke local processes |
+| CJS result code | Result Qualifier LG (an option under the "Urgent" result in Libra) |
 
-## Redirecting a trigger only case to another Force Area
+| Trigger ID | TRPR0024 |
+|------------|----------|
+| Trigger description | Vulnerable or Intimidated victim/witness |
+| PNC screen to update | Invoke local processes |
+| CJS result code | Result Qualifier LH (an option under the "Urgent" result in Libra) |
 
-If a case is received and your force is either no longer the owner of the case, or your force has received the case as the correct force could not be identified from the ASN/PTI-URN, then the triggers can be redirected to the correct force. A trigger only handler can only redirect a case if there are no exceptions on/remaining on the case.
+| Trigger ID | TRPR0025 |
+|------------|----------|
+| Trigger description | Original Case Reopened/stat dec made |
+| PNC screen to update | Update original case with conviction and sentence details |
+| CJS result code | {::nomarkdown}<ul><li>Offence code MC80524 together with Result Code 4584</li><li>OR Offence code MC80527 together with Result Code 3049</li></ul>{:/} |
 
-Select and click on the name of the defendant you wish to transfer.
+| Trigger ID | TRPR0026 |
+|------------|----------|
+| Trigger description | Driving disqualification suspended |
+| PNC screen to update | Driver Disqualification |
+| CJS result code | {::nomarkdown}<ul><li>3075 Driving Disqualification Suspended Pending Appeal on Imposition</li><li>3076 Driving Disqualification Suspended Pending Appeal Subsequent to Imposition</li></ul>{:/} |
 
-![Trigger list](image8.png)
+| Trigger ID | TRPR0027 |
+|------------|----------|
+| Trigger description | Out of Area case |
+| PNC screen to update | Will depend on what action is required on the case |
+| CJS result code | This trigger will fire for cases which are heard outside a force's area. It will fire for cases which meet the conditions for any trigger which the force does not take. |
 
-Click on the 'Case' tab and then click on the Reallocate Case button.
+| Trigger ID | TRPR0028 |
+|------------|----------|
+| Trigger description | Trigger only case reallocated from another force |
+| PNC screen to update | The case will need to be reviewed to see what action is required. |
+| CJS result code | This trigger will fire when a case is reallocated to another force. Its purpose is to inform the receiving force that a case has been reallocated to them, and that case does not contain exceptions but contains triggers that the new force does not have enabled. |
 
-![Reallocate case button](image9.png)
+| Trigger ID | TRPR0029 |
+|------------|----------|
+| Trigger description | Civil proceedings granted or Order made - update records as appropriate |
+| PNC screen to update | The case will need to be reviewed to see what action is required. |
+| CJS result code | This trigger is raised if the case is non-recordable and contains one of the following offences:{::nomarkdown}<br>{:/}AS14504, AS14509, AS14511, CD98501, CD98502, CD98503, CD98517, CD98519, CD98525, CJ08503, CJ08504, CJ08505, CS10501, CS10502, FB89501, FB89506, MC80530, MS15501, MS15502, MS15503, MS15504, PC00503, PC00506, PC09504, PC09505, PC09510, PH97503, SE20503, SE20505, SE20506, SE20513, SE20529, SE20541, SE20545, ST19501{::nomarkdown}<br>{:/}OR{::nomarkdown}<br>{:/}The case is non-recordable and contains one of the following offences and the application has been granted [Note: the word 'granted' must appear within the result text received from Libra]:{::nomarkdown}<br>{:/} AS14501, AS14502, AS14503, AS14505, AS14506, AS14507, AS14508, AS14510, AS14512,AS14513, AW06502, CC81501, CD98510, CD98516, CD98518, CD98527, CD98528, CJ03509,CJ03513, CJ03519, CJ03520, CJ08506, CJ08508, CJ08522, FB89502, FB89503, MC80515,PC09501, PC09502, PC09503, PC09506, PC09507, PC09508, PC09509, PC09511, PH97501,PH97502, PL84503, RO88504, RO88505, ST19502, ST19503, ST19504, ST19505, ST19506,ST19507, SX03505, SX03506, SX03507, SX03508, SX03509, SX03510, SX03511, SX03512,SX03513, SX03514, SX03515, SX03516, SX03517, SX03518, SX03519, SX03520, SX03521,SX03522, SX03523, SX03524, SX03525, SX03526, SX03527, SX03528, SX03529, SX03530,SX03531, SX03532, SX03540, SX03541, SX03542, SX03543, SX03544, SX03545, SX03546,SX03547, SX03548, SX03549, TR08500, TR08501, TR08502, TR08503, VC06501, VC06502,VC06503, VC06504, VC06505, YJ99501, YJ99503 |
 
-When clicking on the Reallocate Case button, the following screen appears and allows you to select a new force.
+| Trigger ID | TRPR0030 |
+|------------|----------|
+| Trigger description | Pre-charge bail application |
+| PNC screen to update | Will depend on what action is required on the case |
+| CJS result code | The case contains one of the following application offence codes: PL84504, PL84505, PL84506 |
 
-![Choose force](image10.png)
+| Trigger ID | TRPS0002 |
+|------------|----------|
+| Trigger description | Confirm address on PNC |
+| PNC screen to update | Confirm address |
+| CJS result code | 3107 Residence Requirement |
 
-Click on the OK button after selecting a new Force. If the Force is different than the original force on the case, you will be returned to the Summary List screen, where the case is no longer listed.
+| Trigger ID | TRPS0003 |
+|------------|----------|
+| Trigger description | Disposal Text too long - revise on PNC if wanted |
+| PNC screen to update | Update text |
+| CJS result code | Text associated with result is greater than 64 characters (PNC disposal text field size). PNC updated by Bichard 7 with first 63 characters and a '+' to indicate some text is missing. |
 
-Note that, if you want to add a note explaining why the case has been reallocated, you would have to do it before selecting the Reallocate Case button.
+| Trigger ID | TRPS0004 |
+|------------|----------|
+| Trigger description | Split Adjournment - manual split required |
+| PNC screen to update | Manually split the result |
+| CJS result code | More than 1 adjournment for a case. |
 
-## Adding/amending access to a trigger
+| Trigger ID | TRPS0008 |
+|------------|----------|
+| Trigger description | Curfew Order |
+| PNC screen to update | Details of curfew order |
+| CJS result code | 3105 Curfew Requirement |
 
-Supervisors are now able to add or amend access to a trigger for a user, via the User Management functionality directly within B7 itself.
+| Trigger ID | TRPS0010 |
+|------------|----------|
+| Trigger description | Offence added to the PNC |
+| PNC screen to update | MO Screen/ Offence Location |
+| CJS result code | Criminal offence added in court and the Bichard 7 / PNC interface allows the offence to be added to the PNC |
+
+| Trigger ID | TRPS0011 |
+|------------|----------|
+| Trigger description | Offence added in court - not added to the PNC |
+| PNC screen to update | Add Offence |
+| CJS result code | Criminal offence added in court but the Bichard 7 / PNC interface does not allow the offence to be added to the PNC |
+
+| Trigger ID | TRPS0013 |
+|------------|----------|
+| Trigger description | Offences taken into consideration - add to offence |
+| PNC screen to update | Add TICs to offence |
+| CJS result code | Offences taken into consideration added by the court but the Bichard 7 / PNC interface does not allow them to be added to the PNC |

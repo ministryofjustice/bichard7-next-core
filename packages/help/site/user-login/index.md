@@ -7,5 +7,5 @@ We have introduced a form of MFA (Multi-Factor Authentication) to the Bichard lo
 
 - [Logging in to Bichard](logging-in-to-bichard/)
 - [Resetting your password](resetting-password/)
-- [Changing your password](changing-your-password/)
+- [Changing your password](change-your-password/)
 - [Setting up your account](new-account-setup/)

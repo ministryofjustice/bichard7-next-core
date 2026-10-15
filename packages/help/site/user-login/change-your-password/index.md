@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Changing your password
+title: Change your password
 ---
 
 Once you are logged in to Bichard, you now also have the ability to change your current password should you wish to do so.
