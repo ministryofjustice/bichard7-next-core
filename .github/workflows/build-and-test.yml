@@ -31,7 +31,7 @@ jobs:
               - 'packages/s3-web-proxy/**'
 
   build_s3_web_proxy_image:
-    name: Test Common
+    name: Build S3 Web Proxy Image
     needs: changes
     if: needs.changes.outputs.s3_web_proxy == 'true'
     runs-on: ubuntu-latest
