@@ -43,7 +43,7 @@ describe("resolveTriggers", () => {
       payload: {
         triggerIds: [insertedTriggers[0].triggerId]
       },
-      url: V1.CasesResolveTriggers.replace(":caseId", caseObj.errorId.toString())
+      url: V1.CaseResolveTriggers.replace(":caseId", caseObj.errorId.toString())
     })
 
     expect(response.statusCode).toBe(OK)
@@ -58,7 +58,7 @@ describe("resolveTriggers", () => {
       payload: {
         triggerIds: [insertedTriggers[0].triggerId]
       },
-      url: V1.CasesResolveTriggers.replace(":caseId", "999")
+      url: V1.CaseResolveTriggers.replace(":caseId", "999")
     })
 
     expect(response.statusCode).toBe(NOT_FOUND)
@@ -74,7 +74,7 @@ describe("resolveTriggers", () => {
       payload: {
         triggerIds: [insertedTriggers[0].triggerId]
       },
-      url: V1.CasesResolveTriggers.replace(":caseId", caseObj.errorId.toString())
+      url: V1.CaseResolveTriggers.replace(":caseId", caseObj.errorId.toString())
     })
 
     expect(response.statusCode).toBe(404)
@@ -89,7 +89,7 @@ describe("resolveTriggers", () => {
       payload: {
         triggerIds: [insertedTriggers[0].triggerId]
       },
-      url: V1.CasesResolveTriggers.replace(":caseId", "invalid-case-id")
+      url: V1.CaseResolveTriggers.replace(":caseId", "invalid-case-id")
     })
 
     expect(response.statusCode).toBe(500)
