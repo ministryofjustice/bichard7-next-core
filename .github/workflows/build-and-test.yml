@@ -47,6 +47,8 @@ jobs:
         uses: ./.github/actions/fetch-docker-images
         with:
           images: nginx-nodejs-24-2023-supervisord
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Build Docker Image
         uses: ./.github/actions/build-docker-image
