@@ -11,7 +11,7 @@ import type { DataSource, EntityManager } from "typeorm"
 import CourtCase from "../../src/services/entities/CourtCase"
 import type { Result } from "../../src/types/Result"
 import { isError } from "../../src/types/Result"
-import communitySentenceAmendResultCodes from "./communitySentenceAmendResultCodes"
+import communitySentenceAmendOffences from "./communitySentenceAmendOffences"
 import createDummyAsn from "./createDummyAsn"
 import createDummyCourtCode from "./createDummyCourtCode"
 import createDummyExceptions from "./createDummyExceptions"
@@ -68,7 +68,7 @@ export default async (
   }
 
   if (triggers.some((a) => a.triggerCode === TriggerCode.TRPR0031)) {
-    communitySentenceAmendResultCodes(parsedAho)
+    communitySentenceAmendOffences(parsedAho)
   }
 
   const notes = createDummyNotes(dataSource, caseId, triggers, isResolved)

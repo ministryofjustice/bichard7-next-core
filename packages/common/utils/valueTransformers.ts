@@ -26,20 +26,28 @@ export const getNumberOfHours = (hours: number | undefined): string | undefined 
 }
 
 const getDurationInMonths = (durationLength: number, durationUnit: string): number => {
+  let durationLengthInMonths
   switch (durationUnit) {
     case "D":
-      return durationLength / 30
+      durationLengthInMonths = durationLength / 30
+      break
     case "H":
-      return durationLength / 720
+      durationLengthInMonths = durationLength / 720
+      break
     case "M":
-      return durationLength
+      durationLengthInMonths = durationLength
+      break
     case "W":
-      return durationLength / 4
+      durationLengthInMonths = durationLength / 4
+      break
     case "Y":
-      return durationLength * 12
+      durationLengthInMonths = durationLength * 12
+      break
     default:
       throw new Error(`Unsupported duration unit: ${durationUnit}`)
   }
+
+  return Math.round(durationLengthInMonths)
 }
 
 export const formatDuration = (durationLength: number, durationUnit: string, forceMonths: boolean = false): string => {

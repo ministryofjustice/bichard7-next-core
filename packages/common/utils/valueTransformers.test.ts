@@ -107,6 +107,12 @@ describe("Utility Functions", () => {
       expect(formatDuration(1440, "H", true)).toBe("2 Months")
     })
 
+    it("should force conversion to months when forceMonths is true and round to nearest integer", () => {
+      expect(formatDuration(61, "D", true)).toBe("2 Months")
+      expect(formatDuration(5, "W", true)).toBe("1 Months")
+      expect(formatDuration(1540, "H", true)).toBe("2 Months")
+    })
+
     it("should throw an error for unsupported duration unit when forceMonths is true", () => {
       expect(() => formatDuration(10, "INVALID", true)).toThrow("Unsupported duration unit: INVALID")
     })

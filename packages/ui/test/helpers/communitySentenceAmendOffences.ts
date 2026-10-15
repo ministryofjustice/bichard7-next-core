@@ -2,12 +2,14 @@ import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/Annotat
 
 const SUSPENDED_SENTENCE_ORDER_RESULT_CODES = [1115, 1134, 1508, 1507]
 const OTHER_SENTENCING_ACT_RESULT_CODES = [1030, 1032, 4575, 4576, 4577]
-const OTHER_RESULT_CODES = [1, 2, 3]
+const OTHER_RESULT_CODES = [3078, 3052]
 
 // Updates result codes and duration (where applicable) to create dummy data specific to community sentences
-const communitySentenceAmendResultCodes = (aho: AnnotatedHearingOutcome) => {
+const communitySentenceAmendOffences = (aho: AnnotatedHearingOutcome) => {
   aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.forEach((offence) => {
     offence.Result.forEach((result) => {
+      result.PleaStatus = Math.random() > 0.5 ? "G" : "NG"
+
       const RESULT_CODE_GROUPS = [
         SUSPENDED_SENTENCE_ORDER_RESULT_CODES,
         OTHER_SENTENCING_ACT_RESULT_CODES,
@@ -57,4 +59,4 @@ const communitySentenceAmendResultCodes = (aho: AnnotatedHearingOutcome) => {
   })
 }
 
-export default communitySentenceAmendResultCodes
+export default communitySentenceAmendOffences
