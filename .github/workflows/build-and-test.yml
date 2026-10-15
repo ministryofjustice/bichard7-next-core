@@ -54,7 +54,7 @@ jobs:
           image_name: s3-web-proxy
           dockerfile: packages/s3-web-proxy/Dockerfile
 
-#      - run:
-#          name: Run Goss Tests
-#          working_directory: packages/s3-web-proxy
-#          command: make goss
+      - name: Run Goss Tests
+        working-directory: packages/s3-web-proxy
+        shell: bash
+        run: make goss
