@@ -7,6 +7,6 @@ IMAGES=($@)
 for image in "${IMAGES[@]}"; do
     if [[ "$CI" == "true" || "$(docker images -q $image 2> /dev/null)" == "" ]]; then
         echo "Fetching $image..."
-        ./fetch-docker-image.sh $image
+        ./scripts/fetch-docker-image.sh $image
     fi
 done
