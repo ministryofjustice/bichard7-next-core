@@ -59,3 +59,50 @@ jobs:
         working-directory: packages/s3-web-proxy
         shell: bash
         run: make goss
+
+  build_postgres_image:
+    name: Build Postgres Image
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Build Docker Image
+        uses: ./.github/actions/build-docker-image
+        with:
+          image_name: bichard-postgres
+          dockerfile: environment/postgres/Dockerfile
+          context: environment/postgres
+
+#    machine:
+#      image: ubuntu-2204:current
+#    resource_class: medium
+#    steps:
+#      - unless:
+#          condition:
+#            <<: *any_change
+#          steps:
+#            - run: circleci-agent step halt
+#      - checkout
+#      - enable_docker_container_image_store
+#      - run: sudo apt-get update && sudo apt-get install -y pigz
+#      - build_and_cache_image:
+#          image_name: bichard-postgres
+#          dockerfile: environment/postgres/Dockerfile
+#          cache_key: buildkit-postgres
+#          image_tag: latest
+#          context: environment/postgres
+#      - run:
+#          name: Save Docker image
+#          command: |
+#            mkdir -p images
+#            docker image save "bichard-postgres:latest" | pigz > "images/postgres.tar.gz"
+#      - persist_to_workspace:
+#          root: .
+#          paths:
+#            - images
