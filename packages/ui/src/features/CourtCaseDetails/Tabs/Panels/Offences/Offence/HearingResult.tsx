@@ -2,6 +2,13 @@ import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/type
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 
+import {
+  capitaliseExpression,
+  formatDuration,
+  getNumberOfHours,
+  getUrgentYesOrNo,
+  getYesOrNo
+} from "@moj-bichard7/common/utils/valueTransformers"
 import Phase from "@moj-bichard7/core/types/Phase"
 import { Card } from "components/Card"
 import ConditionalRender from "components/ConditionalRender"
@@ -12,13 +19,6 @@ import { findExceptions } from "types/ErrorMessages"
 import { Exception } from "types/exceptions"
 import { formatDisplayedDate } from "utils/date/formattedDate"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
-import {
-  capitaliseExpression,
-  formatDuration,
-  getNumberOfHours,
-  getUrgentYesOrNo,
-  getYesOrNo
-} from "utils/valueTransformers"
 import { NextHearingDateField } from "../../EditableFields/NextHearingDateField"
 import { NextHearingLocationField } from "../../EditableFields/NextHearingLocationField"
 import { InfoRow } from "../../InfoRow"

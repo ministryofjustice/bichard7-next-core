@@ -1,9 +1,9 @@
 import { DateCodes } from "@moj-bichard7-developers/bichard7-next-data/dist/types/DateCode"
 import { DateCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import { capitalizeString } from "@moj-bichard7/common/utils/valueTransformers"
 import { textSecondary } from "utils/colours"
 import { formatDisplayedDate } from "utils/date/formattedDate"
-import { capitalizeString } from "utils/valueTransformers"
 
 interface StartDateProps {
   offence: Offence
