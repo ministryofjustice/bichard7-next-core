@@ -81,7 +81,7 @@
     "@types/nunjucks": "^3.2.6",
     "@types/promise-poller": "^1.7.4",
     "@types/stompit": "^0.26.6",
-    "gherkin-lint": "^4.2.4",
+    "gherkin-refine": "1.4.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0"
   },
