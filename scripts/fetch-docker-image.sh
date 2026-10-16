@@ -29,7 +29,7 @@ if [[ -z "${IMAGE_HASH}" ]]; then
       --output json | tr -d '"' | head -1)
 fi
 
-aws ecr get-login-password --region "${REGION}" --registry-id "${AWS_ACCOUNT_ID}" | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+aws ecr get-login-password --region "${REGION}" | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
 
 success=false
 max_attempts=3
