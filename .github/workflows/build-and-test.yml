@@ -14,6 +14,7 @@ jobs:
 
     outputs:
       s3_web_proxy: ${{ fromJSON(steps.evaluate.outputs.filters).s3_web_proxy }}
+      postgres: ${{ fromJSON(steps.evaluate.outputs.filters).postgres }}
 
     steps:
       - name: Checkout repository
@@ -29,6 +30,9 @@ jobs:
             s3_web_proxy:
               - '.github/**'
               - 'packages/s3-web-proxy/**'
+            postgres:
+              - '.github/**'
+              - 'environment/**'
 
   build_s3_web_proxy_image:
     name: Build S3 Web Proxy Image
@@ -62,6 +66,8 @@ jobs:
 
   build_postgres_image:
     name: Build Postgres Image
+    needs: changes
+    if: needs.changes.outputs.postgres == 'true'
     runs-on: ubuntu-latest
 
     permissions:
@@ -86,7 +92,8 @@ jobs:
 
   test_postgres:
     name: Test Postgres
-    needs: build_postgres_image
+    needs: [changes, build_postgres_image]
+    if: needs.changes.outputs.postgres == 'true'
     runs-on: ubuntu-latest
 
     permissions:
