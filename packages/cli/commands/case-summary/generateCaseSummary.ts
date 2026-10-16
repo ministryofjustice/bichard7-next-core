@@ -56,7 +56,7 @@ const extractErrorMessages = (event: ApiAuditLogEvent) => {
 const extractCodesFromAttributes = (attributes: AuditLogEventAttributes, codeRegex: RegExp): string[] => {
   return Object.entries(attributes)
     .filter(([key]) => codeRegex.exec(key))
-    .map(([_, value]) => value.toString())
+    .map(([_, value]) => new RegExp(/(?<code>TRP[RS]\d{4}).*/).exec(value.toString())?.groups?.code ?? value.toString())
     .sort()
 }
 
