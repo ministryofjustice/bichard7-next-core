@@ -14,8 +14,7 @@ if [[ -z "${TAG}" ]]; then
     TAG=$IMAGE
 fi
 
-echo `date`
-echo "Fetching latest ${IMAGE} image from ECR ..."
+echo "Fetching latest ${IMAGE} URL from ECR ..."
 
 REGION=eu-west-2
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
