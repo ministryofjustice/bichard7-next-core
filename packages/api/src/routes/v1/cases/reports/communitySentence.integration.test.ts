@@ -146,7 +146,7 @@ describe("community sentence report", () => {
     expect(response.json()).toHaveLength(0)
   })
 
-  it("returns 0 cases when case does have a trigger 23 but not a trigger 31", async () => {
+  it("returns 0 cases when case does have a domestic violence trigger but not a trigger 31", async () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
     const [caseObj] = await createCases(testDatabaseGateway, 3, {
       0: { courtDate: subDays(new Date(), 2), messageReceivedAt: subDays(new Date(), 2) },
@@ -169,7 +169,7 @@ describe("community sentence report", () => {
     expect(response.json()).toHaveLength(0)
   })
 
-  it("returns 1 case when case does have a trigger 31", async () => {
+  it("returns 1 case when case does have a trigger 31, other result codes not included in report", async () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
     const [caseObj] = await createCases(testDatabaseGateway, 3, {
       0: {
@@ -236,40 +236,6 @@ describe("community sentence report", () => {
     expect(reportItem).not.toHaveProperty("custodialSentenceDuration")
     expect(reportItem).not.toHaveProperty("expiryOfSentence")
     expect(reportItem).not.toHaveProperty("suspendedSentenceDuration")
-  })
-
-  it("returns correct information when trigger 31 and trigger 23 and 24 present", async () => {
-    const courtDate = subDays(new Date(), 3)
-    const messageReceivedAt = subDays(new Date(), 2)
-
-    const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
-    const [caseObj] = await createCases(testDatabaseGateway, 3, {
-      0: { aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml, courtDate, messageReceivedAt },
-      1: { aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml, courtDate, messageReceivedAt },
-      2: { aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml, courtDate, messageReceivedAt }
-    })
-    await createTriggers(testDatabaseGateway, caseObj.errorId, [
-      { triggerCode: TriggerCode.TRPR0031 },
-      { triggerCode: TriggerCode.TRPR0023 },
-      { triggerCode: TriggerCode.TRPR0024 }
-    ])
-
-    const query = new URLSearchParams()
-    query.append("fromDate", subDays(new Date(), 7).toISOString())
-    query.append("toDate", new Date().toISOString())
-
-    const response = await app.inject({
-      headers: { authorization: `Bearer ${jwt}` },
-      method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
-    })
-
-    expect(response.statusCode).toBe(200)
-
-    const json = response.json() as CommunitySentenceReportDto[]
-    const reportItem = json[0]
-
-    expect(reportItem.domesticViolenceFlag).toBe("Yes")
   })
 
   it("returns correct domestic violence flags", async () => {

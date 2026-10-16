@@ -1,12 +1,13 @@
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/types/TriggerCode"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { TRPR0031_RESULT_CODES } from "@moj-bichard7/common/utils/triggerConstants"
 
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import TRPR0031 from "./TRPR0031"
 
 const triggerCode = TriggerCode.TRPR0031
-const reasonCodes = [1115, 1134, 1508, 1507, 1030, 1032, 1116, 4575, 4576, 4577]
+const reasonCodes = TRPR0031_RESULT_CODES
 
 const generateMockAho = (resultCode: number) => {
   return generateAhoFromOffenceList([
@@ -15,8 +16,7 @@ const generateMockAho = (resultCode: number) => {
         {
           CJSresultCode: resultCode
         }
-      ],
-      CourtOffenceSequenceNumber: 1
+      ]
     }
   ] as Offence[])
 }
