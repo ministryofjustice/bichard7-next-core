@@ -19,3 +19,9 @@ runs:
     - name: Pull container
       shell: bash
       run: docker pull ${{ inputs.image_tag }}
+
+    - name: Tag as latest
+      shell: bash
+      run: |
+        IMAGE_NAME=$(basename "${{ inputs.image_tag }}" | cut -d: -f1)
+        docker tag "${{ inputs.image_tag }}" "${IMAGE_NAME}:latest"

@@ -108,4 +108,4 @@ jobs:
 
       - name: Run Postgres function tests
         shell: bash
-        run: DB_HOST=172.17.0.1 ./environment/postgres/tests/test-all.sh
+        run: DB_HOST=172.17.0.1 bash ./environment/postgres/tests/test-all.sh
