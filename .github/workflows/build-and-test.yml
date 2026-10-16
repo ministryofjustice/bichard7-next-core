@@ -97,15 +97,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+      - name: Pull postgres container
+        uses: ./.github/actions/pull-docker-image
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ github.token }}
-
-      - name: Pull container
-        run: docker pull ${{ needs.build_postgres_image.outputs.image_tag }}
+          image_tag: ${{ needs.build_postgres_image.outputs.image_tag }}
 
       - name: Spin up the PostgreSQL database
         shell: bash
