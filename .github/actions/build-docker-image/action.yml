@@ -8,6 +8,10 @@ inputs:
   dockerfile:
     description: "The filepath of the Dockerfile"
     required: true
+  context:
+    description: "Build's context is the set of files located in the specified PATH or URL"
+    required: false
+    default: "."
   base-image-to-pull:
     description: "The name of the base image to pull from ECR"
     required: false
@@ -42,7 +46,7 @@ runs:
     - name: Build image and export to Docker engine
       uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
       with:
-        context: .
+        context: ${{ inputs.context }}
         file: ${{ inputs.dockerfile }}
         load: true # Crucial: loads image into local `docker images`
         push: false
