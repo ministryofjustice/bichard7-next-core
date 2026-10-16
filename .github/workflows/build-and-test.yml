@@ -47,12 +47,6 @@ jobs:
       - name: Install Goss
         uses: ./.github/actions/install-goss
 
-#      - name: Fetch Base Images
-#        uses: ./.github/actions/fetch-docker-images
-#        with:
-#          images: nginx-nodejs-24-2023-supervisord
-#          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-
       - name: Build Docker Image
         uses: ./.github/actions/build-docker-image
         with:
