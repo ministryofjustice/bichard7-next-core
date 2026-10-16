@@ -8,6 +8,10 @@ inputs:
   dockerfile:
     description: "The filepath of the Dockerfile"
     required: true
+  context:
+    description: "Build's context is the set of files located in the specified PATH or URL"
+    required: false
+    default: "."
   base-image-to-pull:
     description: "The name of the base image to pull from ECR"
     required: false
@@ -15,6 +19,15 @@ inputs:
   aws-role-to-assume:
     description: "The ARN of the role to assume, required if pulling a base image from ECR"
     required: false
+  push-to-ghcr:
+    description: "Set to true to push to ghcr for use in subsequent jobs"
+    required: false
+    default: 'false'
+
+outputs:
+  ghcr_tag:
+    description: "The GHCR image tag"
+    value: ${{ steps.resolve-tags.outputs.ghcr_tag }}
 
 runs:
   using: "composite"
@@ -36,17 +49,49 @@ runs:
       shell: bash
       run: ./scripts/get-ecr-image-url.sh ${{ inputs.base-image-to-pull }}
 
+    - name: Resolve Image Tags
+      id: resolve-tags
+      shell: bash
+      run: |
+        REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+        LOCAL_TAG="${{ inputs.image_name }}:latest"
+        GHCR_TAG="ghcr.io/${REPO_LOWER}/${{ inputs.image_name }}:${{ github.sha }}"
+
+        echo "local_tag=${LOCAL_TAG}" >> "$GITHUB_OUTPUT"
+        echo "ghcr_tag=${GHCR_TAG}" >> "$GITHUB_OUTPUT"
+
+        if [ "${{ inputs.push-to-ghcr }}" = "true" ]; then
+          # Buildx tags both references locally in one build pass
+          echo "tags=${LOCAL_TAG},${GHCR_TAG}" >> "$GITHUB_OUTPUT"
+        else
+          echo "tags=${LOCAL_TAG}" >> "$GITHUB_OUTPUT"
+        fi
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
     - name: Build image and export to Docker engine
       uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
       with:
-        context: .
+        context: ${{ inputs.context }}
         file: ${{ inputs.dockerfile }}
         load: true # Crucial: loads image into local `docker images`
         push: false
-        tags: '${{ inputs.image_name }}:latest'
+        tags: ${{ steps.resolve-tags.outputs.tags }}
         build-args: ${{ steps.fetch-base-image-url.outputs.image_url != '' && format('BUILD_IMAGE={0}', steps.fetch-base-image-url.outputs.image_url) || '' }}
         cache-from: type=gha,scope=${{ inputs.image_name }}
         cache-to: type=gha,mode=max,scope=${{ inputs.image_name }}
+
+    - name: Log in to GitHub Container Registry
+      if: inputs.push-to-ghcr == 'true'
+      uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
+
+    - name: Push image to GHCR
+      if: inputs.push-to-ghcr == 'true'
+      shell: bash
+      run: |
+        docker push "${{ steps.resolve-tags.outputs.ghcr_tag }}"
