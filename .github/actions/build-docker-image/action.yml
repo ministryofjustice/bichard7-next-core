@@ -71,7 +71,7 @@ runs:
         context: ${{ inputs.context }}
         file: ${{ inputs.dockerfile }}
         load: true # Crucial: loads image into local `docker images`
-        push: ${{ inputs.push-to-ghcr }}
+        push: false
         tags: ${{ steps.resolve-tags.outputs.tags }}
         build-args: ${{ steps.fetch-base-image-url.outputs.image_url != '' && format('BUILD_IMAGE={0}', steps.fetch-base-image-url.outputs.image_url) || '' }}
         cache-from: type=gha,scope=${{ inputs.image_name }}
