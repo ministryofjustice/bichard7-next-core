@@ -106,3 +106,11 @@ jobs:
 
       - name: Pull container
         run: docker pull ${{ needs.build_postgres_image.outputs.image_tag }}
+
+      - name: Spin up the PostgreSQL database
+        shell: bash
+        run: npm run postgres
+
+      - name: Run Postgres function tests
+        shell: bash
+        run: DB_HOST=172.17.0.1 ./environment/postgres/tests/test-all.sh
