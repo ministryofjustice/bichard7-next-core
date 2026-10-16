@@ -24,6 +24,11 @@ inputs:
     required: false
     default: 'false'
 
+outputs:
+  image_tag:
+    description: "The GHCR image tag"
+    value: ${{ steps.resolve-tags.outputs.ghcr_tag }}
+
 runs:
   using: "composite"
   steps:
