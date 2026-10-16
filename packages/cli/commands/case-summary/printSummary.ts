@@ -13,6 +13,22 @@ const printOnlyOneNewLine = () => {
   isLastLineAnEmptyLine = true
 }
 
+function chunkByWords(text?: string, limit = 75) {
+  if (!text) {
+    return []
+  }
+
+  const regex = new RegExp(`.{1,${limit}}(?:\\s+|$)|\\S+`, "g")
+  return (text.match(regex) || []).map((line) => line.trim())
+}
+
+const wrapText = (text: unknown, label: string, level: number) =>
+  String(text)
+    .split("\n")
+    .flatMap((line) => chunkByWords(line))
+    .map((line) => line.trim())
+    .join("\n" + " ".repeat(level * 4) + " ".repeat(label.length + 2))
+
 const print = (text: string, level: number, ...textColours: string[]) => {
   if (text) {
     isLastLineAnEmptyLine = false
@@ -79,10 +95,11 @@ const printSummary = (obj: object, level = 0) => {
       return
     }
 
+    const formattedValue = wrapText(value, key, level)
     if (fieldsToHighlight.has(key)) {
-      print(`${key}: ${value}`, level, textStyle.brightWhite)
+      print(`${key}: ${formattedValue}`, level, textStyle.brightWhite)
     } else {
-      print(`${textStyle.midGrey}${key}: ${textStyle.default}${value}${textStyle.reset}`, level)
+      print(`${textStyle.midGrey}${key}: ${textStyle.default}${formattedValue}${textStyle.reset}`, level)
     }
   })
 }
