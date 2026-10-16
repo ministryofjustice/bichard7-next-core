@@ -31,7 +31,7 @@ runs:
       uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
 
     - name: Fetch base image URL
-      id: base-img
+      id: fetch-base-image-url
       if: inputs.base-image-to-pull != ''
       shell: bash
       run: ./scripts/get-ecr-image-url.sh ${{ inputs.base-image-to-pull }}
@@ -47,6 +47,6 @@ runs:
         load: true # Crucial: loads image into local `docker images`
         push: false
         tags: '${{ inputs.image_name }}:latest'
-        build-args: ${{ steps.fetch-base.outputs.image_url != '' && format('BUILD_IMAGE={0}', steps.fetch-base.outputs.image_url) || '' }}
+        build-args: ${{ steps.fetch-base-image-url.outputs.image_url != '' && format('BUILD_IMAGE={0}', steps.fetch-base-image-url.outputs.image_url) || '' }}
         cache-from: type=gha,scope=${{ inputs.image_name }}
         cache-to: type=gha,mode=max,scope=${{ inputs.image_name }}
