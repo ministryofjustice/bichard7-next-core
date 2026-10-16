@@ -7,12 +7,12 @@ import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { addDays, subDays } from "date-fns"
-import { formatInTimeZone } from "date-fns-tz"
 import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 
 import build from "../../../../app"
 import { AuditLogDynamoGateway } from "../../../../services/gateways/dynamo"
-import { testSuspendedSentenceOrderAhoXml } from "../../../../tests/helpers/ahoHelper"
+import testCommunitySentenceOrderAhoXml from "../../../../tests/fixtures/AnnotatedHOCommunityOrder.json"
+import testSuspendedSentenceOrderAhoXml from "../../../../tests/fixtures/AnnotatedHOSuspendedSentence.json"
 import { createCases } from "../../../../tests/helpers/caseHelper"
 import auditLogDynamoConfig from "../../../../tests/helpers/dynamoDbConfig"
 import { createTriggers } from "../../../../tests/helpers/triggerHelper"
@@ -172,9 +172,19 @@ describe("community sentence report", () => {
   it("returns 1 case when case does have a trigger 31", async () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
     const [caseObj] = await createCases(testDatabaseGateway, 3, {
-      0: { courtDate: subDays(new Date(), 2), messageReceivedAt: subDays(new Date(), 2) },
-      1: { courtDate: subDays(new Date(), 2), messageReceivedAt: subDays(new Date(), 2) },
-      2: { courtDate: subDays(new Date(), 2), messageReceivedAt: subDays(new Date(), 2) }
+      0: {
+        aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
+        courtDate: subDays(new Date(), 2),
+        messageReceivedAt: subDays(new Date(), 2)
+      },
+      1: {
+        courtDate: subDays(new Date(), 2),
+        messageReceivedAt: subDays(new Date(), 2)
+      },
+      2: {
+        courtDate: subDays(new Date(), 2),
+        messageReceivedAt: subDays(new Date(), 2)
+      }
     })
     await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0031 }])
 
@@ -201,7 +211,7 @@ describe("community sentence report", () => {
 
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
     const [caseObj] = await createCases(testDatabaseGateway, 3, {
-      0: { courtDate, messageReceivedAt },
+      0: { aho: testCommunitySentenceOrderAhoXml.hearingOutcomeXml, courtDate, messageReceivedAt },
       1: { courtDate, messageReceivedAt },
       2: { courtDate, messageReceivedAt }
     })
@@ -220,20 +230,12 @@ describe("community sentence report", () => {
     expect(response.statusCode).toBe(200)
 
     const json = response.json() as CommunitySentenceReportDto[]
+    expect(json).toHaveLength(1)
     const reportItem = json[0]
 
-    expect(reportItem).toEqual(
-      expect.objectContaining({
-        custodialSentenceDuration: null,
-        dateOfBirth: "11/11/1948",
-        defendantName: caseObj.defendantName,
-        domesticViolenceFlag: false,
-        expiryOfSentence: null,
-        pncId: "2000/0448754K",
-        receivedDate: formatInTimeZone(caseObj.messageReceivedAt, "Europe/London", "dd/MM/yyyy HH:mm"),
-        suspendedSentenceDuration: null
-      })
-    )
+    expect(reportItem).not.toHaveProperty("custodialSentenceDuration")
+    expect(reportItem).not.toHaveProperty("expiryOfSentence")
+    expect(reportItem).not.toHaveProperty("suspendedSentenceDuration")
   })
 
   it("returns correct information when trigger 31 and trigger 23 and 24 present", async () => {
@@ -242,9 +244,9 @@ describe("community sentence report", () => {
 
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
     const [caseObj] = await createCases(testDatabaseGateway, 3, {
-      0: { courtDate, messageReceivedAt },
-      1: { courtDate, messageReceivedAt },
-      2: { courtDate, messageReceivedAt }
+      0: { aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml, courtDate, messageReceivedAt },
+      1: { aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml, courtDate, messageReceivedAt },
+      2: { aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml, courtDate, messageReceivedAt }
     })
     await createTriggers(testDatabaseGateway, caseObj.errorId, [
       { triggerCode: TriggerCode.TRPR0031 },
@@ -267,15 +269,7 @@ describe("community sentence report", () => {
     const json = response.json() as CommunitySentenceReportDto[]
     const reportItem = json[0]
 
-    expect(reportItem).toEqual(
-      expect.objectContaining({
-        dateOfBirth: "11/11/1948",
-        defendantName: caseObj.defendantName,
-        domesticViolenceFlag: true,
-        pncId: "2000/0448754K",
-        receivedDate: formatInTimeZone(caseObj.messageReceivedAt, "Europe/London", "dd/MM/yyyy HH:mm")
-      })
-    )
+    expect(reportItem.domesticViolenceFlag).toBe("Yes")
   })
 
   it("returns correct domestic violence flags", async () => {
@@ -284,10 +278,26 @@ describe("community sentence report", () => {
 
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
     const [caseObj1, caseObj2, caseObj3, caseObj4] = await createCases(testDatabaseGateway, 4, {
-      0: { courtDate, messageReceivedAt },
-      1: { courtDate, messageReceivedAt },
-      2: { courtDate, messageReceivedAt },
-      3: { courtDate, messageReceivedAt }
+      0: {
+        aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
+        courtDate,
+        messageReceivedAt
+      },
+      1: {
+        aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
+        courtDate,
+        messageReceivedAt
+      },
+      2: {
+        aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
+        courtDate,
+        messageReceivedAt
+      },
+      3: {
+        aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
+        courtDate,
+        messageReceivedAt
+      }
     })
     await createTriggers(testDatabaseGateway, caseObj1.errorId, [{ triggerCode: TriggerCode.TRPR0031 }])
 
@@ -322,10 +332,10 @@ describe("community sentence report", () => {
     const json = response.json() as CommunitySentenceReportDto[]
     expect(json).toHaveLength(4)
 
-    expect(json[0].domesticViolenceFlag).toBe(false)
-    expect(json[1].domesticViolenceFlag).toBe(true)
-    expect(json[2].domesticViolenceFlag).toBe(true)
-    expect(json[3].domesticViolenceFlag).toBe(true)
+    expect(json[0].domesticViolenceFlag).toBe("No")
+    expect(json[1].domesticViolenceFlag).toBe("Yes")
+    expect(json[2].domesticViolenceFlag).toBe("Yes")
+    expect(json[3].domesticViolenceFlag).toBe("Yes")
   })
 
   it("returns correct sentence duration and expiry date when result codes include suspended sentences", async () => {
@@ -334,7 +344,7 @@ describe("community sentence report", () => {
 
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
     const [caseObj] = await createCases(testDatabaseGateway, 1, {
-      0: { aho: testSuspendedSentenceOrderAhoXml, courtDate, messageReceivedAt }
+      0: { aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml, courtDate, messageReceivedAt }
     })
     await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0031 }])
 
@@ -352,8 +362,8 @@ describe("community sentence report", () => {
 
     const json = response.json() as CommunitySentenceReportDto[]
     expect(json).toHaveLength(1)
-    expect(json[0].custodialSentenceDuration).toBe("8 weeks")
-    expect(json[0].suspendedSentenceDuration).toBe("18 months")
+    expect(json[0].custodialSentenceDurationMonths).toBe("2 months")
+    expect(json[0].suspendedSentenceDurationMonths).toBe("18 months")
     expect(json[0].expiryOfSentence).toBe("08/06/2025")
   })
 })

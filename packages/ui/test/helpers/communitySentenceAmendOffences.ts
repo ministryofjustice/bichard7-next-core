@@ -1,8 +1,8 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
-
-const SUSPENDED_SENTENCE_ORDER_RESULT_CODES = [1115, 1134, 1508, 1507]
-const OTHER_SENTENCING_ACT_RESULT_CODES = [1030, 1032, 4575, 4576, 4577]
-const OTHER_RESULT_CODES = [3078, 3052]
+import {
+  COMMUNITY_ORDER_RESULT_CODES,
+  SUSPENDED_SENTENCE_ORDER_RESULT_CODES
+} from "@moj-bichard7/common/utils/triggerConstants"
 
 // Updates result codes and duration (where applicable) to create dummy data specific to community sentences
 const communitySentenceAmendOffences = (aho: AnnotatedHearingOutcome) => {
@@ -10,11 +10,7 @@ const communitySentenceAmendOffences = (aho: AnnotatedHearingOutcome) => {
     offence.Result.forEach((result) => {
       result.PleaStatus = Math.random() > 0.5 ? "G" : "NG"
 
-      const RESULT_CODE_GROUPS = [
-        SUSPENDED_SENTENCE_ORDER_RESULT_CODES,
-        OTHER_SENTENCING_ACT_RESULT_CODES,
-        OTHER_RESULT_CODES
-      ]
+      const RESULT_CODE_GROUPS = [SUSPENDED_SENTENCE_ORDER_RESULT_CODES, COMMUNITY_ORDER_RESULT_CODES, [3078, 3052]]
 
       function getRandomResultCode(): number {
         const randomGroup = RESULT_CODE_GROUPS[Math.floor(Math.random() * RESULT_CODE_GROUPS.length)]
