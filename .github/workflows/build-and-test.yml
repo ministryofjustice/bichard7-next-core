@@ -75,7 +75,7 @@ jobs:
       packages: write
 
     outputs:
-      image_tag: ${{ steps.build-step.outputs.image_tag }}
+      ghcr_tag: ${{ steps.build-step.outputs.ghcr_tag }}
 
     steps:
       - name: Checkout repository
