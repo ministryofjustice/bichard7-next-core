@@ -78,6 +78,7 @@ jobs:
           image_name: bichard-postgres
           dockerfile: environment/postgres/Dockerfile
           context: environment/postgres
+          push-to-ghcr: true
 
 #    machine:
 #      image: ubuntu-2204:current
