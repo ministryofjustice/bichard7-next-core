@@ -67,6 +67,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      packages: write
 
     steps:
       - name: Checkout repository
@@ -79,31 +80,3 @@ jobs:
           dockerfile: environment/postgres/Dockerfile
           context: environment/postgres
           push-to-ghcr: true
-
-#    machine:
-#      image: ubuntu-2204:current
-#    resource_class: medium
-#    steps:
-#      - unless:
-#          condition:
-#            <<: *any_change
-#          steps:
-#            - run: circleci-agent step halt
-#      - checkout
-#      - enable_docker_container_image_store
-#      - run: sudo apt-get update && sudo apt-get install -y pigz
-#      - build_and_cache_image:
-#          image_name: bichard-postgres
-#          dockerfile: environment/postgres/Dockerfile
-#          cache_key: buildkit-postgres
-#          image_tag: latest
-#          context: environment/postgres
-#      - run:
-#          name: Save Docker image
-#          command: |
-#            mkdir -p images
-#            docker image save "bichard-postgres:latest" | pigz > "images/postgres.tar.gz"
-#      - persist_to_workspace:
-#          root: .
-#          paths:
-#            - images
