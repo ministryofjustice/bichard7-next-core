@@ -25,7 +25,7 @@ inputs:
     default: 'false'
 
 outputs:
-  image_tag:
+  ghcr_tag:
     description: "The GHCR image tag"
     value: ${{ steps.resolve-tags.outputs.ghcr_tag }}
 
