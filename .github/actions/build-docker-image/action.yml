@@ -8,10 +8,34 @@ inputs:
   dockerfile:
     description: "The filepath of the Dockerfile"
     required: true
+  base-image-to-pull:
+    description: "The name of the base image to pull from ECR"
+    required: false
+    default: ""
+  aws-role-to-assume:
+    description: "The ARN of the role to assume, required if pulling a base image from ECR"
+    required: false
 
 runs:
   using: "composite"
   steps:
+    - name: Configure AWS Credentials
+      if: inputs.base-image-to-pull != ''
+      uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+      with:
+        role-to-assume: ${{ inputs.role-to-assume }}
+        aws-region: eu-west-2
+
+    - name: Log in to Amazon ECR
+      if: inputs.base-image-to-pull != ''
+      uses: aws-actions/amazon-ecr-login@03f1aad4c6c7ffd436567f42f9384779290529bd # v2.1.7
+
+    - name: Fetch base image URL
+      id: base-img
+      if: inputs.base-image-to-pull != ''
+      shell: bash
+      run: ./scripts/get-ecr-image-url.sh ${{ inputs.base-image-to-pull }}
+
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
 
@@ -23,5 +47,6 @@ runs:
         load: true # Crucial: loads image into local `docker images`
         push: false
         tags: '${{ inputs.image_name }}:latest'
+        build-args: ${{ steps.fetch-base.outputs.image_url != '' && format('BUILD_IMAGE={0}', steps.fetch-base.outputs.image_url) || '' }}
         cache-from: type=gha,scope=${{ inputs.image_name }}
         cache-to: type=gha,mode=max,scope=${{ inputs.image_name }}
