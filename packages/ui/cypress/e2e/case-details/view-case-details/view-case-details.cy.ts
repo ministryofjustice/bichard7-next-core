@@ -784,7 +784,7 @@ describe("View case details", () => {
     cy.get(".exception-help a")
       .contains("More information")
       .should("exist")
-      .should("have.attr", "href", "/help/triggers-and-exceptions/exception-resolution/index.html#HO100200")
+      .should("have.attr", "href", "/help/triggers-and-exceptions/exceptions/index.html#HO100200")
   })
 
   it("Should generate a more information link for each exception (PNC excception)", () => {
@@ -799,7 +799,7 @@ describe("View case details", () => {
     cy.get(".exception-row__help a")
       .contains("More information")
       .should("exist")
-      .should("have.attr", "href", "/help/triggers-and-exceptions/exception-resolution/index.html#HO100302")
+      .should("have.attr", "href", "/help/triggers-and-exceptions/exceptions/index.html#HO100302")
   })
 
   it("Should show a complete badge for triggers which have been resolved", () => {
