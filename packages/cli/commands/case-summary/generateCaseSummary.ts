@@ -20,7 +20,7 @@ import sensitiveFn from "./utils/sensitive"
 import textStyle from "./utils/textStyle"
 
 type GenerateCaseSummaryResult = {
-  operations: Record<string, number>
+  eventTypeCount: Record<string, number>
   asn: string
   summary: object
 }
@@ -34,7 +34,12 @@ type GenerateCaseSummaryOptions = {
 type FullGenerateCaseSummaryOptions = GenerateCaseSummaryOptions & {
   s3Path: string
   caseId: string
+  exissCorrelationId: string
+  sourceCorrelationId?: string
+  systemId?: string
   receivedDate: string
+  triggerStatus: string
+  pncLedsStatus: string
   messageIndex?: number
 }
 
@@ -56,7 +61,7 @@ const extractErrorMessages = (event: ApiAuditLogEvent) => {
 const extractCodesFromAttributes = (attributes: AuditLogEventAttributes, codeRegex: RegExp): string[] => {
   return Object.entries(attributes)
     .filter(([key]) => codeRegex.exec(key))
-    .map(([_, value]) => value.toString())
+    .map(([_, value]) => new RegExp(/(?<code>TRP[RS]\d{4}).*/).exec(value.toString())?.groups?.code ?? value.toString())
     .sort()
 }
 
@@ -98,7 +103,7 @@ const generateCaseSummaryByMessageId = async (
   options: FullGenerateCaseSummaryOptions
 ): Promise<GenerateCaseSummaryResult> => {
   const output: GenerateCaseSummaryResult = {
-    operations: {},
+    eventTypeCount: {},
     asn: "",
     summary: {}
   }
@@ -114,12 +119,12 @@ const generateCaseSummaryByMessageId = async (
   let eventDetails: object[] = []
   await Promise.all(
     events.map(async (event) => {
-      let operationKey = ""
+      let eventTypeKey = ""
       if (event.eventCode === EventCode.PncResponseReceived) {
         const errors = extractErrorMessages(event)
         const requestType = event.attributes?.["PNC Request Type"]
         if (requestType === "ENQASI") {
-          operationKey = generateOperationKey("Query", errors)
+          eventTypeKey = generateOperationKey("Query", errors)
           output.asn =
             new RegExp(/<E07>(?<asn>.*)<\/E07>/)
               .exec(event.attributes?.["PNC Request Message"]?.toString() ?? "")
@@ -135,52 +140,52 @@ const generateCaseSummaryByMessageId = async (
 
           eventDetails.push(await mapQuery(queryResponse, errors, event.timestamp, sensitive))
         } else if (requestType === "DISARR") {
-          operationKey = generateOperationKey("Disposal Results", errors)
+          eventTypeKey = generateOperationKey("Disposal Results", errors)
           const content = convertPncToLeds(String(event.attributes?.["PNC Request Message"]), "Add Disposal")
           eventDetails.push(await mapAddDisposalResults(content, errors, event.timestamp, sensitive))
         } else if (requestType === "NEWREM") {
-          operationKey = generateOperationKey("Remand", errors)
+          eventTypeKey = generateOperationKey("Remand", errors)
           const content = convertPncToLeds(String(event.attributes?.["PNC Request Message"]), "Remand")
           eventDetails.push(mapRemand(content, errors, event.timestamp, sensitive))
         } else if (requestType === "SUBVAR") {
-          operationKey = generateOperationKey("Subsequently Varied", errors)
+          eventTypeKey = generateOperationKey("Subsequently Varied", errors)
           const content = convertPncToLeds(String(event.attributes?.["PNC Request Message"]), "Subsequently Varied")
           eventDetails.push(
             await mapSubsequentDisposalResults(content, "Subsequently Varied", errors, event.timestamp, sensitive)
           )
         } else if (requestType === "SENDEF") {
-          operationKey = generateOperationKey("Sentence Deferred", errors)
+          eventTypeKey = generateOperationKey("Sentence Deferred", errors)
           const content = convertPncToLeds(String(event.attributes?.["PNC Request Message"]), "Sentence Deferred")
           eventDetails.push(
             await mapSubsequentDisposalResults(content, "Sentence Deferred", errors, event.timestamp, sensitive)
           )
         } else if (requestType === "PENHRG") {
-          operationKey = generateOperationKey("Penalty Hearing", errors)
+          eventTypeKey = generateOperationKey("Penalty Hearing", errors)
           const content = String(event.attributes?.["PNC Request Message"])
           eventDetails.push(mapPenaltyHearing(content, errors, event.timestamp, sensitive))
         }
       } else if (event.eventCode === EventCode.TriggersGenerated && event.attributes) {
-        operationKey = "Bichard Triggers Generated"
+        eventTypeKey = "⚡️ Bichard Triggers Generated"
         eventDetails.push({
           metadata: {
-            title: "✅ Bichard Triggers Generated",
+            title: "⚡️ Bichard Triggers Generated",
             timestamp: event.timestamp,
             errors: []
           },
           Triggers: extractTriggersFromAttributes(event.attributes)
         })
       } else if (event.eventCode === EventCode.TriggersLocked) {
-        operationKey = "Bichard Triggers Locked"
+        eventTypeKey = "🔒 Bichard Triggers Locked"
         eventDetails.push({
           metadata: {
-            title: "Bichard Triggers Locked",
+            title: "🔒 Bichard Triggers Locked",
             timestamp: event.timestamp,
             errors: []
           },
           "Locked by": event.user
         })
       } else if (event.eventCode === EventCode.TriggersResolved && event.attributes) {
-        operationKey = "Bichard Triggers Resolved"
+        eventTypeKey = "✅ Bichard Triggers Resolved"
         eventDetails.push({
           metadata: {
             title: "✅ Bichard Triggers Resolved",
@@ -191,10 +196,10 @@ const generateCaseSummaryByMessageId = async (
           Triggers: extractTriggersFromAttributes(event.attributes)
         })
       } else if (event.eventCode === EventCode.TriggersDeleted && event.attributes) {
-        operationKey = "Bichard Triggers Deleted"
+        eventTypeKey = "🗑️ Bichard Triggers Deleted"
         eventDetails.push({
           metadata: {
-            title: "Bichard Triggers Deleted",
+            title: "🗑️ Bichard Triggers Deleted",
             timestamp: event.timestamp,
             errors: []
           },
@@ -202,20 +207,20 @@ const generateCaseSummaryByMessageId = async (
           Triggers: extractTriggersFromAttributes(event.attributes)
         })
       } else if (event.eventCode === EventCode.ExceptionsGenerated && event.attributes) {
-        operationKey = "Bichard Exceptions Generated"
+        eventTypeKey = "‼️ Bichard Exceptions Generated"
         eventDetails.push({
           metadata: {
-            title: "❌ Bichard Exceptions Generated",
+            title: "‼️ Bichard Exceptions Generated",
             timestamp: event.timestamp,
             errors: []
           },
           Exceptions: extractExceptionsFromAttributes(event.attributes)
         })
       } else if (event.eventCode.startsWith("hearing-outcome.ignored")) {
-        operationKey = "Bichard Ignored the Case"
+        eventTypeKey = "⛔️ Bichard Ignored the Case"
         eventDetails.push({
           metadata: {
-            title: "Bichard Ignored the Case",
+            title: "⛔️ Bichard Ignored the Case",
             timestamp: event.timestamp,
             errors: []
           },
@@ -227,8 +232,8 @@ const generateCaseSummaryByMessageId = async (
         })
       }
 
-      if (operationKey) {
-        output.operations[operationKey] = (output.operations[operationKey] ?? 0) + 1
+      if (eventTypeKey) {
+        output.eventTypeCount[eventTypeKey] = (output.eventTypeCount[eventTypeKey] ?? 0) + 1
       }
     })
   )
@@ -237,14 +242,19 @@ const generateCaseSummaryByMessageId = async (
     (a as { metadata: Metadata }).metadata.timestamp > (b as { metadata: Metadata }).metadata.timestamp ? 1 : -1
   )
 
-  const formattedOperations = Object.keys(output.operations).map((key) => `${key} (${output.operations[key]})`)
+  const formattedEvent = Object.keys(output.eventTypeCount).map((key) => `${key} (${output.eventTypeCount[key]})`)
   const metadata = {
-    "Message ID": messageId,
+    "Bichard ID": messageId,
+    "Exiss correlation id": options.exissCorrelationId.trim(),
+    "Source correlation id": options.sourceCorrelationId?.trim(),
+    "Sent from": options.systemId,
     "SPI S3 Path": s3Path,
-    "Received on": options.receivedDate,
-    ASN: output.asn,
+    "Received at": options.receivedDate,
+    "Arrest summons number": output.asn,
     "Case ID / PTIURN": options.caseId,
-    Operations: formattedOperations
+    "PNC / LEDS status": options.pncLedsStatus,
+    "Triggers status": options.triggerStatus,
+    Events: formattedEvent
   }
 
   const spi = await mapSpi(s3Client, s3Path, options.receivedDate, sensitive)
@@ -261,7 +271,12 @@ const generateCaseSummaryByMessageId = async (
       process.stdout.write([line, messageTitle, line].join("\n") + "\n\n")
     }
 
-    printSummary(summary.metadata)
+    const maxKeyLength = Math.max(...Object.keys(summary.metadata).map((key) => key.length))
+    const metadata = Object.entries(summary.metadata).reduce((acc: Record<string, unknown>, [key, value]) => {
+      acc[key.padEnd(maxKeyLength + 1, " ")] = value
+      return acc
+    }, {})
+    printSummary(metadata)
     summary.events.forEach((event) => printSummary(event))
   }
 
@@ -297,7 +312,12 @@ const findAuditLogsByPtiUrn = async (ptiUrn: string) => {
       messageId: item.messageId.S!,
       s3Path: item.s3Path.S!,
       receivedDate: item.receivedDate.S!,
-      caseId: item.caseId.S!
+      caseId: item.caseId.S!,
+      externalCorrelationId: item.externalCorrelationId.S!,
+      externalId: item.externalId?.S,
+      systemId: item.systemId?.S,
+      triggerStatus: item.triggerStatus.S!,
+      pncStatus: item.pncStatus.S!
     }))
     .sort((a, b) => (a.receivedDate > b.receivedDate ? 1 : -1))
 }
@@ -334,6 +354,11 @@ const generateCaseSummary = async (
           s3Path: record.s3Path,
           receivedDate: record.receivedDate,
           caseId: record.caseId,
+          exissCorrelationId: record.externalCorrelationId,
+          sourceCorrelationId: record.externalId,
+          systemId: record.systemId,
+          triggerStatus: record.triggerStatus,
+          pncLedsStatus: record.pncStatus,
           messageIndex: messageIndex++
         })
       )
@@ -352,7 +377,12 @@ const generateCaseSummary = async (
       ...(options ?? {}),
       s3Path: auditLog.s3Path!,
       receivedDate: auditLog.receivedDate,
-      caseId: auditLog.caseId
+      caseId: auditLog.caseId,
+      exissCorrelationId: auditLog.externalCorrelationId,
+      sourceCorrelationId: auditLog.externalId,
+      systemId: auditLog.systemId,
+      triggerStatus: auditLog.triggerStatus,
+      pncLedsStatus: auditLog.pncStatus
     })
   ]
 }
