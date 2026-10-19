@@ -4,10 +4,11 @@ title: Exception Resolution
 id: exceptionResolution
 ---
 
-This is not an exhaustive list of exceptions. If an exception occurs which is not listed in this document then it should be reported to the MoJ DTSD (Digital Technologies Service Desk).
-In all cases, if the description provided does not lead to a resolution then you should raise a call to the MoJ DTSD.
+This is not an exhaustive list of exceptions. If an exception occurs which is not listed in this document then it should be reported to the Bichard 7 Support Team.
 
-Any error which is not listed here should be reported to the MoJ DTSD for investigation.
+In all cases, if the description provided does not lead to a resolution then you should raise a call to the Bichard 7 Support Team.
+
+Any error which is not listed here should be reported to the Bichard 7 Support Team for investigation.
 
 ## Interaction between errors and triggers
 

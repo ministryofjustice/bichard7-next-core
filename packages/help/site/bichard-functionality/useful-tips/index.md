@@ -3,7 +3,7 @@ layout: default
 title: Useful tips
 ---
 
-This section includes the most frequent queries to date and should be checked before calling the MoJ DTSD with any new queries.
+This section includes the most frequent queries to date and should be checked before contacting the Bichard 7 Support Team with any new queries.
 
 ## Added offences
 
@@ -11,12 +11,12 @@ When new offences are added in the magistrates' court, these will be added to PN
 
 ## New OU codes
 
-When any new Organisation Unit code is created, it is the responsibility of the PNC Bureau to report them to the MoJ DTSD so that they can be added to Bichard 7. These can be identified by the error codes:
+When any new Organisation Unit code is created, it is the responsibility of the PNC Bureau to report them to the Bichard 7 Support Team so that they can be added to Bichard 7. These can be identified by the error codes:
 
 - HO100200 (Invalid Organisation Unit Code),
 - HO100300 (Organisation not recognised: OU Code)
 
-Forces can create new station codes and use them in the ASN/URN however they must be notified to the MoJ DTSD.
+Forces can create new station codes and use them in the ASN/URN, but they must be reported to the Bichard 7 Support Team.
 
 If a new OU code needs to be created or amended for courts, the Libra Standing Data Team will set this up.
 
