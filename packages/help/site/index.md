@@ -7,15 +7,15 @@ Contact the Bichard team for support at [moj-bichard7@madetech.com](mailto:moj-b
 
 ## Triggers and exceptions
 
-- [Exceptions list](bichard-functionality/exceptions/)
-- [Exception resolution](bichard-functionality/exceptions/resolution.html)
-- [Triggers list](bichard-functionality/triggers/)
+- [Exceptions list](triggers-and-exceptions/exceptions/)
+- [Exception resolution](triggers-and-exceptions/exception-resolution)
+- [Triggers list](triggers-and-exceptions/triggers/)
 
 ## System help
 
-- [Useful tips](bichard-functionality/useful-tips/)
-- [Change your password](user-login/change-your-password/)
-- [Bichard 7 system roles](bichard-functionality/bichard-roles)
-- [Manage your team](user-management/manage-your-team/)
-- [How Bichard 7 updates the PNC](bichard-functionality/how-bichard-updates-pnc/)
-- [Glossary](glossary/)
+- [Useful tips](system-help/useful-tips/)
+- [Change your password](system-help/change-your-password/)
+- [Bichard 7 system roles](system-help/bichard-roles)
+- [Manage your team](system-help/manage-your-team/)
+- [How Bichard 7 updates the PNC](system-help/how-bichard-updates-pnc/)
+- [Glossary](system-help/glossary/)
