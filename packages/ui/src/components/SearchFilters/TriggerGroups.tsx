@@ -26,12 +26,15 @@ const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): React.Reac
     excludedTriggerGroups[key] = allGroupedTriggers(key, excludedTriggers)
   })
 
+  const hasTriggerGroups =
+    !isEmpty(Object.values(excludedTriggerGroups).flatMap((v) => v)) || excludedTriggers.length > 0
+
   return (
     <ScrollableFieldset className="govuk-fieldset trigger-groups-fieldset">
       <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
         <Legend>{"Trigger groups"}</Legend>
       </legend>
-      {isEmpty(Object.values(excludedTriggerGroups).flatMap((v) => v)) || excludedTriggers.length <= 0 ? (
+      {!hasTriggerGroups ? (
         <div className="govuk-body">{"No trigger groups"}</div>
       ) : (
         <>
