@@ -60,7 +60,7 @@ const DefaultException = ({ path, code, onNavigate }: Props) => {
           <a
             className="govuk-link"
             rel="noreferrer noopener"
-            href={`/help/triggers-and-exceptions/exception-resolution/index.html#${code}`}
+            href={`/help/triggers-and-exceptions/exceptions/index.html#${code}`}
             target="_blank"
           >
             {"More information"}
