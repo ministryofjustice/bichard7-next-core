@@ -114,7 +114,6 @@ jobs:
           image_tag: ${{ needs.build_postgres_image.outputs.ghcr_tag }}
 
       - name: Spin up the PostgreSQL database
-        shell: bash
         run: npm run postgres
 
       - name: Run Postgres function tests
