@@ -62,7 +62,7 @@ export default class BichardApiV1 implements BichardApiGateway {
   }
 
   async updateAllocation(caseId: number, query: AllocationBody): Promise<Error> {
-    return await this.apiClient.put(V1.CasesAllocate.replace(":caseId", String(caseId)), query)
+    return await this.apiClient.put(V1.CaseAllocate.replace(":caseId", String(caseId)), query)
   }
 
   async fetchAuditById(auditId: number): PromiseResult<AuditWithProgressDto> {

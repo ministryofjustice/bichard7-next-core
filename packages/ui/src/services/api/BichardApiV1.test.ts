@@ -324,7 +324,7 @@ describe("BichardApiV1", () => {
     }
 
     it("calls apiClient#put with a route and a body payload", async () => {
-      const endpoint = V1.CasesAllocate.replace(":caseId", String(caseId))
+      const endpoint = V1.CaseAllocate.replace(":caseId", String(caseId))
 
       jest.spyOn(client, "put").mockResolvedValue("works")
 
