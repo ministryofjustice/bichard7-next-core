@@ -33,6 +33,10 @@ jobs:
             postgres:
               - '.github/**'
               - 'environment/**'
+            comparison_tests:
+              - '.github/**'
+              - 'packages/common/**'
+              - 'packages/core/**'
 
   build_s3_web_proxy_image:
     name: Build S3 Web Proxy Image
@@ -116,3 +120,45 @@ jobs:
       - name: Run Postgres function tests
         shell: bash
         run: DB_HOST=172.17.0.1 bash ./environment/postgres/tests/test-all.sh
+
+  comparison_tests:
+    name: Comparison Tests
+    needs: [changes, build_postgres_image]
+    if: needs.changes.outputs.comparison_tests == 'true'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Pull postgres container
+        uses: ./.github/actions/pull-docker-image
+        with:
+          image_tag: ${{ needs.build_postgres_image.outputs.ghcr_tag }}
+
+      - name: Setup node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install Node Packages
+        run: npm ci --ignore-scripts --no-audit
+
+      - name: Build Common
+        run: npm run build -w packages/common
+
+      - name: Spin up the PostgreSQL database
+        run: npm run postgres
+
+      - name: Run E2E comparison tests against Core Phase 1
+        run: npm run -w packages/core test:compare:phase1
+
+      - name: Run E2E comparison tests against Core Phase 2
+        run: npm run -w packages/core test:compare:phase2
+
+      - name: Run E2E comparison tests against Core Phase 3
+        run: npm run -w packages/core test:compare:phase3
