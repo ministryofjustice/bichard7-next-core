@@ -17,8 +17,13 @@ import config from "./listCourtCasesConfig"
 import courtCasesByOrganisationUnitQuery from "./queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "./queries/leftJoinAndSelectTriggersQuery"
 
-const getExcludedTriggers = (excludedTriggers?: string[]): string[] =>
-  excludedTriggers && excludedTriggers.length > 0 ? excludedTriggers : [""]
+export const getExcludedTriggers = (excludedTriggers?: string[], includedReasonCodes: string[] = []): string[] => {
+  if (!excludedTriggers || excludedTriggers.length == 0) {
+    return [""]
+  }
+
+  return excludedTriggers.filter((t) => !includedReasonCodes.map((rc) => getLongTriggerCode(rc)).includes(t))
+}
 
 const baseQuery = (
   connection: DataSource,
@@ -26,7 +31,8 @@ const baseQuery = (
   user: User,
   caseState: CaseState,
   page: number,
-  maxPageItems: number
+  maxPageItems: number,
+  reasonCodes: string[]
 ): SelectQueryBuilder<CourtCase> => {
   const pageNumValidated = page
   const maxPageItemsValidated = maxPageItems
@@ -35,7 +41,7 @@ const baseQuery = (
   let query = repository.createQueryBuilder("courtCase").select(selectColumns)
   query = courtCasesByOrganisationUnitQuery(query, user)
 
-  leftJoinAndSelectTriggersQuery(query, user.excludedTriggers, caseState)
+  leftJoinAndSelectTriggersQuery(query, user.excludedTriggers, reasonCodes, caseState)
     .leftJoinAndSelect("courtCase.notes", "note")
     .leftJoin("courtCase.errorLockedByUser", "errorLockedByUser")
     .addSelect(["errorLockedByUser.forenames", "errorLockedByUser.surname"])
@@ -213,7 +219,8 @@ const resolvedCasesDateRange = (
 const exceptionsAndTriggers = (
   query: SelectQueryBuilder<CourtCase>,
   caseState: CaseState,
-  user: User
+  user: User,
+  reasonCodes: string[]
 ): SelectQueryBuilder<CourtCase> => {
   const exceptionsAndTriggerHandlersQuery = []
   const exceptionsAndTriggerHandlersParams: Record<string, string | string[]> = {
@@ -227,7 +234,7 @@ const exceptionsAndTriggers = (
     exceptionsAndTriggerHandlersQuery.push(
       "(SELECT COUNT(*) FROM br7own.error_list_triggers AS T1 WHERE T1.error_id = courtCase.errorId AND T1.status IN (:...caseStatus) AND T1.trigger_code NOT IN (:...excludedTriggers)) > 0"
     )
-    exceptionsAndTriggerHandlersParams["excludedTriggers"] = getExcludedTriggers(user.excludedTriggers)
+    exceptionsAndTriggerHandlersParams["excludedTriggers"] = getExcludedTriggers(user.excludedTriggers, reasonCodes)
   }
 
   if (exceptionsAndTriggerHandlersQuery.length > 0) {
@@ -269,7 +276,8 @@ const listCourtCases = async (
     user,
     caseState ?? "Unresolved",
     (page ?? 1) - 1,
-    maxPageItems ?? 25
+    maxPageItems ?? 25,
+    reasonCodes ?? []
   )
 
   query = caseSortOrder(query, order, orderBy)
@@ -326,7 +334,7 @@ const listCourtCases = async (
     }
   }
 
-  query = exceptionsAndTriggers(query, caseState, user)
+  query = exceptionsAndTriggers(query, caseState, user, reasonCodes ?? [])
 
   const result = await query.getManyAndCount().catch((error: Error) => error)
   return isError(result)

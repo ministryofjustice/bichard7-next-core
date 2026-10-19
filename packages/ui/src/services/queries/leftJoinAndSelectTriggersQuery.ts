@@ -1,13 +1,12 @@
 import type { SelectQueryBuilder } from "typeorm"
 import type { CaseState } from "types/CaseListQueryParams"
 import type CourtCase from "../entities/CourtCase"
-
-const getExcludedTriggers = (excludedTriggers?: string[]): string[] =>
-  excludedTriggers && excludedTriggers.length > 0 ? excludedTriggers : [""]
+import { getExcludedTriggers } from "../listCourtCases"
 
 const leftJoinAndSelectTriggersQuery = (
   query: SelectQueryBuilder<CourtCase>,
   excludedTriggers?: string[],
+  reasonCodes: string[] = [],
   caseState?: CaseState
 ): SelectQueryBuilder<CourtCase> => {
   query.leftJoinAndSelect(
@@ -16,7 +15,7 @@ const leftJoinAndSelectTriggersQuery = (
     "trigger.triggerCode NOT IN (:...excludedTriggers)" +
       (caseState === undefined ? "" : " AND trigger.status = :triggerStatus"),
     {
-      excludedTriggers: getExcludedTriggers(excludedTriggers),
+      excludedTriggers: getExcludedTriggers(excludedTriggers, reasonCodes),
       triggerStatus: caseState === "Resolved" ? "2" : "1"
     }
   )
