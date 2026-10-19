@@ -1,5 +1,6 @@
 import forceExcludedTriggers from "@moj-bichard7-developers/bichard7-next-data/dist/data/excluded-trigger-config.json"
 import GroupedTriggerCodes from "@moj-bichard7-developers/bichard7-next-data/dist/types/GroupedTriggerCodes"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { useCurrentUser } from "context/CurrentUserContext"
 import { Legend } from "features/CourtCaseFilters/ExpandingFilters.styles"
 import { isEmpty } from "lodash"
@@ -30,24 +31,36 @@ const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): React.Reac
       <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
         <Legend>{"Trigger groups"}</Legend>
       </legend>
-      {isEmpty(Object.values(excludedTriggerGroups).flatMap((v) => v)) ? (
+      {isEmpty(Object.values(excludedTriggerGroups).flatMap((v) => v)) || excludedTriggers.length <= 0 ? (
         <div className="govuk-body">{"No trigger groups"}</div>
       ) : (
-        Object.keys(excludedTriggerGroups).map((key) => {
-          if (excludedTriggerGroups[key].length === 0) {
-            return
-          }
+        <>
+          {Object.keys(excludedTriggerGroups).map((key) => {
+            if (excludedTriggerGroups[key].length === 0) {
+              return
+            }
 
-          return (
+            return (
+              <TriggerGroup
+                key={`trigger-group-${key.toLowerCase().replaceAll(" ", "")}`}
+                name={key}
+                allGroupTriggers={allGroupedTriggers(key, excludedTriggers)}
+                filteredReasonCodes={filteredReasonCodes(allGroupedTriggers(key, excludedTriggers), reasonCodes)}
+                dispatch={dispatch}
+              />
+            )
+          })}
+
+          {excludedTriggers.length > 0 && (
             <TriggerGroup
-              key={`trigger-group-${key.toLowerCase().replaceAll(" ", "")}`}
-              name={key}
-              allGroupTriggers={allGroupedTriggers(key, excludedTriggers)}
-              filteredReasonCodes={filteredReasonCodes(allGroupedTriggers(key, excludedTriggers), reasonCodes)}
+              key="trigger-group-excluded"
+              name="Excluded"
+              allGroupTriggers={excludedTriggers as TriggerCode[]}
+              filteredReasonCodes={filteredReasonCodes(excludedTriggers as TriggerCode[], reasonCodes)}
               dispatch={dispatch}
             />
-          )
-        })
+          )}
+        </>
       )}
     </ScrollableFieldset>
   )
