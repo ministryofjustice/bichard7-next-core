@@ -15,6 +15,7 @@ jobs:
     outputs:
       s3_web_proxy: ${{ fromJSON(steps.evaluate.outputs.filters).s3_web_proxy }}
       postgres: ${{ fromJSON(steps.evaluate.outputs.filters).postgres }}
+      comparison_tests: ${{ fromJSON(steps.evaluate.outputs.filters).comparison_tests }}
 
     steps:
       - name: Checkout repository
