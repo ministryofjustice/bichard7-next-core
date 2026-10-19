@@ -1,0 +1,61 @@
+name: Build and Test
+on:
+  workflow_dispatch:
+  pull_request:
+  merge_group:
+    types: [checks_requested]
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: read
+
+    outputs:
+      s3_web_proxy: ${{ fromJSON(steps.evaluate.outputs.filters).s3_web_proxy }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Evaluate Run Condition
+        id: evaluate
+        uses: ./.github/actions/path-filter
+        with:
+          filters: |
+            s3_web_proxy:
+              - '.github/**'
+              - 'packages/s3-web-proxy/**'
+
+  build_s3_web_proxy_image:
+    name: Build S3 Web Proxy Image
+    needs: changes
+    if: needs.changes.outputs.s3_web_proxy == 'true'
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Goss
+        uses: ./.github/actions/install-goss
+
+      - name: Build Docker Image
+        uses: ./.github/actions/build-docker-image
+        with:
+          image_name: s3-web-proxy
+          dockerfile: packages/s3-web-proxy/Dockerfile
+          base-image-to-pull: nginx-nodejs-24-2023-supervisord
+          aws-role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+
+      - name: Run Goss Tests
+        working-directory: packages/s3-web-proxy
+        shell: bash
+        run: make goss

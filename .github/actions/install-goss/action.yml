@@ -1,0 +1,9 @@
+name: "Install Goss"
+description: "Installs Goss"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Goss
+      shell: bash
+      run: ./scripts/install-goss.sh
