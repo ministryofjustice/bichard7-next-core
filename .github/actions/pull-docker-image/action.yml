@@ -1,0 +1,27 @@
+name: "Pull Docker Image"
+description: "Pulls a Docker image from ghcr"
+
+inputs:
+  image_tag:
+    description: "The tag of the image"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
+
+    - name: Pull container
+      shell: bash
+      run: docker pull ${{ inputs.image_tag }}
+
+    - name: Tag as latest
+      shell: bash
+      run: |
+        IMAGE_NAME=$(basename "${{ inputs.image_tag }}" | cut -d: -f1)
+        docker tag "${{ inputs.image_tag }}" "${IMAGE_NAME}:latest"
