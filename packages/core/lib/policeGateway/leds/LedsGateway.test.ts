@@ -375,7 +375,7 @@ describe("LedsGateway", () => {
       expect(fetch.mock.calls[0][0]).toBe(
         `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
       )
-      expect(JSON.parse(JSON.stringify(axiosMock.mock.calls[0][1]))).toEqual({
+      expect(JSON.parse(JSON.stringify(fetch.mock.calls[0][1]))).toEqual({
         ownerCode: "01YZ",
         longPersonUrn: "2000/410770Y",
         courtCaseReference: "97/1626/008395Q",
