@@ -34,11 +34,11 @@ const main = async () => {
   const eventHandlers = eventHandlerFilenames.map(
     (filename) => new EventHandler(`${eventHandlerDir}/${filename}`, conductor, incomingMessageSqsQueue)
   )
-  const eventHandlerPromises = eventHandlers.map((eventHandler) => eventHandler.upsert())
-  await Promise.all(eventHandlerPromises)
+  for (const eventHandler of eventHandlers) {
+    await eventHandler.upsert()
+  }
 
   const existingEventHandlers = await EventHandler.getAll(conductor)
-
   if (existingEventHandlers instanceof Error) {
     console.error(existingEventHandlers.message)
     process.exit(1)
@@ -47,10 +47,9 @@ const main = async () => {
   const eventHandlersToRemove = existingEventHandlers.filter(
     (existingEventHandler) => !eventHandlers.map((e) => e.name).includes(existingEventHandler.name)
   )
-  const eventHandlersToRemovePromises = eventHandlersToRemove.map((eventHandler) =>
-    EventHandler.delete(conductor, eventHandler.name)
-  )
-  await Promise.all(eventHandlersToRemovePromises)
+  for (const eventHandler of eventHandlersToRemove) {
+    await EventHandler.delete(conductor, eventHandler.name)
+  }
 }
 
 main()
