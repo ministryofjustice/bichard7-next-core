@@ -113,9 +113,19 @@ export default class LedsGateway implements PoliceGateway {
         this.queryTime
       )
     )
+    interface ApiErrorData {
+      leds?: {
+        errors?: Array<{ message: string }>
+      }
+    }
 
+    interface FetchError extends Error {
+      response?: {
+        data?: ApiErrorData
+      }
+    }
     if (apiResponse instanceof Error) {
-      const responseData = apiResponse.response?.data
+      const responseData = (apiResponse as FetchError).response?.data
       if (responseData) {
         console.error(JSON.stringify(responseData, null, 2))
         const errors = responseData.leds?.errors?.map((err) => err.message) ?? [
