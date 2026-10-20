@@ -104,11 +104,9 @@ describe("LedsGateway", () => {
 
   describe("query", () => {
     it("should return police query result and update query time", async () => {
-      const fetch = jest.spyOn(global, "fetch").mockResolvedValue({
+      const fetchMock = jest.spyOn(global, "fetch").mockResolvedValue({
         status: 200,
-        json: jest.fn().mockResolvedValue({
-          randomField: "randomValue"
-        })
+        json: jest.fn().mockResolvedValue(ledsAsnQueryResponse)
       } as unknown as Response)
       expect(ledsGateway.queryTime).toBeUndefined()
 
@@ -373,7 +371,7 @@ describe("LedsGateway", () => {
       const result = await ledsGateway.update(request, correlationId, pncUpdateDataset)
 
       expect(result).toBeUndefined()
-      expect(jest.mocked(fetch)).toBe(
+      expect(fetch.mock.calls[0][0]).toBe(
         `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
       )
       expect(JSON.parse(JSON.stringify(axiosMock.mock.calls[0][1]))).toEqual({
