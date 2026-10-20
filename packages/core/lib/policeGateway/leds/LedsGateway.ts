@@ -211,7 +211,7 @@ export default class LedsGateway implements PoliceGateway {
 
     const durationMs = performance.now() - startTime
 
-    logApiMetric([request.operation], apiResponse.status)
+    logApiMetric(updateUrl, durationMs, correlationId, pncToLedsOperations[request.operation], apiResponse.status)
 
     this.auditLogger.info(
       EventCode.PncResponseReceived,
