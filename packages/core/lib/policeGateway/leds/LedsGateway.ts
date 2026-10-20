@@ -31,6 +31,7 @@ import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
 import { normalDisposal } from "./processors/normalDisposal"
 import { remand } from "./processors/remand"
 import { subsequentDisposal } from "./processors/subsequentDisposal"
+import cleanObjectStrings from "./cleanObjectStrings"
 
 const generateAuditLogAttributes = (
   requestType: LedsOperation,
@@ -192,6 +193,7 @@ export default class LedsGateway implements PoliceGateway {
     }
 
     const updateUrl = this.generateUrl(endpoint)
+    const body = cleanObjectStrings(requestBody)
     const requestHeaders = generateRequestHeaders(correlationId, actionCode, authToken)
     const startTime = performance.now()
     const apiResponse = await fetch(updateUrl, {
@@ -200,7 +202,7 @@ export default class LedsGateway implements PoliceGateway {
         "Content-Type": "application/json",
         ...requestHeaders
       },
-      body: JSON.stringify(requestBody),
+      body: JSON.stringify(body),
       dispatcher: new Agent({
         connect: { rejectUnauthorized: false }
       })
