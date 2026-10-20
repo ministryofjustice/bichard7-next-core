@@ -44,8 +44,9 @@ const main = async () => {
     process.exit(1)
   }
 
+  const registeredNames = new Set(eventHandlers.map((e) => e.name))
   const eventHandlersToRemove = existingEventHandlers.filter(
-    (existingEventHandler) => !eventHandlers.map((e) => e.name).includes(existingEventHandler.name)
+    (existingEventHandler) => !registeredNames.has(existingEventHandler.name)
   )
   for (const eventHandler of eventHandlersToRemove) {
     await EventHandler.delete(conductor, eventHandler.name)
