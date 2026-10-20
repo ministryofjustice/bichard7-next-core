@@ -15,14 +15,17 @@ Feature: General handler permissions
     Then I see trigger "PR10 - Conditional bail" in the exception list table
       And I see exception "HO100300" in the exception list table
 
+  @ExcludedOnLeds
   Scenario: General handlers can handle exceptions
       And I open the record for "Rigout Dean"
     Then I can correct the exception
 
+  @ExcludedOnLeds
   Scenario: General handlers can handle triggers
       And I open the record for "Rigout Dean"
     Then the "Triggers" menu item is visible
 
+ @ExcludedOnLeds
   Scenario: General handlers can reallocate cases to another force area
       And I open the record for "Rigout Dean"
     Then I can reallocate the case to another force area
