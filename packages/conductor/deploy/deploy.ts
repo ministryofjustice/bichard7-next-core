@@ -25,10 +25,10 @@ const main = async () => {
   }
 
   const workflowFilenames = await fs.readdir(workflowDir)
-  const workflows = workflowFilenames.map((filename) => new Workflow(`${workflowDir}/${filename}`, conductor))
-
-  const workflowPromises = workflows.map((workflow) => workflow.upsert())
-  await Promise.all(workflowPromises)
+  for (const filename of workflowFilenames) {
+    const workflow = new Workflow(`${workflowDir}/${filename}`, conductor)
+    await workflow.upsert()
+  }
 
   const eventHandlerFilenames = await fs.readdir(eventHandlerDir)
   const eventHandlers = eventHandlerFilenames.map(
