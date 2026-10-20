@@ -6,7 +6,7 @@ Feature: {413} Display correct number of triggers after case is resubmitted on O
 
 	Background:
 		Given the data for this test is in the PNC
-			And "input-message" is received
+			And "input-message" is received with an invalid ASN
 
 	@Must
 	@Parallel

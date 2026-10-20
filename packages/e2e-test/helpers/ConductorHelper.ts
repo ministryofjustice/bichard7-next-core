@@ -3,6 +3,17 @@ import type { WorkflowSummary } from "@io-orkes/conductor-javascript"
 import { createWorkflowExecutor } from "@moj-bichard7/common/conductor/createWorkflowExecutor"
 import { delay } from "../utils/puppeteer-utils"
 
+const DEFAULT_WORKFLOW_TIMEOUT_SECONDS = 30
+let maxTimeoutSeconds = DEFAULT_WORKFLOW_TIMEOUT_SECONDS
+
+export const setWorkflowTimeoutSeconds = (seconds: number) => {
+  maxTimeoutSeconds = seconds
+}
+
+export const resetWorkflowTimeout = () => {
+  maxTimeoutSeconds = DEFAULT_WORKFLOW_TIMEOUT_SECONDS
+}
+
 const findRunningConductorWorkflows = async (): Promise<WorkflowSummary[]> => {
   const workflowExecutor = await createWorkflowExecutor()
   const searchResult = await workflowExecutor.search(0, 100, "status='RUNNING'", "*")
@@ -11,7 +22,6 @@ const findRunningConductorWorkflows = async (): Promise<WorkflowSummary[]> => {
 }
 
 export const areAllWorkflowsCompleted = async (): Promise<boolean> => {
-  const maxTimeoutSeconds = 30
   const pollIntervalSeconds = 2
 
   await delay(1)

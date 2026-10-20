@@ -123,7 +123,7 @@ const mapSpi = async (s3Client: S3Client, s3Path: string, receivedDate: string, 
   const spi = getResultedCaseMessage(incomingMessage) as ResultedCaseMessage
 
   const metadata: Metadata = {
-    title: "SPI OUT: Court hearing outcome",
+    title: "⚖️ Court hearing outcome (SPI OUT)",
     timestamp: receivedDate,
     errors: []
   }

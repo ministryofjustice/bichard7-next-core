@@ -64,7 +64,8 @@
         "courtCode": "2576",
         "courtIdentityType": "code"
       },
-      "courtCaseReference": "26/2576/000745L"
+      "courtCaseReference": "26/2576/000745L",
+      "subsequentAppearances": []
     },
     {
       "caseStatusMarker": "C",

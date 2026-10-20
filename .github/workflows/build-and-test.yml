@@ -1,0 +1,165 @@
+name: Build and Test
+on:
+  workflow_dispatch:
+  pull_request:
+  merge_group:
+    types: [checks_requested]
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: read
+
+    outputs:
+      s3_web_proxy: ${{ fromJSON(steps.evaluate.outputs.filters).s3_web_proxy }}
+      postgres: ${{ fromJSON(steps.evaluate.outputs.filters).postgres }}
+      comparison_tests: ${{ fromJSON(steps.evaluate.outputs.filters).comparison_tests }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Evaluate Run Condition
+        id: evaluate
+        uses: ./.github/actions/path-filter
+        with:
+          filters: |
+            s3_web_proxy:
+              - '.github/**'
+              - 'packages/s3-web-proxy/**'
+            postgres:
+              - '.github/**'
+              - 'environment/**'
+            comparison_tests:
+              - '.github/**'
+              - 'packages/common/**'
+              - 'packages/core/**'
+
+  build_s3_web_proxy_image:
+    name: Build S3 Web Proxy Image
+    needs: changes
+    if: needs.changes.outputs.s3_web_proxy == 'true'
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Goss
+        uses: ./.github/actions/install-goss
+
+      - name: Build Docker Image
+        uses: ./.github/actions/build-docker-image
+        with:
+          image_name: s3-web-proxy
+          dockerfile: packages/s3-web-proxy/Dockerfile
+          base-image-to-pull: nginx-nodejs-24-2023-supervisord
+          aws-role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+
+      - name: Run Goss Tests
+        working-directory: packages/s3-web-proxy
+        shell: bash
+        run: make goss
+
+  build_postgres_image:
+    name: Build Postgres Image
+    needs: changes
+    if: needs.changes.outputs.postgres == 'true'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    outputs:
+      ghcr_tag: ${{ steps.build-step.outputs.ghcr_tag }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Build Docker Image
+        id: build-step
+        uses: ./.github/actions/build-docker-image
+        with:
+          image_name: bichard-postgres
+          dockerfile: environment/postgres/Dockerfile
+          context: environment/postgres
+          push-to-ghcr: true
+
+  test_postgres:
+    name: Test Postgres
+    needs: [changes, build_postgres_image]
+    if: needs.changes.outputs.postgres == 'true'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Pull postgres container
+        uses: ./.github/actions/pull-docker-image
+        with:
+          image_tag: ${{ needs.build_postgres_image.outputs.ghcr_tag }}
+
+      - name: Spin up the PostgreSQL database
+        run: npm run postgres
+
+      - name: Run Postgres function tests
+        shell: bash
+        run: DB_HOST=172.17.0.1 bash ./environment/postgres/tests/test-all.sh
+
+  comparison_tests:
+    name: Comparison Tests
+    needs: [changes, build_postgres_image]
+    if: needs.changes.outputs.comparison_tests == 'true'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Pull postgres container
+        uses: ./.github/actions/pull-docker-image
+        with:
+          image_tag: ${{ needs.build_postgres_image.outputs.ghcr_tag }}
+
+      - name: Setup node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+
+      - name: Install Node Packages
+        run: npm ci --ignore-scripts --no-audit
+
+      - name: Build Common
+        run: npm run build -w packages/common
+
+      - name: Spin up the PostgreSQL database
+        run: npm run postgres
+
+      - name: Run E2E comparison tests against Core Phase 1
+        run: npm run -w packages/core test:compare:phase1
+
+      - name: Run E2E comparison tests against Core Phase 2
+        run: npm run -w packages/core test:compare:phase2
+
+      - name: Run E2E comparison tests against Core Phase 3
+        run: npm run -w packages/core test:compare:phase3
