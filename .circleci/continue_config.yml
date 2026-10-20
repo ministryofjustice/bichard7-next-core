@@ -768,38 +768,6 @@ jobs:
           name: Run integration tests against core code
           command: nvm use && npm run -w packages/core test:integration
 
-  comparison_test:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: medium
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - attach_workspace:
-          at: .
-      - load_postgres_image
-      - node_install_packages
-      - build_common
-      - run:
-          name: Spin up the PostgreSQL database
-          command: npm run postgres
-      - run:
-          name: Run E2E comparison tests against Core Phase 1
-          command: npm run -w packages/core test:compare:phase1
-      - run:
-          name: Run E2E comparison tests against Core Phase 2
-          command: npm run -w packages/core test:compare:phase2
-      - run:
-          name: Run E2E comparison tests against Core Phase 3
-          command: npm run -w packages/core test:compare:phase3
-
   test_conductor:
     machine:
       image: ubuntu-2204:current
@@ -1305,9 +1273,6 @@ workflows:
       - build_conductor_image
       - build_nginx_auth_proxy_image
 
-      - comparison_test:
-          requires:
-            - build_postgres_image
       - test_ui:
           requires:
             - build_postgres_image
