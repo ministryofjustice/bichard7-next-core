@@ -22,6 +22,7 @@ import { asnQueryResponseSchema } from "../../../schemas/leds/asnQueryResponse"
 import LedsActionCode from "../../../types/leds/LedsActionCode"
 import { ledsOperations, pncToLedsOperations } from "../../../types/LedsOperation"
 import PoliceApiError from "../PoliceApiError"
+import cleanObjectStrings from "./cleanObjectStrings"
 import convertAsnToLedsFormat from "./convertAsnToLedsFormat"
 import endpoints from "./endpoints"
 import generateCheckName from "./generateCheckName"
@@ -31,7 +32,6 @@ import mapToPoliceQueryResult from "./mapToPoliceQueryResult"
 import { normalDisposal } from "./processors/normalDisposal"
 import { remand } from "./processors/remand"
 import { subsequentDisposal } from "./processors/subsequentDisposal"
-import cleanObjectStrings from "./cleanObjectStrings"
 
 const generateAuditLogAttributes = (
   requestType: LedsOperation,
@@ -115,10 +115,10 @@ export default class LedsGateway implements PoliceGateway {
     )
 
     if (apiResponse instanceof Error) {
-      const responseData = (apiResponse as any).response?.data
+      const responseData = (apiResponse.response as { data?: ApiErrorData }).data
       if (responseData) {
         console.error(JSON.stringify(responseData, null, 2))
-        const errors = responseData.leds?.errors?.map((err: any) => err.message) ?? [
+        const errors = responseData.leds?.errors?.map((err) => err.message) ?? [
           `ASN query failed: ${apiResponse.message}`
         ]
         return new PoliceApiError(errors)
@@ -208,7 +208,7 @@ export default class LedsGateway implements PoliceGateway {
       })
     }).catch((error) => error)
     if (!(apiResponse instanceof Error)) {
-      ;(apiResponse as any).data = await apiResponse.json().catch(() => null)
+      apiResponse.data = await apiResponse.json().catch(() => null)
     }
 
     const durationMs = performance.now() - startTime
