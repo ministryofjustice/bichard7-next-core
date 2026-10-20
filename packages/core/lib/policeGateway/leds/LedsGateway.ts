@@ -115,7 +115,7 @@ export default class LedsGateway implements PoliceGateway {
     )
 
     if (apiResponse instanceof Error) {
-      const responseData = (apiResponse.response as { data?: ApiErrorData }).data
+      const responseData = apiResponse.response?.data
       if (responseData) {
         console.error(JSON.stringify(responseData, null, 2))
         const errors = responseData.leds?.errors?.map((err) => err.message) ?? [
