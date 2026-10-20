@@ -19,10 +19,10 @@ const incomingMessageSqsQueue = process.env.INCOMING_MESSAGE_SQS_QUEUE
 
 const main = async () => {
   const taskFilenames = await fs.readdir(taskDir)
-  const tasks = taskFilenames.map((filename) => new Task(`${taskDir}/${filename}`, conductor))
-
-  const taskPromises = tasks.map((task) => task.upsert())
-  await Promise.all(taskPromises)
+  for (const filename of taskFilenames) {
+    const task = new Task(`${taskDir}/${filename}`, conductor)
+    await task.upsert()
+  }
 
   const workflowFilenames = await fs.readdir(workflowDir)
   const workflows = workflowFilenames.map((filename) => new Workflow(`${workflowDir}/${filename}`, conductor))
