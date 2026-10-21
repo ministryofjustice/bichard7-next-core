@@ -251,10 +251,7 @@ jobs:
         run: npm run build -w packages/core
 
       - name: Start Services
-        run: |
-          docker compose --project-name bichard -f environment/docker-compose.yml up \
-            -d activemq localstack db-seed audit-log-api \ 
-            --wait activemq localstack db-seed audit-log-api
+        run: docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait activemq localstack db-seed audit-log-api
 
       - name: Run code-based unit tests
         run: npm run -w packages/ui test:unit
