@@ -17,7 +17,6 @@ export const resolveTriggers = async (
   tx: TransactionConnection,
   user: User,
   triggersToResolve: TriggerDto[],
-
   auditLogEvents: ApiAuditLogEvent[]
 ): PromiseResult<number> => {
   const resolver = user.username
