@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:0.11.32 AS uv
+FROM ghcr.io/astral-sh/uv:0.13.4 AS uv
 
 # ------------------------------------------------------------------------------
 # Stage 1: Build stage
