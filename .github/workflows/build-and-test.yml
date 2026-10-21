@@ -16,6 +16,7 @@ jobs:
       s3_web_proxy: ${{ fromJSON(steps.evaluate.outputs.filters).s3_web_proxy }}
       postgres: ${{ fromJSON(steps.evaluate.outputs.filters).postgres }}
       comparison_tests: ${{ fromJSON(steps.evaluate.outputs.filters).comparison_tests }}
+      audit_logging: ${{ fromJSON(steps.evaluate.outputs.filters).audit_logging }}
 
     steps:
       - name: Checkout repository
@@ -38,6 +39,9 @@ jobs:
               - '.github/**'
               - 'packages/common/**'
               - 'packages/core/**'
+            audit_logging:
+              - '.github/**'
+              - 'packages/ui/**'
 
   build_s3_web_proxy_image:
     name: Build S3 Web Proxy Image
@@ -93,6 +97,38 @@ jobs:
           image_name: bichard-postgres
           dockerfile: environment/postgres/Dockerfile
           context: environment/postgres
+          push-to-ghcr: true
+
+  build_audit_logging_image:
+    name: Build Audit Logging Image
+    needs: changes
+    if: needs.changes.outputs.audit_logging == 'true'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    outputs:
+      ghcr_tag: ${{ steps.build-step.outputs.ghcr_tag }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Checkout audit logging repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: 'ministryofjustice/bichard7-next-audit-logging'
+          path: "bichard7-next-audit-logging"
+
+      - name: Build Docker Image
+        id: build-step
+        uses: ./.github/actions/build-docker-image
+        with:
+          image_name: audit-log-api
+          dockerfile: bichard7-next-audit-logging/src/audit-log-api/Dockerfile
+          context: bichard7-next-audit-logging
           push-to-ghcr: true
 
   test_postgres:
