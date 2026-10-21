@@ -19,7 +19,8 @@ SPI_NAMESPACE_MAPPING = {
     "http://schemas.cjse.gov.uk/common/businessentities": "ns2",
     "http://schemas.cjse.gov.uk/common/businesstypes": "ns3",
 }
-DATASTREAMCONTENT_NAMESPACE_MAPPING = {"http://www.dca.gov.uk/xmlschemas/libra": ""}
+DATASTREAMCONTENT_NAMESPACE_MAPPING = {
+    "http://www.dca.gov.uk/xmlschemas/libra": ""}
 
 
 def _ensure_list(data: Any) -> list[dict]:
@@ -174,7 +175,8 @@ def flatten_base_dict(base_dict: dict) -> pd.DataFrame:
 def flatten_offences_dict(base_dict: dict) -> pd.DataFrame:
     # Create a copy to avoid mutating the original JSON data
     base_dict_copy = deepcopy(base_dict)
-    _remove_key_from_target(base_dict_copy["Case"]["Defendant"]["Offence"], "Result")
+    _remove_key_from_target(
+        base_dict_copy["Case"]["Defendant"]["Offence"], "Result")
     offences_df = pd.json_normalize(
         base_dict_copy["Case"]["Defendant"].get("Offence", [])
     )
@@ -227,9 +229,11 @@ def drop_sensitive_data(message: dict) -> dict:
             "BasePersonDetails", None
         )
     except (KeyError, TypeError):
-        pass  # no need to do anything if BasePersonDetails doesn't exist (e.g. for a corporate defendant)
+        # no need to do anything if BasePersonDetails doesn't exist (e.g. for a corporate defendant)
+        pass
     try:
-        message["Case"]["Defendant"]["CourtIndividualDefendant"].pop("Address", None)
+        message["Case"]["Defendant"]["CourtIndividualDefendant"].pop(
+            "Address", None)
     except (KeyError, TypeError):
         pass
     return message
@@ -306,8 +310,10 @@ def spi_xml_to_df(xml_file_path: str) -> DataFrame:
     message = drop_sensitive_data(message)
 
     file_uuid = extract_file_uuid(filename=xml_file_path)
-    mrd = extract_message_received_datetime(filename=xml_file_path, include_time=False)
-    mrdt = extract_message_received_datetime(filename=xml_file_path, include_time=True)
+    mrd = extract_message_received_datetime(
+        filename=xml_file_path, include_time=False)
+    mrdt = extract_message_received_datetime(
+        filename=xml_file_path, include_time=True)
     message = inject_metadata(
         base_dict=message,
         file_uuid=file_uuid,
@@ -323,7 +329,8 @@ def spi_xml_to_df(xml_file_path: str) -> DataFrame:
     df = merge_dfs(base_df, offences_df, results_df)
 
     # according to the schema documentation (bichard-next-core repo) these columns can be scalar or array of str
-    df = convert_column_to_list(df, "Case_Defendant_Offence_Result_ResultCodeQualifier")
+    df = convert_column_to_list(
+        df, "Case_Defendant_Offence_Result_ResultCodeQualifier")
     df = convert_column_to_list(
         df, "Case_Defendant_Offence_Result_Duration_DurationStartDate"
     )
