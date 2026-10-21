@@ -3,105 +3,26 @@ layout: default
 title: Exceptions
 ---
 
-## What is an Exception?
+Exceptions occur when the Bichard 7 system cannot automatically update PNC with the court hearing
+result. This may be because of an error, or because the result is complex.
 
-Exceptions generally occur when there is an issue with the data and the Bichard 7 solution cannot automatically update PNC with the court hearing result. Not all exceptions are a result of errors, either with the court result or PNC, but may be because the result is complex requiring operator intervention e.g. breaches of a court order.
-There are numerous reasons as to why an exception may occur, and the top errors seen are explained further in this document.
+There are 2 types of exception:
 
-Exceptions fall into two main categories:
+- **pre hearing outcome publication** <br>
+  If errors are found when completing Bichard 7 checks. For example, an invalid ASN may mean the entry cannot be identified on PNC.
 
-**Pre-hearing outcome publication** - where there are errors found when completing Bichard 7 checks e.g. an invalid ASN meaning the entry cannot be satisfactorily identified on PNC.
+- **post hearing outcome publication** <br>
+  Where the entry has been correctly identified on PNC but the offence cannot be updated. For example, result may already be on the PNC.
 
-**Post hearing outcome publication** - where the entry has been correctly identified on PNC but the offence cannot be updated e.g. a result may already be on the PNC.
+## Case ownership
 
-## Results and exception ownership
+Forces are responsible for exceptions arising from their own cases. If a case is heard out of area, Bichard 7 will always attempt to pass the case back to the owning force.
 
-Most cases are heard at courts based in the same criminal justice area as the force that brought the prosecution. However, cases can be heard "out of area". Bichard 7 will always attempt to pass the case back to the owning force; if this is not possible (for example if the ASN and PTIURN have not been recorded correctly at court) then the case will default back to the local force for the court.
+If this is not possible, the case will default back to the local force for the court. For example, if the ASN and PTIURN have not been recorded correctly at court.
 
-## Handling exceptions on behalf of another force
+You can fix and resubmit a case if the correct Force Owner, ASN or PTIURN is available on paperwork or the PNC.
 
-Forces are responsible for exceptions arising from their own cases, and those cases that have been heard in their court area for which no force can be determined. This is possible if:
-
-- The Force Owner is incorrect on PNC
-- The force code part of an ASN or PTI-URN is provided but incorrect or,
-- No ASN or PTI-URN is provided.
-
-The procedure to follow is:
-
-If the correct Force Owner or ASN is available (for instance on paperwork or from PNC) and if the portal allows the Force Owner or ASN to be corrected then these should be fixed and the case resubmitted. The case will then be sent to the correct force. Otherwise;
-
-If the exception is straightforward, the force that received it should result the case itself. Otherwise;
-A copy of the register should be sent to the owning force and the exception marked as 'Manually Resolved'.
-
-## Ensuring Completeness
-
-Forces need to ensure that all cases where they are the prosecuting authority have been resulted. This will involve reviewing the standard PNC reports of outstanding IPs distributed to all forces.
-
-## How to resolve an exception via the portal
-
-Exceptions can be rectified either by using the portal and resubmitting to PNC or manually through another channel e.g. direct onto PNC using a dedicated PNC terminal.
-
-An exception is the outcome of a hearing with one or more errors e.g. if the ASN is incorrect it will show errors with the defendant, offences and/or PNC. Correcting the error and resubmitting to PNC should rectify the exception created.
-When you log on you are presented with a list of cases within the portal for your area. These show the identifying features of the case and the reason for the exception. All exceptions on the error list start with the code HO.
-
-## Viewing Exceptions
-
-You can view the list of exceptions via Bichard:
-
-![Bichard error list](image1.png)
-
-Clicking on the defendant name will display a split screen containing details of that case hearing.
-
-![Bichard error view](image2.png)
-
-The left hand side shows the information from the courts with 5-7 tabs across the top, blue for the current screen being viewed and red for the others. A yellow triangle is displayed indicating where the error has occurred. Clicking on the tab with the triangle displays the details relating to that tab and the error associated with it.
-
-The right hand side shows the PNC entry for that defendant.
-
-An entry is locked when it is opened, or can be manually locked if it has not already been locked by another user. This prevents another user inadvertently amending your record.
-
-The following fields are editable:
-
-- Arrest Summons Number
-- Offence Sequence Number
-- Result Text
-- Next Appearance Location
-- Next Appearance Date
-- Court Offence Reference Number
-- PNCID
-- Disposal Qualifier - Code
-- Court Reference
-- CCR
-
-Only the Result Text is always editable; all others are only editable when an error has occurred in that particular field and the data to be corrected appears in a box.
-
-## Editing Fields
-
-If the field has been edited then the warning triangle is marked with a tick (see screenshot below) to show that the area has been dealt with.
-
-![Bichard editable field](image3.png)
-
-If you have resolved the exception on the portal click on the 'submit' button at the bottom of the screen which will show you a confirmation screen. If you are sure you wish to submit the resolution to PNC click OK, if not click Cancel which takes you back to your entry.
-
-![Submit confirmation](image4.png)
-
-When the case has been submitted your error list is updated and the reason heading for that entry shows 'submitted'. By clicking on the refresh button (or F5) the entry will disappear if successfully submitted and no further action is necessary. If not successfully submitted the entry will re-appear with updated actions required.
-
-![Submitted state](image5.png)
-
-If you do not amend the entry but submit the entry to PNC the same confirmation screen appears but with an added box for you to check and it informs you the entry has not been updated and invites you to submit the entry anyway to PNC. If the update is successful the error list will display 'submitted' and if refreshed the entry will disappear. If unsuccessful the entry will re-appear when the list is refreshed.
-
-![Amend confirmation](image6.png)
-
-## Marking a case as manually resolved on the PNC
-
-If you have manually resolved the error click the 'mark as manually resolved' button at the bottom of the screen. This shows you a resolution screen with a drop down list of commonly used manual resolutions. Please ensure the correct option is chosen as it will affect your automation rate. Click OK and the entry will no longer appear on your active error list.
-
-## Returning to the error list
-
-Generally when you mark an exception as manually resolved then you are automatically returned to the Error List screen as the case is now resolved. However if you are a General Handler or a Supervisor and there are still outstanding triggers on the case which you could resolve then you remain in the Exception/Trigger detail screen giving you the opportunity to resolve the triggers before leaving the case.
-
-If you resubmit the exception then you are always automatically returned to the Error List screen, irrespective of any outstanding triggers as it is unwise to handle triggers while the case is being reprocessed as the triggers may change.
+If the exception is straightforward, the force that received it should result the case. Otherwise, send a copy of the register to the owning force and mark the exception as 'Manually Resolved'.
 
 ## Exceptions List
 
