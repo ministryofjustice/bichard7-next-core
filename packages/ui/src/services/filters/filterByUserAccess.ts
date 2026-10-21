@@ -1,11 +1,11 @@
+import Permission from "@moj-bichard7/common/types/Permission"
+import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
+import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import type { DataSource, EntityManager, SelectQueryBuilder } from "typeorm"
 import { Brackets, MoreThan } from "typeorm"
 import type CourtCase from "../entities/CourtCase"
-import type User from "../entities/User"
-import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
-import Permission from "@moj-bichard7/common/types/Permission"
 import Trigger from "../entities/Trigger"
-import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
+import type User from "../entities/User"
 
 export const filterByUserAccess = (
   dataSource: DataSource | EntityManager,
