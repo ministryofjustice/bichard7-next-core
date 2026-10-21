@@ -19,7 +19,7 @@ const getDefaultCase = (): Omit<CaseRow, "court_name_upper" | "defendant_name_up
   create_ts: new Date("2025-05-23"),
   defendant_name: "Defendant",
   error_count: 1,
-  error_id: 1,
+  error_id: Math.floor(Math.random() * 1000000),
   error_insert_ts: new Date("2025-05-23"),
   error_locked_by_id: null,
   error_quality_checked: null,
