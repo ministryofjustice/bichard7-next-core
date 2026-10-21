@@ -28,7 +28,8 @@ logger = logging.getLogger(__name__)
 def get_required_env(var_name: str) -> str:
     value = os.getenv(var_name)
     if not value:
-        print(f"FATAL: Environment variable {var_name} is not set.", file=sys.stderr)
+        print(
+            f"FATAL: Environment variable {var_name} is not set.", file=sys.stderr)
         sys.exit(1)
     return value
 
@@ -56,10 +57,11 @@ def yeild_uningested_file_paths(
     logger.info(f"Getting list of files to process under {base_path}")
     rows = query_duckdb(sql)
     file_list = [row[0] for row in rows]
-    logger.info(f"{len(file_list)} files to process in batches of {batch_size}.")
+    logger.info(
+        f"{len(file_list)} files to process in batches of {batch_size}.")
     for batch_id, i in enumerate(range(0, len(file_list), batch_size), start=1):
         logger.info(f"Processing batch {batch_id}...")
-        yield file_list[i : i + batch_size]
+        yield file_list[i: i + batch_size]
 
 
 def list_s3_files(s3_path: str) -> list[str]:
@@ -69,7 +71,8 @@ def list_s3_files(s3_path: str) -> list[str]:
     s3 = boto3.client("s3")
 
     try:
-        logger.info(f"Listing files in bucket: '{bucket_name}' with prefix: '{prefix}'")
+        logger.info(
+            f"Listing files in bucket: '{bucket_name}' with prefix: '{prefix}'")
         paginator = s3.get_paginator("list_objects_v2")
         pages = paginator.paginate(Bucket=bucket_name, Prefix=prefix)
 
@@ -204,8 +207,8 @@ def main():
                     )
 
                 if index % 100 == 0:
-                    logger.info(f"[{index}/{len(xml_files_batch)}] files processed")
-
+                    logger.info(
+                        f"[{index}/{len(xml_files_batch)}] files processed")
 
             except Exception as e:
                 error_msg = str(e)
