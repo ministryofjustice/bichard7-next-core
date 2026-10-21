@@ -17,6 +17,7 @@ jobs:
       postgres: ${{ fromJSON(steps.evaluate.outputs.filters).postgres }}
       comparison_tests: ${{ fromJSON(steps.evaluate.outputs.filters).comparison_tests }}
       audit_logging: ${{ fromJSON(steps.evaluate.outputs.filters).audit_logging }}
+      ui: ${{ fromJSON(steps.evaluate.outputs.filters).ui }}
 
     steps:
       - name: Checkout repository
@@ -42,6 +43,13 @@ jobs:
             audit_logging:
               - '.github/**'
               - 'packages/ui/**'
+              - 'packages/common/**'
+              - 'packages/core/**'
+            ui:
+              - '.github/**'
+              - 'packages/ui/**'
+              - 'packages/common/**'
+              - 'packages/core/**'
 
   build_s3_web_proxy_image:
     name: Build S3 Web Proxy Image
@@ -106,6 +114,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
+      id-token: write
       contents: read
       packages: write
 
