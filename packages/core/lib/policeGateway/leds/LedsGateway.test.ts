@@ -2,7 +2,7 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "node:crypto"
-import * as undici from "undici"
+import { fetch } from "undici"
 
 import type DisposalUpdatedPncUpdateRequest from "../../../phase3/types/DisposalUpdatedPncUpdateRequest"
 import type NormalDisposalPncUpdateRequest from "../../../phase3/types/NormalDisposalPncUpdateRequest"
@@ -20,6 +20,13 @@ import LedsAuthentication from "../../../types/leds/LedsAuthentication"
 import CoreAuditLogger from "../../auditLog/CoreAuditLogger"
 import generateRequestHeaders from "./generateRequestHeaders"
 import LedsGateway from "./LedsGateway"
+
+jest.mock("undici", () => ({
+  ...jest.requireActual("undici"),
+  fetch: jest.fn()
+}))
+
+const fetchMock = fetch as jest.Mock
 
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const auditLogEventMatchers = [
@@ -125,7 +132,7 @@ describe("LedsGateway", () => {
     })
 
     it("should return an error when api call fails", async () => {
-      jest.spyOn(undici, "fetch").mockRejectedValue(Error("API call failed."))
+      fetchMock.mockRejectedValue(new Error("API call failed."))
 
       const result = (await ledsGateway.query("dummy-asn", randomUUID(), aho)) as PoliceApiError
 
@@ -134,7 +141,7 @@ describe("LedsGateway", () => {
     })
 
     it("should return an error when http status code is not 200 and response contains LEDS errors", async () => {
-      jest.spyOn(undici, "fetch").mockResolvedValue({
+      fetchMock.mockResolvedValue({
         status: 501,
         json: jest.fn().mockResolvedValue({
           status: 501,
@@ -156,7 +163,7 @@ describe("LedsGateway", () => {
     })
 
     it("should return an error when http status code is not 200 and response does not contain LEDS errors", async () => {
-      jest.spyOn(undici, "fetch").mockResolvedValue({
+      fetchMock.mockResolvedValue({
         status: 501,
         json: jest.fn().mockResolvedValue({
           randomField: "randomValue"
@@ -171,7 +178,7 @@ describe("LedsGateway", () => {
     })
 
     it("should return an error when http status code is 200 but data is in wrong format", async () => {
-      jest.spyOn(undici, "fetch").mockResolvedValue({
+      fetchMock.mockResolvedValue({
         status: 200,
         json: jest.fn().mockResolvedValue({
           randomField: "randomValue"
@@ -515,7 +522,7 @@ describe("LedsGateway", () => {
     })
 
     it("should return an error when api call fails", async () => {
-      jest.spyOn(undici, "fetch").mockRejectedValue(Error("Dummy update: API call failed."))
+      fetchMock.mockRejectedValue(Error("Dummy update: API call failed."))
 
       const request: RemandPncUpdateRequest = generateRemandRequest()
       const correlationId = randomUUID()
@@ -526,7 +533,7 @@ describe("LedsGateway", () => {
     })
 
     it("should return an error when http status code is not 200 and response contains LEDS errors", async () => {
-      jest.spyOn(undici, "fetch").mockResolvedValue({
+      fetchMock.mockResolvedValue({
         status: 501,
         json: jest.fn().mockResolvedValue({
           status: 501,
@@ -556,7 +563,7 @@ describe("LedsGateway", () => {
     })
 
     it("should return an error when http status code is not 200 and response does not contain LEDS errors", async () => {
-      jest.spyOn(undici, "fetch").mockResolvedValue({
+      fetchMock.mockResolvedValue({
         status: 501,
         json: jest.fn().mockResolvedValue({
           randomField: "randomValue"
