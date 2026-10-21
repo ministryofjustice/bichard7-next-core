@@ -25,7 +25,7 @@ Contact the Bichard team for support at [moj-bichard7@madetech.com](mailto:moj-b
 ### Exceptions Handler
 
 - [Exceptions](bichard-functionality/exceptions/)
-- [Exception resolution](bichard-functionality/exception-resolution/)
+- [Exception resolution](bichard-functionality/exception-res/)
 
 ### Trigger Handler
 
