@@ -4,6 +4,8 @@ import type { PromiseResult } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import { isError } from "@moj-bichard7/common/types/Result"
+import filterExcludedTriggers from "@moj-bichard7/common/utils/filterExcludedTriggers"
+import { isEmpty } from "lodash"
 
 import type { Filters, Pagination, SortOrder } from "../../../types/CaseIndexQuerystring"
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
@@ -37,12 +39,19 @@ const fetchCasesAndFilter = async (
     to: query.to
   }
 
-  const caseAges = await fetchCaseAges(database, user)
+  let excludedTriggers = user.excludedTriggers
+
+  if (filters.reasonCodes && !isEmpty(filters.reasonCodes)) {
+    const reasonCodes = Array.isArray(filters.reasonCodes) ? filters.reasonCodes : [filters.reasonCodes]
+    excludedTriggers = filterExcludedTriggers(user.excludedTriggers, reasonCodes)
+  }
+
+  const caseAges = await fetchCaseAges(database, user, excludedTriggers)
   if (isError(caseAges)) {
     return caseAges
   }
 
-  const fetchCasesResult = await fetchCases(database, user, pagination, sortOrder, filters)
+  const fetchCasesResult = await fetchCases(database, user, pagination, sortOrder, filters, excludedTriggers)
   if (isError(fetchCasesResult)) {
     return fetchCasesResult
   }

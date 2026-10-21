@@ -27,12 +27,13 @@ const fetchCases = async (
   user: User,
   pagination: Pagination,
   sortOrder: SortOrder,
-  filters: Filters
+  filters: Filters,
+  excludedTriggers: string[] = []
 ): PromiseResult<FetchCasesResult> => {
   const offset = (pagination.pageNum - 1) * pagination.maxPerPage
 
   const filtersSql = generateFilters(database, user, filters)
-  const exceptionsAndTriggersSql = exceptionsAndTriggers(database, user, filters)
+  const exceptionsAndTriggersSql = exceptionsAndTriggers(database, user, filters, excludedTriggers)
 
   let triggerReasonCodeFilter = database.connection``
 
@@ -66,7 +67,7 @@ const fetchCases = async (
           )
           FROM br7own.error_list_triggers elt
           WHERE elt.error_id = el.error_id
-            ${excludedTriggersAndStatusSql(database, user, filters)}
+            ${excludedTriggersAndStatusSql(database, excludedTriggers, filters)}
             ${triggerReasonCodeFilter}
         ),
         '[]'::json
@@ -97,7 +98,7 @@ const fetchCases = async (
         FROM
           br7own.error_list el
           LEFT JOIN br7own.error_list_triggers elt ON elt.error_id = el.error_id
-            ${excludedTriggersAndStatusSql(database, user, filters)}
+            ${excludedTriggersAndStatusSql(database, excludedTriggers, filters)}
         WHERE
           (${organisationUnitSql(database, user)})
           ${filtersSql}
