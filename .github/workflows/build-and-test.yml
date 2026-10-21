@@ -128,6 +128,7 @@ jobs:
         with:
           image_name: audit-log-api
           dockerfile: bichard7-next-audit-logging/src/audit-log-api/Dockerfile
+          base-image-to-pull: nodejs-24-2023
           context: bichard7-next-audit-logging
           push-to-ghcr: true
 
