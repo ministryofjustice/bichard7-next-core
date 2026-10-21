@@ -2,7 +2,6 @@ import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { randomUUID } from "node:crypto"
-import { unknown } from "zod"
 
 import type DisposalUpdatedPncUpdateRequest from "../../../phase3/types/DisposalUpdatedPncUpdateRequest"
 import type NormalDisposalPncUpdateRequest from "../../../phase3/types/NormalDisposalPncUpdateRequest"
