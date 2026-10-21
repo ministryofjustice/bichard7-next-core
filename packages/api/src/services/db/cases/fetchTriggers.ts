@@ -4,6 +4,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import Permission from "@moj-bichard7/common/types/Permission"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { type Trigger, TriggerRowSchema } from "@moj-bichard7/common/types/Trigger"
+import filterExcludedTriggers from "@moj-bichard7/common/utils/filterExcludedTriggers"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 import { isEmpty } from "lodash"
 import z from "zod"
@@ -26,9 +27,12 @@ export default async (
 
   let includeTriggersSql = database.connection``
 
+  let excludedTriggers = user.excludedTriggers
+
   if (filters.reasonCodes && !isEmpty(filters.reasonCodes)) {
     const reasonCodes = Array.isArray(filters.reasonCodes) ? filters.reasonCodes : [filters.reasonCodes]
     const triggerCodes = reasonCodes.filter((rc) => rc.startsWith("TRP")) ?? []
+    excludedTriggers = filterExcludedTriggers(user.excludedTriggers, triggerCodes)
 
     if (triggerCodes.length > 0) {
       includeTriggersSql = database.connection`AND elt.trigger_code = ANY (${triggerCodes})`
@@ -42,7 +46,7 @@ export default async (
       br7own.error_list_triggers elt
     WHERE
       elt.error_id = ANY (${caseIds})
-      ${excludedTriggersAndStatusSql(database, user, filters)}
+      ${excludedTriggersAndStatusSql(database, excludedTriggers, filters)}
       ${includeTriggersSql}
   `.catch((error: Error) => error)
 

@@ -16,7 +16,11 @@ import { organisationUnitSql } from "../organisationUnitSql"
 const formInputDateFormat = "yyyy-MM-dd"
 const formatFormInputDateString = (date: Date): string => (isValid(date) ? format(date, formInputDateFormat) : "")
 
-export const fetchCaseAges = async (database: DatabaseConnection, user: User): PromiseResult<CaseAges> => {
+export const fetchCaseAges = async (
+  database: DatabaseConnection,
+  user: User,
+  excludedTriggers: string[] = []
+): PromiseResult<CaseAges> => {
   const slaCaseAges = Object.values(CaseAge)
 
   const queries = slaCaseAges.reduce((queries: postgres.PendingQuery<postgres.Row[]>[], key, index) => {
@@ -36,8 +40,8 @@ export const fetchCaseAges = async (database: DatabaseConnection, user: User): P
   }
 
   const excludedTriggersSql =
-    user.excludedTriggers.length > 0
-      ? database.connection`AND NOT elt.trigger_code = ANY (${user.excludedTriggers})`
+    excludedTriggers.length > 0
+      ? database.connection`AND NOT elt.trigger_code = ANY (${excludedTriggers})`
       : database.connection``
 
   const query = queries.map((q) => database.connection`${q}`)
