@@ -106,7 +106,7 @@ describe("LedsGateway", () => {
 
   describe("query", () => {
     it("should return police query result and update query time", async () => {
-      const fetchMock = jest.spyOn(global, "fetch").mockResolvedValue({
+      const fetchMock = jest.fn().mockResolvedValue({
         status: 200,
         json: jest.fn().mockResolvedValue(ledsAsnQueryResponse)
       } as unknown as Response)
@@ -188,7 +188,7 @@ describe("LedsGateway", () => {
 
   describe("update", () => {
     it("should successfully update when operation is remand", async () => {
-      const fetchMock = jest.spyOn(global, "fetch").mockResolvedValue({
+      const fetchMock = jest.fn().mockResolvedValue({
         status: 201,
         json: jest.fn().mockResolvedValue({
           id: "de765c89-b99d-4116-b282-64a03b242043"
@@ -222,7 +222,7 @@ describe("LedsGateway", () => {
     })
 
     it("should successfully update when operation is add disposal results", async () => {
-      const fetchMock = jest.spyOn(global, "fetch").mockResolvedValue({
+      const fetchMock = jest.fn().mockResolvedValue({
         status: 201,
         json: jest.fn().mockResolvedValue({
           id: "d5f0300e-3079-4923-95a3-d4f4a6c60cd9"
@@ -307,7 +307,7 @@ describe("LedsGateway", () => {
     })
 
     it("should successfully update when operation is subsequently varied", async () => {
-      const fetchMock = jest.spyOn(global, "fetch").mockResolvedValue({
+      const fetchMock = jest.fn().mockResolvedValue({
         status: 201,
         json: jest.fn().mockResolvedValue({
           id: "061a236c-ecdc-48d1-81b2-f3f099a35991"
@@ -422,7 +422,7 @@ describe("LedsGateway", () => {
     })
 
     it("should successfully update when operation is sentence deferred", async () => {
-      const fetchMock = jest.spyOn(global, "fetch").mockResolvedValue({
+      const fetchMock = jest.fn().mockResolvedValue({
         status: 201,
         json: jest.fn().mockResolvedValue({
           id: "fed86d18-c3de-4013-93f0-54fe1571ed13"
