@@ -1,7 +1,7 @@
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 import IndeterminateCheckbox from "components/IndeterminateCheckbox"
 import { Dispatch } from "react"
-import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 import { FilterAction, ReasonCode } from "types/CourtCaseFilter"
 import allTriggersSelected from "utils/triggerGroups/allTriggersSelected"
 import selectedTrigger from "utils/triggerGroups/selectedTrigger"
@@ -11,6 +11,7 @@ import { TriggerGroupList } from "./TriggerGroup.styles"
 
 interface TriggerGroupProps {
   name: string
+  idPrefix?: string
   allGroupTriggers: TriggerCode[]
   filteredReasonCodes: ReasonCode[]
   dispatch: Dispatch<FilterAction>
@@ -18,6 +19,7 @@ interface TriggerGroupProps {
 
 const TriggerGroup = ({
   name,
+  idPrefix,
   allGroupTriggers,
   filteredReasonCodes,
   dispatch
@@ -25,10 +27,12 @@ const TriggerGroup = ({
   const someSelected = someTriggersSelected(allGroupTriggers, filteredReasonCodes)
   const allSelected = allTriggersSelected(allGroupTriggers, filteredReasonCodes)
 
+  const checkboxId = idPrefix ? `${idPrefix}-${name}` : name
+
   return (
     <div id={`${name.toLowerCase()}-group`}>
       <IndeterminateCheckbox
-        id={name.toLowerCase()}
+        id={checkboxId.toLowerCase()}
         checkedValue={allSelected}
         labelText={name}
         indeterminate={someSelected}
