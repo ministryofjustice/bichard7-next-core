@@ -19,38 +19,38 @@ const incomingMessageSqsQueue = process.env.INCOMING_MESSAGE_SQS_QUEUE
 
 const main = async () => {
   const taskFilenames = await fs.readdir(taskDir)
-  const tasks = taskFilenames.map((filename) => new Task(`${taskDir}/${filename}`, conductor))
-
-  const taskPromises = tasks.map((task) => task.upsert())
-  await Promise.all(taskPromises)
+  for (const filename of taskFilenames) {
+    const task = new Task(`${taskDir}/${filename}`, conductor)
+    await task.upsert()
+  }
 
   const workflowFilenames = await fs.readdir(workflowDir)
-  const workflows = workflowFilenames.map((filename) => new Workflow(`${workflowDir}/${filename}`, conductor))
-
-  const workflowPromises = workflows.map((workflow) => workflow.upsert())
-  await Promise.all(workflowPromises)
+  for (const filename of workflowFilenames) {
+    const workflow = new Workflow(`${workflowDir}/${filename}`, conductor)
+    await workflow.upsert()
+  }
 
   const eventHandlerFilenames = await fs.readdir(eventHandlerDir)
   const eventHandlers = eventHandlerFilenames.map(
     (filename) => new EventHandler(`${eventHandlerDir}/${filename}`, conductor, incomingMessageSqsQueue)
   )
-  const eventHandlerPromises = eventHandlers.map((eventHandler) => eventHandler.upsert())
-  await Promise.all(eventHandlerPromises)
+  for (const eventHandler of eventHandlers) {
+    await eventHandler.upsert()
+  }
 
   const existingEventHandlers = await EventHandler.getAll(conductor)
-
   if (existingEventHandlers instanceof Error) {
     console.error(existingEventHandlers.message)
     process.exit(1)
   }
 
+  const registeredNames = new Set(eventHandlers.map((e) => e.name))
   const eventHandlersToRemove = existingEventHandlers.filter(
-    (existingEventHandler) => !eventHandlers.map((e) => e.name).includes(existingEventHandler.name)
+    (existingEventHandler) => !registeredNames.has(existingEventHandler.name)
   )
-  const eventHandlersToRemovePromises = eventHandlersToRemove.map((eventHandler) =>
-    EventHandler.delete(conductor, eventHandler.name)
-  )
-  await Promise.all(eventHandlersToRemovePromises)
+  for (const eventHandler of eventHandlersToRemove) {
+    await EventHandler.delete(conductor, eventHandler.name)
+  }
 }
 
 main()
