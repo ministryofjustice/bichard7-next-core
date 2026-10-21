@@ -210,3 +210,54 @@ jobs:
 
       - name: Run E2E comparison tests against Core Phase 3
         run: npm run -w packages/core test:compare:phase3
+
+  test_ui:
+    name: Test UI
+    needs: [changes, build_postgres_image, build_audit_logging_image]
+    if: needs.changes.outputs.ui == 'true'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Pull postgres container
+        uses: ./.github/actions/pull-docker-image
+        with:
+          image_tag: ${{ needs.build_postgres_image.outputs.ghcr_tag }}
+
+      - name: Pull audit log API container
+        uses: ./.github/actions/pull-docker-image
+        with:
+          image_tag: ${{ needs.build_audit_logging_image.outputs.ghcr_tag }}
+
+      - name: Setup node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+
+      - name: Install Node Packages
+        run: npm ci --ignore-scripts --no-audit
+
+      - name: Build Common
+        run: npm run build -w packages/common
+
+      - name: Build Core
+        run: npm run build -w packages/core
+
+      - name: Start Services
+        run: |
+          docker compose --project-name bichard -f environment/docker-compose.yml up \
+            -d activemq localstack db-seed audit-log-api \ 
+            --wait activemq localstack db-seed audit-log-api
+
+      - name: Run code-based unit tests
+        run: npm run -w packages/ui test:unit
+
+      - name: Run integration tests
+        run: npm run -w packages/ui test:integration
