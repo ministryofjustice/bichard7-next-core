@@ -10,15 +10,15 @@ import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionSta
 import { subDays } from "date-fns"
 import MockDate from "mockdate"
 
-import { createCases } from "../../../tests/helpers/caseHelper"
+import { createCase, createCases } from "../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../tests/helpers/setupAppEnd2EndHelper"
 import { createTriggers } from "../../../tests/helpers/triggerHelper"
 import { createUser } from "../../../tests/helpers/userHelper"
-import fetchCasesAndFilter from "../../../useCases/cases/getCases/fetchCasesAndFilter"
+import fetchCasesAndFilter from "./fetchCasesAndFilter"
 
 const defaultQuery = { maxPerPage: 25, pageNum: 1, reason: Reason.All }
 
-describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
+describe("fetchCasesAndFilter", () => {
   let helper: SetupAppEnd2EndHelper
   let app: FastifyInstance
   let user: User
@@ -215,6 +215,48 @@ describe("fetchCasesAndFilter fetchCaseAges e2e", () => {
     /* eslint-disable perfectionist/sort-objects -- Don't need for this test */
     expect(caseMetadata.caseAges).toStrictEqual({
       [CaseAge.Today]: 2,
+      [CaseAge.Yesterday]: 0,
+      [CaseAge.TwoDaysAgo]: 0,
+      [CaseAge.ThreeDaysAgo]: 0,
+      [CaseAge.FourDaysAgo]: 0,
+      [CaseAge.FiveDaysAgo]: 0,
+      [CaseAge.SixDaysAgo]: 0,
+      [CaseAge.SevenDaysAgo]: 0,
+      [CaseAge.EightDaysAgo]: 0,
+      [CaseAge.NineDaysAgo]: 0,
+      [CaseAge.TenDaysAgo]: 0,
+      [CaseAge.ElevenDaysAgo]: 0,
+      [CaseAge.TwelveDaysAgo]: 0,
+      [CaseAge.ThirteenDaysAgo]: 0,
+      [CaseAge.FourteenDaysAgo]: 0,
+      [CaseAge.FifteenDaysAgoAndOlder]: 0
+    })
+  })
+
+  it("will override excluded triggers when a reason code is specified", async () => {
+    const dateToday = new Date("2001-09-26")
+    MockDate.set(dateToday)
+
+    const caseObj = await createCase(helper.postgres, { courtDate: dateToday, errorCount: 0 })
+
+    await createTriggers(helper.postgres, caseObj.errorId, [
+      { createdAt: new Date(), status: ResolutionStatusNumber.Unresolved, triggerCode: TriggerCode.TRPR0001 }
+    ] as Trigger[])
+
+    const includedReasonCodesQuery = { ...defaultQuery, reasonCodes: [TriggerCode.TRPR0001] }
+
+    const caseMetadata = (await fetchCasesAndFilter(
+      helper.postgres.readonly,
+      includedReasonCodesQuery,
+      userWithExcludedTrigger
+    )) as CaseIndexMetadata
+
+    expect(caseMetadata.cases).toHaveLength(1)
+    expect(caseMetadata.caseAges[CaseAge.Today]).toBe(1)
+
+    /* eslint-disable perfectionist/sort-objects -- Don't need for this test */
+    expect(caseMetadata.caseAges).toStrictEqual({
+      [CaseAge.Today]: 1,
       [CaseAge.Yesterday]: 0,
       [CaseAge.TwoDaysAgo]: 0,
       [CaseAge.ThreeDaysAgo]: 0,
