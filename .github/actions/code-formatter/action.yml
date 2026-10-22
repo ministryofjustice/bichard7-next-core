@@ -70,7 +70,7 @@ runs:
             IFS=',' read -ra IGNORES <<< "$IGNORE_FILES"
             for ignore in "${IGNORES[@]}"; do
               ignore_trimmed=$(echo "$ignore" | xargs)
-              if [[ "$filename" == "$ignore_trimmed" ]]; then
+              if [[ "$file" == $ignore_trimmed || "$filename" == $ignore_trimmed ]]; then
                 skip=true
                 break
               fi
