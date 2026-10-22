@@ -1,6 +1,7 @@
+import { getExcludedTriggers } from "@/utils/getExcludedTriggers"
 import type { DateRange } from "@moj-bichard7/common/types/DateRange"
 import Permission from "@moj-bichard7/common/types/Permission"
-import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
+import filterExcludedTriggers from "@moj-bichard7/common/utils/filterExcludedTriggers"
 import { endOfDay, startOfDay } from "date-fns"
 import type { DataSource, SelectQueryBuilder } from "typeorm"
 import { Brackets, ILike, IsNull, LessThanOrEqual, MoreThanOrEqual, Not } from "typeorm"
@@ -17,9 +18,6 @@ import filterByReasonAndResolutionStatus from "./filters/filterByReasonAndResolu
 import config from "./listCourtCasesConfig"
 import courtCasesByOrganisationUnitQuery from "./queries/courtCasesByOrganisationUnitQuery"
 import leftJoinAndSelectTriggersQuery from "./queries/leftJoinAndSelectTriggersQuery"
-
-const getExcludedTriggers = (excludedTriggers?: string[]): string[] =>
-  excludedTriggers && excludedTriggers.length > 0 ? excludedTriggers : [""]
 
 const baseQuery = (
   connection: DataSource,
@@ -266,11 +264,7 @@ const listCourtCases = async (
   user: User,
   selectColumns: string[] = config.CaseListQuery
 ): PromiseResult<ListCourtCaseResult> => {
-  const activeExcludedTriggers = user.excludedTriggers
-    ? user.excludedTriggers.filter(
-        (trigger) => !reasonCodes?.includes(trigger) && !reasonCodes?.includes(getShortTriggerCode(trigger) ?? "")
-      )
-    : []
+  const activeExcludedTriggers = filterExcludedTriggers(user.excludedTriggers, reasonCodes)
 
   let query: SelectQueryBuilder<CourtCase> = baseQuery(
     connection,
