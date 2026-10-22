@@ -60,12 +60,14 @@ for each of them:
 
 There are folders inside this very repo (bichard7-next-core) that also need building:
 
-- [api](packages/api)
+- [API](packages/api)
   - Navigate to `packages/api` and run `npm run build:docker`
 - [UI](packages/ui)
   - Navigate to `packages/ui` and run `make build`
 - [User Service](packages/user-service)
   - Navigate to `packages/user-service` and run `make build`
+- [Nginx Auth Proxy](packages/nginx-auth-proxy)
+  - Navigate to `packages/nginx-auth-proxy` and run `make build`
 
 Then boot up all the containers you will need in order to run Bichard end to end.
 You can do this by navigating to the root directory of `bichard7-next-core`and running the following command:

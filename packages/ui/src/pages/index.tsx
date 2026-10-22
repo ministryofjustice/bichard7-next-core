@@ -1,4 +1,5 @@
 import apiLogger from "@/services/api/apiLogger"
+import getLongTriggerCode from "@/services/entities/transformers/getLongTriggerCode"
 import { ApiCaseQuery, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { CaseIndexDto } from "@moj-bichard7/common/types/Case"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
@@ -151,6 +152,8 @@ export const getServerSideProps = withMultipleServerSideProps(
 
       const caseAge = [query?.caseAge].flat().filter((value) => Object.values(CaseAge).includes(value as CaseAge))
 
+      const longTriggerCodes = caseListQueryParams.reasonCodes?.map((reasonCode) => getLongTriggerCode(reasonCode))
+
       const apiCaseQuery = {
         ...caseListQueryParams,
         maxPerPage: caseListQueryParams.maxPageItems ?? 50,
@@ -160,7 +163,8 @@ export const getServerSideProps = withMultipleServerSideProps(
         ...(query.to && { to: query.to }),
         ...(query.caseAge && { caseAge }),
         ...(query.resolvedFrom && { resolvedFrom: query.resolvedFrom }),
-        ...(query.resolvedTo && { resolvedTo: query.resolvedTo })
+        ...(query.resolvedTo && { resolvedTo: query.resolvedTo }),
+        reasonCodes: longTriggerCodes
       } as ApiCaseQuery
 
       const caseIndexMetadata = await apiGateway.fetchCases(apiCaseQuery)

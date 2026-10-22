@@ -34,7 +34,7 @@ describe("PUT /v1/cases/:caseId/allocate", () => {
     await helper.postgres.close()
   })
 
-  const getRouteUrl = (caseId: number | string) => V1.CasesAllocate.replace(":caseId", String(caseId))
+  const getRouteUrl = (caseId: number | string) => V1.CaseAllocate.replace(":caseId", String(caseId))
 
   it("returns 403 FORBIDDEN if the authenticated user lacks allocate or user listing permissions", async () => {
     const [encodedJwt] = await createUserAndJwtToken(helper.postgres, [UserGroup.Audit], {
