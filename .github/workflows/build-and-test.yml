@@ -35,6 +35,7 @@ jobs:
               - '.github/**'
               - 'environment/**'
             comparison_tests:
+              - '.nvmrc'
               - '.github/**'
               - 'packages/common/**'
               - 'packages/core/**'
