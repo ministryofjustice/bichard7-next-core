@@ -300,6 +300,7 @@ any_change: &any_change
     - << pipeline.parameters.env-changes >>
     - << pipeline.parameters.conductor-changes >>
     - << pipeline.parameters.message-forwarder-changes >>
+    - << pipeline.parameters.nginx-auth-proxy-changes >>
 
 jobs:
   build_audit_logging_images:
