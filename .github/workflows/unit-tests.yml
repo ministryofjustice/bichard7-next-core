@@ -30,14 +30,17 @@ jobs:
         with:
           filters: |
             common:
+              - '.nvmrc'
               - '.github/**'
               - 'environment/**'
               - 'packages/common/**'
             characterisation:
+              - '.nvmrc'
               - '.github/**'
               - 'packages/common/**'
               - 'packages/core/**'
             ui_component:
+              - '.nvmrc'
               - '.github/**'
               - 'packages/common/**'
               - 'packages/core/**'
