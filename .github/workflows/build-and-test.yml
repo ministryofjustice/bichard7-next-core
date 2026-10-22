@@ -43,11 +43,13 @@ jobs:
               - 'packages/common/**'
               - 'packages/core/**'
             audit_logging:
+              - '.nvmrc'
               - '.github/**'
               - 'packages/ui/**'
               - 'packages/common/**'
               - 'packages/core/**'
             ui:
+              - '.nvmrc'
               - '.github/**'
               - 'packages/ui/**'
               - 'packages/common/**'
