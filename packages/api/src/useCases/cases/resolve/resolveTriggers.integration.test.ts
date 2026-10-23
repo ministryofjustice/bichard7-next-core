@@ -1,3 +1,4 @@
+import type { TriggerDto } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
@@ -20,7 +21,7 @@ const testDatabaseGateway = new End2EndPostgres()
 describe("updateTriggers", () => {
   let auditLogEvents: ApiAuditLogEvent[]
   let user: User
-  let triggersToResolve: { triggerCode: string; triggerId: number; triggerItemIdentity: number | undefined }[]
+  let triggersToResolve: TriggerDto[]
   let triggerIds: number[]
 
   afterAll(async () => {
@@ -36,7 +37,7 @@ describe("updateTriggers", () => {
     triggersToResolve = [
       { triggerCode: "TRPR0001", triggerId: 1, triggerItemIdentity: 1 },
       { triggerCode: "TRPR0002", triggerId: 2, triggerItemIdentity: undefined }
-    ]
+    ] as TriggerDto[]
     triggerIds = triggersToResolve.map((trigger) => trigger.triggerId)
   })
 

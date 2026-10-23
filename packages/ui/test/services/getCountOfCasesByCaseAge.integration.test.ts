@@ -62,10 +62,14 @@ describe("listCourtCases", () => {
       { courtDate: thirdDateOlderThanDay14, orgForPoliceFilter: orgCode }
     ])
 
-    const result = (await getCountOfCasesByCaseAge(dataSource, {
-      visibleCourts: [],
-      visibleForces: [forceCode]
-    } as Partial<User> as User)) as Record<string, number>
+    const result = (await getCountOfCasesByCaseAge(
+      dataSource,
+      {
+        visibleCourts: [],
+        visibleForces: [forceCode]
+      } as Partial<User> as User,
+      []
+    )) as Record<string, number>
 
     expect(isError(result)).toBeFalsy()
 
@@ -87,10 +91,14 @@ describe("listCourtCases", () => {
       { courtDate: dateToday, orgForPoliceFilter: orgCode, errorStatus: "Resolved", triggerStatus: "Resolved" }
     ])
 
-    const result = (await getCountOfCasesByCaseAge(dataSource, {
-      visibleCourts: [],
-      visibleForces: [forceCode]
-    } as Partial<User> as User)) as Record<string, number>
+    const result = (await getCountOfCasesByCaseAge(
+      dataSource,
+      {
+        visibleCourts: [],
+        visibleForces: [forceCode]
+      } as Partial<User> as User,
+      []
+    )) as Record<string, number>
 
     expect(isError(result)).toBeFalsy()
 
@@ -107,10 +115,14 @@ describe("listCourtCases", () => {
       { courtDate: dateToday, orgForPoliceFilter: "002" }
     ])
 
-    const result = (await getCountOfCasesByCaseAge(dataSource, {
-      visibleCourts: [],
-      visibleForces: [forceCode]
-    } as Partial<User> as User)) as Record<string, number>
+    const result = (await getCountOfCasesByCaseAge(
+      dataSource,
+      {
+        visibleCourts: [],
+        visibleForces: [forceCode]
+      } as Partial<User> as User,
+      []
+    )) as Record<string, number>
 
     expect(isError(result)).toBeFalsy()
 
@@ -136,11 +148,15 @@ describe("listCourtCases", () => {
       { createdAt: dateToday, triggerCode: TriggerCode.TRPR0030, triggerId: 3, status: "Unresolved" }
     ])
 
-    const result = (await getCountOfCasesByCaseAge(dataSource, {
-      excludedTriggers: [TriggerCode.TRPR0001],
-      visibleCourts: [],
-      visibleForces: [forceCode]
-    } as Partial<User> as User)) as Record<string, number>
+    const result = (await getCountOfCasesByCaseAge(
+      dataSource,
+      {
+        excludedTriggers: [TriggerCode.TRPR0001],
+        visibleCourts: [],
+        visibleForces: [forceCode]
+      } as Partial<User> as User,
+      [TriggerCode.TRPR0001]
+    )) as Record<string, number>
 
     expect(isError(result)).toBeFalsy()
 
@@ -149,10 +165,14 @@ describe("listCourtCases", () => {
 
   describe("When there are no cases", () => {
     it("Should return 0 for each key", async () => {
-      const result = (await getCountOfCasesByCaseAge(dataSource, {
-        visibleCourts: [],
-        visibleForces: [forceCode]
-      } as Partial<User> as User)) as Record<string, number>
+      const result = (await getCountOfCasesByCaseAge(
+        dataSource,
+        {
+          visibleCourts: [],
+          visibleForces: [forceCode]
+        } as Partial<User> as User,
+        []
+      )) as Record<string, number>
 
       expect(isError(result)).toBeFalsy()
 
@@ -169,10 +189,14 @@ describe("listCourtCases", () => {
     it("Should return the error when failed to unlock court case", async () => {
       jest.spyOn(SelectQueryBuilder.prototype, "getRawOne").mockRejectedValue(Error("Some error"))
 
-      const result = await getCountOfCasesByCaseAge(dataSource, {
-        visibleCourts: [],
-        visibleForces: [forceCode]
-      } as Partial<User> as User)
+      const result = await getCountOfCasesByCaseAge(
+        dataSource,
+        {
+          visibleCourts: [],
+          visibleForces: [forceCode]
+        } as Partial<User> as User,
+        []
+      )
       expect(isError(result)).toBe(true)
 
       const receivedError = result as Error

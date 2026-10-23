@@ -1,6 +1,7 @@
 import type { Case, CaseDto } from "@moj-bichard7/common/types/Case"
 import type { FastifyInstance } from "fastify"
 
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { auditLogEventLookup as AuditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
@@ -16,6 +17,7 @@ import type { OutputApiAuditLog } from "../../../../types/AuditLog"
 import { testAhoJsonStr, testAhoXml } from "../../../../tests/helpers/ahoHelper"
 import { createCase } from "../../../../tests/helpers/caseHelper"
 import { SetupAppEnd2EndHelper } from "../../../../tests/helpers/setupAppEnd2EndHelper"
+import { createTriggers } from "../../../../tests/helpers/triggerHelper"
 import {
   createUser,
   createUserAndJwtToken,
@@ -319,5 +321,116 @@ describe("/v1/case e2e", () => {
     expect(triggerAuditLogEvent).toHaveProperty("eventSource", "Bichard New UI")
     expect(triggerAuditLogEvent).toHaveProperty("eventType", AuditLogEventLookup[EventCode.TriggersLocked])
     expect(triggerAuditLogEvent).toHaveProperty("user", user.username)
+  })
+
+  it("returns only non-excluded triggers", async () => {
+    const user = await createUser(helper.postgres, { excludedTriggers: [TriggerCode.TRPR0001] })
+    const jwtToken = generateJwtForUser(user)
+
+    const testCase = await createCase(helper.postgres, {
+      triggerCount: 2,
+      triggerLockedById: user.username
+    })
+
+    await createTriggers(helper.postgres, testCase.errorId, [
+      { triggerCode: TriggerCode.TRPR0001 },
+      { triggerCode: TriggerCode.TRPR0002 }
+    ])
+
+    const response = await fetch(`${helper.address}${endpoint.replace(":caseId", testCase.errorId.toString())}`, {
+      headers: { Authorization: `Bearer ${jwtToken}` },
+      method: "GET"
+    })
+
+    expect(response.status).toBe(OK)
+    const responseJson: CaseDto = (await response.json()) as CaseDto
+    expect(responseJson.triggers).toHaveLength(1)
+    expect(responseJson.triggers[0].triggerCode).toBe(TriggerCode.TRPR0002)
+  })
+
+  it("returns excluded triggers when reason codes are provided which override the exclusion", async () => {
+    const user = await createUser(helper.postgres, { excludedTriggers: [TriggerCode.TRPR0001] })
+    const jwtToken = generateJwtForUser(user)
+
+    const testCase = await createCase(helper.postgres, {
+      triggerCount: 2,
+      triggerLockedById: user.username
+    })
+
+    await createTriggers(helper.postgres, testCase.errorId, [
+      { triggerCode: TriggerCode.TRPR0001 },
+      { triggerCode: TriggerCode.TRPR0002 }
+    ])
+
+    const response = await fetch(
+      `${helper.address}${endpoint.replace(":caseId", testCase.errorId.toString())}?triggerCodes=TRPR0001`,
+      {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+        method: "GET"
+      }
+    )
+
+    expect(response.status).toBe(OK)
+    const responseJson: CaseDto = (await response.json()) as CaseDto
+    expect(responseJson.triggers).toHaveLength(2)
+    expect(responseJson.triggers[0].triggerCode).toBe(TriggerCode.TRPR0001)
+    expect(responseJson.triggers[1].triggerCode).toBe(TriggerCode.TRPR0002)
+  })
+
+  it("returns only one excluded trigger when a reason code overrides just one exclusion", async () => {
+    const user = await createUser(helper.postgres, { excludedTriggers: [TriggerCode.TRPR0001, TriggerCode.TRPR0002] })
+    const jwtToken = generateJwtForUser(user)
+
+    const testCase = await createCase(helper.postgres, {
+      triggerCount: 2,
+      triggerLockedById: user.username
+    })
+
+    await createTriggers(helper.postgres, testCase.errorId, [
+      { triggerCode: TriggerCode.TRPR0001 },
+      { triggerCode: TriggerCode.TRPR0002 }
+    ])
+
+    const response = await fetch(
+      `${helper.address}${endpoint.replace(":caseId", testCase.errorId.toString())}?triggerCodes=TRPR0001`,
+      {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+        method: "GET"
+      }
+    )
+
+    expect(response.status).toBe(OK)
+    const responseJson: CaseDto = (await response.json()) as CaseDto
+    expect(responseJson.triggers).toHaveLength(1)
+    expect(responseJson.triggers[0].triggerCode).toBe(TriggerCode.TRPR0001)
+  })
+
+  it("returns both excluded triggers when two reason codes override both exclusions", async () => {
+    const user = await createUser(helper.postgres, { excludedTriggers: [TriggerCode.TRPR0001, TriggerCode.TRPR0002] })
+    const jwtToken = generateJwtForUser(user)
+
+    const testCase = await createCase(helper.postgres, {
+      triggerCount: 2,
+      triggerLockedById: user.username
+    })
+
+    await createTriggers(helper.postgres, testCase.errorId, [
+      { triggerCode: TriggerCode.TRPR0001 },
+      { triggerCode: TriggerCode.TRPR0002 }
+    ])
+
+    const response = await fetch(
+      `${helper.address}${endpoint.replace(":caseId", testCase.errorId.toString())}?triggerCodes=TRPR0001&triggerCodes=TRPR0002`,
+      {
+        headers: { Authorization: `Bearer ${jwtToken}` },
+        method: "GET"
+      }
+    )
+
+    expect(response.status).toBe(OK)
+    const responseJson: CaseDto = (await response.json()) as CaseDto
+    expect(responseJson.triggers).toHaveLength(2)
+    expect(responseJson.triggers[0].triggerCode).toBe(TriggerCode.TRPR0001)
+    expect(responseJson.triggers[1].triggerCode).toBe(TriggerCode.TRPR0002)
   })
 })
