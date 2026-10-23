@@ -825,6 +825,33 @@ describe("View case details", () => {
     cy.get("#triggers-tab-panel span").contains("Complete").should("exist")
   })
 
+  it("Should populate query params with trigger codes", () => {
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 0,
+          triggerCode: TriggerCode.TRPR0001,
+          status: "Unresolved",
+          createdAt: new Date("2022-07-09T10:22:34.000Z")
+        } satisfies TestTrigger
+      ]
+    })
+
+    loginAndVisit("/bichard")
+
+    cy.injectAxe()
+
+    cy.get("#reasonCodes").type("TRPR0001")
+
+    cy.get("#search").click()
+
+    cy.get(".defendant-name").click()
+
+    cy.url().should("include", "triggerCodes=TRPR0001")
+  })
+
   canReallocateTestData.forEach(
     ({ canReallocate, triggers, exceptions, triggersLockedByAnotherUser, exceptionLockedByAnotherUser }) => {
       it(`should show Reallocate button when triggers are ${triggers} and ${
