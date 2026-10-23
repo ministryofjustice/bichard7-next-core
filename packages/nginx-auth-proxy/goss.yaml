@@ -71,8 +71,6 @@ package:
     installed: true
   python3:
     installed: true
-  python3-pip:
-    installed: true
   shadow-utils:
     installed: true
 user:
