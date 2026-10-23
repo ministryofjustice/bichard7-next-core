@@ -227,6 +227,10 @@ export const reallocateCaseToForce = async function (this: Bichard, force: strin
   await this.browser.clickAndWait("#Reallocate")
 }
 
+export const reallocateCaseToMet = async function (this: Bichard) {
+  await reallocateCaseToForce.call(this, "Metropolitan")
+}
+
 export const canSeeContentInTable = async function (this: Bichard, value: string) {
   let newValue = value
   if (value === "(Submitted)" || value === "(Resolved)") {
@@ -843,4 +847,21 @@ export const sameException = async function (this: Bichard, exception: string) {
   )
 
   expect(element).not.toBeUndefined()
+}
+
+export const exceptionIsEditable = async function (this: Bichard) {
+  const editException = await this.browser.page.$("input[name='asn']")
+
+  expect(Boolean(editException)).toBe(true)
+}
+
+const isTabVisible = async function (page: Page, sectionName: string) {
+  const btn = await page.$(`#${sectionName.toLowerCase()}-tab`)
+
+  return Boolean(btn)
+}
+
+export const tabIsVisible = async function (this: Bichard, sectionName: string) {
+  const visible = await isTabVisible(this.browser.page, sectionName)
+  expect(visible).toBe(true)
 }

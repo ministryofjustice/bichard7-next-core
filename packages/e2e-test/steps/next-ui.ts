@@ -160,4 +160,7 @@ export const setupNextSteps = () => {
   Then("I should be on the same case details page with exception {string}", ui.sameException)
   Then("I am redirected to a Page Not Found page", ui.goToNotFoundPage)
   Then("I see button {string} with class {string}", ui.seeButton)
+  Then("I can correct the exception", ui.exceptionIsEditable)
+  Then("the {string} menu item is visible", ui.tabIsVisible)
+  Then("I can reallocate the case to another force area", ui.reallocateCaseToMet)
 }
