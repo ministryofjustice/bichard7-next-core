@@ -16,14 +16,15 @@ const lockAndFetchCaseDto = async (
   auditLogGateway: AuditLogDynamoGateway,
   user: User,
   caseId: number,
-  logger: FastifyBaseLogger
+  logger: FastifyBaseLogger,
+  includedTriggerCodes?: string[]
 ): PromiseResult<CaseDto> => {
   const lockAndFetchCaseResult = await lockAndAuditLog(database, auditLogGateway, user, caseId, logger)
   if (isError(lockAndFetchCaseResult)) {
     return lockAndFetchCaseResult
   }
 
-  return fetchCase(database, user, caseId, logger)
+  return fetchCase(database, user, caseId, logger, includedTriggerCodes)
 }
 
 export default lockAndFetchCaseDto

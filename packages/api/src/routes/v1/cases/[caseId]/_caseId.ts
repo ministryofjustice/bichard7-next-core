@@ -29,6 +29,7 @@ type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway
   caseId: number
   database: DatabaseGateway
+  includedTriggerCodes?: string[]
   logger: FastifyBaseLogger
   reply: FastifyReply
   user: User
@@ -37,6 +38,9 @@ type HandlerProps = {
 const schema = {
   ...auth,
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
+  querystring: z.object({
+    triggerCodes: z.preprocess((val) => (typeof val === "string" ? [val] : val), z.array(z.string())).optional()
+  }),
   response: {
     [OK]: jsonResponse("Case DTO", CaseDtoSchema.meta({ description: "Case DTO" })),
     ...unauthorizedError(),
@@ -48,8 +52,23 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ auditLogGateway, caseId, database, logger, reply, user }: HandlerProps) => {
-  const caseResult = await lockAndFetchCaseDto(database.writable, auditLogGateway, user, caseId, logger)
+const handler = async ({
+  auditLogGateway,
+  caseId,
+  database,
+  includedTriggerCodes,
+  logger,
+  reply,
+  user
+}: HandlerProps) => {
+  const caseResult = await lockAndFetchCaseDto(
+    database.writable,
+    auditLogGateway,
+    user,
+    caseId,
+    logger,
+    includedTriggerCodes
+  )
 
   if (!isError(caseResult)) {
     return reply.code(OK).send(caseResult)
@@ -75,6 +94,7 @@ const route = async (fastify: FastifyInstance) => {
       auditLogGateway: req.auditLogGateway,
       caseId: Number(req.params.caseId),
       database: req.database,
+      includedTriggerCodes: req.query.triggerCodes,
       logger: req.log,
       reply,
       user: req.user

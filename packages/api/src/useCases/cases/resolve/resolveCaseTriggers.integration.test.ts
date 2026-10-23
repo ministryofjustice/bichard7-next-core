@@ -88,6 +88,59 @@ describe("resolveCaseTriggers", () => {
     expect(notes[0].note_text).toContain(`${user.username}: Portal Action: Resolved Trigger. Code: ${shortTrigger}`)
   })
 
+  it("should resolve target trigger and log system note for remaining excluded triggers", async () => {
+    const user = await createUser(testDatabaseGateway, {
+      excludedTriggers: ["TRPR0002"],
+      groups: [UserGroup.TriggerHandler],
+      username: "test_user"
+    })
+
+    const caseObj = await createCase(testDatabaseGateway, {
+      triggerLockedById: user.username
+    })
+
+    const insertedTriggers = [
+      { triggerCode: "TRPR0001", triggerId: 1 },
+      { triggerCode: "TRPR0002", triggerId: 2 }
+    ]
+
+    await createTriggers(testDatabaseGateway, caseObj.errorId, insertedTriggers)
+
+    const result = await resolveCaseTriggers(
+      testDatabaseGateway.writable,
+      mockLogger,
+      insertedTriggers.map((trigger) => trigger.triggerId),
+      caseObj.errorId,
+      user,
+      mockAuditLogGateway,
+      ["TRPR0001"]
+    )
+
+    expect(isError(result)).toBe(false)
+
+    const updatedTriggers = await testDatabaseGateway.writable.connection`
+      SELECT trigger_id, status, resolved_by FROM br7own.error_list_triggers WHERE error_id = ${caseObj.errorId} ORDER BY trigger_id
+    `
+    expect(updatedTriggers[0].status).toBe(ResolutionStatusNumber.Resolved)
+    expect(updatedTriggers[0].resolved_by).toBe("test_user")
+
+    expect(updatedTriggers[1].status).toBe(ResolutionStatusNumber.Unresolved)
+
+    const caseRecord = await testDatabaseGateway.writable.connection`
+      SELECT resolution_ts FROM br7own.error_list WHERE error_id = ${caseObj.errorId}
+    `
+    expect(caseRecord[0].resolution_ts).toBeNull()
+
+    const notes = await testDatabaseGateway.writable.connection`
+      SELECT note_text, user_id FROM br7own.error_list_notes WHERE error_id = ${caseObj.errorId}
+    `
+    expect(notes.length).toBeGreaterThan(0)
+    expect(notes[0].user_id).toBe("System")
+
+    const shortTrigger = getShortTriggerCode(insertedTriggers[0].triggerCode)
+    expect(notes[0].note_text).toContain(`${user.username}: Portal Action: Resolved Trigger. Code: ${shortTrigger}`)
+  })
+
   it("should fully complete triggers and audit log when all triggers are resolved", async () => {
     const user = await createUser(testDatabaseGateway, { groups: [UserGroup.TriggerHandler], username: "test_user" })
     const caseObj = await createCase(testDatabaseGateway, {
@@ -107,6 +160,43 @@ describe("resolveCaseTriggers", () => {
       caseObj.errorId,
       user,
       mockAuditLogGateway
+    )
+
+    expect(isError(result)).toBe(false)
+
+    const caseRecord = await testDatabaseGateway.writable.connection`
+      SELECT trigger_status, resolution_ts FROM br7own.error_list WHERE error_id = ${caseObj.errorId}
+    `
+    expect(caseRecord[0].trigger_status).toBe(ResolutionStatusNumber.Resolved)
+    expect(caseRecord[0].resolution_ts).not.toBeNull()
+
+    expect(mockAuditLogGateway.update).toHaveBeenCalled()
+  })
+
+  it("should fully complete triggers and audit log when all target triggers are excluded, but are all overridden by reason codes", async () => {
+    const user = await createUser(testDatabaseGateway, {
+      excludedTriggers: ["TRPR0001", "TRPR0002"]
+    })
+    const caseObj = await createCase(testDatabaseGateway, {
+      errorCount: 0,
+      errorReason: null,
+      triggerLockedById: user.username
+    })
+
+    const insertedTriggers = [
+      { triggerCode: "TRPR0001", triggerId: 1 },
+      { triggerCode: "TRPR0002", triggerId: 2 }
+    ]
+    await createTriggers(testDatabaseGateway, caseObj.errorId, insertedTriggers)
+
+    const result = await resolveCaseTriggers(
+      testDatabaseGateway.writable,
+      mockLogger,
+      insertedTriggers.map((trigger) => trigger.triggerId),
+      caseObj.errorId,
+      user,
+      mockAuditLogGateway,
+      ["TRPR0001", "TRPR0002"]
     )
 
     expect(isError(result)).toBe(false)
@@ -145,6 +235,30 @@ describe("resolveCaseTriggers", () => {
     expect(caseRecord[0].resolution_ts).toBeNull()
 
     expect(mockAuditLogGateway.update).toHaveBeenCalled()
+  })
+
+  it("should return a NotFoundError if target trigger is excluded", async () => {
+    const user = await createUser(testDatabaseGateway, {
+      excludedTriggers: ["TRPR0001"]
+    })
+    const caseObj = await createCase(testDatabaseGateway, {
+      triggerLockedById: user.username
+    })
+
+    const insertedTriggers = [{ triggerCode: "TRPR0001", triggerId: 1 }]
+    await createTriggers(testDatabaseGateway, caseObj.errorId, insertedTriggers)
+
+    const result = await resolveCaseTriggers(
+      testDatabaseGateway.writable,
+      mockLogger,
+      [insertedTriggers[0].triggerId],
+      caseObj.errorId,
+      user,
+      mockAuditLogGateway
+    )
+
+    expect(isError(result)).toBe(true)
+    expect(result).toBeInstanceOf(NotFoundError)
   })
 
   it("should return a NotFoundError if no matching unresolved triggers exist", async () => {
