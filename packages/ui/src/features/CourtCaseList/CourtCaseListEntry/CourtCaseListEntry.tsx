@@ -5,12 +5,12 @@ import { useRouter } from "next/router"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { formatReasonCodes } from "utils/formatReasons/reasonCodes"
 import getResolutionStatus from "../../../utils/getResolutionStatus"
+import { canUseAllocation } from "../../flags/canUseAllocation"
+import { AllocateUser } from "../tags/Allocate/AllocateUser"
 import { CaseDetailsRow } from "./CaseDetailsRow/CaseDetailsRow"
 import { generateExceptionComponents } from "./CourtCaseListEntryCells/generateExceptionComponents"
 import { generateTriggerComponents } from "./CourtCaseListEntryCells/generateTriggerComponents"
 import { ExtraReasonRow } from "./ExtraReasonRow"
-import { AllocateUser } from "../tags/Allocate/AllocateUser"
-import { canUseAllocation } from "../../flags/canUseAllocation"
 
 interface Props {
   courtCase: DisplayPartialCourtCase
@@ -19,6 +19,7 @@ interface Props {
   previousPath: string | null
   displayAuditQuality: boolean
   courtDateReceivedDateMismatch: boolean
+  reasonCodes?: string[]
 }
 
 const CourtCaseListEntry: React.FC<Props> = ({
@@ -27,7 +28,8 @@ const CourtCaseListEntry: React.FC<Props> = ({
   triggerHasBeenRecentlyUnlocked,
   previousPath,
   displayAuditQuality,
-  courtDateReceivedDateMismatch
+  courtDateReceivedDateMismatch,
+  reasonCodes
 }: Props) => {
   const { basePath, query } = useRouter()
   const currentUser = useCurrentUser()
@@ -74,6 +76,7 @@ const CourtCaseListEntry: React.FC<Props> = ({
         previousPath={previousPath}
         displayAuditQuality={displayAuditQuality}
         courtDateReceivedDateMismatch={courtDateReceivedDateMismatch}
+        reasonCodes={reasonCodes}
       />
       {renderExtraReasons && (
         <ExtraReasonRow
