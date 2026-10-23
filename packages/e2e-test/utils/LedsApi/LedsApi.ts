@@ -53,7 +53,7 @@ export class LedsApi implements PoliceApi {
     return this.bichard.config.realPNC ? this.testApiHelper.getArtifacts().arrestSummonsNumber : undefined
   }
 
-  createValidRecord: (record: string) => Promise<void>
+  createValidRecord = (_record: string): Promise<void> => Promise.resolve()
 
   async mockMissingDataForTest(): Promise<void> {
     if (!this.bichard.config.realPNC) {
