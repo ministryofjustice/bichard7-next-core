@@ -334,8 +334,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Run across 4 parallel runners
-        machines: [1, 2, 3, 4]
+        container: [1, 2, 3, 4]
 
     permissions:
       contents: read
@@ -425,8 +424,10 @@ jobs:
             packages/user-service/cypress/screenshots
 
   process_user_service_e2e_results:
+    name: Process User Service e2e Results
     needs: [test_user_service_e2e]
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
