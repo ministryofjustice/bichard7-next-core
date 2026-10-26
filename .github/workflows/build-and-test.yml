@@ -398,7 +398,7 @@ jobs:
         run: |
           SPECS=$(node ./scripts/split-specs.mjs cypress/e2e)
           if [ -n "$SPECS" ]; then
-            npm exec --no -- cypress run --e2e --spec "$SPECS" --reporter mocha-junit-reporter --reporter-options mochaFile=cypress/results/[suiteFilename].xml
+            npm exec --no -- cypress run --e2e --spec "$SPECS" --reporter ../../node_modules/mocha-junit-reporter --reporter-options mochaFile=cypress/results/[suiteFilename].xml
           fi
         env:
           TZ: "Europe/London"
