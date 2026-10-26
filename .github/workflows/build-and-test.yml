@@ -327,7 +327,7 @@ jobs:
 
   test_user_service_e2e:
     name: Test User Service e2e
-    needs: [changes, build_postgres_image, build_audit_logging_image]
+    needs: [changes, build_postgres_image]
     if: needs.changes.outputs.user_service == 'true'
     runs-on: ubuntu-latest
 
@@ -350,10 +350,10 @@ jobs:
         with:
           image_tag: ${{ needs.build_postgres_image.outputs.ghcr_tag }}
 
-      - name: Pull audit log API container
-        uses: ./.github/actions/pull-docker-image
-        with:
-          image_tag: ${{ needs.build_audit_logging_image.outputs.ghcr_tag }}
+#      - name: Pull audit log API container
+#        uses: ./.github/actions/pull-docker-image
+#        with:
+#          image_tag: ${{ needs.build_audit_logging_image.outputs.ghcr_tag }}
 
       - name: Setup node version
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -377,7 +377,7 @@ jobs:
         run: npm run -w packages/user-service build
 
       - name: Start Services
-        run: docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait db-seed audit-log-api
+        run: docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait db-seed
 
       - name: Start User Service
         run: |
