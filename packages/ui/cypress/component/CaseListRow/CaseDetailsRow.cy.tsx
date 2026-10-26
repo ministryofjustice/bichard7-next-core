@@ -21,6 +21,8 @@ describe("CaseDetailsRow", () => {
           lockTag={undefined}
           previousPath={null}
           displayAuditQuality={false}
+          reasonCodes={undefined}
+          courtDateReceivedDateMismatch={false}
         />
       </MockNextRouter>
     )

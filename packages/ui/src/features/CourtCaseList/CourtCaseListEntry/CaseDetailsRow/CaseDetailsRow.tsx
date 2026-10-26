@@ -1,14 +1,14 @@
 import ConditionalRender from "components/ConditionalRender"
 import DateTime from "components/DateTime"
 import { TableCell, TableRow } from "components/Table"
+import { AuditQualityCell } from "features/CaseList/CaseListRow/AuditQualityCell"
+import { NotePreviewButton } from "features/CaseList/CaseListRow/NotePreviewButton"
+import { NotePreviewRow } from "features/CaseList/CaseListRow/NotePreviewRow"
 import { filterUserNotes } from "features/CourtCaseList/CourtCaseListEntry/CaseDetailsRow/CourtCaseListEntryHelperFunction"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { DisplayPartialCourtCase } from "types/display/CourtCases"
 import { displayedDateFormat } from "utils/date/formattedDate"
-import { AuditQualityCell } from "features/CaseList/CaseListRow/AuditQualityCell"
-import { NotePreviewButton } from "features/CaseList/CaseListRow/NotePreviewButton"
-import { NotePreviewRow } from "features/CaseList/CaseListRow/NotePreviewRow"
 
 interface CaseDetailsRowProps {
   courtCase: DisplayPartialCourtCase
@@ -17,6 +17,7 @@ interface CaseDetailsRowProps {
   previousPath: string | null
   displayAuditQuality: boolean
   courtDateReceivedDateMismatch: boolean
+  reasonCodes?: string[]
 }
 
 export const CaseDetailsRow = ({
@@ -25,7 +26,8 @@ export const CaseDetailsRow = ({
   lockTag,
   previousPath,
   displayAuditQuality,
-  courtDateReceivedDateMismatch
+  courtDateReceivedDateMismatch,
+  reasonCodes
 }: CaseDetailsRowProps) => {
   const {
     notes,
@@ -42,10 +44,21 @@ export const CaseDetailsRow = ({
   const [showPreview, setShowPreview] = useState(true)
   const numberOfNotes = courtCase.noteCount ?? filterUserNotes(notes).length
 
-  let previousPathWebSafe = ""
+  const queryParams = new URLSearchParams()
+
   if (previousPath) {
-    previousPathWebSafe = `?previousPath=${encodeURIComponent(previousPath)}`
+    queryParams.append("previousPath", previousPath)
   }
+
+  if (reasonCodes && reasonCodes.length > 0) {
+    reasonCodes.forEach((code) => {
+      queryParams.append("triggerCodes", code)
+    })
+  }
+
+  const queryString = queryParams.toString()
+  const search = queryString ? `?${queryString}` : ""
+  const href = `${basePath}/court-cases/${errorId}${search}`
 
   const BASE_COLUMNS = 3
   const AUDIT_COLUMNS = 1
@@ -55,7 +68,7 @@ export const CaseDetailsRow = ({
     <>
       <TableRow className="caseDetailsRow">
         <TableCell>
-          <a href={`${basePath}/court-cases/${errorId}${previousPathWebSafe}`} className="defendant-name govuk-link">
+          <a href={href} className="defendant-name govuk-link">
             {defendantName}
           </a>
         </TableCell>

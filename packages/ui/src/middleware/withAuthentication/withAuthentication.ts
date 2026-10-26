@@ -1,12 +1,13 @@
-import type User from "../../services/entities/User"
-import getDataSource from "services/getDataSource"
+import filterExcludedTriggers from "@moj-bichard7/common/utils/filterExcludedTriggers"
 import parseJwtCookie from "middleware/withAuthentication/parseJwtCookie"
 import type { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from "next"
 import type { ParsedUrlQuery } from "querystring"
+import getDataSource from "services/getDataSource"
+import getUser from "services/getUser"
 import type AuthenticationServerSidePropsContext from "types/AuthenticationServerSidePropsContext"
 import type { Result } from "types/Result"
 import { isError } from "types/Result"
-import getUser from "services/getUser"
+import type User from "../../services/entities/User"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default <Props extends { [key: string]: any }>(
@@ -15,7 +16,7 @@ export default <Props extends { [key: string]: any }>(
   const result: GetServerSideProps<Props> = async (
     context: GetServerSidePropsContext<ParsedUrlQuery>
   ): Promise<GetServerSidePropsResult<Props>> => {
-    const { req, res } = context
+    const { req, res, query } = context
     const authJwt = parseJwtCookie(req)
     let currentUser: Result<User | null> = null
 
@@ -39,6 +40,17 @@ export default <Props extends { [key: string]: any }>(
       res.end()
       return { props: {} } as unknown as GetServerSidePropsResult<Props>
     }
+
+    const triggerCodesParam = query.triggerCodes
+    let triggerCodes: string[] = []
+
+    if (Array.isArray(triggerCodesParam)) {
+      triggerCodes = triggerCodesParam
+    } else if (triggerCodesParam) {
+      triggerCodes = [triggerCodesParam]
+    }
+
+    currentUser.excludedTriggers = filterExcludedTriggers(currentUser.excludedTriggers, triggerCodes)
 
     return getServerSidePropsFunction({
       ...context,
