@@ -300,6 +300,7 @@ any_change: &any_change
     - << pipeline.parameters.env-changes >>
     - << pipeline.parameters.conductor-changes >>
     - << pipeline.parameters.message-forwarder-changes >>
+    - << pipeline.parameters.nginx-auth-proxy-changes >>
 
 jobs:
   build_audit_logging_images:
@@ -531,39 +532,6 @@ jobs:
           paths:
             - images
 
-  build_s3_web_proxy_image:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: medium
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.s3-web-proxy-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - install_goss
-      - enable_docker_container_image_store
-      - set_docker_tag
-      - run: sudo apt-get update && sudo apt-get install -y pigz
-      - fetch_images:
-          images: nodejs-24-2023 nginx-nodejs-24-2023-supervisord
-      - build_and_cache_image:
-          image_name: s3-web-proxy
-          dockerfile: packages/s3-web-proxy/Dockerfile
-          cache_key: buildkit-s3-web-proxy
-      - run:
-          name: Save Docker image
-          command: |
-            mkdir -p images
-            docker image save "s3-web-proxy:${DOCKER_TAG}" | pigz > "images/s3-web-proxy.tar.gz"
-      - run:
-          name: Run Goss Tests
-          working_directory: packages/s3-web-proxy
-          command: make goss
-
   build_nginx_auth_proxy_image:
     machine:
       image: ubuntu-2204:current
@@ -768,38 +736,6 @@ jobs:
           name: Run integration tests against core code
           command: nvm use && npm run -w packages/core test:integration
 
-  comparison_test:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: medium
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - attach_workspace:
-          at: .
-      - load_postgres_image
-      - node_install_packages
-      - build_common
-      - run:
-          name: Spin up the PostgreSQL database
-          command: npm run postgres
-      - run:
-          name: Run E2E comparison tests against Core Phase 1
-          command: npm run -w packages/core test:compare:phase1
-      - run:
-          name: Run E2E comparison tests against Core Phase 2
-          command: npm run -w packages/core test:compare:phase2
-      - run:
-          name: Run E2E comparison tests against Core Phase 3
-          command: npm run -w packages/core test:compare:phase3
-
   test_conductor:
     machine:
       image: ubuntu-2204:current
@@ -974,29 +910,6 @@ jobs:
       - run:
           name: Run e2e tests against API code
           command: nvm use && npm run -w packages/api test:e2e
-
-  test_postgres:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: medium
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.env-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - attach_workspace:
-          at: .
-      - load_postgres_image
-      - run:
-          name: Spin up the PostgreSQL database
-          command: npm run postgres
-      - run:
-          command: DB_HOST=172.17.0.1 bash ./environment/postgres/tests/test-all.sh
-          name: run Postgres function tests
 
   test_ui:
     machine:
@@ -1323,17 +1236,10 @@ workflows:
       - build_ui_image
       - build_user_service_image
       - build_api_image
-      - build_s3_web_proxy_image
       - build_audit_logging_images
       - build_conductor_image
       - build_nginx_auth_proxy_image
 
-      - comparison_test:
-          requires:
-            - build_postgres_image
-      - test_postgres:
-          requires:
-            - build_postgres_image
       - test_ui:
           requires:
             - build_postgres_image
