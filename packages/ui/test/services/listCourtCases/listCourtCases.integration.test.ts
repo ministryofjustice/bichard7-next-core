@@ -3,6 +3,7 @@ import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStat
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import type ErrorListRecord from "@moj-bichard7/core/types/ErrorListRecord"
 import postgres from "postgres"
 import "reflect-metadata"
 import Note from "services/entities/Note"
@@ -12,7 +13,6 @@ import leftJoinAndSelectTriggersQuery from "services/queries/leftJoinAndSelectTr
 import type { DataSource } from "typeorm"
 import { LockedState } from "types/CaseListQueryParams"
 import type { ListCourtCaseResult } from "types/ListCourtCasesResult"
-import type ErrorListRecord from "../../../../core/types/ErrorListRecord"
 import CourtCase from "../../../src/services/entities/CourtCase"
 import Trigger from "../../../src/services/entities/Trigger"
 import getDataSource from "../../../src/services/getDataSource"
@@ -217,7 +217,7 @@ describe("listCourtCases", () => {
       expect(cases).toHaveLength(3)
     })
 
-    it("Should not display user excluded triggers but display those cases when they have non-exluded triggers and user has access to all", async () => {
+    it("Should not display user excluded triggers but display those cases when they have non-excluded triggers and user has access to all", async () => {
       const generalHandler = createUserWithExcludedTrigger([UserGroup.GeneralHandler], TriggerCode.TRPR0001)
       const caseTrigger: { code: string; status: ResolutionStatus }[] = [
         {
@@ -240,7 +240,7 @@ describe("listCourtCases", () => {
       expect(cases).toHaveLength(3)
     })
 
-    it("Should not display user excluded triggers but display those cases when they have non-exluded triggers and user is a trigger handler", async () => {
+    it("Should not display user excluded triggers but display those cases when they have non-excluded triggers and user is a trigger handler", async () => {
       const triggerHandler = createUserWithExcludedTrigger([UserGroup.TriggerHandler], TriggerCode.TRPR0001)
       const caseTrigger: { code: string; status: ResolutionStatus }[] = [
         {
@@ -292,6 +292,34 @@ describe("listCourtCases", () => {
       const { result: cases } = result as ListCourtCaseResult
 
       expect(cases).toHaveLength(0)
+    })
+
+    it("Should only display a case with a user excluded trigger when it is explicitly searched for", async () => {
+      const generalHandler = createUserWithExcludedTrigger([UserGroup.GeneralHandler], TriggerCode.TRPR0001)
+
+      const caseTriggers: { code: string; status: ResolutionStatus }[][] = [
+        [{ code: TriggerCode.TRPR0001, status: "Unresolved" }]
+      ]
+
+      await insertDummyCourtCasesWithTriggers(caseTriggers, "01")
+      await removeExceptions(1)
+
+      let result = await listCourtCases(dataSource, { maxPageItems: 100 }, generalHandler)
+      expect(isError(result)).toBe(false)
+      let { result: cases } = result as ListCourtCaseResult
+
+      expect(cases).toHaveLength(0)
+
+      result = await listCourtCases(
+        dataSource,
+        { maxPageItems: 100, reasonCodes: [TriggerCode.TRPR0001] },
+        generalHandler
+      )
+      expect(isError(result)).toBe(false)
+      cases = (result as ListCourtCaseResult).result
+
+      expect(cases).toHaveLength(1)
+      expect(cases[0].triggers[0].triggerCode).toStrictEqual(TriggerCode.TRPR0001)
     })
   })
 

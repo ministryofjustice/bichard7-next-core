@@ -6,6 +6,7 @@ import type { FastifyBaseLogger } from "fastify"
 import Permission from "@moj-bichard7/common/types/Permission"
 import { isError } from "@moj-bichard7/common/types/Result"
 import UnlockReason from "@moj-bichard7/common/types/UnlockReason"
+import filterExcludedTriggers from "@moj-bichard7/common/utils/filterExcludedTriggers"
 import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { AuditLogDynamoGateway } from "../../../services/gateways/dynamo"
@@ -31,9 +32,10 @@ const handleResolvingTriggers = async (
   courtCaseId: number,
   triggerIds: number[],
   logger: FastifyBaseLogger,
-  auditLogEvents: ApiAuditLogEvent[]
+  auditLogEvents: ApiAuditLogEvent[],
+  includedTriggerCodes: string[]
 ) => {
-  const courtCase = await fetchCase(tx, user, courtCaseId, logger)
+  const courtCase = await fetchCase(tx, user, courtCaseId, logger, includedTriggerCodes)
   if (isError(courtCase)) {
     throw courtCase
   }
@@ -81,15 +83,18 @@ const handleUnlockingAndCompleting = async (
   user: User,
   courtCaseId: number,
   courtCase: CaseDto,
-  auditLogEvents: ApiAuditLogEvent[]
+  auditLogEvents: ApiAuditLogEvent[],
+  includedTriggerCodes: string[]
 ) => {
   const allTriggers = await getAllTriggers(tx, courtCaseId)
   if (isError(allTriggers)) {
     throw allTriggers
   }
 
-  const triggersVisibleToUser = user.excludedTriggers
-    ? allTriggers.filter((trigger) => !user.excludedTriggers.includes(trigger.trigger_code))
+  const excludedTriggers = filterExcludedTriggers(user.excludedTriggers, includedTriggerCodes)
+
+  const triggersVisibleToUser = excludedTriggers
+    ? allTriggers.filter((trigger) => !excludedTriggers.includes(trigger.trigger_code))
     : allTriggers
 
   const areAllTriggersResolved = allTriggers.filter((trigger) => trigger.resolved_ts).length === allTriggers.length
@@ -157,7 +162,8 @@ const resolveCaseTriggers = async (
   triggerIds: number[],
   courtCaseId: number,
   user: User,
-  auditLogGateway: AuditLogDynamoGateway
+  auditLogGateway: AuditLogDynamoGateway,
+  includedTriggerCodes: string[] = []
 ): PromiseResult<void> => {
   const auditLogEvents: ApiAuditLogEvent[] = []
 
@@ -167,9 +173,17 @@ const resolveCaseTriggers = async (
 
   return await database
     .transaction<Error | void>(async (tx) => {
-      const courtCase = await handleResolvingTriggers(tx, user, courtCaseId, triggerIds, logger, auditLogEvents)
+      const courtCase = await handleResolvingTriggers(
+        tx,
+        user,
+        courtCaseId,
+        triggerIds,
+        logger,
+        auditLogEvents,
+        includedTriggerCodes
+      )
 
-      await handleUnlockingAndCompleting(tx, user, courtCaseId, courtCase, auditLogEvents)
+      await handleUnlockingAndCompleting(tx, user, courtCaseId, courtCase, auditLogEvents, includedTriggerCodes)
 
       await handleAuditLogging(tx, user, courtCaseId, auditLogEvents, auditLogGateway, logger)
     })

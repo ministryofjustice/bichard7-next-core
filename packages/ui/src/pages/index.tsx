@@ -4,6 +4,7 @@ import { ApiCaseQuery, Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { CaseIndexDto } from "@moj-bichard7/common/types/Case"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
 import UnlockReason from "@moj-bichard7/common/types/UnlockReason"
+import filterExcludedTriggers from "@moj-bichard7/common/utils/filterExcludedTriggers"
 import Layout from "components/Layout"
 import Pagination from "components/Pagination"
 import { CsrfTokenContext, useCsrfTokenContextState } from "context/CsrfTokenContext"
@@ -177,8 +178,9 @@ export const getServerSideProps = withMultipleServerSideProps(
       apiCases = caseIndexMetadata.cases
       totalCases = caseIndexMetadata.totalCases
     } else {
+      const activeExcludedFilters = filterExcludedTriggers(caseListQueryParams.reasonCodes)
       const [tempCaseAgeCounts, tempCourtCases] = await Promise.all([
-        getCountOfCasesByCaseAge(dataSource, currentUser),
+        getCountOfCasesByCaseAge(dataSource, currentUser, activeExcludedFilters),
         listCourtCases(dataSource, caseListQueryParams, currentUser)
       ])
 
