@@ -217,7 +217,7 @@ describe("LedsGateway", () => {
       expect(fetchMock.mock.calls[0][0]).toBe(
         `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/arrest-reports/${pncUpdateDataset.PncQuery!.reportId}/basic-remands`
       )
-      expect(JSON.parse(JSON.stringify(fetchMock.mock.calls[0][1]))).toEqual({
+      expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
         ownerCode: "02YZ",
         longPersonUrn: "2000/410770Y",
         remandDate: "2024-12-05",
@@ -293,7 +293,7 @@ describe("LedsGateway", () => {
       expect(fetchMock.mock.calls[0][0]).toBe(
         `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-disposal-result`
       )
-      expect(JSON.parse(JSON.stringify(fetchMock.mock.calls[0][1]))).toEqual({
+      expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
         ownerCode: "02YZ",
         longPersonUrn: "2000/410770Y",
         courtCaseReference: "97/1626/008395Q",
@@ -391,7 +391,7 @@ describe("LedsGateway", () => {
       expect(fetchMock.mock.calls[0][0]).toBe(
         `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
       )
-      expect(JSON.parse(JSON.stringify(fetchMock.mock.calls[0][1]))).toEqual({
+      expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
         ownerCode: "01YZ",
         longPersonUrn: "2000/410770Y",
         courtCaseReference: "97/1626/008395Q",
@@ -493,7 +493,7 @@ describe("LedsGateway", () => {
       expect(fetchMock.mock.calls[0][0]).toBe(
         `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
       )
-      expect(JSON.parse(JSON.stringify(fetchMock.mock.calls[0][1]))).toEqual({
+      expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
         ownerCode: "01YZ",
         longPersonUrn: "2000/410770Y",
         courtCaseReference: "97/1626/008395Q",
