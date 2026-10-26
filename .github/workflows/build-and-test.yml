@@ -458,6 +458,6 @@ jobs:
         with:
           name: User Service e2e Test Results
           artifact: /user-service-e2e-test-data-(.*)/
-          path: '*.xml'
+          path: '**/*.xml'
           reporter: java-junit
           fail-on-error: true
