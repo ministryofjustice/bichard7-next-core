@@ -398,7 +398,7 @@ jobs:
         run: |
           SPECS=$(node ./scripts/split-specs.mjs cypress/e2e)
           if [ -n "$SPECS" ]; then
-            npm exec --no -- cypress run --e2e --spec "$SPECS" --reporter junit --reporter-options mochaFile=cypress/results/results-[hash].xml
+            npm exec --no -- cypress run --e2e --spec "$SPECS" --reporter junit --reporter-options mochaFile=cypress/results/[suiteFilename].xml
           fi
         env:
           TZ: "Europe/London"
@@ -410,8 +410,8 @@ jobs:
         with:
           name: user-service-e2e-test-data-${{ matrix.container }}
           path: |
-            packages/user-service/cypress/results/results-*.xml
-            packages/user-service/cypress/timing.json
+            packages/user-service/cypress/results/*.xml
+            packages/user-service/cypress/results/timing.json
           if-no-files-found: ignore
 
       - name: Upload Cypress Artifacts (Videos & Screenshots)
@@ -458,6 +458,6 @@ jobs:
         with:
           name: User Service e2e Test Results
           artifact: /user-service-e2e-test-data-(.*)/
-          path: '**/results-*.xml'
+          path: '*.cy.js.xml'
           reporter: java-junit
           fail-on-error: true
