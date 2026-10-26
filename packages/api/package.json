@@ -40,7 +40,7 @@
     "@jest/globals": "^30.5.2",
     "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/lodash": "^4.17.26",
+    "@types/lodash": "^4.17.27",
     "jest": "^30.5.2",
     "mockdate": "^3.0.5",
     "nodemon": "^3.1.14",
@@ -54,11 +54,11 @@
     "zod-fixture": "^2.5.2"
   },
   "dependencies": {
-    "@aws-sdk/lib-dynamodb": "^3.1152.0",
+    "@aws-sdk/lib-dynamodb": "^3.1156.0",
     "@fastify/autoload": "6.5.1",
     "@fastify/swagger": "^9.9.2",
     "@fastify/swagger-ui": "^6.1.2",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.450",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.456",
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "fastify": "^5.12.7",

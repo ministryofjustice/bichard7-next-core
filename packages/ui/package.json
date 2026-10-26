@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^11.1.0",
-    "@moj-bichard7-developers/bichard7-next-data": "^2.0.450",
+    "@moj-bichard7-developers/bichard7-next-data": "^2.0.456",
     "cookie": "^1.1.1",
     "cookie-signature": "^1.2.2",
     "cookies-next": "4.3.0",
@@ -106,13 +106,13 @@
     "mockdate": "^3.0.5",
     "pg-promise": "^12.7.1",
     "postgres": "^3.4.9",
-    "sass": "^1.105.2",
+    "sass": "^1.106.1",
     "stylelint": "^17.16.0",
     "stylelint-config-standard-scss": "^17.0.0",
     "ts-jest": "^29.4.15",
     "ts-node": "^10.9.2",
     "tsconfig-paths-webpack-plugin": "^4.2.0",
     "wait-on": "^9.5.1",
-    "webpack": "^5.112.0"
+    "webpack": "^5.112.1"
   }
 }
