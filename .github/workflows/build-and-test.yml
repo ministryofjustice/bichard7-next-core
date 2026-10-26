@@ -410,7 +410,7 @@ jobs:
         with:
           name: user-service-e2e-test-data-${{ matrix.container }}
           path: |
-            packages/user-service/cypress/results/*.xml
+            packages/user-service/cypress/results/**/*.xml
             packages/user-service/cypress/results/timing.json
           if-no-files-found: ignore
 
