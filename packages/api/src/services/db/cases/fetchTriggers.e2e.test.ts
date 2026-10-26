@@ -118,4 +118,23 @@ describe("fetchTriggers e2e", () => {
       TriggerCode.TRPS0010
     ])
   })
+
+  it("will override excluded triggers with reason codes specified in the filter", async () => {
+    const filter = { ...defaultFilter, reasonCodes: [TriggerCode.TRPR0001, TriggerCode.TRPR0010] }
+
+    const triggers = (await fetchTriggers(
+      helper.postgres.readonly,
+      user2,
+      cases.map((c) => c.errorId),
+      filter
+    )) as Trigger[]
+
+    expect(triggers).toHaveLength(3)
+    expect(sortBy(triggers, "errorId").map((t) => t.errorId)).toEqual([0, 0, 1])
+    expect(sortBy(triggers, "triggerCode").map((t) => t.triggerCode)).toEqual([
+      TriggerCode.TRPR0001,
+      TriggerCode.TRPR0001,
+      TriggerCode.TRPR0010
+    ])
+  })
 })

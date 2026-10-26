@@ -37,7 +37,7 @@ describe("View case details", () => {
       }).then((response) => {
         expect(response.status).to.eq(404)
       })
-  })
+    })
 
     it("Should return 200 if the case has unresolved exceptions and the user is an exception handler", () => {
       cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 1 }])
@@ -784,7 +784,7 @@ describe("View case details", () => {
     cy.get(".exception-help a")
       .contains("More information")
       .should("exist")
-      .should("have.attr", "href", "/help/bichard-functionality/exceptions/resolution.html#HO100200")
+      .should("have.attr", "href", "/help/triggers-and-exceptions/exceptions/index.html#HO100200")
   })
 
   it("Should generate a more information link for each exception (PNC excception)", () => {
@@ -799,7 +799,7 @@ describe("View case details", () => {
     cy.get(".exception-row__help a")
       .contains("More information")
       .should("exist")
-      .should("have.attr", "href", "/help/bichard-functionality/exceptions/resolution.html#HO100302")
+      .should("have.attr", "href", "/help/triggers-and-exceptions/exceptions/index.html#HO100302")
   })
 
   it("Should show a complete badge for triggers which have been resolved", () => {
@@ -823,6 +823,33 @@ describe("View case details", () => {
     loginAndVisit("/bichard/court-cases/0")
 
     cy.get("#triggers-tab-panel span").contains("Complete").should("exist")
+  })
+
+  it("Should populate query params with trigger codes", () => {
+    cy.task("insertCourtCasesWithFields", [{ orgForPoliceFilter: "01", errorCount: 0 }])
+    cy.task("insertTriggers", {
+      caseId: 0,
+      triggers: [
+        {
+          triggerId: 0,
+          triggerCode: TriggerCode.TRPR0001,
+          status: "Unresolved",
+          createdAt: new Date("2022-07-09T10:22:34.000Z")
+        } satisfies TestTrigger
+      ]
+    })
+
+    loginAndVisit("/bichard")
+
+    cy.injectAxe()
+
+    cy.get("#reasonCodes").type("TRPR0001")
+
+    cy.get("#search").click()
+
+    cy.get(".defendant-name").click()
+
+    cy.url().should("include", "triggerCodes=TRPR0001")
   })
 
   canReallocateTestData.forEach(

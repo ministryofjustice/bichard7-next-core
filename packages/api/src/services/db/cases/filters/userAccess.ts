@@ -6,7 +6,7 @@ import { userAccess } from "@moj-bichard7/common/utils/userPermissions"
 
 import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
 
-export function filterByUserAccess(database: DatabaseConnection, user: User) {
+export function filterByUserAccess(database: DatabaseConnection, user: User, excludedTriggers: string[]) {
   if (userAccess(user)[Permission.ListAllCases]) {
     return database.connection``
   }
@@ -18,7 +18,7 @@ export function filterByUserAccess(database: DatabaseConnection, user: User) {
         FROM br7own.error_list_triggers T1
         WHERE
           T1.error_id = el.error_id
-          AND NOT (T1.trigger_code = ANY (${user.excludedTriggers}))
+          AND NOT (T1.trigger_code = ANY (${excludedTriggers}))
       ) > 0
       AND (
         el.trigger_status = ${ResolutionStatusNumber.Unresolved} 
@@ -31,7 +31,7 @@ export function filterByUserAccess(database: DatabaseConnection, user: User) {
     (
       el.error_count > 0 
       AND (
-        el.error_status IN (${ResolutionStatusNumber.Unresolved}, ${ResolutionStatusNumber.Submitted}) 
+        el.error_status IN (${ResolutionStatusNumber.Unresolved},${ResolutionStatusNumber.Submitted}) 
         OR el.error_resolved_by = ${user.username}
       )
     )`

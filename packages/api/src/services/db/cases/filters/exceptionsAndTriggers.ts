@@ -12,7 +12,8 @@ import type { DatabaseConnection } from "../../../../types/DatabaseGateway"
 export const exceptionsAndTriggers = (
   database: DatabaseConnection,
   user: User,
-  filters: Filters
+  filters: Filters,
+  excludedTriggers: string[] = []
 ): postgres.PendingQuery<Row[]> => {
   const resolutionStatus: number[] =
     filters.caseState === ResolutionStatus.Resolved
@@ -33,7 +34,7 @@ export const exceptionsAndTriggers = (
           WHERE
             T1.error_id = el.error_id
             AND T1.status = ANY (${resolutionStatus})
-            AND NOT (T1.trigger_code = ANY (${user.excludedTriggers}))
+            AND NOT (T1.trigger_code = ANY (${excludedTriggers}))
         ) > 0
       `
   }

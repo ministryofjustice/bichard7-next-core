@@ -26,6 +26,7 @@ type HandlerProps = {
   auditLogGateway: AuditLogDynamoGateway
   caseId: number
   database: DatabaseGateway
+  includedTriggerCodes?: string[]
   logger: FastifyBaseLogger
   reply: FastifyReply
   triggerIds: number[]
@@ -35,6 +36,7 @@ type HandlerProps = {
 const schema = {
   ...auth,
   body: z.object({
+    triggerCodes: z.array(z.string()).optional(),
     triggerIds: z.array(z.number()).min(1).meta({ description: "Array of Trigger IDs to resolve" })
   }),
   params: z.object({ caseId: z.string().meta({ description: "Case ID" }) }),
@@ -48,14 +50,24 @@ const schema = {
   tags: ["Cases V1"]
 } satisfies FastifyZodOpenApiSchema
 
-const handler = async ({ auditLogGateway, caseId, database, logger, reply, triggerIds, user }: HandlerProps) => {
+const handler = async ({
+  auditLogGateway,
+  caseId,
+  database,
+  includedTriggerCodes,
+  logger,
+  reply,
+  triggerIds,
+  user
+}: HandlerProps) => {
   const resolveTriggersResult = await resolveCaseTriggers(
     database.writable,
     logger,
     triggerIds,
     caseId,
     user,
-    auditLogGateway
+    auditLogGateway,
+    includedTriggerCodes
   )
 
   if (isError(resolveTriggersResult)) {
@@ -81,6 +93,7 @@ const route = async (fastify: FastifyInstance) => {
       auditLogGateway: req.auditLogGateway,
       caseId: Number(req.params.caseId),
       database: req.database,
+      includedTriggerCodes: req.body.triggerCodes,
       logger: req.log,
       reply,
       triggerIds: req.body.triggerIds,
