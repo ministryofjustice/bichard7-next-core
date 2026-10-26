@@ -42,10 +42,8 @@ describe("Triggers excluded at user level", () => {
     cy.get("input#excluded-results").should("exist").click()
 
     cy.get(".govuk-checkboxes__item #trpr0006").should("exist")
-    cy.get(".govuk-checkboxes__item #trpr0016").should("exist")
-    cy.get(".govuk-checkboxes__item #trpr0025").should("exist")
 
-    cy.get("input#reasonCodes").should("value", "PR06 PR16 PR25")
+    cy.get("input#reasonCodes").should("value", "PR06")
   })
 
   it("should not show excluded triggers in trigger groups and reason codes in the reason codes input when we click on Custody", () => {
@@ -57,13 +55,9 @@ describe("Triggers excluded at user level", () => {
     cy.get("input#reasonCodes").should("value", "PR05")
   })
 
-  it("should show excluded triggers in the Excluded section and in the reason codes input when we click on Custody", () => {
+  it("should not show Excluded section for Custody when none are excluded", () => {
     cy.get("fieldset").contains("Excluded").click()
-    cy.get("input#excluded-custody").should("exist").click()
-
-    cy.get(".govuk-checkboxes__item #trpr0005").should("exist")
-
-    cy.get("input#reasonCodes").should("value", "PR05")
+    cy.get("input#excluded-custody").should("not.exist")
   })
 
   it("should not show excluded triggers in trigger groups and reason codes in the reason codes input when we click on Orders", () => {
@@ -84,11 +78,8 @@ describe("Triggers excluded at user level", () => {
     cy.get("input#excluded-orders").should("exist").click()
 
     cy.get(".govuk-checkboxes__item #trpr0003").should("exist")
-    cy.get(".govuk-checkboxes__item #trpr0021").should("exist")
-    cy.get(".govuk-checkboxes__item #trpr0029").should("exist")
-    cy.get(".govuk-checkboxes__item #trps0008").should("exist")
 
-    cy.get("input#reasonCodes").should("value", "PR03 PR21 PR29 PS08")
+    cy.get("input#reasonCodes").should("value", "PR03")
   })
 
   it("should not show excluded triggers in trigger groups and reason codes in the reason codes input when we click on Warrants", () => {
@@ -101,8 +92,12 @@ describe("Triggers excluded at user level", () => {
     cy.get("input#reasonCodes").should("value", "PR12")
   })
 
-  it("should not show Excluded section for Warrants when none are excluded", () => {
+  it("should show excluded triggers in the Excluded section and in the reason codes input when we click on Warrants", () => {
     cy.get("fieldset").contains("Excluded").click()
-    cy.get("input#excluded-warrants").should("not.exist")
+    cy.get("input#excluded-warrants").should("exist").click()
+
+    cy.get(".govuk-checkboxes__item #trpr0002").should("exist")
+
+    cy.get("input#reasonCodes").should("value", "PR02")
   })
 })
