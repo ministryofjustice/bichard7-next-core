@@ -364,11 +364,11 @@ jobs:
       - name: Install Node Packages
         run: npm ci --ignore-scripts --no-audit
 
+      - name: Install Cypress
+        run: npx cypress install
+
       - name: Install GOV.UK Assets
         run: npm run -w packages/user-service install:assets
-
-      - name: Install Cypress
-        run: npm exec --no -- cypress install
 
       - name: Build Common
         run: npm run build -w packages/common
