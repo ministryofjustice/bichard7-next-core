@@ -229,9 +229,10 @@ describe("LedsGateway", () => {
           court: { courtIdentityType: "name", courtName: "Magistrates' Courts London Croydon MCA" }
         }
       })
-      expect(fetchMock.mock.calls[0][1]?.headers).toEqual(
-        generateExpectedHeaders(correlationId, LedsActionCode.AddRemand)
-      )
+      expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
+        ...generateExpectedHeaders(correlationId, LedsActionCode.AddRemand),
+        "Content-Type": "application/json"
+      })
       expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
@@ -315,9 +316,10 @@ describe("LedsGateway", () => {
           }
         ]
       })
-      expect(fetchMock.mock.calls[0][1]?.headers).toEqual(
-        generateExpectedHeaders(correlationId, LedsActionCode.AddDisposalResults)
-      )
+      expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
+        ...generateExpectedHeaders(correlationId, LedsActionCode.AddDisposalResults),
+        "Content-Type": "application/json"
+      })
       expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
@@ -525,9 +527,10 @@ describe("LedsGateway", () => {
           }
         ]
       })
-      expect(fetchMock.mock.calls[0][1]?.headers).toEqual(
-        generateExpectedHeaders(correlationId, LedsActionCode.AddSubsequentDisposalResults)
-      )
+      expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
+        ...generateExpectedHeaders(correlationId, LedsActionCode.AddSubsequentDisposalResults),
+        "Content-Type": "application/json"
+      })
       expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
