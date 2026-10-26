@@ -383,13 +383,15 @@ jobs:
         run: |
           npm run -w packages/user-service start &
           timeout 30s bash -c 'until curl -s http://localhost:3000 > /dev/null; do sleep 1; done'
+        env:
+          INCORRECT_DELAY: 0
 
       - name: Run Cypress e2e tests
         working-directory: packages/user-service
         run: |
           SPECS=$(node ./scripts/split-specs.mjs cypress/e2e)
           if [ -n "$SPECS" ]; then
-            npm exec --no -- cypress run --e2e --spec "$SPECS" --reporter junit --reporter-options mochaFile=cypress/results/results-[hash].xml --env INCORRECT_DELAY=0
+            npm exec --no -- cypress run --e2e --spec "$SPECS" --reporter junit --reporter-options mochaFile=cypress/results/results-[hash].xml
           fi
         env:
           TZ: "Europe/London"
