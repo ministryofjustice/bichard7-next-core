@@ -327,7 +327,7 @@ jobs:
 
   test_user_service_e2e:
     name: Test User Service e2e
-    needs: [changes, build_postgres_image]
+    needs: [changes, build_postgres_image, build_audit_logging_image]
     if: needs.changes.outputs.user_service == 'true'
     runs-on: ubuntu-latest
 
@@ -350,10 +350,10 @@ jobs:
         with:
           image_tag: ${{ needs.build_postgres_image.outputs.ghcr_tag }}
 
-#      - name: Pull audit log API container
-#        uses: ./.github/actions/pull-docker-image
-#        with:
-#          image_tag: ${{ needs.build_audit_logging_image.outputs.ghcr_tag }}
+      - name: Pull audit log API container
+        uses: ./.github/actions/pull-docker-image
+        with:
+          image_tag: ${{ needs.build_audit_logging_image.outputs.ghcr_tag }}
 
       - name: Setup node version
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -377,20 +377,12 @@ jobs:
         run: npm run -w packages/user-service build
 
       - name: Start Services
-        run: docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait db-seed
+        run: docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait db-seed audit-log-api
 
       - name: Start User Service
         run: |
           npm run -w packages/user-service start &
           timeout 30s bash -c 'until curl -s http://localhost:3000 > /dev/null; do sleep 1; done'
-
-#      - name: Restore timings
-#        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-#        with:
-#          path: packages/user-service/timings.json
-#          key: cypress-timings-${{ github.ref_name }}
-#          restore-keys: |
-#            cypress-timings-main
 
       - name: Run e2e tests
         working-directory: packages/user-service
@@ -401,9 +393,9 @@ jobs:
           fi
         env:
           TZ: "Europe/London"
+          INCORRECT_DELAY: 0
           SPLIT_TOTAL: ${{ strategy.job-total }}
           SPLIT_INDEX: ${{ strategy.job-index }}
-#          TIMINGS_FILE: timings.json
 
       - name: Publish Cypress Test Report
         uses: dorny/test-reporter@d1b5dff021aa968b288b02285a8bf47471c5928a # v3.2.0
