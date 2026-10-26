@@ -367,17 +367,20 @@ jobs:
       - name: Install GOV.UK Assets
         run: npm run -w packages/user-service install:assets
 
+      - name: Install Cypress
+        run: npm exec --no -- cypress install
+
       - name: Build Common
         run: npm run build -w packages/common
 
       - name: Build the user service
         run: npm run -w packages/user-service build
 
-      - name: Install Cypress
-        run: npm exec --no -- cypress install
-
       - name: Start Services
         run: docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait db-seed audit-log-api
+
+      - name: Start User Service
+        run: npm run -w packages/user-service start
 
 #      - name: Restore timings
 #        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
