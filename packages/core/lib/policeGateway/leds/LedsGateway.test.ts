@@ -436,7 +436,7 @@ describe("LedsGateway", () => {
       expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
         ...generateExpectedHeaders(correlationId, LedsActionCode.AddSubsequentDisposalResults),
         "Content-Type": "application/json"
-    })
+      })
       expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
