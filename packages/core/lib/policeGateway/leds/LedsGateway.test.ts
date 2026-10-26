@@ -113,10 +113,10 @@ describe("LedsGateway", () => {
 
   describe("query", () => {
     it("should return police query result and update query time", async () => {
-      const fetchMock = jest.fn().mockResolvedValue({
+      fetchMock.mockResolvedValue({
         status: 200,
         json: jest.fn().mockResolvedValue(ledsAsnQueryResponse)
-      } as unknown as Response)
+      } as any)
       expect(ledsGateway.queryTime).toBeUndefined()
 
       const correlationId = randomUUID()
