@@ -71,6 +71,7 @@
     "jest": "^30.5.2",
     "jest-environment-jsdom": "^30.5.2",
     "lint-staged": "^17.6.0",
+    "mocha-junit-reporter": "^2.2.1",
     "sass": "^1.106.1",
     "ts-jest": "^29.4.15",
     "ts-node": "^10.9.2",
