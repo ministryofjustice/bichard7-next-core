@@ -27,4 +27,11 @@ describe("filterExcludedTriggers", () => {
 
     expect(filterExcludedTriggers(excluded, included)).toEqual([])
   })
+
+  it("should filter out trigger when in short format", () => {
+    const excluded = ["TRPR0010", "TRPR0011"]
+    const included = ["PR10"]
+
+    expect(filterExcludedTriggers(excluded, included)).toEqual(["TRPR0011"])
+  })
 })
