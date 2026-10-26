@@ -1,8 +1,8 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
-import axios from "axios"
 import { randomUUID } from "node:crypto"
+import { fetch } from "undici"
 
 import type DisposalUpdatedPncUpdateRequest from "../../../phase3/types/DisposalUpdatedPncUpdateRequest"
 import type NormalDisposalPncUpdateRequest from "../../../phase3/types/NormalDisposalPncUpdateRequest"
@@ -20,6 +20,13 @@ import LedsAuthentication from "../../../types/leds/LedsAuthentication"
 import CoreAuditLogger from "../../auditLog/CoreAuditLogger"
 import generateRequestHeaders from "./generateRequestHeaders"
 import LedsGateway from "./LedsGateway"
+
+jest.mock("undici", () => ({
+  ...jest.requireActual("undici"),
+  fetch: jest.fn()
+}))
+
+const fetchMock = fetch as jest.Mock
 
 const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const auditLogEventMatchers = [
@@ -89,6 +96,9 @@ const generateExpectedHeaders = (correlationId: string, actionCode: LedsActionCo
 })
 
 describe("LedsGateway", () => {
+  beforeEach(() => {
+    fetchMock.mockClear()
+  })
   let auditLogger: AuditLogger
   let ledsGateway: LedsGateway
 
@@ -106,11 +116,11 @@ describe("LedsGateway", () => {
 
   describe("query", () => {
     it("should return police query result and update query time", async () => {
-      const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
+      fetchMock.mockResolvedValue({
+        ok: true,
         status: 200,
-        data: ledsAsnQueryResponse
-      })
-
+        json: jest.fn().mockResolvedValue(ledsAsnQueryResponse)
+      } as any)
       expect(ledsGateway.queryTime).toBeUndefined()
 
       const correlationId = randomUUID()
@@ -119,14 +129,15 @@ describe("LedsGateway", () => {
       expect(isError(result)).toBe(false)
       expect(result).toMatchSnapshot("Query Result")
       expect(ledsGateway.queryTime).toBeDefined()
-      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
-        generateExpectedHeaders(correlationId, LedsActionCode.QueryByAsn)
-      )
+      expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
+        ...generateExpectedHeaders(correlationId, LedsActionCode.QueryByAsn),
+        "Content-Type": "application/json"
+      })
       expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should return an error when api call fails", async () => {
-      jest.spyOn(axios, "post").mockRejectedValue(Error("API call failed."))
+      fetchMock.mockRejectedValue(new Error("API call failed."))
 
       const result = (await ledsGateway.query("dummy-asn", randomUUID(), aho)) as PoliceApiError
 
@@ -135,26 +146,19 @@ describe("LedsGateway", () => {
     })
 
     it("should return an error when http status code is not 200 and response contains LEDS errors", async () => {
-      jest.spyOn(axios, "post").mockResolvedValue({
+      fetchMock.mockResolvedValue({
         status: 501,
-        data: {
+        json: jest.fn().mockResolvedValue({
           status: 501,
           title: "dummy title",
           type: "unprocessable/not-allowed",
           details: "dummy details",
           instance: "dummy instance",
           leds: {
-            errors: [
-              {
-                message: "dummy error message 1"
-              },
-              {
-                message: "dummy error message 2"
-              }
-            ]
+            errors: [{ message: "dummy error message 1" }, { message: "dummy error message 2" }]
           }
-        }
-      })
+        })
+      } as any)
 
       const result = (await ledsGateway.query("dummy-asn", randomUUID(), aho)) as PoliceApiError
 
@@ -164,12 +168,12 @@ describe("LedsGateway", () => {
     })
 
     it("should return an error when http status code is not 200 and response does not contain LEDS errors", async () => {
-      jest.spyOn(axios, "post").mockResolvedValue({
+      fetchMock.mockResolvedValue({
         status: 501,
-        data: {
+        json: jest.fn().mockResolvedValue({
           randomField: "randomValue"
-        }
-      })
+        })
+      } as any)
 
       const result = (await ledsGateway.query("dummy-asn", randomUUID(), aho)) as PoliceApiError
 
@@ -179,12 +183,13 @@ describe("LedsGateway", () => {
     })
 
     it("should return an error when http status code is 200 but data is in wrong format", async () => {
-      jest.spyOn(axios, "post").mockResolvedValue({
+      fetchMock.mockResolvedValue({
+        ok: true,
         status: 200,
-        data: {
+        json: jest.fn().mockResolvedValue({
           randomField: "randomValue"
-        }
-      })
+        })
+      } as any)
 
       const result = (await ledsGateway.query("dummy-asn", randomUUID(), aho)) as PoliceApiError
 
@@ -196,20 +201,23 @@ describe("LedsGateway", () => {
 
   describe("update", () => {
     it("should successfully update when operation is remand", async () => {
-      const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
+      fetchMock.mockResolvedValue({
+        ok: true,
         status: 201,
-        data: { id: "de765c89-b99d-4116-b282-64a03b242043" }
-      })
+        json: jest.fn().mockResolvedValue({
+          id: "de765c89-b99d-4116-b282-64a03b242043"
+        })
+      } as unknown as Response)
 
       const request: RemandPncUpdateRequest = generateRemandRequest()
       const correlationId = randomUUID()
       const result = await ledsGateway.update(request, correlationId, pncUpdateDataset)
 
       expect(result).toBeUndefined()
-      expect(axiosMock.mock.calls[0][0]).toBe(
+      expect(fetchMock.mock.calls[0][0]).toBe(
         `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/arrest-reports/${pncUpdateDataset.PncQuery!.reportId}/basic-remands`
       )
-      expect(JSON.parse(JSON.stringify(axiosMock.mock.calls[0][1]))).toEqual({
+      expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
         ownerCode: "02YZ",
         longPersonUrn: "2000/410770Y",
         remandDate: "2024-12-05",
@@ -221,17 +229,21 @@ describe("LedsGateway", () => {
           court: { courtIdentityType: "name", courtName: "Magistrates' Courts London Croydon MCA" }
         }
       })
-      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
-        generateExpectedHeaders(correlationId, LedsActionCode.AddRemand)
-      )
+      expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
+        ...generateExpectedHeaders(correlationId, LedsActionCode.AddRemand),
+        "Content-Type": "application/json"
+      })
       expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should successfully update when operation is add disposal results", async () => {
-      const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
+      fetchMock.mockResolvedValue({
+        ok: true,
         status: 201,
-        data: { id: "d5f0300e-3079-4923-95a3-d4f4a6c60cd9" }
-      })
+        json: jest.fn().mockResolvedValue({
+          id: "d5f0300e-3079-4923-95a3-d4f4a6c60cd9"
+        })
+      } as unknown as Response)
 
       const request: NormalDisposalPncUpdateRequest = {
         operation: PncOperation.NORMAL_DISPOSAL,
@@ -279,10 +291,10 @@ describe("LedsGateway", () => {
       const result = await ledsGateway.update(request, correlationId, pncUpdateDataset)
 
       expect(result).toBeUndefined()
-      expect(axiosMock.mock.calls[0][0]).toBe(
+      expect(fetchMock.mock.calls[0][0]).toBe(
         `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-disposal-result`
       )
-      expect(JSON.parse(JSON.stringify(axiosMock.mock.calls[0][1]))).toEqual({
+      expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
         ownerCode: "02YZ",
         longPersonUrn: "2000/410770Y",
         courtCaseReference: "97/1626/008395Q",
@@ -304,17 +316,21 @@ describe("LedsGateway", () => {
           }
         ]
       })
-      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
-        generateExpectedHeaders(correlationId, LedsActionCode.AddDisposalResults)
-      )
+      expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
+        ...generateExpectedHeaders(correlationId, LedsActionCode.AddDisposalResults),
+        "Content-Type": "application/json"
+      })
       expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should successfully update when operation is subsequently varied", async () => {
-      const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
+      fetchMock.mockResolvedValue({
+        ok: true,
         status: 201,
-        data: { id: "061a236c-ecdc-48d1-81b2-f3f099a35991" }
-      })
+        json: jest.fn().mockResolvedValue({
+          id: "061a236c-ecdc-48d1-81b2-f3f099a35991"
+        })
+      } as unknown as Response)
 
       const request: DisposalUpdatedPncUpdateRequest = {
         operation: PncOperation.DISPOSAL_UPDATED,
@@ -374,10 +390,10 @@ describe("LedsGateway", () => {
       const result = await ledsGateway.update(request, correlationId, pncUpdateDataset)
 
       expect(result).toBeUndefined()
-      expect(axiosMock.mock.calls[0][0]).toBe(
+      expect(fetchMock.mock.calls[0][0]).toBe(
         `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
       )
-      expect(JSON.parse(JSON.stringify(axiosMock.mock.calls[0][1]))).toEqual({
+      expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
         ownerCode: "01YZ",
         longPersonUrn: "2000/410770Y",
         courtCaseReference: "97/1626/008395Q",
@@ -417,17 +433,21 @@ describe("LedsGateway", () => {
           }
         ]
       })
-      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
-        generateExpectedHeaders(correlationId, LedsActionCode.AddSubsequentDisposalResults)
-      )
+      expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
+        ...generateExpectedHeaders(correlationId, LedsActionCode.AddSubsequentDisposalResults),
+        "Content-Type": "application/json"
+    })
       expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should successfully update when operation is sentence deferred", async () => {
-      const axiosMock = jest.spyOn(axios, "post").mockResolvedValue({
+      fetchMock.mockResolvedValue({
+        ok: true,
         status: 201,
-        data: { id: "fed86d18-c3de-4013-93f0-54fe1571ed13" }
-      })
+        json: jest.fn().mockResolvedValue({
+          id: "fed86d18-c3de-4013-93f0-54fe1571ed13"
+        })
+      } as unknown as Response)
 
       const request: SentenceDeferredPncUpdateRequest = {
         operation: PncOperation.SENTENCE_DEFERRED,
@@ -473,10 +493,10 @@ describe("LedsGateway", () => {
       const result = await ledsGateway.update(request, correlationId, pncUpdateDataset)
 
       expect(result).toBeUndefined()
-      expect(axiosMock.mock.calls[0][0]).toBe(
+      expect(fetchMock.mock.calls[0][0]).toBe(
         `https://dummy/person-services/v1/people/${pncUpdateDataset.PncQuery!.personId}/disposals/${pncUpdateDataset.PncQuery!.courtCases![0].courtCaseId}/court-case-subsequent-disposal-results`
       )
-      expect(JSON.parse(JSON.stringify(axiosMock.mock.calls[0][1]))).toEqual({
+      expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
         ownerCode: "01YZ",
         longPersonUrn: "2000/410770Y",
         courtCaseReference: "97/1626/008395Q",
@@ -508,14 +528,15 @@ describe("LedsGateway", () => {
           }
         ]
       })
-      expect(axiosMock.mock.calls[0][2]?.headers).toEqual(
-        generateExpectedHeaders(correlationId, LedsActionCode.AddSubsequentDisposalResults)
-      )
+      expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
+        ...generateExpectedHeaders(correlationId, LedsActionCode.AddSubsequentDisposalResults),
+        "Content-Type": "application/json"
+      })
       expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
     it("should return an error when api call fails", async () => {
-      jest.spyOn(axios, "post").mockRejectedValue(Error("Dummy update: API call failed."))
+      fetchMock.mockRejectedValue(Error("Dummy update: API call failed."))
 
       const request: RemandPncUpdateRequest = generateRemandRequest()
       const correlationId = randomUUID()
@@ -526,9 +547,9 @@ describe("LedsGateway", () => {
     })
 
     it("should return an error when http status code is not 200 and response contains LEDS errors", async () => {
-      jest.spyOn(axios, "post").mockResolvedValue({
+      fetchMock.mockResolvedValue({
         status: 501,
-        data: {
+        json: jest.fn().mockResolvedValue({
           status: 501,
           title: "dummy title",
           type: "unprocessable/not-allowed",
@@ -544,8 +565,8 @@ describe("LedsGateway", () => {
               }
             ]
           }
-        }
-      })
+        })
+      } as any)
 
       const request: RemandPncUpdateRequest = generateRemandRequest()
       const correlationId = randomUUID()
@@ -556,12 +577,12 @@ describe("LedsGateway", () => {
     })
 
     it("should return an error when http status code is not 200 and response does not contain LEDS errors", async () => {
-      jest.spyOn(axios, "post").mockResolvedValue({
+      fetchMock.mockResolvedValue({
         status: 501,
-        data: {
+        json: jest.fn().mockResolvedValue({
           randomField: "randomValue"
-        }
-      })
+        })
+      } as any)
 
       const request: RemandPncUpdateRequest = generateRemandRequest()
       const correlationId = randomUUID()
