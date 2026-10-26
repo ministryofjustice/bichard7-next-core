@@ -198,7 +198,7 @@ describe("LedsGateway", () => {
 
   describe("update", () => {
     it("should successfully update when operation is remand", async () => {
-      const fetchMock = jest.fn().mockResolvedValue({
+      fetchMock.mockResolvedValue({
         ok: true,
         status: 201,
         json: jest.fn().mockResolvedValue({
@@ -233,7 +233,7 @@ describe("LedsGateway", () => {
     })
 
     it("should successfully update when operation is add disposal results", async () => {
-      const fetchMock = jest.fn().mockResolvedValue({
+      fetchMock.mockResolvedValue({
         ok: true,
         status: 201,
         json: jest.fn().mockResolvedValue({
@@ -319,7 +319,7 @@ describe("LedsGateway", () => {
     })
 
     it("should successfully update when operation is subsequently varied", async () => {
-      const fetchMock = jest.fn().mockResolvedValue({
+      fetchMock.mockResolvedValue({
         ok: true,
         status: 201,
         json: jest.fn().mockResolvedValue({
@@ -435,7 +435,7 @@ describe("LedsGateway", () => {
     })
 
     it("should successfully update when operation is sentence deferred", async () => {
-      const fetchMock = jest.fn().mockResolvedValue({
+      fetchMock.mockResolvedValue({
         ok: true,
         status: 201,
         json: jest.fn().mockResolvedValue({
