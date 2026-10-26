@@ -96,6 +96,9 @@ const generateExpectedHeaders = (correlationId: string, actionCode: LedsActionCo
 })
 
 describe("LedsGateway", () => {
+  beforeEach(() => {
+    fetchMock.mockClear()
+  })
   let auditLogger: AuditLogger
   let ledsGateway: LedsGateway
 
