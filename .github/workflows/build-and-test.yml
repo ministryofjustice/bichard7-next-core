@@ -365,7 +365,7 @@ jobs:
         run: npm ci --ignore-scripts --no-audit
 
       - name: Install Cypress
-        run: npx cypress install
+        run: node ./node_modules/cypress/bin/cypress install
 
       - name: Install GOV.UK Assets
         run: npm run -w packages/user-service install:assets
