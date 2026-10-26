@@ -125,9 +125,10 @@ describe("LedsGateway", () => {
       expect(isError(result)).toBe(false)
       expect(result).toMatchSnapshot("Query Result")
       expect(ledsGateway.queryTime).toBeDefined()
-      expect(fetchMock.mock.calls[0][1]?.headers).toEqual(
-        generateExpectedHeaders(correlationId, LedsActionCode.QueryByAsn)
-      )
+      expect(fetchMock.mock.calls[0][1]?.headers).toEqual({
+        ...generateExpectedHeaders(correlationId, LedsActionCode.QueryByAsn),
+        "Content-Type": "application/json"
+      })
       expect(auditLogger.getEvents()).toMatchSnapshot(auditLogEventMatchers, "Audit Log Events")
     })
 
