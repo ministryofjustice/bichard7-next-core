@@ -324,3 +324,96 @@ jobs:
 
       - name: Run integration tests
         run: npm run -w packages/user-service test:integration
+
+  test_user_service_e2e:
+    name: Test User Servcice
+    needs: [changes, build_postgres_image, build_audit_logging_image]
+    if: needs.changes.outputs.user_service == 'true'
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # Run across 4 parallel runners
+        machines: [1, 2, 3, 4]
+
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Pull postgres container
+        uses: ./.github/actions/pull-docker-image
+        with:
+          image_tag: ${{ needs.build_postgres_image.outputs.ghcr_tag }}
+
+      - name: Pull audit log API container
+        uses: ./.github/actions/pull-docker-image
+        with:
+          image_tag: ${{ needs.build_audit_logging_image.outputs.ghcr_tag }}
+
+      - name: Setup node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+
+      - name: Install Node Packages
+        run: npm ci --ignore-scripts --no-audit
+
+      - name: Install GOV.UK Assets
+        run: npm run -w packages/user-service install:assets
+
+      - name: Build Common
+        run: npm run build -w packages/common
+
+      - name: Build the user service
+        run: npm run -w packages/user-service build
+
+      - name: Install Cypress
+        run: npm exec --no -- cypress install
+
+      - name: Start Services
+        run: docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait db-seed audit-log-api
+
+#      - name: Restore timings
+#        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+#        with:
+#          path: packages/user-service/timings.json
+#          key: cypress-timings-${{ github.ref_name }}
+#          restore-keys: |
+#            cypress-timings-main
+
+      - name: Run e2e tests
+        working-directory: packages/user-service
+        run: |
+          SPECS=$(node ./scripts/split-specs.mjs cypress/e2e)
+          if [ -n "$SPECS" ]; then
+            npm exec --no -- cypress run --e2e --spec "$SPECS" --reporter junit --reporter-options mochaFile=cypress/results/results-[hash].xml
+          fi
+        env:
+          TZ: "Europe/London"
+          SPLIT_TOTAL: ${{ strategy.job-total }}
+          SPLIT_INDEX: ${{ strategy.job-index }}
+#          TIMINGS_FILE: timings.json
+
+      - name: Publish Cypress Test Report
+        uses: dorny/test-reporter@d1b5dff021aa968b288b02285a8bf47471c5928a # v3.2.0
+        if: always()
+        with:
+          name: User Service e2e Tests
+          path: 'packages/user-service/cypress/results/**/*.xml'
+          reporter: java-junit
+          fail-on-error: true
+
+      - name: Upload Cypress Artifacts (Videos & Screenshots)
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # 7.0.2
+        if: failure()
+        with:
+          name: cypress-artifacts
+          path: |
+            packages/user-service/cypress/videos
+            packages/user-service/cypress/screenshots
