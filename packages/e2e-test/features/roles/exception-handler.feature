@@ -11,18 +11,22 @@ Feature: Exception handler permissions
     When I view the list of exceptions
 
   @ExcludedOnConductor
+  @NextUI
   Scenario: Exception handler can see exceptions
     Then I see exception "HO100300" in the exception list table
-      And I cannot see "TRPR0010" in the exception list table
+      And I cannot see trigger "TRPR0010" in the exception list table
 
+  @NextUI
   Scenario: Exception handlers can handle exceptions
       And I open the record for "Rigout Dean"
     Then I can correct the exception
 
+  @NextUI
   Scenario: Exception handlers cannot see triggers
       And I open the record for "Rigout Dean"
     Then the "Triggers" menu item is not visible
 
+  @NextUI
   Scenario: Exception handlers can reallocate cases to another force area
       And I open the record for "Rigout Dean"
     Then I can reallocate the case to another force area
