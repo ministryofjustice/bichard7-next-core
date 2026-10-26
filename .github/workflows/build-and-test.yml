@@ -457,7 +457,7 @@ jobs:
         if: always()
         with:
           name: User Service e2e Test Results
-          artifact: user-service-e2e-test-data-*
-          path: 'results-*.xml'
+          artifact: /user-service-e2e-test-data-(.*)/
+          path: '**/results-*.xml'
           reporter: java-junit
           fail-on-error: true
