@@ -281,7 +281,7 @@ jobs:
         run: npm run -w packages/ui test:integration
 
   test_user_service:
-    name: Test User Servcice
+    name: Test User Service
     needs: [changes, build_postgres_image, build_audit_logging_image]
     if: needs.changes.outputs.user_service == 'true'
     runs-on: ubuntu-latest
@@ -326,7 +326,7 @@ jobs:
         run: npm run -w packages/user-service test:integration
 
   test_user_service_e2e:
-    name: Test User Servcice
+    name: Test User Service e2e
     needs: [changes, build_postgres_image, build_audit_logging_image]
     if: needs.changes.outputs.user_service == 'true'
     runs-on: ubuntu-latest
