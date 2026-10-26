@@ -14,13 +14,15 @@ interface Props {
   order?: QueryOrder
   displayAuditQuality: boolean
   courtDateReceivedDateMismatch: boolean
+  reasonCodes?: string[]
 }
 
 const CourtCaseList: React.FC<Props> = ({
   courtCases,
   order = "asc",
   displayAuditQuality,
-  courtDateReceivedDateMismatch
+  courtDateReceivedDateMismatch,
+  reasonCodes
 }: Props) => {
   const { query } = useRouter()
   const { announce, announcerRef } = useAnnouncer()
@@ -73,6 +75,7 @@ const CourtCaseList: React.FC<Props> = ({
             previousPath={queryString}
             displayAuditQuality={displayAuditQuality}
             courtDateReceivedDateMismatch={courtDateReceivedDateMismatch}
+            reasonCodes={reasonCodes}
           />
         ))}
       </Table>
