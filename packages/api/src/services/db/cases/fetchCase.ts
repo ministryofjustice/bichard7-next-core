@@ -3,6 +3,7 @@ import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyBaseLogger } from "fastify"
 
 import { isError, type PromiseResult } from "@moj-bichard7/common/types/Result"
+import filterExcludedTriggers from "@moj-bichard7/common/utils/filterExcludedTriggers"
 
 import type { CaseRowForDto } from "../../../types/Case"
 import type { DatabaseConnection } from "../../../types/DatabaseGateway"
@@ -16,8 +17,11 @@ export default async (
   database: DatabaseConnection,
   user: User,
   caseId: number,
-  logger: FastifyBaseLogger
+  logger: FastifyBaseLogger,
+  includedTriggerCodes: string[] = []
 ): PromiseResult<CaseDto> => {
+  const excludedTriggers = filterExcludedTriggers(user.excludedTriggers, includedTriggerCodes)
+
   const result = await database.connection<CaseRowForDto[]>`
       SELECT
         el.annotated_msg,
@@ -63,7 +67,13 @@ export default async (
             )
           ) FILTER (WHERE eln.note_id IS NOT NULL), '[]'
         ) AS notes,
-        COALESCE(json_agg(DISTINCT to_jsonb(elt.*)) FILTER (WHERE elt.trigger_id IS NOT NULL), '[]') AS triggers
+        COALESCE(
+          json_agg(DISTINCT to_jsonb(elt.*)) FILTER (
+            WHERE elt.trigger_id IS NOT NULL 
+              AND NOT (elt.trigger_code = ANY (${excludedTriggers}))
+          ), 
+          '[]'
+        ) AS triggers
       FROM
         br7own.error_list AS el
         LEFT JOIN br7own.error_list_notes AS eln ON eln.error_id = el.error_id
@@ -74,7 +84,7 @@ export default async (
       WHERE
         el.error_id = ${caseId} 
         AND (${organisationUnitSql(database, user)})
-        ${filterByUserAccess(database, user)}
+        ${filterByUserAccess(database, user, excludedTriggers)}
       GROUP BY el.error_id, errorLockU.forenames, errorLockU.surname, triggerLockU.forenames, triggerLockU.surname
     `.catch((error: Error) => error)
 

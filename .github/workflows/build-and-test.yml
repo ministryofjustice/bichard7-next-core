@@ -16,6 +16,9 @@ jobs:
       s3_web_proxy: ${{ fromJSON(steps.evaluate.outputs.filters).s3_web_proxy }}
       postgres: ${{ fromJSON(steps.evaluate.outputs.filters).postgres }}
       comparison_tests: ${{ fromJSON(steps.evaluate.outputs.filters).comparison_tests }}
+      audit_logging: ${{ fromJSON(steps.evaluate.outputs.filters).audit_logging }}
+      ui: ${{ fromJSON(steps.evaluate.outputs.filters).ui }}
+      user_service: ${{ fromJSON(steps.evaluate.outputs.filters).user_service }}
 
     steps:
       - name: Checkout repository
@@ -33,11 +36,41 @@ jobs:
               - 'packages/s3-web-proxy/**'
             postgres:
               - '.github/**'
+              - '.nvmrc'
               - 'environment/**'
-            comparison_tests:
-              - '.github/**'
+              - 'packages/ui/**'
+              - 'packages/user-service/**'
               - 'packages/common/**'
               - 'packages/core/**'
+            comparison_tests:
+              - '.github/**'
+              - '.nvmrc'
+              - 'environment/postgres/**'
+              - 'packages/common/**'
+              - 'packages/core/**'
+            audit_logging:
+              - '.nvmrc'
+              - '.github/**'
+              - '.nvmrc'
+              - 'environment/**'
+              - 'packages/ui/**'
+              - 'packages/user-service/**'
+              - 'packages/common/**'
+              - 'packages/core/**'
+            ui:
+              - '.nvmrc'
+              - '.github/**'
+              - '.nvmrc'
+              - 'environment/**'
+              - 'packages/ui/**'
+              - 'packages/common/**'
+              - 'packages/core/**'
+            user_service:
+              - '.github/**'
+              - '.nvmrc'
+              - 'environment/**'
+              - 'packages/user-service/**'
+              - 'packages/common/**'
 
   build_s3_web_proxy_image:
     name: Build S3 Web Proxy Image
@@ -93,6 +126,41 @@ jobs:
           image_name: bichard-postgres
           dockerfile: environment/postgres/Dockerfile
           context: environment/postgres
+          push-to-ghcr: true
+
+  build_audit_logging_image:
+    name: Build Audit Logging Image
+    needs: changes
+    if: needs.changes.outputs.audit_logging == 'true'
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+      packages: write
+
+    outputs:
+      ghcr_tag: ${{ steps.build-step.outputs.ghcr_tag }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Checkout audit logging repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: 'ministryofjustice/bichard7-next-audit-logging'
+          path: "bichard7-next-audit-logging"
+
+      - name: Build Docker Image
+        id: build-step
+        uses: ./.github/actions/build-docker-image
+        with:
+          image_name: audit-log-api
+          dockerfile: bichard7-next-audit-logging/src/audit-log-api/Dockerfile
+          context: bichard7-next-audit-logging
+          base-image-to-pull: nodejs-24-2023
+          aws-role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           push-to-ghcr: true
 
   test_postgres:
@@ -163,3 +231,96 @@ jobs:
 
       - name: Run E2E comparison tests against Core Phase 3
         run: npm run -w packages/core test:compare:phase3
+
+  test_ui:
+    name: Test UI
+    needs: [changes, build_postgres_image, build_audit_logging_image]
+    if: needs.changes.outputs.ui == 'true'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Pull postgres container
+        uses: ./.github/actions/pull-docker-image
+        with:
+          image_tag: ${{ needs.build_postgres_image.outputs.ghcr_tag }}
+
+      - name: Pull audit log API container
+        uses: ./.github/actions/pull-docker-image
+        with:
+          image_tag: ${{ needs.build_audit_logging_image.outputs.ghcr_tag }}
+
+      - name: Setup node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+
+      - name: Install Node Packages
+        run: npm ci --ignore-scripts --no-audit
+
+      - name: Build Common
+        run: npm run build -w packages/common
+
+      - name: Build Core
+        run: npm run build -w packages/core
+
+      - name: Start Services
+        run: docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait activemq localstack db-seed audit-log-api
+
+      - name: Run code-based unit tests
+        run: npm run -w packages/ui test:unit
+
+      - name: Run integration tests
+        run: npm run -w packages/ui test:integration
+
+  test_user_service:
+    name: Test User Servcice
+    needs: [changes, build_postgres_image, build_audit_logging_image]
+    if: needs.changes.outputs.user_service == 'true'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Pull postgres container
+        uses: ./.github/actions/pull-docker-image
+        with:
+          image_tag: ${{ needs.build_postgres_image.outputs.ghcr_tag }}
+
+      - name: Pull audit log API container
+        uses: ./.github/actions/pull-docker-image
+        with:
+          image_tag: ${{ needs.build_audit_logging_image.outputs.ghcr_tag }}
+
+      - name: Setup node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+
+      - name: Install Node Packages
+        run: npm ci --ignore-scripts --no-audit
+
+      - name: Build Common
+        run: npm run build -w packages/common
+
+      - name: Start Services
+        run: docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait db-seed audit-log-api
+
+      - name: Run code-based unit tests
+        run: npm run -w packages/user-service test:unit
+
+      - name: Run integration tests
+        run: npm run -w packages/user-service test:integration

@@ -31,6 +31,62 @@ describe("fetchCase", () => {
     expect((result as Error).message).toBe("Case id 0 for user User1 not found")
   })
 
+  it("returns no case triggers if all excluded", async () => {
+    const user = await createUser(testDatabaseGateway, {
+      excludedTriggers: ["TRPR0002", "TRPR0001"]
+    })
+    const caseObj = await createCase(testDatabaseGateway)
+
+    const insertedTriggers = [
+      { triggerCode: "TRPR0001", triggerId: 1 },
+      { triggerCode: "TRPR0002", triggerId: 2 }
+    ]
+    await createTriggers(testDatabaseGateway, caseObj.errorId, insertedTriggers)
+
+    const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+    expect(result.errorId).toEqual(caseObj.errorId)
+    expect(result.triggers).toHaveLength(0)
+  })
+
+  it("returns case triggers that are not excluded", async () => {
+    const user = await createUser(testDatabaseGateway, {
+      excludedTriggers: ["TRPR0002"]
+    })
+    const caseObj = await createCase(testDatabaseGateway)
+
+    const insertedTriggers = [
+      { triggerCode: "TRPR0001", triggerId: 1 },
+      { triggerCode: "TRPR0002", triggerId: 2 }
+    ]
+    await createTriggers(testDatabaseGateway, caseObj.errorId, insertedTriggers)
+
+    const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger)) as CaseDto
+    expect(result.errorId).toEqual(caseObj.errorId)
+    expect(result.triggers).toHaveLength(1)
+    expect(result.triggers[0].triggerId).toBe(insertedTriggers[0].triggerId)
+  })
+
+  it("returns excluded case triggers when a valid override reason code is provided", async () => {
+    const user = await createUser(testDatabaseGateway, {
+      excludedTriggers: ["TRPR0002", "TRPR0001"]
+    })
+    const caseObj = await createCase(testDatabaseGateway)
+
+    const insertedTriggers = [
+      { triggerCode: "TRPR0001", triggerId: 1 },
+      { triggerCode: "TRPR0002", triggerId: 2 }
+    ]
+    await createTriggers(testDatabaseGateway, caseObj.errorId, insertedTriggers)
+
+    const result = (await filter(testDatabaseGateway.readonly, user, caseObj.errorId, testLogger, [
+      "TRPR0001"
+    ])) as CaseDto
+
+    expect(result.errorId).toEqual(caseObj.errorId)
+    expect(result.triggers).toHaveLength(1)
+    expect(result.triggers[0].triggerId).toBe(insertedTriggers[0].triggerId)
+  })
+
   it("returns an error if the case isn't in the correct force and court", async () => {
     const user = await createUser(testDatabaseGateway, { id: 1, visibleCourts: [], visibleForces: ["01"] })
     const caseObj = await createCase(testDatabaseGateway, {
