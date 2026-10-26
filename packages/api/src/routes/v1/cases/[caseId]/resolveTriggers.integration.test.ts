@@ -49,6 +49,75 @@ describe("resolveTriggers", () => {
     expect(response.statusCode).toBe(OK)
   })
 
+  it("returns 200 OK when resolving excluded triggers, when valid override reason codes are provided", async () => {
+    const multipleTestTriggers = [
+      { triggerCode: "TRPR0001", triggerId: 1 },
+      { triggerCode: "TRPR0002", triggerId: 2 }
+    ]
+
+    const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler], {
+      excludedTriggers: ["TRPR0001", "TRPR0002"]
+    })
+    const caseObj = await createCase(testDatabaseGateway, { triggerLockedById: user.username })
+    await createTriggers(testDatabaseGateway, caseObj.errorId, multipleTestTriggers)
+
+    const response = await app.inject({
+      headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
+      method: "POST",
+      payload: {
+        triggerCodes: ["TRPR0001", "TRPR0002"],
+        triggerIds: multipleTestTriggers.map((trigger) => trigger.triggerId)
+      },
+      url: `${V1.CaseResolveTriggers.replace(":caseId", caseObj.errorId.toString())}`
+    })
+
+    expect(response.statusCode).toBe(OK)
+  })
+
+  it("returns 200 OK when resolving excluded triggers, when a valid override reason code is provided for one of the triggers", async () => {
+    const multipleTestTriggers = [
+      { triggerCode: "TRPR0001", triggerId: 1 },
+      { triggerCode: "TRPR0002", triggerId: 2 }
+    ]
+
+    const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler], {
+      excludedTriggers: ["TRPR0001", "TRPR0002"]
+    })
+    const caseObj = await createCase(testDatabaseGateway, { triggerLockedById: user.username })
+    await createTriggers(testDatabaseGateway, caseObj.errorId, multipleTestTriggers)
+
+    const response = await app.inject({
+      headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
+      method: "POST",
+      payload: {
+        triggerCodes: ["TRPR0001"],
+        triggerIds: multipleTestTriggers.map((trigger) => trigger.triggerId)
+      },
+      url: `${V1.CaseResolveTriggers.replace(":caseId", caseObj.errorId.toString())}`
+    })
+
+    expect(response.statusCode).toBe(OK)
+  })
+
+  it("returns 404 Not Found when attempting to resolve an excluded trigger", async () => {
+    const [encodedJwt, user] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler], {
+      excludedTriggers: ["TRPR0001"]
+    })
+    const caseObj = await createCase(testDatabaseGateway, { triggerLockedById: user.username })
+    await createTriggers(testDatabaseGateway, caseObj.errorId, insertedTriggers)
+
+    const response = await app.inject({
+      headers: { Authorization: `Bearer ${encodedJwt}`, "Content-Type": "application/json" },
+      method: "POST",
+      payload: {
+        triggerIds: [insertedTriggers[0].triggerId]
+      },
+      url: `${V1.CaseResolveTriggers.replace(":caseId", caseObj.errorId.toString())}`
+    })
+
+    expect(response.statusCode).toBe(NOT_FOUND)
+  })
+
   it("returns 404 Not Found when the case does not exist", async () => {
     const [encodedJwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
 

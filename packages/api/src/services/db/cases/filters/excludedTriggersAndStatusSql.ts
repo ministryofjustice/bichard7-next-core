@@ -1,4 +1,3 @@
-import type { User } from "@moj-bichard7/common/types/User"
 import type postgres from "postgres"
 import type { Row } from "postgres"
 
@@ -11,7 +10,7 @@ import { resolutionStatusCodeByText } from "../../../../useCases/dto/convertReso
 
 export const excludedTriggersAndStatusSql = (
   database: DatabaseConnection,
-  user: User,
+  excludedTriggers: string[],
   filters: Filters
 ): postgres.PendingQuery<Row[]> => {
   const resolutionStatus = filters.caseState
@@ -20,6 +19,6 @@ export const excludedTriggersAndStatusSql = (
 
   return database.connection`
     AND elt.status = ${resolutionStatus}
-    AND NOT elt.trigger_code = ANY (${user.excludedTriggers})
+    AND NOT elt.trigger_code = ANY (${excludedTriggers})
   `
 }
