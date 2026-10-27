@@ -1,5 +1,5 @@
-import type User from "../../services/entities/User"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import type User from "../../services/entities/User"
 import { canSeeCommunitySentenceReport } from "./canSeeCommunitySentenceReport"
 
 describe("canSeeCommunitySentenceReport", () => {
@@ -10,6 +10,15 @@ describe("canSeeCommunitySentenceReport", () => {
     } as unknown as User
 
     expect(canSeeCommunitySentenceReport(user)).toBe(false)
+  })
+
+  it("returns undefined when user does not have feature flag", () => {
+    const user = {
+      groups: [UserGroup.Supervisor],
+      featureFlags: {}
+    } as unknown as User
+
+    expect(canSeeCommunitySentenceReport(user)).toBeUndefined()
   })
 
   it("returns false when user groups does not include Supervisor", () => {
