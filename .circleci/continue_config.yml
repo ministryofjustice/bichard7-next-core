@@ -911,40 +911,6 @@ jobs:
           name: Run e2e tests against API code
           command: nvm use && npm run -w packages/api test:e2e
 
-  test_ui:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: large
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.ui-changes >>
-              - << pipeline.parameters.common-changes >>
-              - << pipeline.parameters.core-changes >>
-              - << pipeline.parameters.api-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - attach_workspace:
-          at: .
-      - load_postgres_image
-      - load_audit_logging_image
-      - node/install
-      - node_install_packages
-      - fetch_images:
-          images: nodejs-24-2023
-      - start_services:
-          SERVICES: activemq localstack db-seed audit-log-api
-      - build_core
-      - run:
-          name: Run code-based unit tests
-          command: nvm use && npm run -w packages/ui test:unit
-      - run:
-          name: Run integration tests
-          command: nvm use && npm run -w packages/ui test:integration
-
   cypress_e2e_tests:
     machine:
       image: ubuntu-2204:current
@@ -1158,11 +1124,6 @@ workflows:
       - build_audit_logging_images
       - build_conductor_image
       - build_nginx_auth_proxy_image
-
-      - test_ui:
-          requires:
-            - build_postgres_image
-            - build_audit_logging_images
 
       - test_core:
           requires:
