@@ -26,8 +26,12 @@ const generateSetOfTriggers = (
   const generatedTriggers = generator(aho, { triggers: existingTriggers, phase })
   const filteredTriggers = filterExcludedTriggers(aho, generatedTriggers)
 
+  // filter out TR31 so that TR27 not generated
+  const generatedTriggersExTR31 = generatedTriggers.filter((a) => a.code !== TriggerCode.TRPR0031)
+  const filteredTriggersExTR31 = filteredTriggers.filter((a) => a.code !== TriggerCode.TRPR0031)
+
   // Generate TRPR0027 which depends on whether triggers have been excluded or not
-  const triggersExcluded = generatedTriggers.length !== filteredTriggers.length
+  const triggersExcluded = generatedTriggersExTR31.length !== filteredTriggersExTR31.length
   const trigger27 = triggers.TRPR0027(aho, { triggersExcluded })
 
   const allTriggers = filteredTriggers.concat(trigger27)
