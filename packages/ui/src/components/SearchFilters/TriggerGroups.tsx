@@ -19,17 +19,19 @@ interface TriggerGroupProps {
 
 const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): React.ReactNode => {
   const currentUser = useCurrentUser()
-  const excludedTriggersForForce = allExcludedTriggers(currentUser, forceExcludedTriggers)
+  const excludedTriggers = allExcludedTriggers(currentUser, forceExcludedTriggers)
   const excludedTriggersForUser = currentUser.excludedTriggers
 
   const activeTriggerGroups: Record<string, string[]> = {}
-  const excludedTriggerGroups: Record<string, string[]> = {}
+  const excludedTriggerGroupsForUser: Record<string, string[]> = {}
 
   Object.keys(GroupedTriggerCodes).forEach((key) => {
-    activeTriggerGroups[key] = allGroupedTriggers(key, excludedTriggersForForce)
+    activeTriggerGroups[key] = allGroupedTriggers(key, excludedTriggers)
 
     const allTriggersForGroup = (GroupedTriggerCodes as Record<string, string[]>)[key] || []
-    excludedTriggerGroups[key] = excludedTriggersForUser.filter((trigger) => allTriggersForGroup.includes(trigger))
+    excludedTriggerGroupsForUser[key] = excludedTriggersForUser.filter((trigger) =>
+      allTriggersForGroup.includes(trigger)
+    )
   })
 
   return (
@@ -56,8 +58,8 @@ const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): React.Reac
 
         {excludedTriggersForUser.length > 0 && (
           <ExpandingFilters filterName={"Excluded"} openByDefault={false}>
-            {Object.keys(excludedTriggerGroups).map((key) => {
-              if (excludedTriggerGroups[key].length === 0) {
+            {Object.keys(excludedTriggerGroupsForUser).map((key) => {
+              if (excludedTriggerGroupsForUser[key].length === 0) {
                 return
               }
 
@@ -66,8 +68,11 @@ const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): React.Reac
                   key={`trigger-group-excluded-${key.toLowerCase().replaceAll(" ", "")}`}
                   name={key}
                   idPrefix="excluded"
-                  allGroupTriggers={excludedTriggerGroups[key] as TriggerCode[]}
-                  filteredReasonCodes={filteredReasonCodes(excludedTriggerGroups[key] as TriggerCode[], reasonCodes)}
+                  allGroupTriggers={excludedTriggerGroupsForUser[key] as TriggerCode[]}
+                  filteredReasonCodes={filteredReasonCodes(
+                    excludedTriggerGroupsForUser[key] as TriggerCode[],
+                    reasonCodes
+                  )}
                   dispatch={dispatch}
                 />
               )
