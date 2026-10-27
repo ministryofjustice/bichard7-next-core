@@ -389,9 +389,9 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: packages/user-service/cypress/timings.json
-          key: cypress-timing-user-service-${{ github.ref_name }}-${{ github.run_id }}
+          key: cypress-timing-user-service-e2e-${{ github.ref_name }}-${{ github.run_id }}
           restore-keys: |
-            cypress-timing-main-
+            cypress-timing-user-service-e2e-main-
 
       - name: Run Cypress e2e tests
         working-directory: packages/user-service

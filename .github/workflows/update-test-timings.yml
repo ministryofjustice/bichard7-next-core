@@ -69,4 +69,4 @@ jobs:
         if: github.ref == 'refs/heads/main' && always()
         with:
           path: timings/timings.json
-          key: cypress-timing-main-${{ github.sha }}
+          key: cypress-timing-user-service-e2e-main-${{ github.sha }}
