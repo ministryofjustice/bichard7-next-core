@@ -17,11 +17,12 @@ const DownArrow: React.FC = () => (
 interface Props {
   filterName: string
   children: React.ReactNode
+  openByDefault?: boolean
   classNames?: string
 }
 
-const ExpandingFilters: React.FC<Props> = ({ filterName, classNames, children }: Props) => {
-  const [isVisible, setVisible] = useState(true)
+const ExpandingFilters: React.FC<Props> = ({ filterName, classNames, children, openByDefault = true }: Props) => {
+  const [isVisible, setVisible] = useState(openByDefault)
   const id = filterName.toLowerCase().replace(/\s+/g, "-") + "-panel"
 
   return (
