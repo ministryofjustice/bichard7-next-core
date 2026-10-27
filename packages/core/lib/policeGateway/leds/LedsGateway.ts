@@ -236,9 +236,20 @@ export default class LedsGateway implements PoliceGateway {
         updateTime
       )
     )
-
     if (apiResponse instanceof Error) {
       return new PoliceApiError([apiResponse.message])
+    }
+
+    if (apiResponse.status !== 201) {
+      if (apiResponse.data) {
+        console.error(JSON.stringify(apiResponse.data, null, 2))
+      }
+
+      const errors = (apiResponse.data as ErrorResponse)?.leds?.errors?.map((error) => error.message) ?? [
+        `Update failed with status code ${apiResponse.status}.`
+      ]
+
+      return new PoliceApiError(errors)
     }
 
     if (apiResponse.status !== 201) {
