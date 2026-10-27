@@ -416,7 +416,7 @@ jobs:
 
       - name: Upload Timings
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # 7.0.2
-        if: github.ref == 'refs/heads/main' && always()
+        if: always() && github.event_name == 'merge_group'
         with:
           name: user-service-e2e-test-timings-${{ matrix.container }}
           path: packages/user-service/cypress/timings-*.json
