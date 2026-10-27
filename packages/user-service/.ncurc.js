@@ -1,5 +1,5 @@
 const pinned = new Set(["cookie", "word-list", "cypress"])
-const ignored = new Set(["cypress-circleci-reporter", "raw-body", "@swc/core"])
+const ignored = new Set(["raw-body", "@swc/core"])
 
 module.exports = {
   target: (pkg) => {
