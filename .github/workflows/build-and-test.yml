@@ -388,7 +388,7 @@ jobs:
       - name: Restore Spec Timings Cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: packages/user-service/cypress/timing.json
+          path: packages/user-service/cypress/timings.json
           key: cypress-timing-user-service-${{ github.ref_name }}-${{ github.run_id }}
           restore-keys: |
             cypress-timing-main-
@@ -404,14 +404,22 @@ jobs:
           TZ: "Europe/London"
           SPLIT_TOTAL: ${{ strategy.job-total }}
           SPLIT_INDEX: ${{ strategy.job-index }}
+          OUTPUT_TIMINGS_FILE: ./cypress/timings-${{ strategy.job-index }}.json
 
-      - name: Upload Container Test Results & Timings
+      - name: Upload Test Results
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # 7.0.2
+        if: always()
         with:
-          name: user-service-e2e-test-data-${{ matrix.container }}
-          path: |
-            packages/user-service/cypress/results/**/*.xml
-            packages/user-service/cypress/results/timing.json
+          name: user-service-e2e-test-results-${{ matrix.container }}
+          path: packages/user-service/cypress/results/**/*.xml
+          if-no-files-found: ignore
+
+      - name: Upload Timings
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # 7.0.2
+        if: always() # github.ref == 'refs/heads/main' &&
+        with:
+          name: user-service-e2e-test-timings-${{ matrix.container }}
+          path: packages/user-service/cypress/timings-*.json
           if-no-files-found: ignore
 
       - name: Upload Cypress Artifacts (Videos & Screenshots)
@@ -432,32 +440,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Download All Test Data Artifacts
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        with:
-          pattern: user-service-e2e-test-data-*
-          path: all-test-data
-
-      # Optional: Add a small script here if you need to merge multiple timing.json files into one,
-      # then place the final merged file at `packages/user-service/cypress/timing.json`
-
-#      - name: Save Unified Spec Timings Cache (Main Branch Only)
-#        if: github.ref == 'refs/heads/main' && always()
-#        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-#        with:
-#          path: packages/user-service/cypress/timing.json
-#          key: cypress-timing-main-${{ github.sha }}
-
-      #      - name: Merge JUnit Reports
-      #        working-directory: packages/user-service
-      #        run: npx junit-report-merger final-combined-report.xml "../all-test-data/**/results-*.xml"
-
       - name: Publish Cypress Test Report
         uses: dorny/test-reporter@d1b5dff021aa968b288b02285a8bf47471c5928a # v3.2.0
         if: always()
         with:
           name: User Service e2e Test Results
-          artifact: /user-service-e2e-test-data-(.*)/
+          artifact: /user-service-e2e-test-results-(.*)/
           path: '**/*.xml'
           reporter: java-junit
           fail-on-error: true
+
+      - name: Download Test Timings Artifacts
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          path: test-timings
+          pattern: user-service-e2e-test-timings-*
+          merge-multiple: true
+
+      - name: Merge Test Timings
+        run: node ./.github/scripts/merge-timings.mjs test-timings timings/timings.json
+
+      - name: Save Test Timings
+        if: always() # github.ref == 'refs/heads/main' &&
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: timings/timings.json
+          key: cypress-timing-main-${{ github.sha }}

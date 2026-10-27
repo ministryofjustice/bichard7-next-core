@@ -3,6 +3,7 @@
 // This example plugins/index.js can be used to load plugins
 //
 // You can change the location of this file or turn off loading
+import fs from "node:fs"
 import pgPromise from "pg-promise"
 import deleteFromTable from "../../testFixtures/database/deleteFromTable"
 import insertIntoUsersTable from "../../testFixtures/database/insertIntoUsersTable"
@@ -127,6 +128,23 @@ module.exports = (on, config) => {
     async insertIntoUsersAndGroupsTable() {
       await insertIntoUsersAndGroupsTable(users, groups)
       return null
+    }
+  })
+
+  const runnerTimings = {}
+  const outputFile = process.env.OUTPUT_TIMINGS_FILE || "runner-timings.json"
+
+  on("after:spec", (spec, results) => {
+    if (results?.stats) {
+      const durationSec = Math.max(
+        1,
+        Math.round((results.stats.wallClockDuration || results.stats.duration || 0) / 1000)
+      )
+
+      const specPath = spec.relative.replace(/\\/g, "/")
+      runnerTimings[specPath] = durationSec
+
+      fs.writeFileSync(outputFile, JSON.stringify(runnerTimings, null, 2))
     }
   })
 }
