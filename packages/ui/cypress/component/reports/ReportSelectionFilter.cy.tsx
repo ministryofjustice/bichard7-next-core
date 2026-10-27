@@ -1,17 +1,35 @@
+import { CurrentUserContext } from "@/context/CurrentUserContext"
 import AuditResolvedBy from "@/types/AuditResolvedBy"
+import { DisplayFullUser } from "@/types/display/Users"
+import { PrettyReportType } from "@moj-bichard7/common/types/reports/ReportType"
+import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { addDays, addMonths, endOfMonth, format, startOfMonth, startOfToday, subDays, subMonths } from "date-fns"
 import { ReportSelectionFilter } from "features/ReportSelectionFilter/ReportSelectionFilter"
+import React from "react"
 
 describe("ReportSelectionFilter", () => {
   beforeEach(() => {
     cy.intercept("GET", `**/bichard/api/reports*`).as("downloadApi")
   })
 
-  const selectReportType = (
-    type:
-      "Resolved exceptions and triggers" | "Bail conditions" | "Warrants" | "Domestic violence and vulnerable victims"
-  ) => {
+  const selectReportType = (type: PrettyReportType) => {
     cy.get('select[name="select-case-type"]').select(type)
+  }
+
+  type SetupProps = Partial<React.ComponentProps<typeof ReportSelectionFilter>>
+
+  function setUpComponentWithUser(
+    props: SetupProps = {},
+    featureFlags: Record<string, boolean> = {},
+    groups: UserGroup[] = []
+  ) {
+    const currentUser = { featureFlags: featureFlags, groups: groups } as unknown as DisplayFullUser
+
+    cy.mount(
+      <CurrentUserContext.Provider value={{ currentUser }}>
+        <ReportSelectionFilter {...props} />
+      </CurrentUserContext.Provider>
+    )
   }
 
   describe("DateRange", () => {
@@ -28,7 +46,7 @@ describe("ReportSelectionFilter", () => {
 
     describe("rendering", () => {
       it("renders the correct fields for the date range section", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         cy.get("div#date-range-section").should("exist")
         cy.get("div#date-range-section").find("h2").should("have.text", "Date range")
@@ -37,7 +55,7 @@ describe("ReportSelectionFilter", () => {
       })
 
       it("hides date range section when 'Clear filters' is clicked", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         cy.get("button#clear-filters").click()
         cy.get("div#date-range-section").find("div#report-selection-date-from").should("not.exist")
         cy.get("div#date-range-section").find("div#report-selection-date-to").should("not.exist")
@@ -46,20 +64,20 @@ describe("ReportSelectionFilter", () => {
 
     describe("date to disabled state", () => {
       it("is disabled before a date from is selected", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         dateToInput().should("be.disabled")
       })
 
       it("is enabled after a date from is selected", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         typeFromDate(subMonths(today, 1))
         dateToInput().should("not.be.disabled")
       })
 
       it("becomes disabled again when date from is cleared", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         typeFromDate(subMonths(today, 1))
         dateFromInput().clear()
@@ -69,7 +87,7 @@ describe("ReportSelectionFilter", () => {
 
     describe("date to auto-population", () => {
       it("autopopulates to end of month when date from is the 1st", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         const firstOfLastMonth = startOfMonth(subMonths(today, 1))
         typeFromDate(firstOfLastMonth)
@@ -77,14 +95,14 @@ describe("ReportSelectionFilter", () => {
       })
 
       it("autopopulates to today when date from is in the current month", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         typeFromDate(startOfMonth(today))
         dateToInput().should("have.value", fmt(today))
       })
 
       it("resets date to when date from is changed", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         typeFromDate(subMonths(today, 2))
         dateFromInput().clear()
@@ -95,7 +113,7 @@ describe("ReportSelectionFilter", () => {
 
     describe("valid submission", () => {
       it("calls the API when a valid date range is entered and 'Run report' is clicked when from date is today", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         typeFromDate(today)
         clickRunReport()
@@ -103,7 +121,7 @@ describe("ReportSelectionFilter", () => {
       })
 
       it("calls the API when a valid date range is entered and 'Run report' is clicked when from date is the start of 2 months ago", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         typeFromDate(startOfMonth(subMonths(today, 2)))
         clickRunReport()
@@ -113,7 +131,7 @@ describe("ReportSelectionFilter", () => {
 
     describe("validation: required fields", () => {
       it("displays 'This field is required' for date from when empty", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         clickRunReport()
         cy.get("div#report-selection-date-from")
@@ -123,7 +141,7 @@ describe("ReportSelectionFilter", () => {
       })
 
       it("displays 'This field is required' for date to when empty", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         clickRunReport()
         cy.get("div#report-selection-date-to").find("p.govuk-error-message").should("contain", "This field is required")
@@ -133,7 +151,7 @@ describe("ReportSelectionFilter", () => {
 
     describe("validation: future dates", () => {
       it("displays error when date from is in the future", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         typeFromDate(addDays(today, 1))
         clickRunReport()
@@ -144,7 +162,7 @@ describe("ReportSelectionFilter", () => {
       })
 
       it("displays error when date to is in the future", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         typeFromDate(subMonths(today, 2))
         typeToDate(addDays(today, 1))
@@ -158,7 +176,7 @@ describe("ReportSelectionFilter", () => {
 
     describe("validation: 12-month limit", () => {
       it("displays error when date from is more than 12 months ago", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         typeFromDate(subDays(earliest, 1))
         clickRunReport()
@@ -169,7 +187,7 @@ describe("ReportSelectionFilter", () => {
       })
 
       it("displays error when date to is more than 12 months ago", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         typeFromDate(earliest)
         typeToDate(subDays(earliest, 1))
@@ -183,7 +201,7 @@ describe("ReportSelectionFilter", () => {
 
     describe("validation: date order", () => {
       it("displays errors when date from is after date to", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         typeFromDate(today)
         typeToDate(subDays(today, 5))
@@ -200,7 +218,7 @@ describe("ReportSelectionFilter", () => {
 
     describe("validation: 1-month range limit", () => {
       it("displays error when date to exceeds 1 month after date from", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         const from = subMonths(today, 2)
         typeFromDate(from)
@@ -213,7 +231,7 @@ describe("ReportSelectionFilter", () => {
       })
 
       it("does not display an error when date to is exactly 1 month after date from", () => {
-        cy.mount(<ReportSelectionFilter />)
+        setUpComponentWithUser()
         selectWarrants()
         typeFromDate(subMonths(today, 2))
         clickRunReport()
@@ -225,7 +243,7 @@ describe("ReportSelectionFilter", () => {
 
   describe("ReportTypeDropdown", () => {
     it("renders the correct fields for report section", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
       cy.get("div#report-section").should("exist")
       cy.get("div#report-section").find("h2").should("have.text", "Reports")
       cy.get("div#report-section").find("label").should("have.text", "Select report")
@@ -233,25 +251,25 @@ describe("ReportSelectionFilter", () => {
     })
 
     it("clears report selection dropdown when 'Clear filters' is clicked", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
       selectReportType("Resolved exceptions and triggers")
       cy.get("button#clear-filters").click()
       cy.get('select[name="select-case-type"]').should("have.value", null)
     })
 
     it("'Run report' button is hidden when no report is selected", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
       cy.get("button#run-report").should("not.exist")
     })
 
     it("'Date from' and 'Date to' fields are hidden when no report is selected", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
       cy.get("#report-selection-date-from").should("not.exist")
       cy.get("#report-selection-date-to").should("not.exist")
     })
 
     it("'Date from' and 'Date to' fields are hidden when 'Clear filters' is clicked", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
       selectReportType("Resolved exceptions and triggers")
       cy.get("button#clear-filters").click()
       cy.get("#report-selection-date-from").should("not.exist")
@@ -259,12 +277,12 @@ describe("ReportSelectionFilter", () => {
     })
 
     it("exceptions/triggers checkboxes fields are hidden when no report is selected", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
       cy.get("#checkboxes-container").should("not.exist")
     })
 
     it("exceptions/triggers checkboxes fields are hidden when 'Clear filters' is clicked", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
       selectReportType("Resolved exceptions and triggers")
       cy.get("button#clear-filters").click()
       cy.get("#checkboxes-container").should("not.exist")
@@ -298,27 +316,27 @@ describe("ReportSelectionFilter", () => {
     }
 
     it("calls API when both checkboxes are selected and 'Run report' is clicked", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
       selectReportType("Resolved exceptions and triggers")
       apiCallCheck(true)
     })
 
     it("calls API when 'Triggers' checkbox is selected and 'Run report' is clicked", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
       selectReportType("Resolved exceptions and triggers")
       cy.get("div#include-section").find("input").eq(1).click()
       apiCallCheck(true)
     })
 
     it("calls API when 'Exceptions' checkbox is selected and 'Run report' is clicked", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
       selectReportType("Resolved exceptions and triggers")
       cy.get("div#include-section").find("input").eq(0).click()
       apiCallCheck(true)
     })
 
     it("renders the correct fields for include/checkboxes section when 'Resolved exceptions and triggers' is selected", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
 
       selectReportType("Resolved exceptions and triggers")
 
@@ -342,7 +360,7 @@ describe("ReportSelectionFilter", () => {
     })
 
     it("hides the checkboxes when something other than 'Resolved exceptions and triggers' is selected in the reports dropdown", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
       checkboxesShouldNotExist()
 
       selectReportType("Bail conditions")
@@ -356,7 +374,7 @@ describe("ReportSelectionFilter", () => {
     })
 
     it("Triggers and Exceptions checkboxes disappear when 'Clear filters' is clicked", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
 
       selectReportType("Resolved exceptions and triggers")
       cy.get("div#include-section").find("input").eq(0).click()
@@ -366,14 +384,14 @@ describe("ReportSelectionFilter", () => {
     })
 
     it("'At least one option must be selected' message is displayed when both checkboxes are unchecked and 'Run report' is clicked", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
 
       checkboxesMessageShouldExist()
       apiCallCheck(false)
     })
 
     it("'At least one option must be selected' message is removed when 'Triggers' checkbox is checked and 'Run report' is clicked", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
 
       checkboxesMessageShouldExist()
       apiCallCheck(false)
@@ -387,7 +405,7 @@ describe("ReportSelectionFilter", () => {
     })
 
     it("'At least one option must be selected' message is removed when 'Exceptions' checkbox is checked and 'Run report' is clicked", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
 
       checkboxesMessageShouldExist()
       apiCallCheck(false)
@@ -399,7 +417,7 @@ describe("ReportSelectionFilter", () => {
     })
 
     it("'At least one option must be selected' message is removed when both checkboxes are checked and 'Run report' is clicked", () => {
-      cy.mount(<ReportSelectionFilter />)
+      setUpComponentWithUser()
 
       checkboxesMessageShouldExist()
       apiCallCheck(false)
@@ -421,21 +439,21 @@ describe("ReportSelectionFilter", () => {
     ]
 
     it("Does not display resolved by section if canUseTriggerAndExceptionQualityAuditing is false", () => {
-      cy.mount(<ReportSelectionFilter canUseTriggerAndExceptionQualityAuditing={false} />)
+      setUpComponentWithUser({ canUseTriggerAndExceptionQualityAuditing: false })
       selectReportType("Resolved exceptions and triggers")
 
       cy.get("div#resolved-by-section").should("not.exist")
     })
 
     it("Displays resolved by section if canUseTriggerAndExceptionQualityAuditing is true", () => {
-      cy.mount(<ReportSelectionFilter canUseTriggerAndExceptionQualityAuditing={true} />)
+      setUpComponentWithUser({ canUseTriggerAndExceptionQualityAuditing: true })
       selectReportType("Resolved exceptions and triggers")
 
       cy.get("div#resolved-by-section").should("exist")
     })
 
     it("Displays field required error message if no users are selected and run report is clicked", () => {
-      cy.mount(<ReportSelectionFilter canUseTriggerAndExceptionQualityAuditing={true} resolvedBy={mockResolvers} />)
+      setUpComponentWithUser({ canUseTriggerAndExceptionQualityAuditing: true, resolvedBy: mockResolvers })
       selectReportType("Resolved exceptions and triggers")
 
       cy.get("button#run-report").click()
@@ -443,12 +461,44 @@ describe("ReportSelectionFilter", () => {
     })
 
     it("Field required error message is removed after a user is selected", () => {
-      cy.mount(<ReportSelectionFilter canUseTriggerAndExceptionQualityAuditing={true} resolvedBy={mockResolvers} />)
+      setUpComponentWithUser({ canUseTriggerAndExceptionQualityAuditing: true, resolvedBy: mockResolvers })
       selectReportType("Resolved exceptions and triggers")
 
       cy.get("button#run-report").click()
       cy.get("div#resolved-by-section").find("input").eq(0).click()
       cy.get("div#resolved-by-section").find("p.govuk-error-message").should("not.exist", "This field is required")
+    })
+  })
+
+  describe("canSeeCommunitySentenceReport feature flag", () => {
+    const communitySentenceOption: PrettyReportType = "Community sentence"
+
+    it("does not display community sentence option when user is not a supervisor and does not have the flag", () => {
+      setUpComponentWithUser()
+
+      cy.contains('select[name="select-case-type"] option', communitySentenceOption).should("not.exist")
+      cy.get('select[name="select-case-type"] option:not([disabled])').should("have.length", 8)
+    })
+
+    it("does not display community sentence option when user is not a supervisor but has the flag", () => {
+      setUpComponentWithUser({}, { communitySentenceReportEnabled: true })
+
+      cy.contains('select[name="select-case-type"] option', communitySentenceOption).should("not.exist")
+      cy.get('select[name="select-case-type"] option:not([disabled])').should("have.length", 8)
+    })
+
+    it("does not display community sentence option when user is a supervisor but does not have the flag", () => {
+      setUpComponentWithUser({}, {}, [UserGroup.Supervisor])
+
+      cy.contains('select[name="select-case-type"] option', communitySentenceOption).should("not.exist")
+      cy.get('select[name="select-case-type"] option:not([disabled])').should("have.length", 8)
+    })
+
+    it("displays community sentence option when user is a supervisor and has the flag", () => {
+      setUpComponentWithUser({}, { communitySentenceReportEnabled: true }, [UserGroup.Supervisor])
+
+      cy.contains('select[name="select-case-type"] option', communitySentenceOption).should("exist")
+      cy.get('select[name="select-case-type"] option:not([disabled])').should("have.length", 9)
     })
   })
 })

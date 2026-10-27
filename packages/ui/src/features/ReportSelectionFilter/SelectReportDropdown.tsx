@@ -1,8 +1,10 @@
+import { useCurrentUser } from "@/context/CurrentUserContext"
 import { AUTOMATED_REPORT_TYPE_MAP, AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { FormGroup } from "components/FormGroup"
 import { Select } from "components/Select"
 import { SyntheticEvent } from "react"
+import { canSeeCommunitySentenceReport } from "../flags/canSeeCommunitySentenceReport"
 
 interface SelectReportDropdownProps {
   handleChange: (event: SyntheticEvent<HTMLSelectElement>) => void
@@ -11,7 +13,13 @@ interface SelectReportDropdownProps {
 }
 
 export const SelectReportDropdown: React.FC<SelectReportDropdownProps> = ({ handleChange, reportType, error }) => {
-  const dropdownOptions = [...Object.entries(REPORT_TYPE_MAP), ...Object.entries(AUTOMATED_REPORT_TYPE_MAP)]
+  const currentUser = useCurrentUser()
+  const dropdownOptions = [
+    ...Object.entries(REPORT_TYPE_MAP).filter(
+      ([key]) => key !== "community sentence" || canSeeCommunitySentenceReport(currentUser)
+    ),
+    ...Object.entries(AUTOMATED_REPORT_TYPE_MAP)
+  ]
 
   return (
     <>
