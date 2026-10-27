@@ -89,12 +89,21 @@ describe("TriggerGroups", () => {
       )
     })
 
-    it("doesn't show any checkbox", () => {
-      cy.get("[type=checkbox]").should("have.length", 0)
+    it("doesn't show any checkboxes under the main Trigger Group heading", () => {
+      cy.get("input#bails").should("not.exist")
+      cy.get("input#results").should("not.exist")
+      cy.get("input#custody").should("not.exist")
+      cy.get("input#orders").should("not.exist")
+      cy.get("input#warrants").should("not.exist")
     })
 
-    it("does show message", () => {
-      cy.get(".govuk-body").should("have.text", "No trigger groups")
+    it("shows the checkboxes under the Excluded heading", () => {
+      cy.get("fieldset").contains("Excluded").click()
+      cy.get("input#excluded-bails").should("exist")
+      cy.get("input#excluded-results").should("exist")
+      cy.get("input#excluded-custody").should("exist")
+      cy.get("input#excluded-orders").should("exist")
+      cy.get("input#excluded-warrants").should("exist")
     })
   })
 
@@ -145,13 +154,14 @@ describe("TriggerGroups", () => {
       )
     })
 
-    it("does only show Warrants checkbox", () => {
+    it("only shows the Warrants checkbox under the main Trigger Group heading", () => {
       cy.get("input#warrants[type=checkbox]").should("have.length", 1)
       cy.get("label[for=warrants]").contains("Warrants")
     })
 
-    it("doesn't show message", () => {
-      cy.get(".govuk-body").should("have.length", 0)
+    it("shows all checkboxes except Warrants under the Excluded heading", () => {
+      cy.get("fieldset").contains("Excluded").click()
+      cy.get("#excluded-panel > div").should("have.length", 4)
     })
   })
 })

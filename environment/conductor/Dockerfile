@@ -4,7 +4,7 @@ ARG CONDUCTOR_VERSION="v3.32.1"
 # ===========================================================================================================
 # 0. Source stage
 # ===========================================================================================================
-FROM alpine/git@sha256:ce84fd6a057b4dc5cf5009da2dd832f1c6d096c1984bf50496cf3c256402264d AS src
+FROM alpine/git@sha256:03228d7ded483b0b3e55e1de7fa660d70d3e1bb432fa7021d29e192640de11aa AS src
 ARG CONDUCTOR_VERSION
 
 RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor
@@ -12,7 +12,7 @@ RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss
 # ===========================================================================================================
 # 1. UI Builder stage
 # ===========================================================================================================
-FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS ui-builder
+FROM node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f AS ui-builder
 
 COPY --from=src /conductor/ui /conductor/ui
 
