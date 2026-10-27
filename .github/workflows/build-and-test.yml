@@ -416,7 +416,7 @@ jobs:
 
       - name: Upload Timings
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # 7.0.2
-        if: always() # github.ref == 'refs/heads/main' &&
+        if: always() # github.ref == 'refs/heads/main' && always()
         with:
           name: user-service-e2e-test-timings-${{ matrix.container }}
           path: packages/user-service/cypress/timings-*.json
@@ -467,7 +467,6 @@ jobs:
       - name: Save Test Timings
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         #if: github.ref == 'refs/heads/main' && always()
-        ç
         with:
           path: timings/timings.json
           key: cypress-timing-main-${{ github.sha }}
