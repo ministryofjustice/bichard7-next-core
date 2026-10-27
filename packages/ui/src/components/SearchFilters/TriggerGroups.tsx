@@ -19,16 +19,17 @@ interface TriggerGroupProps {
 
 const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): React.ReactNode => {
   const currentUser = useCurrentUser()
-  const excludedTriggers = allExcludedTriggers(currentUser, forceExcludedTriggers)
+  const excludedTriggersForForce = allExcludedTriggers(currentUser, forceExcludedTriggers)
+  const excludedTriggersForUser = currentUser.excludedTriggers
 
   const activeTriggerGroups: Record<string, string[]> = {}
   const excludedTriggerGroups: Record<string, string[]> = {}
 
   Object.keys(GroupedTriggerCodes).forEach((key) => {
-    activeTriggerGroups[key] = allGroupedTriggers(key, excludedTriggers)
+    activeTriggerGroups[key] = allGroupedTriggers(key, excludedTriggersForForce)
 
     const allTriggersForGroup = (GroupedTriggerCodes as Record<string, string[]>)[key] || []
-    excludedTriggerGroups[key] = excludedTriggers.filter((trigger) => allTriggersForGroup.includes(trigger))
+    excludedTriggerGroups[key] = excludedTriggersForUser.filter((trigger) => allTriggersForGroup.includes(trigger))
   })
 
   return (
@@ -53,7 +54,7 @@ const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): React.Reac
           )
         })}
 
-        {excludedTriggers.length > 0 && (
+        {excludedTriggersForUser.length > 0 && (
           <ExpandingFilters filterName={"Excluded"} openByDefault={false}>
             {Object.keys(excludedTriggerGroups).map((key) => {
               if (excludedTriggerGroups[key].length === 0) {
