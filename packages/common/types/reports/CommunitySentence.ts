@@ -8,6 +8,7 @@ export const CommunitySentenceReportDtoSchema = z.object({
   dateOfSentence: z.string(),
   defendantName: z.string().nullish(),
   domesticViolenceFlag: z.string(),
+  errorId: z.number(),
   expiryOfSentence: z.string(),
   homeAddress: z.string(),
   offenceAddress: z.string(),

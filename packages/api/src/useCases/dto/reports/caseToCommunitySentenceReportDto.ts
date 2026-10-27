@@ -30,6 +30,7 @@ export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Com
     dateOfBirth: dateOfBirth(aho),
     defendantName: row.defendant_name ?? null,
     domesticViolenceFlag: getYesOrNo(row.domestic_violence_flag),
+    errorId: row.error_id,
     homeAddress: defendantAddress(aho),
     pncId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier ?? "",
     receivedDate: formatDate(row.msg_received_ts, false, true)
