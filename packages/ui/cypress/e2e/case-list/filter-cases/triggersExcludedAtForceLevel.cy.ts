@@ -16,7 +16,7 @@ describe("Triggers excluded at force level", () => {
     cy.get("input#reasonCodes").should("value", "PR10 PR19 PR30")
   })
 
-  it("should not show excluded triggers in trigger groups and reason codes in the reason codes input when we click on results", () => {
+  it("should not show excluded triggers in trigger groups and reason codes in the reason codes input when we click on Results", () => {
     cy.get("input#results").should("exist")
     cy.get("input#results").click()
 
@@ -28,7 +28,7 @@ describe("Triggers excluded at force level", () => {
     cy.get("input#reasonCodes").should("value", "PR20")
   })
 
-  it("should not show excluded triggers in trigger groups and reason codes in the reason codes input when we click on custody", () => {
+  it("should not show excluded triggers in trigger groups and reason codes in the reason codes input when we click on Custody", () => {
     cy.get("input#custody").should("not.exist")
   })
 
@@ -52,5 +52,14 @@ describe("Triggers excluded at force level", () => {
     cy.get(".govuk-checkboxes__item #trpr0012 + label").contains("PR12 - Warrant withdrawn").should("exist")
 
     cy.get("input#reasonCodes").should("value", "PR02 PR12")
+  })
+
+  it("should not show Excluded section for force level exclusions", () => {
+    cy.get("fieldset").contains("Excluded").should("not.exist")
+    cy.get("input#excluded-bails").should("not.exist")
+    cy.get("input#excluded-results").should("not.exist")
+    cy.get("input#excluded-custody").should("not.exist")
+    cy.get("input#excluded-orders").should("not.exist")
+    cy.get("input#excluded-warrants").should("not.exist")
   })
 })
