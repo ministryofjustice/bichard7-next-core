@@ -46,7 +46,7 @@ describe("community sentence report e2e", () => {
     await helper.postgres.close()
   })
 
-  it.only("gets community sentence report", async () => {
+  it("gets community sentence report", async () => {
     const parsedAho: Result<AnnotatedHearingOutcome> = parseAhoXml(testAhoXml)
 
     if (isError(parsedAho)) {
