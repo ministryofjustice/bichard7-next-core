@@ -3,7 +3,7 @@ name: Test Help pages
 on:
   workflow_dispatch:
   push:
-    paths: ["packages/help/**"]
+    paths: ["packages/help/**", ".github/workflows/test-help-pages.yml"]
 
 jobs:
   test:
