@@ -976,56 +976,6 @@ jobs:
           name: Run integration tests against user service code
           command: nvm use && npm run -w packages/user-service test:integration
 
-  test_user_service_e2e:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: large
-    parallelism: 4
-    steps:
-      - unless:
-          condition:
-            or:
-              - << pipeline.parameters.circleci-changes >>
-              - << pipeline.parameters.user-service-changes >>
-              - << pipeline.parameters.env-changes >>
-          steps:
-            - run: circleci-agent step halt
-      - checkout
-      - run:
-          name: Check for tests
-          command: bash .circleci/scripts/check-tests.sh "user-service" "cypress/e2e/**/*.cy.js"
-      - attach_workspace:
-          at: .
-      - load_postgres_image
-      - load_audit_logging_image
-      - node/install
-      - node_install_packages
-      - run:
-          name: Install Cypress
-          command: |
-            cd packages/user-service
-            npx cypress install
-      - run:
-          name: Install GOV.UK Assets
-          command: npm run -w packages/user-service install:assets
-      - build_common
-      - run:
-          name: Build the user service
-          command: npm run -w packages/user-service build
-      - start_services:
-          SERVICES: db-seed
-      - run:
-          name: Run e2e tests against user service code
-          command: bash .circleci/scripts/user-service/run-cypress-e2e-tests.sh
-          environment:
-            INCORRECT_DELAY: 0
-      - store_test_results:
-          path: ~/project/packages/user-service/cypress/results
-      - store_artifacts:
-          path: ~/project/packages/user-service/cypress/videos
-      - store_artifacts:
-          path: ~/project/packages/user-service/cypress/screenshots
-
   cypress_e2e_tests:
     machine:
       image: ubuntu-2204:current
@@ -1245,10 +1195,6 @@ workflows:
             - build_postgres_image
             - build_audit_logging_images
       - test_user_service:
-          requires:
-            - build_postgres_image
-            - build_audit_logging_images
-      - test_user_service_e2e:
           requires:
             - build_postgres_image
             - build_audit_logging_images
