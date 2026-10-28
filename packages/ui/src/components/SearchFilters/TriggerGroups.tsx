@@ -1,4 +1,5 @@
 import ExpandingFilters from "@/features/CourtCaseFilters/ExpandingFilters"
+import getLongTriggerCode from "@/services/entities/transformers/getLongTriggerCode"
 import forceExcludedTriggers from "@moj-bichard7-developers/bichard7-next-data/dist/data/excluded-trigger-config.json"
 import GroupedTriggerCodes from "@moj-bichard7-developers/bichard7-next-data/dist/types/GroupedTriggerCodes"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
@@ -20,7 +21,7 @@ interface TriggerGroupProps {
 const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): React.ReactNode => {
   const currentUser = useCurrentUser()
   const excludedTriggers = allExcludedTriggers(currentUser, forceExcludedTriggers)
-  const excludedTriggersForUser = currentUser.excludedTriggers
+  const excludedTriggersForUser: string[] = [] //  currentUser.excludedTriggers - disable this until ready for go-ahead
 
   const activeTriggerGroups: Record<string, string[]> = {}
   const excludedTriggerGroupsForUser: Record<string, string[]> = {}
@@ -33,6 +34,9 @@ const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): React.Reac
       allTriggersForGroup.includes(trigger)
     )
   })
+
+  const longTriggerCodes = new Set(reasonCodes.map((shortCode) => getLongTriggerCode(shortCode.value)))
+  const hasSelectedExcludedTrigger = excludedTriggersForUser.some((trigger) => longTriggerCodes.has(trigger))
 
   return (
     <ScrollableFieldset className="govuk-fieldset trigger-groups-fieldset">
@@ -57,7 +61,7 @@ const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): React.Reac
         })}
 
         {excludedTriggersForUser.length > 0 && (
-          <ExpandingFilters filterName={"Excluded"} openByDefault={false}>
+          <ExpandingFilters filterName={"Excluded"} openByDefault={hasSelectedExcludedTrigger}>
             {Object.keys(excludedTriggerGroupsForUser).map((key) => {
               if (excludedTriggerGroupsForUser[key].length === 0) {
                 return
