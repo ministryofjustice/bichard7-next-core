@@ -227,6 +227,16 @@ export const reallocateCaseToForce = async function (this: Bichard, force: strin
   await this.browser.clickAndWait("#Reallocate")
 }
 
+export const reallocateCaseToMet = async function (this: Bichard) {
+  await reallocateCaseToForce.call(this, "Metropolitan")
+}
+
+export const cannotReallocateCase = async function (this: Bichard) {
+  const [reallocateBtn] = await this.browser.page.$$("xpath/.//button[contains(., 'Reallocate Case')]")
+
+  expect(reallocateBtn).toBeFalsy()
+}
+
 export const canSeeContentInTable = async function (this: Bichard, value: string) {
   let newValue = value
   if (value === "(Submitted)" || value === "(Resolved)") {
@@ -249,7 +259,7 @@ export const canSeeContentInTableForThis = async function (this: Bichard, value:
   expect(found).toBeTruthy()
 }
 
-export const cannotSeeTrigger = async function (this: Bichard, value: string) {
+export const cannotSeeValue = async function (this: Bichard, value: string) {
   await waitForRecord(null, this.browser.page, 2)
   const noCasesMessageMatch = await this.browser.page.$$(
     `xpath/.//table[@class="cases-list"]//tbody//*[contains(text(),"${value}")]`
@@ -843,4 +853,32 @@ export const sameException = async function (this: Bichard, exception: string) {
   )
 
   expect(element).not.toBeUndefined()
+}
+
+export const exceptionIsEditable = async function (this: Bichard) {
+  const editException = await this.browser.page.$("input[name='asn']")
+
+  expect(Boolean(editException)).toBe(true)
+}
+
+export const exceptionIsNotEditable = async function (this: Bichard) {
+  const editException = await this.browser.page.$("input[name='asn']")
+
+  expect(Boolean(editException)).toBe(false)
+}
+
+const isTabVisible = async function (page: Page, sectionName: string) {
+  const tab = await page.$(`#${sectionName.toLowerCase()}-tab`)
+
+  return Boolean(tab)
+}
+
+export const tabIsVisible = async function (this: Bichard, sectionName: string) {
+  const visible = await isTabVisible(this.browser.page, sectionName)
+  expect(visible).toBe(true)
+}
+
+export const tabIsNotVisible = async function (this: Bichard, sectionName: string) {
+  const visible = await isTabVisible(this.browser.page, sectionName)
+  expect(visible).toBe(false)
 }
