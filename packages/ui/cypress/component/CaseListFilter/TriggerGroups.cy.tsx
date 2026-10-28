@@ -97,13 +97,8 @@ describe("TriggerGroups", () => {
       cy.get("input#warrants").should("not.exist")
     })
 
-    it("shows the checkboxes under the Excluded heading", () => {
-      cy.get("fieldset").contains("Excluded").click()
-      cy.get("input#excluded-bails").should("exist")
-      cy.get("input#excluded-results").should("exist")
-      cy.get("input#excluded-custody").should("exist")
-      cy.get("input#excluded-orders").should("exist")
-      cy.get("input#excluded-warrants").should("exist")
+    it("doesn't shows the checkboxes under the Excluded heading, as disabled for now", () => {
+      cy.get("fieldset").should("not.contain", "Excluded")
     })
   })
 
@@ -160,8 +155,7 @@ describe("TriggerGroups", () => {
     })
 
     it("shows all checkboxes except Warrants under the Excluded heading", () => {
-      cy.get("fieldset").contains("Excluded").click()
-      cy.get("#excluded-panel > div").should("have.length", 4)
+      cy.get("fieldset").should("not.contain", "Excluded")
     })
   })
 })

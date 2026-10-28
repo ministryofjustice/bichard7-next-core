@@ -11,7 +11,7 @@ const getLongTriggerCode = (triggerCode?: null | string): null | string => {
   }
 
   const triggerNumber = parseInt(triggerCode.substring(2), 10)
-  if (isNaN(triggerNumber)) {
+  if (Number.isNaN(triggerNumber)) {
     return triggerCode
   }
 
