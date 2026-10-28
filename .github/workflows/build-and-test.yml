@@ -389,9 +389,9 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: packages/user-service/cypress/timings.json
-          key: cypress-timing-user-service-${{ github.ref_name }}-${{ github.run_id }}
+          key: cypress-timing-user-service-e2e-${{ github.ref_name }}-${{ github.run_id }}
           restore-keys: |
-            cypress-timing-main-
+            cypress-timing-user-service-e2e-main-
 
       - name: Run Cypress e2e tests
         working-directory: packages/user-service
@@ -416,7 +416,7 @@ jobs:
 
       - name: Upload Timings
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # 7.0.2
-        if: github.ref == 'refs/heads/main' && always()
+        if: always() && github.event_name == 'merge_group'
         with:
           name: user-service-e2e-test-timings-${{ matrix.container }}
           path: packages/user-service/cypress/timings-*.json
@@ -449,22 +449,3 @@ jobs:
           path: '**/*.xml'
           reporter: java-junit
           fail-on-error: true
-
-      - name: Download Test Timings Artifacts
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        if: github.ref == 'refs/heads/main' && always()
-        with:
-          path: test-timings
-          pattern: user-service-e2e-test-timings-*
-          merge-multiple: true
-
-      - name: Merge Test Timings
-        if: github.ref == 'refs/heads/main' && always()
-        run: node ./.github/scripts/merge-timings.mjs test-timings timings/timings.json
-
-      - name: Save Test Timings
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        if: github.ref == 'refs/heads/main' && always()
-        with:
-          path: timings/timings.json
-          key: cypress-timing-main-${{ github.sha }}

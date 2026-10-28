@@ -1,0 +1,72 @@
+name: Update Test Timings
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: read
+
+    outputs:
+      user_service: ${{ fromJSON(steps.evaluate.outputs.filters).user_service }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Evaluate Run Condition
+        id: evaluate
+        uses: ./.github/actions/path-filter
+        with:
+          filters: |
+            user_service:
+              - '.github/**'
+              - '.nvmrc'
+              - 'environment/**'
+              - 'packages/user-service/**'
+              - 'packages/common/**'
+
+  update_user_service_e2e_timings:
+    name: Update User Service e2e Timings
+    needs: [changes]
+    if: needs.changes.outputs.user_service == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Fetch artifacts from the Merge Queue run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Locate the merge_group run that tested this exact commit
+          MERGE_RUN_ID=$(gh run list \
+            --commit "${{ github.sha }}" \
+            --event merge_group \
+            --status success \
+            --json databaseId -q '.[0].databaseId')
+          
+          if [ -z "$MERGE_RUN_ID" ]; then
+            echo "No successful merge_group run found for commit ${{ github.sha }}. Skipping."
+            exit 0
+          fi
+          
+          echo "Downloading timings from merge_group run: $MERGE_RUN_ID"
+          gh run download "$MERGE_RUN_ID" --dir test-timings -p "user-service-e2e-test-timings-*"
+
+      - name: Merge Test Timings
+        run: node ./.github/scripts/merge-timings.mjs test-timings timings/timings.json
+
+      - name: Save Test Timings
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        if: github.ref == 'refs/heads/main' && always()
+        with:
+          path: timings/timings.json
+          key: cypress-timing-user-service-e2e-main-${{ github.sha }}
