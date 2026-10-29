@@ -480,7 +480,7 @@ describe("ReportSelectionFilter", () => {
       cy.get('select[name="select-case-type"] option:not([disabled])').should("have.length", 8)
     })
 
-    it("does not display community sentence option when user is not a supervisor but has the flag", () => {
+    it("does not display community sentence option when user is not a supervisor but flag is true", () => {
       setUpComponentWithUser({}, { communitySentenceReportEnabled: true })
 
       cy.contains('select[name="select-case-type"] option', communitySentenceOption).should("not.exist")
@@ -489,6 +489,20 @@ describe("ReportSelectionFilter", () => {
 
     it("does not display community sentence option when user is a supervisor but does not have the flag", () => {
       setUpComponentWithUser({}, {}, [UserGroup.Supervisor])
+
+      cy.contains('select[name="select-case-type"] option', communitySentenceOption).should("not.exist")
+      cy.get('select[name="select-case-type"] option:not([disabled])').should("have.length", 8)
+    })
+
+    it("does not display community sentence option when user is a supervisor but flag is false", () => {
+      setUpComponentWithUser({}, { communitySentenceReportEnabled: false }, [UserGroup.Supervisor])
+
+      cy.contains('select[name="select-case-type"] option', communitySentenceOption).should("not.exist")
+      cy.get('select[name="select-case-type"] option:not([disabled])').should("have.length", 8)
+    })
+
+    it("does not display community sentence option when user is not a supervisor and flag is false", () => {
+      setUpComponentWithUser({}, { communitySentenceReportEnabled: false }, [])
 
       cy.contains('select[name="select-case-type"] option', communitySentenceOption).should("not.exist")
       cy.get('select[name="select-case-type"] option:not([disabled])').should("have.length", 8)
