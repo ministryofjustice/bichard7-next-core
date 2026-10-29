@@ -58,20 +58,34 @@ const extractErrorMessages = (event: ApiAuditLogEvent) => {
   return errors
 }
 
-const extractCodesFromAttributes = (attributes: AuditLogEventAttributes, codeRegex: RegExp): string[] => {
+const extractCodesFromAttributes = (
+  attributes: AuditLogEventAttributes,
+  codeRegex: RegExp
+): { code: string; offenceIndex?: string }[] => {
   return Object.entries(attributes)
     .filter(([key]) => codeRegex.exec(key))
-    .map(([_, value]) => new RegExp(/(?<code>TRP[RS]\d{4}).*/).exec(value.toString())?.groups?.code ?? value.toString())
-    .sort()
+    .map(([_, value]) => {
+      const result = new RegExp(/(?<code>(TRP[RS]\d{4})|(HO\d{6}))(?:\s*\((?<offence>\d+)\))?/).exec(
+        value.toString()
+      )?.groups
+
+      return result ? { code: result.code, offenceIndex: result.offence } : { code: value.toString() }
+    })
+    .sort((a, b) => (`${a.code}${a.offenceIndex ?? ""}` > `${b.code}${b.offenceIndex ?? ""}` ? 1 : -1))
 }
 
 const extractTriggersFromAttributes = (attributes: AuditLogEventAttributes) => {
   const triggerCodes = extractCodesFromAttributes(attributes, /Trigger \d+ Details/)
 
   return triggerCodes.reduce(
-    (acc, triggerCode) => {
+    (acc, { code: triggerCode, offenceIndex }) => {
+      let triggerCodeKey = triggerCode
+      if (offenceIndex) {
+        triggerCodeKey += ` (Offence #${offenceIndex})`
+      }
+
       const trigger = triggerDefinitions.find(({ code }) => code === triggerCode)
-      acc[triggerCode] = trigger?.description ?? "⚠️ Definition missing from standing data"
+      acc[triggerCodeKey] = trigger?.description ?? "⚠️ Definition missing from standing data"
 
       return acc
     },
@@ -84,8 +98,8 @@ const extractExceptionsFromAttributes = (attributes: AuditLogEventAttributes) =>
 
   return exceptionCodes.reduce(
     (acc, exceptionCode) => {
-      const exception = exceptionDefinitions.find(({ code }) => code === exceptionCode)
-      acc[exceptionCode] = exception
+      const exception = exceptionDefinitions.find(({ code }) => code === exceptionCode.code)
+      acc[exceptionCode.code] = exception
         ? {
             Description: exception.shortDescription,
             Cause: exception.cause
