@@ -6,7 +6,6 @@ import type { User } from "@moj-bichard7/common/types/User"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
-import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
 import { addDays, startOfDay, subDays } from "date-fns"
@@ -71,14 +70,12 @@ describe("communitySentenceReport - Integration", () => {
 
     await createTriggers(database, cases[0].errorId, [
       {
-        status: ResolutionStatusNumber.Unresolved,
         triggerCode: TriggerCode.TRPR0031
       }
     ])
 
     await createTriggers(database, cases[1].errorId, [
       {
-        status: ResolutionStatusNumber.Unresolved,
         triggerCode: TriggerCode.TRPR0002
       }
     ])
@@ -128,7 +125,6 @@ describe("communitySentenceReport - Integration", () => {
     for (const c of cases) {
       await createTriggers(database, c.errorId, [
         {
-          status: ResolutionStatusNumber.Unresolved,
           triggerCode: TriggerCode.TRPR0031
         }
       ])
@@ -170,18 +166,15 @@ describe("communitySentenceReport - Integration", () => {
 
     await createTriggers(database, cases[0].errorId, [
       {
-        status: ResolutionStatusNumber.Unresolved,
         triggerCode: TriggerCode.TRPR0031
       },
       {
-        status: ResolutionStatusNumber.Unresolved,
         triggerCode: TriggerCode.TRPR0024
       }
     ])
 
     await createTriggers(database, cases[1].errorId, [
       {
-        status: ResolutionStatusNumber.Unresolved,
         triggerCode: TriggerCode.TRPR0031
       }
     ])
@@ -228,7 +221,6 @@ describe("communitySentenceReport - Integration", () => {
     for (const c of cases) {
       await createTriggers(database, c.errorId, [
         {
-          status: ResolutionStatusNumber.Unresolved,
           triggerCode: TriggerCode.TRPR0031
         }
       ])

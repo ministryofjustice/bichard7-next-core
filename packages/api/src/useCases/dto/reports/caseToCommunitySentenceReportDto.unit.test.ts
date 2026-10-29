@@ -36,7 +36,7 @@ describe("caseToCommunitySentenceDto", () => {
         Case: {
           HearingDefendant: {
             Offence: offences,
-            PNCIdentifier: pncId === undefined ? "2023/1234567A" : (pncId ?? undefined)
+            PNCIdentifier: pncId === undefined ? "2023/1234567A" : pncId
           }
         }
       }
