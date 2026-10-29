@@ -67,11 +67,12 @@ COPY files/openssl.cnf /tmp/openssl.cnf
 COPY files/nginx.repo /etc/yum.repos.d/nginx.repo
 
 RUN mkdir -p /certs /var/log/supervisor && \
-    yum install -y --setopt=install_weak_deps=False \
+    yum install -y --setopt=install_weak_deps=False --releasever=latest \
       nginx \
       httpd-tools \
       gettext \
-      java-21-amazon-corretto-21.0.13.0.2-1.amzn2023 && \
+      ca-certificates \
+      java-21-amazon-corretto-21.0.13* && \
     yum clean all && \
     rm -rf /var/cache/yum && \
     pip install --no-cache-dir --only-binary=:all: sußpervisor==4.3.0 && \
