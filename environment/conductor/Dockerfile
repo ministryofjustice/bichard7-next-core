@@ -26,7 +26,7 @@ RUN npm install --legacy-peer-deps --ignore-scripts --no-audit && \
 # ===========================================================================================================
 # 2. Java Builder stage
 # ===========================================================================================================
-FROM eclipse-temurin:21-jdk-jammy@sha256:742daacb9316be4b6fc60258f6e4ac2a11882f6c597373c92290a57bfad0d2e0 AS builder
+FROM eclipse-temurin:21-jdk-jammy@sha256:4e61d0b3471137e239397789661f6adeaf8db9adcfae45916b22f628c8a32dc0 AS builder
 
 COPY --from=src /conductor /conductor
 
@@ -67,7 +67,12 @@ COPY files/openssl.cnf /tmp/openssl.cnf
 COPY files/nginx.repo /etc/yum.repos.d/nginx.repo
 
 RUN mkdir -p /certs /var/log/supervisor && \
-    yum install -y --setopt=install_weak_deps=False nginx httpd-tools gettext java-21-amazon-corretto && \
+    yum install -y --setopt=install_weak_deps=False --releasever=latest \
+      nginx \
+      httpd-tools \
+      gettext \
+      ca-certificates \
+      java-21-amazon-corretto-21.0.13* && \
     yum clean all && \
     rm -rf /var/cache/yum && \
     pip install --no-cache-dir --only-binary=:all: supervisor==4.3.0 && \
