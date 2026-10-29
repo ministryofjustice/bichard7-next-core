@@ -8,7 +8,9 @@ const stringResultCodes = TRPR0031_RESULT_CODES.map(String) as [string, ...strin
 export const CommunitySentenceReportQuerySchema = z
   .object({
     ...dateRangeShape,
-    resultCodes: z.array(z.enum(stringResultCodes)).optional()
+    resultCodes: z
+      .preprocess((val) => (typeof val === "string" ? [val] : val), z.array(z.enum(stringResultCodes)))
+      .optional()
   })
   .superRefine(validateDateRange)
 
