@@ -51,7 +51,7 @@ runs:
         fi
 
         # Get raw changed file list
-        git diff --name-only --diff-filter=ACMRT "$BASE_SHA" "$HEAD_SHA" > .all_changed.txt || true
+        git diff --name-only --diff-filter=ACMRT "$BASE_SHA"..."$HEAD_SHA" > .all_changed.txt || true
 
         # Filter out ignored files and workflow files
         IGNORE_FILES="${{ inputs.ignore-files }}"
