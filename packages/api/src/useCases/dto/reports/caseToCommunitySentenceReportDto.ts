@@ -19,7 +19,10 @@ import { dateOfBirth } from "../../cases/reports/utils/dateOfBirth"
 import { defendantAddress } from "../../cases/reports/utils/defendantAddress"
 import { formatDate } from "../../cases/reports/utils/formatDate"
 
-export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): CommunitySentenceReportDto[] {
+export function caseToCommunitySentenceDto(
+  row: CommunitySentenceRowReport,
+  resultCodes: string[] = []
+): CommunitySentenceReportDto[] {
   const aho = parseHearingOutcome(row.annotated_msg)
 
   if (isError(aho)) {
@@ -49,9 +52,12 @@ export function caseToCommunitySentenceDto(row: CommunitySentenceRowReport): Com
       offenceTitle: offence.OffenceTitle ?? ""
     }
 
-    const filtered = offence.Result.filter((result) => TRPR0031_RESULT_CODES.includes(result.CJSresultCode))
+    const targetResultCodes = resultCodes?.length ? resultCodes : TRPR0031_RESULT_CODES
+    const validResultCodeSet = new Set(targetResultCodes.map(String))
 
-    return filtered.map((result) => {
+    const matchingResults = offence.Result.filter((result) => validResultCodeSet.has(String(result.CJSresultCode)))
+
+    return matchingResults.map((result) => {
       const resultLevelDetails = {
         ...offenceLevelDetails,
         plea: getPleaStatus(result.PleaStatus),

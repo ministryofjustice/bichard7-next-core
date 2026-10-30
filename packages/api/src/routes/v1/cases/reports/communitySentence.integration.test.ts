@@ -77,15 +77,13 @@ describe("community sentence report", () => {
     query.append("toDate", new Date().toISOString())
     query.append("resultCodes", "1030")
 
-    const response = await app.inject({
+    const { statusCode } = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
       url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
     })
 
-    console.log(response.body)
-
-    expect(response.statusCode).toBe(OK)
+    expect(statusCode).toBe(OK)
   })
 
   it("succeeds with multiple result code params", async () => {

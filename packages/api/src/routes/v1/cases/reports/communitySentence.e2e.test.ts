@@ -55,7 +55,9 @@ describe("community sentence report e2e", () => {
     }
 
     // Need to assign a community sentence result code
-    parsedAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].CJSresultCode = 1030
+    const validResultCode = 1030
+    parsedAho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence[0].Result[0].CJSresultCode =
+      validResultCode
 
     const aho = serialiseToXml(parsedAho)
 
@@ -75,6 +77,7 @@ describe("community sentence report e2e", () => {
     const query = new URLSearchParams()
     query.append("fromDate", subDays(new Date(), 7).toISOString())
     query.append("toDate", new Date().toISOString())
+    query.append("resultCodes", validResultCode.toString())
 
     const response = await fetch(`${helper.address}${endpoint}?${query}`, defaultRequest(encodedJwt))
 
