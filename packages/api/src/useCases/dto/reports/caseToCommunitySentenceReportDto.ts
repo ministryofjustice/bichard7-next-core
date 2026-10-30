@@ -16,7 +16,7 @@ import {
 import type { CommunitySentenceRowReport } from "../../../types/reports/CommunitySentence"
 
 import { dateOfBirth } from "../../cases/reports/utils/dateOfBirth"
-import { defendantAddress } from "../../cases/reports/utils/defendantAddress"
+import { defendantAddress as getDefendantAddress } from "../../cases/reports/utils/defendantAddress"
 import { formatDate } from "../../cases/reports/utils/formatDate"
 
 export function caseToCommunitySentenceDto(
@@ -29,12 +29,16 @@ export function caseToCommunitySentenceDto(
     throw aho
   }
 
+  const defendantAddress = getDefendantAddress(aho)
+  const defendantAddressForReport =
+    defendantAddress || aho.AnnotatedHearingOutcome?.HearingOutcome?.Hearing?.CourtHouseName || "Unknown"
+
   const caseLevelDetails = {
     dateOfBirth: dateOfBirth(aho),
     defendantName: row.defendant_name ?? null,
     domesticViolenceFlag: getYesOrNo(row.domestic_violence_flag),
     errorId: row.error_id,
-    homeAddress: defendantAddress(aho),
+    homeAddress: defendantAddressForReport,
     pncId: aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.PNCIdentifier ?? "",
     receivedDate: formatDate(row.msg_received_ts, false, true)
   } as CommunitySentenceReportDto
