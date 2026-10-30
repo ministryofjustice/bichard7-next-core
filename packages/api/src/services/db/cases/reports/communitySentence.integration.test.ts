@@ -146,6 +146,48 @@ describe("communitySentenceReport - Integration", () => {
     expect(results[0].defendantName).toBe("In Range")
   })
 
+  it("should filter results based on provided result code", async () => {
+    const today = startOfDay(new Date())
+
+    const cases = await createCases(database, 2, {
+      0: {
+        aho: ahoWithCommunityOrderResultCode(),
+        defendantName: "With code",
+        messageReceivedAt: today,
+        orgForPoliceFilter: "01"
+      },
+      1: {
+        defendantName: "Without code",
+        messageReceivedAt: today,
+        orgForPoliceFilter: "01"
+      }
+    })
+
+    for (const c of cases) {
+      await createTriggers(database, c.errorId, [
+        {
+          triggerCode: TriggerCode.TRPR0031
+        }
+      ])
+    }
+
+    const filters: CommunitySentenceReportQuery = {
+      fromDate: subDays(today, 1),
+      resultCodes: ["1030"],
+      toDate: addDays(today, 1)
+    }
+
+    const results: CommunitySentenceReportDto[] = []
+    await database.writable.transaction(async (trx) => {
+      for await (const batch of communitySentenceReport(trx, mockUser, filters)) {
+        results.push(...batch)
+      }
+    })
+
+    expect(results).toHaveLength(1)
+    expect(results[0].defendantName).toBe("With code")
+  })
+
   it("should correctly identify and set the domestic violence flag when TRPR0023 or TRPR0024 are present", async () => {
     const today = startOfDay(new Date())
 
