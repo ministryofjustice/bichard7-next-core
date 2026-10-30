@@ -9,13 +9,10 @@ then
   RUN_ALL_TESTS="true"
 fi
 
-if [[ "$USE_LEDS" == "true" && "$REAL_POLICE_API" == "true" ]]
+if [[ -n "$TEST_COMMAND" && -n "$TEST_COMMAND_DESCRIPTION" ]]
 then
-  echo "Running LEDS tests against the real LEDS API and old UI"
-  CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:leds:real:oldUI
-
-  echo "Running LEDS tests against the real LEDS API and new UI"
-  CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run test:leds:real:nextUI
+  echo "Running $TEST_COMMAND_DESCRIPTION"
+  CI=true RECORD=true MESSAGE_ENTRY_POINT=s3 npm run $TEST_COMMAND
 elif [[ "$WORKSPACE" == "e2e-test" ]]
 then
   echo "Build was triggered by $TRIGGER"
