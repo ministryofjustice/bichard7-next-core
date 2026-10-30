@@ -47,7 +47,7 @@ export async function* communitySentenceReport(
   try {
     const cursor = query.cursor(100)
     for await (const rows of cursor) {
-      yield processCommunitySentenceReport(rows)
+      yield processCommunitySentenceReport(rows, filters.resultCodes)
     }
   } catch (err) {
     throw new Error(`Error fetching report: ${(err as Error).message}`)

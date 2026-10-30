@@ -53,7 +53,7 @@ describe("community sentence report", () => {
     expect(statusCode).toBe(BAD_REQUEST)
   })
 
-  it("succeeds with params", async () => {
+  it("succeeds with required params", async () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
 
     const query = new URLSearchParams()
@@ -67,6 +67,58 @@ describe("community sentence report", () => {
     })
 
     expect(statusCode).toBe(OK)
+  })
+
+  it("succeeds with optional result code param", async () => {
+    const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+
+    const query = new URLSearchParams()
+    query.append("fromDate", new Date().toISOString())
+    query.append("toDate", new Date().toISOString())
+    query.append("resultCodes", "1030")
+
+    const { statusCode } = await app.inject({
+      headers: { authorization: `Bearer ${jwt}` },
+      method: "GET",
+      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+    })
+
+    expect(statusCode).toBe(OK)
+  })
+
+  it("succeeds with multiple result code params", async () => {
+    const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+
+    const query = new URLSearchParams()
+    query.append("fromDate", new Date().toISOString())
+    query.append("toDate", new Date().toISOString())
+    query.append("resultCodes", "1030")
+    query.append("resultCodes", "1032")
+
+    const { statusCode } = await app.inject({
+      headers: { authorization: `Bearer ${jwt}` },
+      method: "GET",
+      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+    })
+
+    expect(statusCode).toBe(OK)
+  })
+
+  it("fails with a non trigger 31 result code param", async () => {
+    const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+
+    const query = new URLSearchParams()
+    query.append("fromDate", new Date().toISOString())
+    query.append("toDate", new Date().toISOString())
+    query.append("resultCodes", "1234")
+
+    const { statusCode } = await app.inject({
+      headers: { authorization: `Bearer ${jwt}` },
+      method: "GET",
+      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+    })
+
+    expect(statusCode).toBe(BAD_REQUEST)
   })
 
   it("fails with the wrong permissions", async () => {
@@ -203,6 +255,64 @@ describe("community sentence report", () => {
     const json = response.json() as CaseForBailsReportDto[]
 
     expect(json).toHaveLength(1)
+  })
+
+  it("returns 1 case when matching result code is provided", async () => {
+    const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+    const [caseObj] = await createCases(testDatabaseGateway, 3, {
+      0: {
+        aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
+        courtDate: subDays(new Date(), 2),
+        messageReceivedAt: subDays(new Date(), 2)
+      }
+    })
+    await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0031 }])
+
+    const query = new URLSearchParams()
+    query.append("fromDate", subDays(new Date(), 7).toISOString())
+    query.append("toDate", new Date().toISOString())
+    query.append("resultCodes", "1115")
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${jwt}` },
+      method: "GET",
+      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+    })
+
+    expect(response.statusCode).toBe(200)
+
+    const json = response.json() as CaseForBailsReportDto[]
+
+    expect(json).toHaveLength(1)
+  })
+
+  it("returns 0 cases when provided result code does not match", async () => {
+    const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
+    const [caseObj] = await createCases(testDatabaseGateway, 3, {
+      0: {
+        aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
+        courtDate: subDays(new Date(), 2),
+        messageReceivedAt: subDays(new Date(), 2)
+      }
+    })
+    await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0031 }])
+
+    const query = new URLSearchParams()
+    query.append("fromDate", subDays(new Date(), 7).toISOString())
+    query.append("toDate", new Date().toISOString())
+    query.append("resultCodes", "1030")
+
+    const response = await app.inject({
+      headers: { authorization: `Bearer ${jwt}` },
+      method: "GET",
+      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+    })
+
+    expect(response.statusCode).toBe(200)
+
+    const json = response.json() as CaseForBailsReportDto[]
+
+    expect(json).toHaveLength(0)
   })
 
   it("returns correct information when only trigger 31 present, suspended sentence order codes not present", async () => {
