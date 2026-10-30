@@ -71,9 +71,6 @@ USER root
 COPY files/openssl.cnf /tmp/openssl.cnf
 COPY files/nginx.repo /etc/yum.repos.d/nginx.repo
 
-COPY --chown=root:root blocked.certs ${JAVA_HOME}/lib/security/blocked.certs
-RUN chmod 644 ${JAVA_HOME}/lib/security/blocked.certs
-
 RUN mkdir -p /certs /var/log/supervisor && \
     yum install -y --setopt=install_weak_deps=False --releasever=latest \
       nginx \
@@ -88,6 +85,10 @@ RUN mkdir -p /certs /var/log/supervisor && \
     -out /certs/server.crt -keyout /certs/server.key \
     -config /tmp/openssl.cnf -extensions 'v3_req' && \
     rm -rf /tmp/openssl.cnf
+
+# Add blocked.certs for Java
+COPY --chown=root:root blocked.certs ${JAVA_HOME}/lib/security/blocked.certs
+RUN chmod 644 ${JAVA_HOME}/lib/security/blocked.certs
 
 # Make app folders
 RUN mkdir -p /app/config /app/logs /app/libs
