@@ -28,6 +28,7 @@ jest.mock("../../cases/reports/utils/formatDate")
 describe("caseToCommunitySentenceDto", () => {
   const matchingResultCode = TRPR0031_RESULT_CODES[0]
   const nonMatchingResultCode = 99999
+  const validNonMatchingResultCode = TRPR0031_RESULT_CODES[1]
   const suspendedResultCode = SUSPENDED_SENTENCE_ORDER_RESULT_CODES[0]
 
   const createMockAho = (offences: any[] = [], pncId?: null | string) => ({
@@ -87,6 +88,24 @@ describe("caseToCommunitySentenceDto", () => {
     ;(parseHearingOutcome as jest.Mock).mockReturnValue(createMockAho(offences))
 
     const results = caseToCommunitySentenceDto(mockRow)
+
+    expect(results).toHaveLength(1)
+    expect(results[0].resultCode).toBe(matchingResultCode)
+  })
+
+  it("should filter results based on provided result codes", () => {
+    const offences = [
+      {
+        OffenceTitle: "Offence title",
+        Result: [
+          { CJSresultCode: matchingResultCode, PleaStatus: "Guilty" },
+          { CJSresultCode: validNonMatchingResultCode, PleaStatus: "Guilty" }
+        ]
+      }
+    ]
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue(createMockAho(offences))
+
+    const results = caseToCommunitySentenceDto(mockRow, [matchingResultCode.toString()])
 
     expect(results).toHaveLength(1)
     expect(results[0].resultCode).toBe(matchingResultCode)
