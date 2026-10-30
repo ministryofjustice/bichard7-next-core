@@ -1,4 +1,5 @@
 import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
+import type { CommunitySentenceReportDto } from "@moj-bichard7/common/types/reports/CommunitySentence"
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
 import type { CaseForExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 import type { CodeDetailUserDto } from "@moj-bichard7/common/types/reports/UserPerformanceDetail"
@@ -106,3 +107,23 @@ export const codeDetailUserColumns: Record<string, ReportColumn<CodeDetailUserDt
     { header: "Total number of triggers still locked", key: "totalLocked" }
   ]
 } as const
+
+export const communitySentenceColumns: ReportColumn<CommunitySentenceReportDto>[] = [
+  { header: "Date received", key: "receivedDate" },
+  { header: "Name", key: "defendantName" },
+  { header: "Date of birth", key: "dateOfBirth" },
+  { header: "PNCID", key: "pncId" },
+  { header: "Offence", key: "offenceTitle" },
+  { header: "Domestic violence case", key: "domesticViolenceFlag" },
+  { header: "Suspended Sentence Order duration (months)", key: "suspendedSentenceDurationMonths" },
+  { header: "Custodial Sentence Order duration (months)", key: "custodialSentenceDurationMonths" },
+  { header: "Date of sentence", key: "dateOfSentence" },
+  { header: "Expiry", key: "expiryOfSentence" },
+  { header: "Home address", key: "homeAddress" },
+  { header: "Offence address", key: "offenceAddress" },
+  { header: "Offence start date", key: "offenceStartDate" },
+  { header: "Arrest date", key: "arrestDate" },
+  { header: "Charge date", key: "chargeDate" },
+  { header: "Plea", key: "plea" },
+  { header: "Result code", key: "resultCode" }
+] as const
