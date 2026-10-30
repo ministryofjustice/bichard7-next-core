@@ -19,10 +19,11 @@ import { validateSelectReport } from "utils/reports/validateSelectReport"
 import { ActionBar } from "./ActionBar"
 import { Checkboxes } from "./Checkboxes"
 import { DateRange } from "./DateRange"
+import { filterReducer, initialFilterState } from "./reducers/filters"
 import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
+import { ResultCodesCheckboxes } from "./ResultCodesCheckboxes"
 import { SelectReportDropdown } from "./SelectReportDropdown"
-import { filterReducer, initialFilterState } from "./reducers/filters"
 
 export const ReportSelectionFilter: React.FC<{
   resolvedBy?: AuditResolvedBy[]
@@ -61,6 +62,11 @@ export const ReportSelectionFilter: React.FC<{
     if (REPORT_TYPE_MAP[selectedValue as ReportType]) {
       dispatch({ type: "SET_REPORT_TYPE", payload: selectedValue as ReportType })
     }
+  }
+
+  const handleResultCodeCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
+    const { id, checked } = event.currentTarget
+    dispatch({ type: "SET_RESULT_CODES", payload: { id, checked } })
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -222,6 +228,12 @@ export const ReportSelectionFilter: React.FC<{
                   triggers={filterValues.triggers}
                   exceptions={filterValues.exceptions}
                   error={filterValues.checkboxesError}
+                />
+              )}
+              {filterValues.reportType === "community sentence" && (
+                <ResultCodesCheckboxes
+                  handleChange={handleResultCodeCheckbox}
+                  activeResultCodes={filterValues.resultCodes}
                 />
               )}
             </div>

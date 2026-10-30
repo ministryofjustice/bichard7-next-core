@@ -17,7 +17,8 @@ export const initialFilterState: FilterState = {
   reportTypeError: null,
   resolvedBy: [],
   resolvedByError: null,
-  canUseTriggerAndExceptionQualityAuditing: false
+  canUseTriggerAndExceptionQualityAuditing: false,
+  resultCodes: []
 }
 
 export function filterReducer(state: FilterState, action: FilterAction): FilterState {
@@ -79,6 +80,18 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
       )
 
       return { ...state, resolvedBy: action.payload, resolvedByError: resolvedByError }
+    }
+
+    case "SET_RESULT_CODES": {
+      let updatedResultCodes = state.resultCodes
+
+      if (action.payload.checked && !state.resultCodes.includes(action.payload.id)) {
+        updatedResultCodes.push(action.payload.id)
+      } else if (!action.payload.checked) {
+        updatedResultCodes = updatedResultCodes.filter((id) => id !== action.payload.id)
+      }
+
+      return { ...state, resultCodes: updatedResultCodes }
     }
 
     case "RESET_FILTERS":
