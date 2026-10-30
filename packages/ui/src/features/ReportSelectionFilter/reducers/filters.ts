@@ -1,4 +1,5 @@
 import { validateResolvedBy } from "@/utils/reports/validateResolvedBy"
+import { validateResultCodeCheckboxes } from "@/utils/reports/validateResultCodeCheckboxes"
 import type { ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import type { FilterAction, FilterState } from "types/reports/ReportSelectionFilter"
 import { validateCheckboxes } from "utils/reports/validateCheckboxes"
@@ -18,7 +19,8 @@ export const initialFilterState: FilterState = {
   resolvedBy: [],
   resolvedByError: null,
   canUseTriggerAndExceptionQualityAuditing: false,
-  resultCodes: []
+  resultCodes: [],
+  resultCodesError: null
 }
 
 export function filterReducer(state: FilterState, action: FilterAction): FilterState {
@@ -83,15 +85,9 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
     }
 
     case "SET_RESULT_CODES": {
-      let updatedResultCodes = state.resultCodes
+      const resultCodesError = validateResultCodeCheckboxes(state.reportType as ReportType, action.payload)
 
-      if (action.payload.checked && !state.resultCodes.includes(action.payload.id)) {
-        updatedResultCodes.push(action.payload.id)
-      } else if (!action.payload.checked) {
-        updatedResultCodes = updatedResultCodes.filter((id) => id !== action.payload.id)
-      }
-
-      return { ...state, resultCodes: updatedResultCodes }
+      return { ...state, resultCodes: action.payload, resultCodesError: resultCodesError }
     }
 
     case "RESET_FILTERS":
@@ -103,7 +99,8 @@ export function filterReducer(state: FilterState, action: FilterAction): FilterS
         dateFromError: action.payload.dateFromError,
         dateToError: action.payload.dateToError,
         checkboxesError: action.payload.checkboxesError,
-        resolvedByError: action.payload.resolvedByError
+        resolvedByError: action.payload.resolvedByError,
+        resultCodesError: action.payload.resultCodesError
       }
     default:
       return state

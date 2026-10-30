@@ -1,9 +1,11 @@
 import { FormGroup } from "@/components/FormGroup"
 import ResolveByFilter from "@/components/SearchFilters/ResolvedByFilter"
+import SelectAllCheckboxesFilter from "@/components/SearchFilters/SelectAllCheckboxesFilter"
 import { createReportCsv } from "@/services/reports/csvGeneration/createReportCsv"
 import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
 import AuditResolvedBy from "@/types/AuditResolvedBy"
 import { validateResolvedBy } from "@/utils/reports/validateResolvedBy"
+import { validateResultCodeCheckboxes } from "@/utils/reports/validateResultCodeCheckboxes"
 import { AUTOMATED_REPORT_TYPE_MAP, AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { Card } from "components/Card"
@@ -22,8 +24,20 @@ import { DateRange } from "./DateRange"
 import { filterReducer, initialFilterState } from "./reducers/filters"
 import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
-import { ResultCodesCheckboxes } from "./ResultCodesCheckboxes"
 import { SelectReportDropdown } from "./SelectReportDropdown"
+
+const RESULT_CODES_LIST = [
+  { id: "1032", label: "Community order amended" },
+  { id: "1116", label: "Community order" },
+  { id: "1030", label: "Community order varied" },
+  { id: "4575", label: "Warrant for arrest for breach of community penalty with bail (dated)" },
+  { id: "4577", label: "Warrant for arrest for community penalty breach with bail (undated)" },
+  { id: "4576", label: "Warrant for arrest for community penalty breach without bail" },
+  { id: "1507", label: "Suspended sentence of imprisonment implemented" },
+  { id: "1508", label: "Suspended sentence order amended - imprisonment" },
+  { id: "1115", label: "Suspended sentence order - imprisonment" },
+  { id: "1134", label: "Suspended sentence order - detention" }
+]
 
 export const ReportSelectionFilter: React.FC<{
   resolvedBy?: AuditResolvedBy[]
@@ -64,9 +78,8 @@ export const ReportSelectionFilter: React.FC<{
     }
   }
 
-  const handleResultCodeCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
-    const { id, checked } = event.currentTarget
-    dispatch({ type: "SET_RESULT_CODES", payload: { id, checked } })
+  const handleResultCodesChange = (selectedResultCodes: string[]) => {
+    dispatch({ type: "SET_RESULT_CODES", payload: selectedResultCodes })
   }
 
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -105,12 +118,18 @@ export const ReportSelectionFilter: React.FC<{
       canUseTriggerAndExceptionQualityAuditing
     )
 
+    const resultCodesError = validateResultCodeCheckboxes(
+      filterValues.reportType as ReportType,
+      filterValues.resultCodes
+    )
+
     const newErrors = {
       dateFromError: rangeValidation.fromError,
       dateToError: rangeValidation.toError,
       reportTypeError: selectReportValidation,
       checkboxesError: checkboxesValidation,
-      resolvedByError: resolvedByValidation
+      resolvedByError: resolvedByValidation,
+      resultCodesError: resultCodesError
     }
 
     dispatch({ type: "SET_ERRORS", payload: newErrors })
@@ -237,10 +256,23 @@ export const ReportSelectionFilter: React.FC<{
                 />
               )}
               {filterValues.reportType === "community sentence" && (
-                <ResultCodesCheckboxes
-                  handleChange={handleResultCodeCheckbox}
-                  activeResultCodes={filterValues.resultCodes}
-                />
+                <>
+                  <h2 className="govuk-heading-m">{"Result codes"}</h2>
+                  <FormGroup showError={!!filterValues.resultCodesError}>
+                    {filterValues.resultCodesError && (
+                      <p className="govuk-error-message">
+                        <span className="govuk-visually-hidden">{"Error:"}</span>
+                        {filterValues.resultCodesError}
+                      </p>
+                    )}
+                    <SelectAllCheckboxesFilter
+                      onChange={handleResultCodesChange}
+                      allCheckboxLabel="result codes"
+                      allOptions={RESULT_CODES_LIST}
+                      selected={filterValues.resultCodes}
+                    />
+                  </FormGroup>
+                </>
               )}
             </div>
             {filterValues.reportType === "exceptions" && canUseTriggerAndExceptionQualityAuditing && (

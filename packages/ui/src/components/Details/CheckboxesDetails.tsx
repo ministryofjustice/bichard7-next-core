@@ -1,42 +1,45 @@
-import { formatUserFullName } from "@/utils/formatUserFullName"
 import Checkbox from "../Checkbox/Checkbox"
 import Details from "./Details"
-import AuditResolvedBy from "@/types/AuditResolvedBy"
 
-interface ResolverDetailsProps {
+export interface CheckboxDetails {
+  id: string
+  label: string
+}
+
+interface CheckboxesDetailsProps {
   summary: string
   detailsId: string
-  resolvers: AuditResolvedBy[]
+  allOptions: CheckboxDetails[]
   refs: React.RefObject<HTMLInputElement[]>
-  resolvedBy: string[]
+  selected: string[]
   keyPrefix?: string
   idPrefix: string
   onCheckboxChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const ResolverDetails = ({
+const CheckboxesDetails = ({
   summary,
   detailsId,
-  resolvers,
+  allOptions,
   refs,
-  resolvedBy,
+  selected,
   keyPrefix = "",
   idPrefix,
   onCheckboxChange
-}: ResolverDetailsProps) => {
-  if (!resolvers || resolvers.length === 0) {
+}: CheckboxesDetailsProps) => {
+  if (!allOptions || allOptions.length === 0) {
     return null
   }
   return (
     <Details summary={summary} id={detailsId}>
-      {resolvers.map((resolver, index) => (
+      {allOptions.map((option, index) => (
         <Checkbox
-          key={`${keyPrefix}${resolver.username}-${index}`}
+          key={`${keyPrefix}${option.id}-${index}`}
           id={`${idPrefix}${index}`}
           name="resolvedBy"
-          value={resolver.username}
-          defaultChecked={resolvedBy.includes(resolver.username)}
-          label={formatUserFullName(resolver.forenames, resolver.surname)}
+          value={option.id}
+          defaultChecked={selected.includes(option.id)}
+          label={option.label}
           data-testid={`audit-resolved-by-${keyPrefix}${index}`}
           onChange={onCheckboxChange}
           ref={(elem) => {
@@ -50,4 +53,4 @@ const ResolverDetails = ({
   )
 }
 
-export default ResolverDetails
+export default CheckboxesDetails

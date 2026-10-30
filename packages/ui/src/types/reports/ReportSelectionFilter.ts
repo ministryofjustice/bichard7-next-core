@@ -13,6 +13,7 @@ export type FilterState = {
   dateToError: string | null
   checkboxesError: string | null
   resolvedByError: string | null
+  resultCodesError: string | null
   resolvedBy: string[]
   resultCodes: string[]
   canUseTriggerAndExceptionQualityAuditing: boolean
@@ -25,7 +26,7 @@ export type FilterAction =
   | { type: "SET_DATE_TO"; payload: string }
   | { type: "SET_CHECKBOX"; payload: { id: string; checked: boolean } }
   | { type: "SET_RESOLVED_BY"; payload: string[] }
-  | { type: "SET_RESULT_CODES"; payload: { id: string; checked: boolean } }
+  | { type: "SET_RESULT_CODES"; payload: string[] }
   | { type: "RESET_FILTERS" }
   | {
       type: "SET_ERRORS"
@@ -35,5 +36,6 @@ export type FilterAction =
         dateToError: string | null
         checkboxesError: string | null
         resolvedByError: string | null
+        resultCodesError: string | null
       }
     }

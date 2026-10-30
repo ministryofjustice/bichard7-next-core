@@ -272,6 +272,18 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
       TriggerCode.TRPS0013
     ]
   },
+  CommunitySentenceReportUser: {
+    username: "CommunitySentenceReportUser",
+    visibleForces: ["001"],
+    forenames: "CommunitySentenceReport",
+    surname: "User",
+    email: "communitysentencereportuser@example.com",
+    password: hashedPassword,
+    groups: [UserGroup.Supervisor],
+    featureFlags: {
+      canSeeCommunitySentenceReport: true
+    }
+  },
   ...numberedUsers()
 }
 

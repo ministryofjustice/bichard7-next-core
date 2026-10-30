@@ -1,7 +1,8 @@
 import AuditResolvedBy from "@/types/AuditResolvedBy"
+import { formatUserFullName } from "@/utils/formatUserFullName"
 import { useRef, useState } from "react"
 import Checkbox from "../Checkbox/Checkbox"
-import ResolverDetails from "../Details/ResolverDetails"
+import CheckboxesDetails, { CheckboxDetails } from "../Details/CheckboxesDetails"
 
 interface ResolveByFilterProps {
   resolvedBy: string[]
@@ -17,14 +18,15 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
   const resolvedByRefs = useRef<HTMLInputElement[]>([])
   const deletedResolvedByRefs = useRef<HTMLInputElement[]>([])
 
-  const activeResolvers: AuditResolvedBy[] = []
-  const deletedResolvers: AuditResolvedBy[] = []
+  const activeResolvers: CheckboxDetails[] = []
+  const deletedResolvers: CheckboxDetails[] = []
 
   for (const resolver of resolvers) {
+    const checkboxDetail = { id: resolver.username, label: formatUserFullName(resolver.forenames, resolver.surname) }
     if (resolver.deleted) {
-      deletedResolvers.push(resolver)
+      deletedResolvers.push(checkboxDetail)
     } else {
-      activeResolvers.push(resolver)
+      activeResolvers.push(checkboxDetail)
     }
   }
 
@@ -53,12 +55,12 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
           pushUpdates()
         }}
       />
-      <ResolverDetails
+      <CheckboxesDetails
         summary="Show active users"
         detailsId="active-users"
-        resolvers={activeResolvers}
+        allOptions={activeResolvers}
         refs={resolvedByRefs}
-        resolvedBy={resolvedBy}
+        selected={resolvedBy}
         idPrefix="resolvers"
         onCheckboxChange={(_) => {
           setAllResolversSelected(resolvedByRefs.current.every((input) => (input as HTMLInputElement).checked))
@@ -67,12 +69,12 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
       />
 
       {deletedResolvers.length > 0 && (
-        <ResolverDetails
+        <CheckboxesDetails
           summary="Show deleted users"
           detailsId="deleted-users"
-          resolvers={deletedResolvers}
+          allOptions={deletedResolvers}
           refs={deletedResolvedByRefs}
-          resolvedBy={resolvedBy}
+          selected={resolvedBy}
           keyPrefix="deleted-"
           idPrefix="deleted-resolvers-"
           onCheckboxChange={(_) => {
