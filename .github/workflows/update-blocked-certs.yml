@@ -1,0 +1,56 @@
+name: Update blocked.certs
+
+on:
+  schedule:
+    - cron: '0 1 * * 1' # Runs every Monday at 01:00 UTC
+  workflow_dispatch:
+
+jobs:
+  update-cert-blocklist:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Fetch latest blocked.certs
+        run: |
+          URL="https://ops.java/unix/blocked.certs"
+          TARGET="environment/conductor/blocked.certs"
+          TEMP_FILE="blocked.certs.tmp"
+
+          echo "Downloading latest blocklist..."
+          if ! curl -f -sSL -o "$TEMP_FILE" "$URL"; then
+            echo "::error::Failed to download $URL (HTTP error or connection failure)."
+            exit 1
+          fi
+
+          # Sanity check: Ensure the response is valid and not an HTML outage/error page
+          if grep -qiE "<html|<!doctype" "$TEMP_FILE"; then
+            echo "::error::Downloaded file is an HTML page (likely an upstream outage). Aborting."
+            rm -f "$TEMP_FILE"
+            exit 1
+          fi
+
+          # Ensure the file is not empty
+          if [ ! -s "$TEMP_FILE" ]; then
+            echo "::error::Downloaded file is empty. Aborting."
+            rm -f "$TEMP_FILE"
+            exit 1
+          fi
+
+          # Replace existing file
+          mv "$TEMP_FILE" "$TARGET"
+
+      - name: Create pull request
+        id: cpr
+        uses: ./.github/actions/create-pull-request@main
+        with:
+          github_token: ${{ github.token }}
+          branch: "auto/update-blocked-certs"
+          commit_message: "chore(security): update blocked.certs from upstream"
+          pr_title: "Update blocked.certs"
+          update_type: "blocked.certs update"

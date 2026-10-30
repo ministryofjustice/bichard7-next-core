@@ -28,6 +28,11 @@ RUN npm install --legacy-peer-deps --ignore-scripts --no-audit && \
 # ===========================================================================================================
 FROM eclipse-temurin:21-jdk-jammy@sha256:4e61d0b3471137e239397789661f6adeaf8db9adcfae45916b22f628c8a32dc0 AS builder
 
+USER root
+
+COPY --chown=root:root blocked.certs ${JAVA_HOME}/lib/security/blocked.certs
+RUN chmod 644 ${JAVA_HOME}/lib/security/blocked.certs
+
 COPY --from=src /conductor /conductor
 
 WORKDIR /conductor
@@ -80,6 +85,15 @@ RUN mkdir -p /certs /var/log/supervisor && \
     -out /certs/server.crt -keyout /certs/server.key \
     -config /tmp/openssl.cnf -extensions 'v3_req' && \
     rm -rf /tmp/openssl.cnf
+
+# Add blocked.certs for Java
+COPY blocked.certs /tmp/blocked.certs
+RUN JAVA_BIN=$(readlink -f $(command -v java)) && \
+    JAVA_DIR=$(dirname $(dirname "$JAVA_BIN")) && \
+    mkdir -p "${JAVA_DIR}/lib/security" && \
+    mv /tmp/blocked.certs "${JAVA_DIR}/lib/security/blocked.certs" && \
+    chmod 644 "${JAVA_DIR}/lib/security/blocked.certs" && \
+    chown root:root "${JAVA_DIR}/lib/security/blocked.certs"
 
 # Make app folders
 RUN mkdir -p /app/config /app/logs /app/libs

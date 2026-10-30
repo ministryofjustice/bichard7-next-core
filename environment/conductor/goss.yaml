@@ -87,6 +87,15 @@ file:
   /tmp/openssl.cnf:
     exists: false
     contains: []
+  /usr/lib/jvm/java-21-amazon-corretto.aarch64/lib/security/blocked.certs:
+    exists: true
+    filetype: file
+    mode: "0644"
+    owner: root
+    group: root
+    contents:
+      # Verifies the file contains actual certificate hashes / standard headers
+      - "SHA-256"
 port:
   tcp:4000:
     listening: true
