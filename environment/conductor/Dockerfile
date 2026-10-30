@@ -28,6 +28,11 @@ RUN npm install --legacy-peer-deps --ignore-scripts --no-audit && \
 # ===========================================================================================================
 FROM eclipse-temurin:21-jdk-jammy@sha256:4e61d0b3471137e239397789661f6adeaf8db9adcfae45916b22f628c8a32dc0 AS builder
 
+USER root
+
+COPY --chown=root:root blocked.certs ${JAVA_HOME}/lib/security/blocked.certs
+RUN chmod 644 ${JAVA_HOME}/lib/security/blocked.certs
+
 COPY --from=src /conductor /conductor
 
 WORKDIR /conductor
@@ -65,6 +70,9 @@ USER root
 
 COPY files/openssl.cnf /tmp/openssl.cnf
 COPY files/nginx.repo /etc/yum.repos.d/nginx.repo
+
+COPY --chown=root:root blocked.certs ${JAVA_HOME}/lib/security/blocked.certs
+RUN chmod 644 ${JAVA_HOME}/lib/security/blocked.certs
 
 RUN mkdir -p /certs /var/log/supervisor && \
     yum install -y --setopt=install_weak_deps=False --releasever=latest \
