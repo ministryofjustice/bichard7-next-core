@@ -3,7 +3,7 @@ import { z } from "zod"
 import { dateRangeShape, validateDateRange } from "../types/reports/BaseQuery"
 import { TRPR0031_RESULT_CODES } from "../utils/triggerConstants"
 
-const stringResultCodes = TRPR0031_RESULT_CODES.map(String) as [string, ...string[]]
+const stringResultCodes = TRPR0031_RESULT_CODES.map(String) as string[]
 
 export const CommunitySentenceReportQuerySchema = z
   .object({
