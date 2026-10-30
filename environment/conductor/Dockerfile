@@ -87,8 +87,13 @@ RUN mkdir -p /certs /var/log/supervisor && \
     rm -rf /tmp/openssl.cnf
 
 # Add blocked.certs for Java
-COPY --chown=root:root blocked.certs ${JAVA_HOME}/lib/security/blocked.certs
-RUN chmod 644 ${JAVA_HOME}/lib/security/blocked.certs
+COPY blocked.certs /tmp/blocked.certs
+RUN JAVA_BIN=$(readlink -f $(command -v java)) && \
+    JAVA_DIR=$(dirname $(dirname "$JAVA_BIN")) && \
+    mkdir -p "${JAVA_DIR}/lib/security" && \
+    mv /tmp/blocked.certs "${JAVA_DIR}/lib/security/blocked.certs" && \
+    chmod 644 "${JAVA_DIR}/lib/security/blocked.certs" && \
+    chown root:root "${JAVA_DIR}/lib/security/blocked.certs"
 
 # Make app folders
 RUN mkdir -p /app/config /app/logs /app/libs

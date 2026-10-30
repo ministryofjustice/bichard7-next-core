@@ -87,9 +87,10 @@ file:
   /tmp/openssl.cnf:
     exists: false
     contains: []
-  /opt/java/openjdk/lib/security/blocked.certs:
+  /usr/bin/java/openjdk/lib/security/blocked.certs:
     exists: true
     owner: root
+    filetype: file
 port:
   tcp:4000:
     listening: true
