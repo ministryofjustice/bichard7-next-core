@@ -149,6 +149,12 @@ export const ReportSelectionFilter: React.FC<{
         }
       }
 
+      if (reportType === "community sentence") {
+        for (const resultCode of filterValues.resultCodes) {
+          urlQuery.append("resultCodes", resultCode)
+        }
+      }
+
       const parsedData = await downloadReport(reportType, urlQuery)
 
       const reportData = bundleReportData(config, parsedData)

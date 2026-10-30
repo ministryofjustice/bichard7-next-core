@@ -26,8 +26,7 @@ export const ResultCodesCheckboxes: React.FC<ResultCodesCheckboxesProps> = ({ ha
       <label className="govuk-body" htmlFor="checkboxes-container">
         {"Select an option"}
       </label>
-
-      <div id="checkboxes-container" className="checkboxes-wrapper">
+      <div className="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
         {RESULT_CODES_LIST.map((resultCode) => (
           <Checkbox
             key={resultCode.id}
