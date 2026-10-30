@@ -35,9 +35,13 @@ describe("caseToCommunitySentenceDto", () => {
       HearingOutcome: {
         Case: {
           HearingDefendant: {
+            Address: "",
             Offence: offences,
             PNCIdentifier: pncId === undefined ? "2023/1234567A" : pncId
           }
+        },
+        Hearing: {
+          CourtHouseName: "Court name"
         }
       }
     }
@@ -155,6 +159,23 @@ describe("caseToCommunitySentenceDto", () => {
     expect(dto.chargeDate).toBe("")
     expect(dto.dateOfSentence).toBe("")
     expect(dto.offenceStartDate).toBe("")
+  })
+
+  it("should default to court address when defendant address is empty", () => {
+    ;(defendantAddress as jest.Mock).mockReturnValue("")
+
+    const offences = [
+      {
+        OffenceTitle: "Offence title",
+        Result: [{ CJSresultCode: matchingResultCode, PleaStatus: "Guilty" }]
+      }
+    ]
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue(createMockAho(offences, null))
+
+    const results = caseToCommunitySentenceDto(mockRow)
+    const dto = results[0]
+
+    expect(dto.homeAddress).toBe("Court name")
   })
 
   it("should calculate suspended sentence durations and expiry date for suspended sentence order codes", () => {
