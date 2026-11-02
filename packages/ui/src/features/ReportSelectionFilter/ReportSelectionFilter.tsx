@@ -3,11 +3,11 @@ import ResolveByFilter from "@/components/SearchFilters/ResolvedByFilter"
 import { createReportCsv } from "@/services/reports/csvGeneration/createReportCsv"
 import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
 import AuditResolvedBy from "@/types/AuditResolvedBy"
+import { buildReportQueryParams } from "@/utils/reports/buildReportQueryParams"
 import { validateResolvedBy } from "@/utils/reports/validateResolvedBy"
 import { validateResultCodeCheckboxes } from "@/utils/reports/validateResultCodeCheckboxes"
 import { AUTOMATED_REPORT_TYPE_MAP, AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
-import { TRPR0031_RESULTS } from "@moj-bichard7/common/utils/triggerConstants"
 import { Card } from "components/Card"
 import { SyntheticEvent, useEffect, useReducer, useState } from "react"
 import { downloadReport } from "services/reports/downloadReport"
@@ -140,28 +140,7 @@ export const ReportSelectionFilter: React.FC<{
   const handleDownload = async () => {
     try {
       const reportType = filterValues.reportType as ReportType
-
-      const allResolversSelected = resolvedBy.every((r) => filterValues.resolvedBy.includes(r.username))
-      const allResultCodesSelected = TRPR0031_RESULTS.every((option) => filterValues.resultCodes.includes(option.id))
-
-      const urlQuery = new URLSearchParams({
-        fromDate: filterValues.dateFrom,
-        toDate: filterValues.dateTo,
-        exceptions: String(filterValues.exceptions),
-        triggers: String(filterValues.triggers)
-      })
-
-      if (!allResolversSelected) {
-        for (const user of filterValues.resolvedBy) {
-          urlQuery.append("resolvedBy", user)
-        }
-      }
-
-      if (!allResultCodesSelected) {
-        for (const resultCode of filterValues.resultCodes) {
-          urlQuery.append("resultCodes", resultCode)
-        }
-      }
+      const urlQuery = buildReportQueryParams(filterValues, resolvedBy)
 
       const parsedData = await downloadReport(reportType, urlQuery)
 
