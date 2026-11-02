@@ -1,12 +1,13 @@
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { TRPR0031_RESULT_CODES } from "@moj-bichard7/common/utils/triggerConstants"
 
 import generateAhoFromOffenceList from "../../phase2/tests/fixtures/helpers/generateAhoFromOffenceList"
 import TRPR0031 from "./TRPR0031"
 
 const triggerCode = TriggerCode.TRPR0031
-const resultCodes = [1030, 1032, 1115, 1116, 1134, 1507, 1508, 4575, 4576, 4577]
+const reasonCodes = TRPR0031_RESULT_CODES
 
 const generateMockAho = (resultCode: number) => {
   return generateAhoFromOffenceList([
@@ -21,17 +22,13 @@ const generateMockAho = (resultCode: number) => {
 }
 
 describe("TRPR0031", () => {
-  it.each(resultCodes)("should generate a trigger for resultCode: %s", (resultCode) => {
-    const generatedHearingOutcome = generateMockAho(resultCode)
-    const result = TRPR0031(generatedHearingOutcome)
-
+  it.each(reasonCodes)("Should generate a trigger when case has a reason code of %s", (reasonCode) => {
+    const result = TRPR0031(generateMockAho(reasonCode))
     expect(result).toEqual([{ code: triggerCode }])
   })
 
-  it("should not generate a trigger for a result code not covered by this trigger", () => {
-    const generatedHearingOutcome = generateMockAho(1)
-    const result = TRPR0031(generatedHearingOutcome)
-
-    expect(result).toEqual([])
+  it("Should not generate a trigger when case has a reason code that is not from the list", () => {
+    const result = TRPR0031(generateMockAho(9999))
+    expect(result).toHaveLength(0)
   })
 })

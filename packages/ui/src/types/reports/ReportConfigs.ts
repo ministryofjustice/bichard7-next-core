@@ -1,5 +1,6 @@
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
+import type { CommunitySentenceReportDto } from "@moj-bichard7/common/types/reports/CommunitySentence"
 import type { CaseForDomesticViolenceReportDto } from "@moj-bichard7/common/types/reports/DomesticViolence"
 import type { CaseForExceptionReportDto, ExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 import type {
@@ -15,6 +16,7 @@ import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/report
 import {
   bailsColumns,
   codeDetailUserColumns,
+  communitySentenceColumns,
   domesticViolenceColumns,
   exceptionsColumns,
   userPerformanceSummaryColumns,
@@ -111,5 +113,11 @@ export const ReportConfigs = {
       { key: "totalLocked", label: "Locked" }
     ],
     reportType: "user detail"
-  } satisfies NestedGroupedReportConfig<UserPerformanceDetailDto, CodeDetailDto, CodeDetailUserDto>
+  } satisfies NestedGroupedReportConfig<UserPerformanceDetailDto, CodeDetailDto, CodeDetailUserDto>,
+  "community sentence": {
+    endpoint: V1.CasesReportsCommunitySentence,
+    structure: "flat",
+    columns: communitySentenceColumns,
+    reportType: "community sentence"
+  } satisfies FlatReportConfig<CommunitySentenceReportDto>
 }

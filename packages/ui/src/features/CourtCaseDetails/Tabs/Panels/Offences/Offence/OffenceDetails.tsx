@@ -1,8 +1,14 @@
 import offenceCategory from "@moj-bichard7-developers/bichard7-next-data/dist/data/offence-category.json"
 import yesNo from "@moj-bichard7-developers/bichard7-next-data/dist/data/yes-no.json"
 import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import {
+  capitaliseExpression,
+  getPleaStatus,
+  getVerdict,
+  getYesOrNo
+} from "@moj-bichard7/common/utils/valueTransformers"
+import getOffenceCode from "@moj-bichard7/core/lib/offences/getOffenceCode"
 import { Card } from "components/Card"
 import ConditionalRender from "components/ConditionalRender"
 import ErrorPromptMessage from "components/ErrorPromptMessage"
@@ -16,7 +22,6 @@ import { formatDisplayedDate } from "utils/date/formattedDate"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
 import { initialOffencesVisibility, OffenceVisibilityMap } from "utils/offenceDetails/initialOffencesVisibility"
 import { initialResultsVisibility, ResultVisibilityMap } from "utils/offenceDetails/initialResultsVisibility"
-import { capitaliseExpression, getPleaStatus, getVerdict, getYesOrNo } from "utils/valueTransformers"
 import { InfoRow } from "../../InfoRow"
 import { HearingResult } from "./HearingResult"
 import { OffenceMatching } from "./Matcher/OffenceMatching"

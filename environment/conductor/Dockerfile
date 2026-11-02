@@ -4,7 +4,7 @@ ARG CONDUCTOR_VERSION="v3.32.1"
 # ===========================================================================================================
 # 0. Source stage
 # ===========================================================================================================
-FROM alpine/git@sha256:03228d7ded483b0b3e55e1de7fa660d70d3e1bb432fa7021d29e192640de11aa AS src
+FROM alpine/git@sha256:e8ceedc73bd80992ae8d58a7d24c58b8322146c354f1d2e81a97db4452068ec0 AS src
 ARG CONDUCTOR_VERSION
 
 RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor
@@ -12,7 +12,7 @@ RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss
 # ===========================================================================================================
 # 1. UI Builder stage
 # ===========================================================================================================
-FROM node:24-alpine@sha256:44fce696f38ba8c987c4db89954051000bbd05ffd8d8659ba15ed4a8602e937f AS ui-builder
+FROM node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 AS ui-builder
 
 COPY --from=src /conductor/ui /conductor/ui
 
@@ -26,7 +26,7 @@ RUN npm install --legacy-peer-deps --ignore-scripts --no-audit && \
 # ===========================================================================================================
 # 2. Java Builder stage
 # ===========================================================================================================
-FROM eclipse-temurin:21-jdk-jammy@sha256:742daacb9316be4b6fc60258f6e4ac2a11882f6c597373c92290a57bfad0d2e0 AS builder
+FROM eclipse-temurin:21-jdk-jammy@sha256:4e61d0b3471137e239397789661f6adeaf8db9adcfae45916b22f628c8a32dc0 AS builder
 
 COPY --from=src /conductor /conductor
 
@@ -67,7 +67,12 @@ COPY files/openssl.cnf /tmp/openssl.cnf
 COPY files/nginx.repo /etc/yum.repos.d/nginx.repo
 
 RUN mkdir -p /certs /var/log/supervisor && \
-    yum install -y --setopt=install_weak_deps=False nginx httpd-tools gettext java-21-amazon-corretto && \
+    yum install -y --setopt=install_weak_deps=False --releasever=latest \
+      nginx \
+      httpd-tools \
+      gettext \
+      ca-certificates \
+      java-21-amazon-corretto-21.0.13* && \
     yum clean all && \
     rm -rf /var/cache/yum && \
     pip install --no-cache-dir --only-binary=:all: supervisor==4.3.0 && \

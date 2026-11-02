@@ -1,7 +1,9 @@
 import { faker } from "@faker-js/faker"
+import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
-import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
+import communitySentenceAmendOffences from "@moj-bichard7/common/test/dummyData/communitySentenceAmendOffences"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
 import { randomUUID } from "crypto"
 import { subYears } from "date-fns"
 import sample from "lodash.sample"
@@ -65,6 +67,10 @@ export default async (
     throw parsedAho
   }
 
+  if (triggers.some((a) => a.triggerCode === TriggerCode.TRPR0031)) {
+    communitySentenceAmendOffences(parsedAho)
+  }
+
   const notes = createDummyNotes(dataSource, caseId, triggers, isResolved)
   const { errorReport, errorReason, exceptionCount, ahoWithExceptions } = createDummyExceptions(
     hasUnresolvedTriggers,
@@ -73,9 +79,12 @@ export default async (
   const hasExceptions = exceptionCount > 0
 
   let ahoWithExceptionsXml
+  let ahoWithoutExceptionsXml
 
   if (ahoWithExceptions) {
     ahoWithExceptionsXml = serialiseToXml(ahoWithExceptions)
+  } else {
+    ahoWithoutExceptionsXml = serialiseToXml(parsedAho)
   }
 
   const courtCase = await dataSource.getRepository(CourtCase).save({
@@ -94,9 +103,7 @@ export default async (
     isUrgent: randomBoolean(),
     asn: createDummyAsn(caseDate.getFullYear(), orgCode + faker.string.alpha(2).toUpperCase()),
     courtCode: createDummyCourtCode(orgCode),
-    hearingOutcome: errorReport
-      ? ahoWithExceptionsXml
-      : generateAho({ firstName, lastName, courtName, ptiurn, ahoTemplate }),
+    hearingOutcome: errorReport ? ahoWithExceptionsXml : ahoWithoutExceptionsXml,
     errorReport: errorReport,
     createdTimestamp: caseDate,
     errorReason: errorReason,

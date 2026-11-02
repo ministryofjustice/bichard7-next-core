@@ -243,15 +243,9 @@ export const canSeeContentInTableForThis = async function (this: Bichard, value:
   expect(found).toBeTruthy()
 }
 
-export const cannotSeeTrigger = async function (this: Bichard, value: string) {
+export const cannotSeeValue = async function (this: Bichard, value: string) {
   await waitForRecord(this.browser.page, 2)
   const isVisible = await containsValue(this.browser.page, ".resultsTable > tbody td", value)
-  expect(isVisible).toBe(false)
-}
-
-export const cannotSeeException = async function (this: Bichard, exception: string) {
-  await waitForRecord(this.browser.page, 2)
-  const isVisible = await containsValue(this.browser.page, ".resultsTable > tbody td", exception)
   expect(isVisible).toBe(false)
 }
 
