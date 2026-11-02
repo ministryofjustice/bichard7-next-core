@@ -24,6 +24,7 @@ import type PoliceGateway from "../../../types/PoliceGateway"
 
 import { pncApiResultSchema } from "../../../schemas/pncApiResult"
 import PoliceApiError from "../PoliceApiError"
+import { fetch } from "undici"
 
 const transform = (apiResponse: PncApiResult): PoliceQueryResult => {
   const getAdjudication = (offence: PncApiOffence): PoliceAdjudication | undefined => {
@@ -100,8 +101,11 @@ const lookupPathFromOperation = (operation: PncOperation): string =>
     [PncOperation.SENTENCE_DEFERRED]: "sentence-deferred"
   })[operation]
 
+
+
+
+  
 export default class PncGateway implements PoliceGateway {
-  pncAxios: AxiosInstance
   queryTime: Date | undefined
 
   constructor(
@@ -111,7 +115,15 @@ export default class PncGateway implements PoliceGateway {
     this.pncAxios = axios.create({
       transformResponse: [dateTransformer]
     })
+    private async pncFetch(url: string, options: RequestInit = {}) {
+      const response = await fetch(url, options)
+    }
   }
+
+
+
+
+
 
   async query(
     asn: string,
