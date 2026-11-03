@@ -1,7 +1,8 @@
 import AuditResolvedBy from "@/types/AuditResolvedBy"
+import { formatUserFullName } from "@/utils/formatUserFullName"
 import { useRef, useState } from "react"
 import Checkbox from "../Checkbox/Checkbox"
-import ResolverDetails from "../Details/ResolverDetails"
+import CollapsibleCheckboxList, { CheckboxOption } from "../Details/CollapsibleCheckboxList"
 
 interface ResolveByFilterProps {
   resolvedBy: string[]
@@ -17,14 +18,15 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
   const resolvedByRefs = useRef<HTMLInputElement[]>([])
   const deletedResolvedByRefs = useRef<HTMLInputElement[]>([])
 
-  const activeResolvers: AuditResolvedBy[] = []
-  const deletedResolvers: AuditResolvedBy[] = []
+  const activeResolvers: CheckboxOption[] = []
+  const deletedResolvers: CheckboxOption[] = []
 
   for (const resolver of resolvers) {
+    const checkboxOption = { id: resolver.username, label: formatUserFullName(resolver.forenames, resolver.surname) }
     if (resolver.deleted) {
-      deletedResolvers.push(resolver)
+      deletedResolvers.push(checkboxOption)
     } else {
-      activeResolvers.push(resolver)
+      activeResolvers.push(checkboxOption)
     }
   }
 
@@ -53,31 +55,34 @@ function ResolveByFilter({ resolvedBy, resolvers, onChange }: Readonly<ResolveBy
           pushUpdates()
         }}
       />
-      <ResolverDetails
+      <CollapsibleCheckboxList
         summary="Show active users"
         detailsId="active-users"
-        resolvers={activeResolvers}
+        allOptions={activeResolvers}
         refs={resolvedByRefs}
-        resolvedBy={resolvedBy}
+        selected={resolvedBy}
         idPrefix="resolvers"
+        keyPrefix="audit-resolved-by-"
         onCheckboxChange={(_) => {
           setAllResolversSelected(resolvedByRefs.current.every((input) => (input as HTMLInputElement).checked))
           pushUpdates()
         }}
+        name="resolvedBy"
       />
 
       {deletedResolvers.length > 0 && (
-        <ResolverDetails
+        <CollapsibleCheckboxList
           summary="Show deleted users"
           detailsId="deleted-users"
-          resolvers={deletedResolvers}
+          allOptions={deletedResolvers}
           refs={deletedResolvedByRefs}
-          resolvedBy={resolvedBy}
-          keyPrefix="deleted-"
+          selected={resolvedBy}
+          keyPrefix="audit-resolved-by-deleted-"
           idPrefix="deleted-resolvers-"
           onCheckboxChange={(_) => {
             pushUpdates()
           }}
+          name="resolvedBy"
         />
       )}
     </div>

@@ -1,5 +1,5 @@
+import { format, subDays } from "date-fns"
 import AuditSearch from "../../../src/features/AuditSearch/AuditSearch"
-import { subDays, format } from "date-fns"
 import { MockNextRouter } from "../../support/MockNextRouter"
 
 describe("AuditSearch", () => {

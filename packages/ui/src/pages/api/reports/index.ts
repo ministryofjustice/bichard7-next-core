@@ -37,7 +37,7 @@ export default async function index(request: NextApiRequest, response: NextApiRe
   const streamClient = new ReportsApiClient(jwt)
   const reportGateway = new BichardReportGateway(streamClient)
 
-  const { reportType, fromDate, toDate, exceptions, triggers, resolvedBy } = request.query
+  const { reportType, fromDate, toDate, exceptions, triggers, resolvedBy, resultCodes } = request.query
 
   if (!isReportType(reportType)) {
     res.status(400).send({ error: "Bad Report Type" })
@@ -49,7 +49,8 @@ export default async function index(request: NextApiRequest, response: NextApiRe
     toDate: new Date(toDate as string),
     exceptions: exceptions === "true",
     triggers: triggers === "true",
-    resolvedBy: resolvedBy as string[]
+    resolvedBy: resolvedBy as string[],
+    resultCodes: resultCodes as string[]
   }
 
   const reportStream = reportGateway.reportStrategy(reportType as keyof typeof ReportConfigs, params)

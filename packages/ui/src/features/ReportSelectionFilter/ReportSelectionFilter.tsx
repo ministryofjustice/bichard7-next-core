@@ -3,7 +3,9 @@ import ResolveByFilter from "@/components/SearchFilters/ResolvedByFilter"
 import { createReportCsv } from "@/services/reports/csvGeneration/createReportCsv"
 import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
 import AuditResolvedBy from "@/types/AuditResolvedBy"
+import { buildReportQueryParams } from "@/utils/reports/buildReportQueryParams"
 import { validateResolvedBy } from "@/utils/reports/validateResolvedBy"
+import { validateResultCodeCheckboxes } from "@/utils/reports/validateResultCodeCheckboxes"
 import { AUTOMATED_REPORT_TYPE_MAP, AutomatedReportType } from "@moj-bichard7/common/types/reports/AutomatedReportType"
 import { REPORT_TYPE_MAP, ReportType } from "@moj-bichard7/common/types/reports/ReportType"
 import { Card } from "components/Card"
@@ -18,11 +20,12 @@ import { validateDateRange } from "utils/reports/validateDateRange"
 import { validateSelectReport } from "utils/reports/validateSelectReport"
 import { ActionBar } from "./ActionBar"
 import { Checkboxes } from "./Checkboxes"
+import { CommunitySentenceResultCodesFilter } from "./CommunitySentenceResultCodesFilter"
 import { DateRange } from "./DateRange"
+import { filterReducer, initialFilterState } from "./reducers/filters"
 import { ReportResults } from "./ReportResults"
 import { ReportSelectionFilterWrapper } from "./ReportSelectionFilter.styles"
 import { SelectReportDropdown } from "./SelectReportDropdown"
-import { filterReducer, initialFilterState } from "./reducers/filters"
 
 export const ReportSelectionFilter: React.FC<{
   resolvedBy?: AuditResolvedBy[]
@@ -63,6 +66,10 @@ export const ReportSelectionFilter: React.FC<{
     }
   }
 
+  const handleResultCodesChange = (selectedResultCodes: string[]) => {
+    dispatch({ type: "SET_RESULT_CODES", payload: selectedResultCodes })
+  }
+
   const handleCheckbox = (event: SyntheticEvent<HTMLInputElement>) => {
     const { id, checked } = event.currentTarget
     dispatch({ type: "SET_CHECKBOX", payload: { id, checked } })
@@ -99,12 +106,18 @@ export const ReportSelectionFilter: React.FC<{
       canUseTriggerAndExceptionQualityAuditing
     )
 
+    const resultCodesError = validateResultCodeCheckboxes(
+      filterValues.reportType as ReportType,
+      filterValues.resultCodes
+    )
+
     const newErrors = {
       dateFromError: rangeValidation.fromError,
       dateToError: rangeValidation.toError,
       reportTypeError: selectReportValidation,
       checkboxesError: checkboxesValidation,
-      resolvedByError: resolvedByValidation
+      resolvedByError: resolvedByValidation,
+      resultCodesError: resultCodesError
     }
 
     dispatch({ type: "SET_ERRORS", payload: newErrors })
@@ -127,21 +140,7 @@ export const ReportSelectionFilter: React.FC<{
   const handleDownload = async () => {
     try {
       const reportType = filterValues.reportType as ReportType
-
-      const allResolversSelected = resolvedBy.every((r) => filterValues.resolvedBy.includes(r.username))
-
-      const urlQuery = new URLSearchParams({
-        fromDate: filterValues.dateFrom,
-        toDate: filterValues.dateTo,
-        exceptions: String(filterValues.exceptions),
-        triggers: String(filterValues.triggers)
-      })
-
-      if (!allResolversSelected) {
-        for (const user of filterValues.resolvedBy) {
-          urlQuery.append("resolvedBy", user)
-        }
-      }
+      const urlQuery = buildReportQueryParams(filterValues, resolvedBy)
 
       const parsedData = await downloadReport(reportType, urlQuery)
 
@@ -222,6 +221,13 @@ export const ReportSelectionFilter: React.FC<{
                   triggers={filterValues.triggers}
                   exceptions={filterValues.exceptions}
                   error={filterValues.checkboxesError}
+                />
+              )}
+              {filterValues.reportType === "community sentence" && (
+                <CommunitySentenceResultCodesFilter
+                  onChange={handleResultCodesChange}
+                  error={filterValues.resultCodesError}
+                  selectedResultCodes={filterValues.resultCodes}
                 />
               )}
             </div>
