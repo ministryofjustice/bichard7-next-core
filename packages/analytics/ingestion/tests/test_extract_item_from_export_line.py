@@ -56,6 +56,7 @@ def test_extract_item_from_export_line_full():
     output = extract_item_from_export_line(FULL_INPUT)
     assert output == FULL_OUTPUT
 
+
 def test_extract_item_from_export_line_deleted():
     output = extract_item_from_export_line(DELETED_INPUT)
     assert output == DELETED_INPUT["Keys"]
