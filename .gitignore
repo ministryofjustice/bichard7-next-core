@@ -1,3 +1,22 @@
+# analytics
+## ad hoc output data
+packages/analytics/ingestion/iceberg
+packages/spi-transform/sql/*.csv
+
+## sample input data
+packages/analytics/ingestion/tests/data
+
+## Python-generated files/venv
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.venv
+.ruff_cache
+
+# misc
 build
 node_modules
 .eslintcache
