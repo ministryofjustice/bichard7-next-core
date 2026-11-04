@@ -28,6 +28,11 @@ RUN npm install --legacy-peer-deps --ignore-scripts --no-audit && \
 # ===========================================================================================================
 FROM eclipse-temurin:21-jdk-jammy@sha256:4b1a74fbffbe6b4e7b6f0171a472478282fb463790a51edf10e465d578f22b69 AS builder
 
+USER root
+
+COPY --chown=root:root blocked.certs ${JAVA_HOME}/lib/security/blocked.certs
+RUN chmod 644 "${JAVA_HOME}/lib/security/blocked.certs"
+
 COPY --from=src /conductor /conductor
 
 WORKDIR /conductor
@@ -65,6 +70,7 @@ USER root
 
 COPY files/openssl.cnf /tmp/openssl.cnf
 COPY files/nginx.repo /etc/yum.repos.d/nginx.repo
+COPY blocked.certs /tmp/blocked.certs
 
 RUN mkdir -p /certs /var/log/supervisor && \
     yum install -y --setopt=install_weak_deps=False --releasever=latest \
@@ -79,7 +85,14 @@ RUN mkdir -p /certs /var/log/supervisor && \
     openssl req -x509 -nodes -days 730 -newkey rsa:4096 \
     -out /certs/server.crt -keyout /certs/server.key \
     -config /tmp/openssl.cnf -extensions 'v3_req' && \
-    rm -rf /tmp/openssl.cnf
+    rm -rf /tmp/openssl.cnf && \
+    JAVA_BIN=$(readlink -f $(command -v java)) && \
+    JAVA_DIR=$(dirname $(dirname "$JAVA_BIN")) && \
+    mkdir -p "${JAVA_DIR}/lib/security" && \
+    mv /tmp/blocked.certs "${JAVA_DIR}/lib/security/blocked.certs" && \
+    chmod 644 "${JAVA_DIR}/lib/security/blocked.certs" && \
+    chown root:root "${JAVA_DIR}/lib/security/blocked.certs" && \
+    ln -s "${JAVA_DIR}" /usr/lib/jvm/java-21
 
 # Make app folders
 RUN mkdir -p /app/config /app/logs /app/libs
