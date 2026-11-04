@@ -94,10 +94,12 @@ class Manifest:
     @classmethod
     def from_summary_file(cls, bucket_name: str, summary_file_key: str) -> "Manifest":
         """Factory method to parse and construct a Manifest from a summary file."""
-        summary_uri = "s3://" + bucket_name + "/" + summary_file_key.lstrip("/")
+        summary_uri = "s3://" + bucket_name + \
+            "/" + summary_file_key.lstrip("/")
         summary = cls._load_json(summary_uri)
 
-        export_type: ExportType = "incremental" if summary.get("exportType") else "full"
+        export_type: ExportType = "incremental" if summary.get(
+            "exportType") else "full"
         item_count = summary.get("itemCount")
         item_count = int(item_count) if item_count else item_count
 
@@ -216,9 +218,11 @@ def main() -> None:
     )
 
     pipeline = dlt.pipeline(
-        pipeline_name="audit_log_landing_to_bronze",  # database name (not used in AWS Glue)
+        # database name (not used in AWS Glue)
+        pipeline_name="audit_log_landing_to_bronze",
         destination="iceberg",
-        dataset_name="bronze_audit_log",  # schema name (database name in AWS Glue)
+        # schema name (database name in AWS Glue)
+        dataset_name="bronze_audit_log",
         progress="log",
         dev_mode=True,
     )

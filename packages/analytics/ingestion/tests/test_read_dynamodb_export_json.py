@@ -10,6 +10,7 @@ from ingestion.main import read_dynamodb_export_jsonl
 # pyrefly: ignore [implicit-any-type-argument]
 class MockFileItem(dict):
     """Mock that behaves like a real dlt FileItemDict in production."""
+
     def __init__(self, content: bytes, file_name: str = "test.jsonl"):
         super().__init__({
             "file_name": file_name,
@@ -18,7 +19,7 @@ class MockFileItem(dict):
         })
         self.content = content
 
-    def open(self, mode: str="rb"):
+    def open(self, mode: str = "rb"):
         return io.BytesIO(self.content)
 
 
@@ -50,7 +51,8 @@ def test_read_dynamodb_export_jsonl_chunking(
     def mock_filesystem_resource():
         yield [MockFileItem(sample_jsonl_bytes)]
 
-    transformer_pipe = mock_filesystem_resource() | read_dynamodb_export_jsonl(chunksize=2)
+    transformer_pipe = mock_filesystem_resource(
+    ) | read_dynamodb_export_jsonl(chunksize=2)
     results = list(transformer_pipe)
 
     assert len(results) == 3
@@ -73,7 +75,8 @@ def test_read_dynamodb_export_jsonl_empty_file(mock_extract, mock_deserialise):
     def mock_filesystem_resource():
         yield [MockFileItem(b"")]
 
-    transformer_pipe = mock_filesystem_resource() | read_dynamodb_export_jsonl(chunksize=2)
+    transformer_pipe = mock_filesystem_resource(
+    ) | read_dynamodb_export_jsonl(chunksize=2)
     results = list(transformer_pipe)
 
     assert len(results) == 0
