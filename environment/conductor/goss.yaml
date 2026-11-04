@@ -87,7 +87,7 @@ file:
   /tmp/openssl.cnf:
     exists: false
     contains: []
-  /usr/lib/jvm/java-21-amazon-corretto.aarch64/lib/security/blocked.certs:
+  /usr/lib/jvm/java-21/lib/security/blocked.certs:
     exists: true
     filetype: file
     mode: "0644"

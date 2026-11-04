@@ -91,7 +91,8 @@ RUN mkdir -p /certs /var/log/supervisor && \
     mkdir -p "${JAVA_DIR}/lib/security" && \
     mv /tmp/blocked.certs "${JAVA_DIR}/lib/security/blocked.certs" && \
     chmod 644 "${JAVA_DIR}/lib/security/blocked.certs" && \
-    chown root:root "${JAVA_DIR}/lib/security/blocked.certs"
+    chown root:root "${JAVA_DIR}/lib/security/blocked.certs" && \
+    ln -s "${JAVA_DIR}" /usr/lib/jvm/java-21
 
 # Make app folders
 RUN mkdir -p /app/config /app/logs /app/libs
