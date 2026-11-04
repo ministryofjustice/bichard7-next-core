@@ -1,0 +1,17 @@
+# potential secrets
+.dlt/secrets.toml
+.env
+
+# ad hoc output data
+iceberg
+
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
