@@ -31,7 +31,7 @@ FROM eclipse-temurin:21-jdk-jammy@sha256:4e61d0b3471137e239397789661f6adeaf8db9a
 USER root
 
 COPY --chown=root:root blocked.certs ${JAVA_HOME}/lib/security/blocked.certs
-RUN chmod 644 ${JAVA_HOME}/lib/security/blocked.certs
+RUN chmod 644 "${JAVA_HOME}/lib/security/blocked.certs"
 
 COPY --from=src /conductor /conductor
 
@@ -70,6 +70,7 @@ USER root
 
 COPY files/openssl.cnf /tmp/openssl.cnf
 COPY files/nginx.repo /etc/yum.repos.d/nginx.repo
+COPY blocked.certs /tmp/blocked.certs
 
 RUN mkdir -p /certs /var/log/supervisor && \
     yum install -y --setopt=install_weak_deps=False --releasever=latest \
@@ -84,11 +85,8 @@ RUN mkdir -p /certs /var/log/supervisor && \
     openssl req -x509 -nodes -days 730 -newkey rsa:4096 \
     -out /certs/server.crt -keyout /certs/server.key \
     -config /tmp/openssl.cnf -extensions 'v3_req' && \
-    rm -rf /tmp/openssl.cnf
-
-# Add blocked.certs for Java
-COPY blocked.certs /tmp/blocked.certs
-RUN JAVA_BIN=$(readlink -f $(command -v java)) && \
+    rm -rf /tmp/openssl.cnf && \
+    JAVA_BIN=$(readlink -f $(command -v java)) && \
     JAVA_DIR=$(dirname $(dirname "$JAVA_BIN")) && \
     mkdir -p "${JAVA_DIR}/lib/security" && \
     mv /tmp/blocked.certs "${JAVA_DIR}/lib/security/blocked.certs" && \
