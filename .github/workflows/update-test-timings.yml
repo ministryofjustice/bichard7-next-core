@@ -79,7 +79,7 @@ jobs:
 
       - name: Save Test Timings
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        if: steps.fetch-timings.outputs.found == 'true' && github.ref == 'refs/heads/main' && always()
+        if: steps.fetch-timings.outputs.found == 'true' && github.ref == 'refs/heads/main'
         with:
           path: timings/timings.json
           key: cypress-timing-user-service-e2e-main-${{ github.sha }}
