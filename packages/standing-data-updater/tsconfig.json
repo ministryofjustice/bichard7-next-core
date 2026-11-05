@@ -1,10 +1,18 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["**/*.ts", "package.json", "node_modules/@types/puppeteer/index.d.ts"],
+  "include": [
+    "src/**/*",
+    "src/input-data/cjs-result-codes/cjs-result-data.json",
+    "src/input-data/offence-code/b7-overrides.json",
+    "src/input-data/offence-code/cjs-offences.json",
+    "src/input-data/offence-code/pnc-ccjs-cjs-offences.json",
+    "src/input-data/offence-code/pnld-offences.json",
+    "src/input-data/organisation-unit/cjs-data.json",
+    "src/input-data/organisation-unit/police-forces.json"
+  ],
   "exclude": ["dist", "node_modules"],
   "compilerOptions": {
-    "outDir": "dist",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext"
+    "types": ["puppeteer"],
+    "outDir": "dist"
   }
 }

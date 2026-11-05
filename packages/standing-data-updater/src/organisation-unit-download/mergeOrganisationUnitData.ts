@@ -1,7 +1,7 @@
 import * as fs from "fs"
-import cjsOrganisationUnitData from "../../input-data/organisation-unit/cjs-data.json"
-import policeOrganisationUnitData from "../../input-data/organisation-unit/police-forces.json"
-import existingOrganisationUnitData from "../../output-data/data/organisation-unit.json"
+import { organisationUnit as existingOrganisationUnitData } from "@moj-bichard7/standing-data"
+import cjsOrganisationUnitData from "../input-data/organisation-unit/cjs-data.json"
+import policeOrganisationUnitData from "../input-data/organisation-unit/police-forces.json"
 import consistentSort from "../lib/consistentSort"
 import mergeOrganisationUnits from "./mergeOrganisationUnits"
 
