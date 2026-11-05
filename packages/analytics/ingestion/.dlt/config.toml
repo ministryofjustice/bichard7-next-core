@@ -1,0 +1,8 @@
+[destination.iceberg]
+catalog_type = "glue"
+catalog_name = "default"
+
+[destination.iceberg.filesystem]
+# The S3 bucket where Iceberg parquet and metadata files will be stored
+# TODO move to env var 'DESTINATION__ICEBERG__FILESYSTEM__BUCKET_URL'
+bucket_url = "s3://bichard-7-e2e-test-analytics-data-store/"
