@@ -32,9 +32,6 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "zod": "^4.6.7"
   },
-  "lint-staged": {
-    "*.{js,ts}": "eslint --cache --fix --max-warnings 0 --no-warn-ignored --ignore-pattern !.ncurc.js"
-  },
   "devDependencies": {
     "@emnapi/core": "1.11.3",
     "@types/jest": "^30.0.0",
@@ -45,5 +42,8 @@
     "lint-staged": "^17.6.0",
     "mockdate": "^3.0.5",
     "ts-jest": "^29.4.15"
+  },
+  "lint-staged": {
+    "*.{js,ts}": "eslint --cache --fix --max-warnings 0 --no-warn-ignored --ignore-pattern !.ncurc.js"
   }
 }

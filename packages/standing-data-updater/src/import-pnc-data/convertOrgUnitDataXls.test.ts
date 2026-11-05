@@ -1,5 +1,5 @@
 import fs from "fs"
-import type { OrganisationUnit } from "../../output-data/types/types"
+import type { OrganisationUnit } from "@moj-bichard7/standing-data/types/types"
 import generatePoliceOrganisationUnits from "./convertOrgUnitDataXls"
 
 describe("GeneratePoliceUnits", () => {

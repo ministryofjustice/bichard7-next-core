@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx"
-import forces from "../../output-data/data/forces.json"
+import { forces } from "@moj-bichard7/standing-data"
 import type { OrganisationUnit } from "../types/OrganisationUnit"
 
 export type SheetData = {

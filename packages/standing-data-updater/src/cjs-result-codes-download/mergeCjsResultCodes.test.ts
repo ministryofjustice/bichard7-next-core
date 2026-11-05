@@ -1,4 +1,4 @@
-import type { ResultCode } from "../../output-data/types/types"
+import type { ResultCode } from "@moj-bichard7/standing-data/types/types"
 import mergeCjsResultCodes from "./mergeCjsResultCodes"
 
 describe("MergeCjsResultCodes", () => {

@@ -1,6 +1,6 @@
-import organisationUnits from "../output-data/data/organisation-unit.json"
+import { organisationUnit } from "@moj-bichard7/standing-data"
 
-const organisationUnitsWithNonEmptyThirdLevelPsaCode = organisationUnits.filter((ou) => ou.thirdLevelPsaCode !== "")
+const organisationUnitsWithNonEmptyThirdLevelPsaCode = organisationUnit.filter((ou) => ou.thirdLevelPsaCode !== "")
 
 test.each(organisationUnitsWithNonEmptyThirdLevelPsaCode)(
   "Third-level PSA code '$thirdLevelPsaCode' can be converted to number",

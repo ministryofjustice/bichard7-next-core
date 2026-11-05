@@ -1,5 +1,5 @@
 import * as XLSX from "xlsx"
-import type { ResultCode } from "../../output-data/types/types"
+import type { ResultCode } from "@moj-bichard7/standing-data/types/types"
 
 export type CjsResultCode = {
   "CJS Result Code": string
