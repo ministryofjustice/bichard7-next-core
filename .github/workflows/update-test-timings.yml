@@ -53,7 +53,7 @@ jobs:
         run: |
           # Locate the merge_group run that tested this exact commit
           MERGE_RUN_ID=$(gh run list \
-            --workflow "build-and-test.yml"
+            --workflow "build-and-test.yml" \
             --commit "${{ github.sha }}" \
             --event merge_group \
             --status success \
