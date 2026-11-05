@@ -25,7 +25,8 @@ const mockPutFileToS3 = putFileToS3Module as { default: any }
 jest.mock("@moj-bichard7/common/utils/logger", () => ({
   __esModule: true,
   default: {
-    info: jest.fn()
+    info: jest.fn(),
+    error: jest.fn()
   }
 }))
 
