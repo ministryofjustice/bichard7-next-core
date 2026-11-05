@@ -9,6 +9,7 @@ import { QualityCheckStatus } from "../../types/ErrorListRecord"
 import Phase from "../../types/Phase"
 import { getAnnotatedHearingOutcome } from "../../types/PhaseResult"
 import ResolutionStatus from "../../types/ResolutionStatus"
+import { extractPostcodeFromAddress } from "../extractPostcodeFromAddress"
 import serialiseToAhoXml from "../serialise/ahoXml/serialiseToXml"
 import serialiseToAnnotatedPncUpdateDatasetXml from "../serialise/annotatedPncUpdateDatasetXml/serialiseToXml"
 import serialiseToPncUpdateDatasetXml from "../serialise/pncUpdateDatasetXml/serialiseToXml"
@@ -70,6 +71,7 @@ const convertResultToErrorListRecord = (result: PhaseResult): ErrorListRecord =>
     ? serialiseToPncUpdateDatasetXml(hearingOutcome, generateFalseHasErrorAttributes, false)
     : serialiseToAhoXml(hearingOutcome, false, generateFalseHasErrorAttributes)
   const updatedHearingOutcome: AnnotatedHearingOutcome = { ...hearingOutcome, Exceptions: [] }
+  const postcode = extractPostcodeFromAddress(hearingOutcome)
 
   return {
     message_id: hearing.SourceReference.UniqueID,
@@ -102,7 +104,8 @@ const convertResultToErrorListRecord = (result: PhaseResult): ErrorListRecord =>
     court_name: hearing.CourtHouseName?.slice(0, 500),
     org_for_police_filter: generateOrgForPoliceFilter(caseElem.ForceOwner),
     court_room: hearing.CourtHearingLocation.BottomLevelCode || undefined,
-    pnc_update_enabled: "Y"
+    pnc_update_enabled: "Y",
+    postcode: postcode
   }
 }
 
