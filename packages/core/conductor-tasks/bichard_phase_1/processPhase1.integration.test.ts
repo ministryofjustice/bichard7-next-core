@@ -6,10 +6,11 @@ import getFileFromS3 from "@moj-bichard7/common/s3/getFileFromS3"
 import * as putFileToS3Module from "@moj-bichard7/common/s3/putFileToS3"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { dateReviver } from "@moj-bichard7/common/utils/dateTransformer"
+import logger from "@moj-bichard7/common/utils/logger"
 import { randomUUID } from "crypto"
 import fs from "fs"
-import { MockServer } from "jest-mock-server"
 import "jest-xml-matcher"
+import { MockServer } from "jest-mock-server"
 import postgres from "postgres"
 
 import type Phase1Result from "../../phase1/types/Phase1Result"
@@ -20,6 +21,13 @@ import processPhase1 from "./processPhase1"
 
 const putFileToS3 = putFileToS3Module.default
 const mockPutFileToS3 = putFileToS3Module as { default: any }
+
+jest.mock("@moj-bichard7/common/utils/logger", () => ({
+  __esModule: true,
+  default: {
+    info: jest.fn()
+  }
+}))
 
 const bucket = "conductor-task-data"
 const s3Config = createS3Config()
@@ -133,5 +141,30 @@ describe("processPhase1", () => {
     expect(parsedUpdatedFile.hearingOutcome).toHaveProperty("PncQueryDate")
     expect(result.logs?.map((l) => l.log)).toContain("Hearing outcome details")
     expect(result.logs?.map((l) => l.log)).toContain("Exceptions generated")
+  })
+
+  it("should log the raised exceptions individually", async () => {
+    pncApi.get("/pnc/records/1101ZD0100000410837W").mockImplementationOnce((ctx) => {
+      ctx.status = 200
+      ctx.body = test89PncResponse
+    })
+
+    const inputAhoJson = String(fs.readFileSync("phase1/tests/fixtures/input-message-089.json"))
+    const s3TaskDataPath = `${randomUUID()}.json`
+    await putFileToS3(inputAhoJson, s3TaskDataPath, bucket, s3Config)
+
+    await processPhase1.execute({ inputData: { s3TaskDataPath } })
+
+    expect(logger.info).toHaveBeenNthCalledWith(1, {
+      correlationId: "EXTERNAL_CORRELATION_ID",
+      exceptionCode: "HO100322",
+      message: "Exception generated"
+    })
+
+    expect(logger.info).toHaveBeenNthCalledWith(2, {
+      correlationId: "EXTERNAL_CORRELATION_ID",
+      exceptionCode: "HO100322",
+      message: "Exception generated"
+    })
   })
 })
