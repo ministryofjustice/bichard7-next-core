@@ -61,6 +61,7 @@
     "packages/message-forwarder",
     "packages/s3-web-proxy",
     "packages/standing-data",
+    "packages/standing-data-updater",
     "packages/uat-data",
     "packages/ui",
     "packages/user-service"
