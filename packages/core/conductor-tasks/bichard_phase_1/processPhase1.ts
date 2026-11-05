@@ -11,6 +11,7 @@ import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/common/schemas/un
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
+import logger from "@moj-bichard7/common/utils/logger"
 import postgres from "postgres"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
@@ -36,6 +37,11 @@ const processPhase1: ConductorWorker = {
 
     const result = await phase1(s3TaskData, policeGateway, auditLogger)
 
+    const hasExceptions = result.hearingOutcome.Exceptions.length > 0
+    if (hasExceptions) {
+      logger.info({ message: "Exceptions generated", exceptionCode: result.hearingOutcome.Exceptions[0].code })
+    }
+
     const tags: Record<string, string> = lockId ? { [lockKey]: lockId } : {}
     const s3PutResult = await putFileToS3(JSON.stringify(result), s3TaskDataPath, taskDataBucket, s3Config, tags)
     if (isError(s3PutResult)) {
@@ -43,8 +49,7 @@ const processPhase1: ConductorWorker = {
     }
 
     let hasTriggersOrExceptions =
-      ("triggers" in result && result.triggers.length > 0) ||
-      ("hearingOutcome" in result && result.hearingOutcome.Exceptions.length > 0)
+      ("triggers" in result && result.triggers.length > 0) || ("hearingOutcome" in result && hasExceptions)
 
     if (!hasTriggersOrExceptions) {
       const existingTriggersCount = await getTriggersCount(db, result.correlationId)
