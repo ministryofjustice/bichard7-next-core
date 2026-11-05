@@ -1,21 +1,10 @@
 {
+  "extends": "../../tsconfig.base.json",
+  "include": ["**/*.ts", "package.json"],
+  "exclude": ["dist", "node_modules"],
   "compilerOptions": {
+    "outDir": "dist",
     "module": "NodeNext",
-    "moduleResolution": "NodeNext",
-    "target": "ES2020",
-    "noImplicitAny": true,
-    "preserveConstEnums": true,
-    "sourceMap": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": false,
-    "skipLibCheck": true,
-    "declaration": true,
-    "outDir": "dist"
-  },
-  "include": ["./**/*.ts"]
+    "moduleResolution": "NodeNext"
+  }
 }
