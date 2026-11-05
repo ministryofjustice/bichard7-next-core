@@ -153,6 +153,12 @@ export default class CourtCase {
   @OneToMany(() => Note, (note) => note.courtCase, { eager: true, cascade: ["insert", "update"] })
   notes!: Relation<Note>[]
 
+  @Column({ name: "postcode", type: "varchar", nullable: true })
+  postcode!: string | null
+
+  @Column({ name: "police_force_area", type: "varchar", nullable: true })
+  policeForceArea!: string | null
+
   exceptionsAreLockedByAnotherUser(username: string) {
     return !!this.errorLockedByUsername && this.errorLockedByUsername !== username
   }
