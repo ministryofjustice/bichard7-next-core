@@ -4,7 +4,7 @@ ARG CONDUCTOR_VERSION="v3.32.1"
 # ===========================================================================================================
 # 0. Source stage
 # ===========================================================================================================
-FROM alpine/git@sha256:e8ceedc73bd80992ae8d58a7d24c58b8322146c354f1d2e81a97db4452068ec0 AS src
+FROM alpine/git@sha256:ac6c828f15d82775d204d3d75112e1d34af8945da80ccf922713c9891ba68e7a AS src
 ARG CONDUCTOR_VERSION
 
 RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor
