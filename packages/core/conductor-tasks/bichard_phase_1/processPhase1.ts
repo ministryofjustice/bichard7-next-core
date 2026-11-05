@@ -37,19 +37,24 @@ const processPhase1: ConductorWorker = {
 
     const result = await phase1(s3TaskData, policeGateway, auditLogger)
 
-    const hasExceptions = result.hearingOutcome.Exceptions.length > 0
-    if (hasExceptions) {
-      logger.info({ message: "Exceptions generated", exceptionCode: result.hearingOutcome.Exceptions[0].code })
-    }
-
     const tags: Record<string, string> = lockId ? { [lockKey]: lockId } : {}
     const s3PutResult = await putFileToS3(JSON.stringify(result), s3TaskDataPath, taskDataBucket, s3Config, tags)
     if (isError(s3PutResult)) {
       return failed(`Could not put file to S3: ${s3TaskDataPath}`, s3PutResult.message)
     }
 
-    let hasTriggersOrExceptions =
-      ("triggers" in result && result.triggers.length > 0) || ("hearingOutcome" in result && hasExceptions)
+    const hasExceptions = "hearingOutcome" in result && result.hearingOutcome.Exceptions.length > 0
+    let hasTriggersOrExceptions = ("triggers" in result && result.triggers.length > 0) || hasExceptions
+
+    if (hasExceptions) {
+      result.hearingOutcome.Exceptions.forEach((exception) => {
+        logger.info({
+          correlationId: result.correlationId,
+          message: "Exception generated",
+          exceptionCode: exception.code
+        })
+      })
+    }
 
     if (!hasTriggersOrExceptions) {
       const existingTriggersCount = await getTriggersCount(db, result.correlationId)
