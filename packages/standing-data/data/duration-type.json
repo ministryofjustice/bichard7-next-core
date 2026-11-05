@@ -1,0 +1,34 @@
+[
+  {
+    "cjsCode": "Community Punishment",
+    "description": "Community Punishment"
+  },
+  {
+    "cjsCode": "Custodial",
+    "description": "Custodial"
+  },
+  {
+    "cjsCode": "Duration",
+    "description": "Duration"
+  },
+  {
+    "cjsCode": "License",
+    "description": "License"
+  },
+  {
+    "cjsCode": "Operational Period",
+    "description": "Operational Period"
+  },
+  {
+    "cjsCode": "Rehabilitation",
+    "description": "Rehabilitation"
+  },
+  {
+    "cjsCode": "Supervision",
+    "description": "Supervision"
+  },
+  {
+    "cjsCode": "Suspended",
+    "description": "Suspended"
+  }
+]

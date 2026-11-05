@@ -1,0 +1,50 @@
+[
+  {
+    "cjsCode": "ADM",
+    "description": "Admits",
+    "pncCode": "GUILTY",
+    "spiCode": "7"
+  },
+  {
+    "cjsCode": "CON",
+    "description": "Consents",
+    "pncCode": "CONSENTED",
+    "spiCode": "4"
+  },
+  {
+    "cjsCode": "DEN",
+    "description": "Denies",
+    "pncCode": "NOT GUILTY",
+    "spiCode": "8"
+  },
+  {
+    "cjsCode": "G",
+    "description": "Guilty",
+    "pncCode": "GUILTY",
+    "spiCode": "1"
+  },
+  {
+    "cjsCode": "G",
+    "description": "Guilty",
+    "pncCode": "GUILTY",
+    "spiCode": "6"
+  },
+  {
+    "cjsCode": "NG",
+    "description": "Not Guilty",
+    "pncCode": "NOT GUILTY",
+    "spiCode": "2"
+  },
+  {
+    "cjsCode": "NONE",
+    "description": "No Plea",
+    "pncCode": "NO PLEA TAKEN",
+    "spiCode": "3"
+  },
+  {
+    "cjsCode": "OPP",
+    "description": "Opposed",
+    "pncCode": "RESISTED",
+    "spiCode": "5"
+  }
+]

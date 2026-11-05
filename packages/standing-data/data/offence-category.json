@@ -1,0 +1,98 @@
+[
+  {
+    "cjsCode": "B7",
+    "description": "Bichard 7-specific category"
+  },
+  {
+    "cjsCode": "CB",
+    "description": "Non-Offence Breach"
+  },
+  {
+    "cjsCode": "CE",
+    "description": "Either Way"
+  },
+  {
+    "cjsCode": "CI",
+    "description": "Indictable"
+  },
+  {
+    "cjsCode": "CM",
+    "description": "Summary Motoring"
+  },
+  {
+    "cjsCode": "CR",
+    "description": "Civil - Related to Criminal"
+  },
+  {
+    "cjsCode": "CS",
+    "description": "Summary Non-motoring"
+  },
+  {
+    "cjsCode": "EF",
+    "description": "Fines"
+  },
+  {
+    "cjsCode": "EM",
+    "description": "Maintenance Enforcement of Home Account"
+  },
+  {
+    "cjsCode": "EX",
+    "description": "Maintenance Enforcement of Foreign Account"
+  },
+  {
+    "cjsCode": "FC",
+    "description": "Family Children Act (Private Law)"
+  },
+  {
+    "cjsCode": "FH",
+    "description": "Family Financial Variation of Home Account"
+  },
+  {
+    "cjsCode": "FL",
+    "description": "Family Law Act"
+  },
+  {
+    "cjsCode": "FO",
+    "description": "Family Other"
+  },
+  {
+    "cjsCode": "FP",
+    "description": "Family Children Act (Public Law)"
+  },
+  {
+    "cjsCode": "FV",
+    "description": "Family Variation"
+  },
+  {
+    "cjsCode": "FX",
+    "description": "Family Variation of Foreign Account"
+  },
+  {
+    "cjsCode": "LB",
+    "description": "Betting"
+  },
+  {
+    "cjsCode": "LC",
+    "description": "Club Licensing"
+  },
+  {
+    "cjsCode": "LG",
+    "description": "Gaming"
+  },
+  {
+    "cjsCode": "LL",
+    "description": "Liquor"
+  },
+  {
+    "cjsCode": "LM",
+    "description": "Magistrates Licensing"
+  },
+  {
+    "cjsCode": "VA",
+    "description": "Miscellaneous Applications (Civil)"
+  },
+  {
+    "cjsCode": "VP",
+    "description": "Civil Proceedings"
+  }
+]

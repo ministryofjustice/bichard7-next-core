@@ -1,0 +1,30 @@
+[
+  {
+    "cjsCode": "0",
+    "description": "not known",
+    "pncCode": "U",
+    "spiCode": "0",
+    "xhibitCode": "unknown"
+  },
+  {
+    "cjsCode": "1",
+    "description": "male",
+    "pncCode": "M",
+    "spiCode": "1",
+    "xhibitCode": "male"
+  },
+  {
+    "cjsCode": "2",
+    "description": "female",
+    "pncCode": "F",
+    "spiCode": "2",
+    "xhibitCode": "female"
+  },
+  {
+    "cjsCode": "9",
+    "description": "not specified",
+    "pncCode": "U",
+    "spiCode": "9",
+    "xhibitCode": "indeterminate"
+  }
+]

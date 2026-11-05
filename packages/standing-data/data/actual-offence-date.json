@@ -1,0 +1,26 @@
+[
+  {
+    "cjsCode": "1",
+    "description": "on or in"
+  },
+  {
+    "cjsCode": "2",
+    "description": "before"
+  },
+  {
+    "cjsCode": "3",
+    "description": "after"
+  },
+  {
+    "cjsCode": "4",
+    "description": "between"
+  },
+  {
+    "cjsCode": "5",
+    "description": "on or about"
+  },
+  {
+    "cjsCode": "6",
+    "description": "on or before"
+  }
+]

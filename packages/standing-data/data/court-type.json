@@ -1,0 +1,34 @@
+[
+  {
+    "cjsCode": "CC",
+    "description": "Crown Court"
+  },
+  {
+    "cjsCode": "COA",
+    "description": "Court of Appeal"
+  },
+  {
+    "cjsCode": "HC",
+    "description": "High Court"
+  },
+  {
+    "cjsCode": "MCA",
+    "description": "MC adult"
+  },
+  {
+    "cjsCode": "MCE",
+    "description": "MC enforcement"
+  },
+  {
+    "cjsCode": "MCF",
+    "description": "MC family"
+  },
+  {
+    "cjsCode": "MCL",
+    "description": "MC licensing"
+  },
+  {
+    "cjsCode": "MCY",
+    "description": "MC youth"
+  }
+]

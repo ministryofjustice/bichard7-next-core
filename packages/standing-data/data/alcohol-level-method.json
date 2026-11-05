@@ -1,0 +1,102 @@
+[
+  {
+    "cjsCode": "A",
+    "description": "Blood",
+    "spiCode": "A"
+  },
+  {
+    "cjsCode": "B",
+    "description": "Breath",
+    "spiCode": "B"
+  },
+  {
+    "cjsCode": "C",
+    "description": "Amfetamine",
+    "spiCode": "C"
+  },
+  {
+    "cjsCode": "D",
+    "description": "Benzoylecgonine",
+    "spiCode": "D"
+  },
+  {
+    "cjsCode": "E",
+    "description": "Clonazepam",
+    "spiCode": "E"
+  },
+  {
+    "cjsCode": "F",
+    "description": "Cocaine",
+    "spiCode": "F"
+  },
+  {
+    "cjsCode": "G",
+    "description": "Diazepam",
+    "spiCode": "G"
+  },
+  {
+    "cjsCode": "H",
+    "description": "Flunitrazepam",
+    "spiCode": "H"
+  },
+  {
+    "cjsCode": "J",
+    "description": "Ketamine",
+    "spiCode": "J"
+  },
+  {
+    "cjsCode": "K",
+    "description": "Lorazepam",
+    "spiCode": "K"
+  },
+  {
+    "cjsCode": "L",
+    "description": "Lysergic Acid Diethylamide",
+    "spiCode": "L"
+  },
+  {
+    "cjsCode": "M",
+    "description": "Methadone",
+    "spiCode": "M"
+  },
+  {
+    "cjsCode": "N",
+    "description": "Metamfetamine",
+    "spiCode": "N"
+  },
+  {
+    "cjsCode": "P",
+    "description": "Methylenedioxymetamfetamine",
+    "spiCode": "P"
+  },
+  {
+    "cjsCode": "R",
+    "description": "6-Monoacetylmorphine",
+    "spiCode": "R"
+  },
+  {
+    "cjsCode": "S",
+    "description": "Morphine",
+    "spiCode": "S"
+  },
+  {
+    "cjsCode": "T",
+    "description": "Oxazepam",
+    "spiCode": "T"
+  },
+  {
+    "cjsCode": "U",
+    "description": "Temazepam",
+    "spiCode": "U"
+  },
+  {
+    "cjsCode": "V",
+    "description": "Urine",
+    "spiCode": "V"
+  },
+  {
+    "cjsCode": "W",
+    "description": "Delta-9-Tetrahydrocannabinol",
+    "spiCode": "W"
+  }
+]
