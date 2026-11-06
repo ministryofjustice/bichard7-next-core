@@ -1,0 +1,14 @@
+[
+  {
+    "cjsCode": "C",
+    "description": "Charge"
+  },
+  {
+    "cjsCode": "R",
+    "description": "Requisition"
+  },
+  {
+    "cjsCode": "S",
+    "description": "Summons"
+  }
+]

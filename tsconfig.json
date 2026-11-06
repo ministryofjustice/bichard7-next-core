@@ -7,6 +7,8 @@
     { "path": "./packages/core/tsconfig.ref.json" },
     { "path": "./packages/e2e-test/tsconfig.ref.json" },
     { "path": "./packages/message-forwarder/tsconfig.ref.json" },
+    { "path": "./packages/standing-data/tsconfig.ref.json" },
+    { "path": "./packages/standing-data-updater/tsconfig.ref.json" },
     { "path": "./packages/ui/tsconfig.ref.json" },
     { "path": "./packages/user-service/tsconfig.ref.json" }
   ]

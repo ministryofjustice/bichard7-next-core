@@ -1,0 +1,1198 @@
+[
+  {
+    "cjsCode": "A",
+    "description": "Police Cells"
+  },
+  {
+    "cjsCode": "AB",
+    "description": "Custody for life (of offenders 18-20)"
+  },
+  {
+    "cjsCode": "AC",
+    "description": "Mandatory life sentences for second serious offence"
+  },
+  {
+    "cjsCode": "AD",
+    "description": "Minimum 7 years for 3rd Class A drug trafficking"
+  },
+  {
+    "cjsCode": "AE",
+    "description": "Minimum 3 years for 3rd domestic burglary"
+  },
+  {
+    "cjsCode": "AJ",
+    "description": "Detained (Offender under 18)"
+  },
+  {
+    "cjsCode": "AS",
+    "description": "Aggravated as victim is Emergency Worker"
+  },
+  {
+    "cjsCode": "AT",
+    "description": "Offence aggravated by Transgender perception in general"
+  },
+  {
+    "cjsCode": "AU",
+    "description": "Offence aggravated by Transgender perception of victim"
+  },
+  {
+    "cjsCode": "AV",
+    "description": "Offence aggravated by Sexual Orientation of victim"
+  },
+  {
+    "cjsCode": "AW",
+    "description": "Offence aggravated by Sexual Orientation in general"
+  },
+  {
+    "cjsCode": "AX",
+    "description": "Offence aggravated by Disability of victim"
+  },
+  {
+    "cjsCode": "AY",
+    "description": "Offence aggravated by Disability in general"
+  },
+  {
+    "cjsCode": "AZ",
+    "description": "Religiously Aggravated Offence"
+  },
+  {
+    "cjsCode": "B",
+    "description": "Racially Aggravated Offence"
+  },
+  {
+    "cjsCode": "BA",
+    "description": "With Electronic Tagging"
+  },
+  {
+    "cjsCode": "BB",
+    "description": "Without Electronic Tagging"
+  },
+  {
+    "cjsCode": "BF",
+    "description": "Comply with Supervisor's Directions"
+  },
+  {
+    "cjsCode": "BI",
+    "description": "Attend at a Community Rehabilitation Centre"
+  },
+  {
+    "cjsCode": "BJ",
+    "description": "Participate in Specified Activities"
+  },
+  {
+    "cjsCode": "BL",
+    "description": "Refrain from Specified Activities"
+  },
+  {
+    "cjsCode": "BM",
+    "description": "Residential drug/alcohol Treatment"
+  },
+  {
+    "cjsCode": "BN",
+    "description": "Extension of Requirements for Sexual Offenders"
+  },
+  {
+    "cjsCode": "BP",
+    "description": "For Default in Payment"
+  },
+  {
+    "cjsCode": "BQ",
+    "description": "Education Requirement"
+  },
+  {
+    "cjsCode": "BR",
+    "description": "Night Restriction Requirement"
+  },
+  {
+    "cjsCode": "BS",
+    "description": "Non-Residential drug/alcohol Treatment"
+  },
+  {
+    "cjsCode": "BT",
+    "description": "Drug/alcohol Treatment by Doctor"
+  },
+  {
+    "cjsCode": "BU",
+    "description": "Other"
+  },
+  {
+    "cjsCode": "BV",
+    "description": "No Additional Requirements"
+  },
+  {
+    "cjsCode": "C",
+    "description": "Concurrent"
+  },
+  {
+    "cjsCode": "CA",
+    "description": "Local Custody"
+  },
+  {
+    "cjsCode": "CB",
+    "description": "Prison"
+  },
+  {
+    "cjsCode": "CC",
+    "description": "Failed to appear at Adjourned Hearing - Considering Disqualification"
+  },
+  {
+    "cjsCode": "CD",
+    "description": "Failed to Appear at Adjourned Hearing - Defendant Convicted"
+  },
+  {
+    "cjsCode": "CE",
+    "description": "Failed to Appear at Adjourned Hearing - Evidence Heard"
+  },
+  {
+    "cjsCode": "CF",
+    "description": "Failed to Appear at Adjourned Hearing - No Evidence Heard"
+  },
+  {
+    "cjsCode": "CG",
+    "description": "Failed to Appear when Bailed"
+  },
+  {
+    "cjsCode": "CH",
+    "description": "Failed to appear in Answer to Summons - Proposing Disqualification"
+  },
+  {
+    "cjsCode": "CI",
+    "description": "Failed to Appear in Answer to Summons - Defendant Convicted"
+  },
+  {
+    "cjsCode": "CJ",
+    "description": "Failed to Appear in Answer to Summons - Evidence Heard"
+  },
+  {
+    "cjsCode": "CK",
+    "description": "Failed to Appear in Answer to Summons"
+  },
+  {
+    "cjsCode": "CL",
+    "description": "Attached to Non-Molestation Order"
+  },
+  {
+    "cjsCode": "CM",
+    "description": "Attached to Occupation Order"
+  },
+  {
+    "cjsCode": "CN",
+    "description": "In Custody"
+  },
+  {
+    "cjsCode": "CQ",
+    "description": "Not Detained"
+  },
+  {
+    "cjsCode": "CV",
+    "description": "Offence imprisonable in case of person aged over 18"
+  },
+  {
+    "cjsCode": "CW",
+    "description": "With Counselling and Guidance Sessions"
+  },
+  {
+    "cjsCode": "CX",
+    "description": "New evidence has become available"
+  },
+  {
+    "cjsCode": "CY",
+    "description": "Absconded after surrendering from court"
+  },
+  {
+    "cjsCode": "CZ",
+    "description": "Proceedings relate to previous court order"
+  },
+  {
+    "cjsCode": "DA",
+    "description": "For pre-sentence reports"
+  },
+  {
+    "cjsCode": "DB",
+    "description": "At Defence request/For Defence Enquiries"
+  },
+  {
+    "cjsCode": "DC",
+    "description": "At Prosecution Request/For Prosecution Enquiries"
+  },
+  {
+    "cjsCode": "DD",
+    "description": "Defendant to Produce Medical Certificate - Too Ill to Attend"
+  },
+  {
+    "cjsCode": "DE",
+    "description": "Defendant to Seek Legal Advice/Instruct Solicitor"
+  },
+  {
+    "cjsCode": "DF",
+    "description": "For Attendance of Parent/Guardian of Young Offender"
+  },
+  {
+    "cjsCode": "DG",
+    "description": "For Bail Hostel Vacancy"
+  },
+  {
+    "cjsCode": "DH",
+    "description": "For CPS to Review the Case"
+  },
+  {
+    "cjsCode": "DI",
+    "description": "For defence to consider advance disclosure"
+  },
+  {
+    "cjsCode": "DJ",
+    "description": "For Defence Witnesses to Attend"
+  },
+  {
+    "cjsCode": "DK",
+    "description": "For Defendant to Attend because Guilty Plea Equivocal"
+  },
+  {
+    "cjsCode": "DL",
+    "description": "For Defendant to complete/return statement of means form"
+  },
+  {
+    "cjsCode": "DM",
+    "description": "For Defendant to Enter a Plea"
+  },
+  {
+    "cjsCode": "DN",
+    "description": "For Defendant to have opportunity to attend in Support of Special Reasons"
+  },
+  {
+    "cjsCode": "DO",
+    "description": "For Defendant to Produce valid driving documents/insurance/test certificate"
+  },
+  {
+    "cjsCode": "DP",
+    "description": "For defendant to send driving licence"
+  },
+  {
+    "cjsCode": "DQ",
+    "description": "For defendant to sign/return written guilty plea form"
+  },
+  {
+    "cjsCode": "DR",
+    "description": "For details of antecedents/previous convictions"
+  },
+  {
+    "cjsCode": "DS",
+    "description": "For details of Compensation Claim"
+  },
+  {
+    "cjsCode": "DT",
+    "description": "For driving record from DVLA"
+  },
+  {
+    "cjsCode": "DU",
+    "description": "For Evidence on disputed facts"
+  },
+  {
+    "cjsCode": "DV",
+    "description": "For Hospital Admission"
+  },
+  {
+    "cjsCode": "DW",
+    "description": "For Hospital Assessment"
+  },
+  {
+    "cjsCode": "DX",
+    "description": "For Hospital Assessment/Fitness to Plead"
+  },
+  {
+    "cjsCode": "DY",
+    "description": "For Medical Reports"
+  },
+  {
+    "cjsCode": "DZ",
+    "description": "Case Management Hearing"
+  },
+  {
+    "cjsCode": "E",
+    "description": "Extended"
+  },
+  {
+    "cjsCode": "EA",
+    "description": "Drug abstinence requirement"
+  },
+  {
+    "cjsCode": "EB",
+    "description": "Curfew requirement PCCSA"
+  },
+  {
+    "cjsCode": "EC",
+    "description": "Exclusion requirement PCCSA"
+  },
+  {
+    "cjsCode": "ED",
+    "description": "Participate in alternative to custody programme"
+  },
+  {
+    "cjsCode": "EF",
+    "description": "Extended Licence Period"
+  },
+  {
+    "cjsCode": "EO",
+    "description": "Warrant allocated to civilian enforcement officer"
+  },
+  {
+    "cjsCode": "F",
+    "description": "Consecutive"
+  },
+  {
+    "cjsCode": "FA",
+    "description": "On Conviction"
+  },
+  {
+    "cjsCode": "FB",
+    "description": "On application"
+  },
+  {
+    "cjsCode": "FC",
+    "description": "On imposition of conditional discharge"
+  },
+  {
+    "cjsCode": "FD",
+    "description": "Temporary custody periods Weekends"
+  },
+  {
+    "cjsCode": "FE",
+    "description": "Temporary custody periods Monday to Thursday"
+  },
+  {
+    "cjsCode": "FF",
+    "description": "Temporary custody periods Tuesday to Friday"
+  },
+  {
+    "cjsCode": "FG",
+    "description": "Second Order Imposed"
+  },
+  {
+    "cjsCode": "FH",
+    "description": "Custodial sentence imposed in absence"
+  },
+  {
+    "cjsCode": "FX",
+    "description": "On acquittal"
+  },
+  {
+    "cjsCode": "FZ",
+    "description": "No Conviction"
+  },
+  {
+    "cjsCode": "GA",
+    "description": "For Hostel placement"
+  },
+  {
+    "cjsCode": "GB",
+    "description": "For Prosecution to furnish Advance Disclosure"
+  },
+  {
+    "cjsCode": "GC",
+    "description": "For Prosecution witnesses to attend"
+  },
+  {
+    "cjsCode": "GD",
+    "description": "For service of written statements"
+  },
+  {
+    "cjsCode": "GE",
+    "description": "Opportunity to attend before case proceeds in absence"
+  },
+  {
+    "cjsCode": "GF",
+    "description": "To arrange for Admission to Hospital under Mental Health Act"
+  },
+  {
+    "cjsCode": "GH",
+    "description": "To attend as Liable to totting disqualification"
+  },
+  {
+    "cjsCode": "GI",
+    "description": "To attend for disqualification (Serious Offence)"
+  },
+  {
+    "cjsCode": "GJ",
+    "description": "To attend for sentence"
+  },
+  {
+    "cjsCode": "GK",
+    "description": "To be heard in Courtroom with Video Facilities"
+  },
+  {
+    "cjsCode": "GL",
+    "description": "To dispute claim for back duty"
+  },
+  {
+    "cjsCode": "GM",
+    "description": "To Fix trial date"
+  },
+  {
+    "cjsCode": "GN",
+    "description": "To obtain interpreter"
+  },
+  {
+    "cjsCode": "GO",
+    "description": "To Tie in with Other Charges"
+  },
+  {
+    "cjsCode": "GP",
+    "description": "To Tie in with Other Defendants"
+  },
+  {
+    "cjsCode": "GQ",
+    "description": "Residence with named individual"
+  },
+  {
+    "cjsCode": "GR",
+    "description": "To live at specified place(s)"
+  },
+  {
+    "cjsCode": "GS",
+    "description": "Residence in Local Authority Accommodation"
+  },
+  {
+    "cjsCode": "GT",
+    "description": "Condition - Pre-sentence drug testing order"
+  },
+  {
+    "cjsCode": "GU",
+    "description": "For a placement report"
+  },
+  {
+    "cjsCode": "GV",
+    "description": "For re-hearing"
+  },
+  {
+    "cjsCode": "GW",
+    "description": "For preparation of committal papers / committal proceedings"
+  },
+  {
+    "cjsCode": "HA",
+    "description": "Residential - approved Community Rehabilitation hostel"
+  },
+  {
+    "cjsCode": "HB",
+    "description": "Residential - Other Institution"
+  },
+  {
+    "cjsCode": "HC",
+    "description": "Residential - Other"
+  },
+  {
+    "cjsCode": "HD",
+    "description": "Report to Specified Person at Specified place"
+  },
+  {
+    "cjsCode": "HE",
+    "description": "Residential treatment in mental hospital"
+  },
+  {
+    "cjsCode": "HF",
+    "description": "Non-residential treatment for mental illness at specified institution or place"
+  },
+  {
+    "cjsCode": "HG",
+    "description": "Mental treatment by or under the direction of a duly qualified medical practitioner PCCSA"
+  },
+  {
+    "cjsCode": "IA",
+    "description": "Prosecutor"
+  },
+  {
+    "cjsCode": "IB",
+    "description": "Central funds"
+  },
+  {
+    "cjsCode": "IC",
+    "description": "Solicitor"
+  },
+  {
+    "cjsCode": "ID",
+    "description": "Inter partes"
+  },
+  {
+    "cjsCode": "IE",
+    "description": "Defendant"
+  },
+  {
+    "cjsCode": "J",
+    "description": "Offences taken into consideration"
+  },
+  {
+    "cjsCode": "JA",
+    "description": "Reason for bail condition - To ensure appearance"
+  },
+  {
+    "cjsCode": "JB",
+    "description": "Reason for bail condition - To prevent interference with justice"
+  },
+  {
+    "cjsCode": "JC",
+    "description": "Reason for bail condition - To prevent offending"
+  },
+  {
+    "cjsCode": "JD",
+    "description": "Condition - Curfew No Police - to stay indoors at home"
+  },
+  {
+    "cjsCode": "JE",
+    "description": "Condition - Curfew Police - to stay indoors at home"
+  },
+  {
+    "cjsCode": "JF",
+    "description": "Condition - Driving disqualification - not drive motor vehicle"
+  },
+  {
+    "cjsCode": "JG",
+    "description": "Condition - Supply contact telephone number"
+  },
+  {
+    "cjsCode": "JH",
+    "description": "Condition - Not to apply for international travel documents"
+  },
+  {
+    "cjsCode": "JK",
+    "description": "Condition - No contact - not contact directly or indirectly"
+  },
+  {
+    "cjsCode": "JL",
+    "description": "Condition - Surrender Passport and/or Identity Card to Court"
+  },
+  {
+    "cjsCode": "JM",
+    "description": "Condition - Surrender Passport and/or Identity Card to Police"
+  },
+  {
+    "cjsCode": "JN",
+    "description": "Condition - Pub exclusion"
+  },
+  {
+    "cjsCode": "JO",
+    "description": "Condition - Not to approach (unsupervised)"
+  },
+  {
+    "cjsCode": "JP",
+    "description": "Condition - Not to approach (police supervised)"
+  },
+  {
+    "cjsCode": "JQ",
+    "description": "Condition - Reporting to police station"
+  },
+  {
+    "cjsCode": "JR",
+    "description": "Condition - residency Bail Hostel"
+  },
+  {
+    "cjsCode": "JS",
+    "description": "Condition - Residency Various Bail Hostels"
+  },
+  {
+    "cjsCode": "JT",
+    "description": "Condition - Security"
+  },
+  {
+    "cjsCode": "JU",
+    "description": "Condition - Surety (once)"
+  },
+  {
+    "cjsCode": "JV",
+    "description": "Condition - Surety continuous"
+  },
+  {
+    "cjsCode": "JW",
+    "description": "Condition - Sureties (once)"
+  },
+  {
+    "cjsCode": "JX",
+    "description": "Condition - Sureties continuous"
+  },
+  {
+    "cjsCode": "JY",
+    "description": "Condition - Not to leave England or Wales"
+  },
+  {
+    "cjsCode": "JZ",
+    "description": "Condition - report to a probation office"
+  },
+  {
+    "cjsCode": "K",
+    "description": "Parent"
+  },
+  {
+    "cjsCode": "KC",
+    "description": "For a report containing an action plan"
+  },
+  {
+    "cjsCode": "KD",
+    "description": "To attend - not a guilty plea by post case"
+  },
+  {
+    "cjsCode": "KE",
+    "description": "For the case to continue"
+  },
+  {
+    "cjsCode": "KF",
+    "description": "Defendant in custody on other matters"
+  },
+  {
+    "cjsCode": "KG",
+    "description": "Defendant failed to appear"
+  },
+  {
+    "cjsCode": "KH",
+    "description": "For time to consider a deportation notice"
+  },
+  {
+    "cjsCode": "KI",
+    "description": "For service of a deportation notice"
+  },
+  {
+    "cjsCode": "KJ",
+    "description": "Driving licence suspended until produced"
+  },
+  {
+    "cjsCode": "KK",
+    "description": "For a report on progress of a drug treatment order"
+  },
+  {
+    "cjsCode": "KL",
+    "description": "For a bail application"
+  },
+  {
+    "cjsCode": "KM",
+    "description": "For a report on suitability of a drug treatment order"
+  },
+  {
+    "cjsCode": "KN",
+    "description": "For samples to be provided"
+  },
+  {
+    "cjsCode": "KO",
+    "description": "Error by court"
+  },
+  {
+    "cjsCode": "KP",
+    "description": "Guilty plea received late"
+  },
+  {
+    "cjsCode": "KQ",
+    "description": "Insufficient court time"
+  },
+  {
+    "cjsCode": "KR",
+    "description": "For a report on suitability for a parenting order"
+  },
+  {
+    "cjsCode": "KS",
+    "description": "For a report on suitability for a reparation order"
+  },
+  {
+    "cjsCode": "KT",
+    "description": "Because of bad weather"
+  },
+  {
+    "cjsCode": "KU",
+    "description": "Due to unforseen circumstances"
+  },
+  {
+    "cjsCode": "KV",
+    "description": "To attend for disqualification (Serious Offence)"
+  },
+  {
+    "cjsCode": "KZ",
+    "description": "Pending appeal"
+  },
+  {
+    "cjsCode": "LA",
+    "description": "Before return date of summons"
+  },
+  {
+    "cjsCode": "LB",
+    "description": "No appearance for deferred sentence"
+  },
+  {
+    "cjsCode": "LC",
+    "description": "Extradition request"
+  },
+  {
+    "cjsCode": "LD",
+    "description": "Provisional warrant requested by Foreign State"
+  },
+  {
+    "cjsCode": "LE",
+    "description": "First instance warrant"
+  },
+  {
+    "cjsCode": "LF",
+    "description": "As shown in Information"
+  },
+  {
+    "cjsCode": "LG",
+    "description": "domestic violence case"
+  },
+  {
+    "cjsCode": "LH",
+    "description": "vulnerable or intimidated victim/witness"
+  },
+  {
+    "cjsCode": "LI",
+    "description": "bail conditions cancelled"
+  },
+  {
+    "cjsCode": "LL",
+    "description": "IOJ would not understand proceedings"
+  },
+  {
+    "cjsCode": "LM",
+    "description": "IOJ cross examination of witnesses"
+  },
+  {
+    "cjsCode": "LN",
+    "description": "IOJ loss of liberty"
+  },
+  {
+    "cjsCode": "LO",
+    "description": "IOJ loss of livelihood"
+  },
+  {
+    "cjsCode": "LP",
+    "description": "IOJ serious damage to reputation"
+  },
+  {
+    "cjsCode": "LQ",
+    "description": "IOJ substantial question of law"
+  },
+  {
+    "cjsCode": "LR",
+    "description": "IOJ tracing of witnesses"
+  },
+  {
+    "cjsCode": "LS",
+    "description": "IOJ interest of other person"
+  },
+  {
+    "cjsCode": "LX",
+    "description": "Representation by one advocate"
+  },
+  {
+    "cjsCode": "LY",
+    "description": "Representation by two advocates"
+  },
+  {
+    "cjsCode": "LZ",
+    "description": "Representation by Queen's Counsel"
+  },
+  {
+    "cjsCode": "MA",
+    "description": "Full bail argument"
+  },
+  {
+    "cjsCode": "MI",
+    "description": "Bail exception - Likely to abscond"
+  },
+  {
+    "cjsCode": "MJ",
+    "description": "Bail exception - Likely to offend"
+  },
+  {
+    "cjsCode": "MK",
+    "description": "Bail exception - Likely to interfere with justice"
+  },
+  {
+    "cjsCode": "ML",
+    "description": "Bail exception - Own protection"
+  },
+  {
+    "cjsCode": "MM",
+    "description": "Bail exception - Own welfare"
+  },
+  {
+    "cjsCode": "MN",
+    "description": "Bail exception - In custody"
+  },
+  {
+    "cjsCode": "MO",
+    "description": "Bail exception - insufficient information"
+  },
+  {
+    "cjsCode": "MP",
+    "description": "Bail exception - Breach of bail"
+  },
+  {
+    "cjsCode": "MQ",
+    "description": "Bail exception - Serious offence while on bail"
+  },
+  {
+    "cjsCode": "MR",
+    "description": "Bail exception - For preparation of report"
+  },
+  {
+    "cjsCode": "MS",
+    "description": "Bail exception - Breach of bail (non-imprisonable offence)"
+  },
+  {
+    "cjsCode": "MT",
+    "description": "Bail exception - Fail to surrender"
+  },
+  {
+    "cjsCode": "MU",
+    "description": "Bail exception - No drug assessment"
+  },
+  {
+    "cjsCode": "MV",
+    "description": "Bail exception - likely to offend (physical or mental injury)"
+  },
+  {
+    "cjsCode": "MW",
+    "description": "Bail exception - no power to consider bail in case of murder"
+  },
+  {
+    "cjsCode": "OA",
+    "description": "Reduction allowed when course completed"
+  },
+  {
+    "cjsCode": "OM",
+    "description": "Reason for bail condition - Defendant's own interests"
+  },
+  {
+    "cjsCode": "ON",
+    "description": "Reason for bail condition - Defendant's own protection"
+  },
+  {
+    "cjsCode": "OO",
+    "description": "Reason for bail condition - Defendant's own welfare"
+  },
+  {
+    "cjsCode": "OP",
+    "description": "Reason for bail condition - Probation enquiries/report"
+  },
+  {
+    "cjsCode": "OQ",
+    "description": "Reason for bail condition - Interview with legal advisor"
+  },
+  {
+    "cjsCode": "OR",
+    "description": "Reason for bail condition - tested positive for class A"
+  },
+  {
+    "cjsCode": "Q",
+    "description": "Court House"
+  },
+  {
+    "cjsCode": "RA",
+    "description": "Condition - Other"
+  },
+  {
+    "cjsCode": "RB",
+    "description": "Condition - Residence"
+  },
+  {
+    "cjsCode": "RC",
+    "description": "Condition - Attend appointment with solicitor"
+  },
+  {
+    "cjsCode": "RD",
+    "description": "Condition - Not sit in front of motor vehicle"
+  },
+  {
+    "cjsCode": "RE",
+    "description": "Condition - Report to Youth Justice Team"
+  },
+  {
+    "cjsCode": "RF",
+    "description": "Condition - not to use any internet device"
+  },
+  {
+    "cjsCode": "RG",
+    "description": "Condition - not to delete any history of computer use"
+  },
+  {
+    "cjsCode": "RH",
+    "description": "Condition - keep mobile phone switched on, charged and on person"
+  },
+  {
+    "cjsCode": "S",
+    "description": "Wholly Suspended"
+  },
+  {
+    "cjsCode": "V",
+    "description": "Local Authority to pay"
+  },
+  {
+    "cjsCode": "VA",
+    "description": "Aggregated Daily Penalty"
+  },
+  {
+    "cjsCode": "VB",
+    "description": "Decrease Allowed"
+  },
+  {
+    "cjsCode": "VC",
+    "description": "Increase Order"
+  },
+  {
+    "cjsCode": "W",
+    "description": "Witness"
+  },
+  {
+    "cjsCode": "WB",
+    "description": "Committed for trial under s.6(1) MCA 1980"
+  },
+  {
+    "cjsCode": "WC",
+    "description": "Committed for trial under s.6(2) MCA 1980"
+  },
+  {
+    "cjsCode": "WD",
+    "description": "Notice of transfer - Child witness in Sex case s.53 CJA 1991"
+  },
+  {
+    "cjsCode": "WE",
+    "description": "Notice of transfer - Complex fraud s.4 CJA 1987"
+  },
+  {
+    "cjsCode": "WF",
+    "description": "For sentence s.3 PCC(S)A 2000"
+  },
+  {
+    "cjsCode": "WG",
+    "description": "With other related offences committed for trial s.4 PCC(S)A 2000"
+  },
+  {
+    "cjsCode": "WH",
+    "description": "With other related offences committed for trial and for sentence ss.4 & 3 PCC(S)A 2000"
+  },
+  {
+    "cjsCode": "WJ",
+    "description": "For sentence or to be otherwise dealt with s.6 PCC(S)A 2000"
+  },
+  {
+    "cjsCode": "WK",
+    "description": "For breach of a Crown Court conditional discharge s.13 PCC(S)A 2000"
+  },
+  {
+    "cjsCode": "WL",
+    "description": "For breach of a Crown Court community punishment and rehabilitation order Sch 3 PCC(S)A 2000"
+  },
+  {
+    "cjsCode": "WM",
+    "description": "For breach of a Crown Court community punishment order Sch 3 PCC(S)A 2000"
+  },
+  {
+    "cjsCode": "WN",
+    "description": "For breach of a Crown Court curfew order Sch 3 PCC(S)A 2000"
+  },
+  {
+    "cjsCode": "WO",
+    "description": "For breach of a Crown Court community rehabilitation order Sch 3 PCC(S)A 2000"
+  },
+  {
+    "cjsCode": "WP",
+    "description": "For breach of a Crown Court suspended sentence"
+  },
+  {
+    "cjsCode": "WQ",
+    "description": "For breach of a Crown Court attendance centre Sch 5 PCC(S)A 2000"
+  },
+  {
+    "cjsCode": "WS",
+    "description": "As an incorrigible rogue s.5 Vagrancy Act 1824"
+  },
+  {
+    "cjsCode": "WT",
+    "description": "Following conviction for current offence during currency of an existing sentence for another offence s.116 PCC(S)A 2000"
+  },
+  {
+    "cjsCode": "WV",
+    "description": "For breach of conditions of a release supervision order s.17(3) Crime (Sentences) Act 1997"
+  },
+  {
+    "cjsCode": "WW",
+    "description": "For sentence under s.6(6) Bail Act 1976"
+  },
+  {
+    "cjsCode": "WX",
+    "description": "For restriction order or sentence"
+  },
+  {
+    "cjsCode": "WY",
+    "description": "For restriction order s.43(1) Mental Health Act 1983"
+  },
+  {
+    "cjsCode": "XA",
+    "description": "Indictable only offence sent for trial s.51 Crime and Disorder Act 1998"
+  },
+  {
+    "cjsCode": "XB",
+    "description": "Either way/summary offence sent for trial with indictable offence"
+  },
+  {
+    "cjsCode": "XC",
+    "description": "Summary offence committed/transferred for trial with other offence"
+  },
+  {
+    "cjsCode": "XD",
+    "description": "For breach of a Crown Court Action Plan Order"
+  },
+  {
+    "cjsCode": "XE",
+    "description": "For breach of a Crown Court Drug Treatment and Testing Order"
+  },
+  {
+    "cjsCode": "XF",
+    "description": "For breach of a Crown Court Reparation order"
+  },
+  {
+    "cjsCode": "XG",
+    "description": "For breach of a Crown Court Supervision order"
+  },
+  {
+    "cjsCode": "XH",
+    "description": "For a confiscation order"
+  },
+  {
+    "cjsCode": "XI",
+    "description": "For a confiscation order and for sentence"
+  },
+  {
+    "cjsCode": "XJ",
+    "description": "As a dangerous adult offender"
+  },
+  {
+    "cjsCode": "XK",
+    "description": "As a dangerous adult offender and for sentence"
+  },
+  {
+    "cjsCode": "XL",
+    "description": "For sentence of detention as a child/young person"
+  },
+  {
+    "cjsCode": "XM",
+    "description": "As a dangerous young offender"
+  },
+  {
+    "cjsCode": "XN",
+    "description": "For sentence of detention and as a dangerous young offender"
+  },
+  {
+    "cjsCode": "XO",
+    "description": "With another related offence committed for trial"
+  },
+  {
+    "cjsCode": "XP",
+    "description": "For sentence of detention and with another related offence committed for trial"
+  },
+  {
+    "cjsCode": "XQ",
+    "description": "As a dangerous young offender and with another related offence committed for trial"
+  },
+  {
+    "cjsCode": "XR",
+    "description": "For breach of a Crown Court community order"
+  },
+  {
+    "cjsCode": "XS",
+    "description": "Further offence committed during currency of Crown Court community order"
+  },
+  {
+    "cjsCode": "XT",
+    "description": "Further offence committed during currency of Crown Court suspended sentence"
+  },
+  {
+    "cjsCode": "XU",
+    "description": "Summary offence joined on indictment s.40 Criminal Justice Act 1988"
+  },
+  {
+    "cjsCode": "YA",
+    "description": "Under s.3 Obscene Publications Act 1959"
+  },
+  {
+    "cjsCode": "YB",
+    "description": "Under s.52(1) Firearms Act 1968"
+  },
+  {
+    "cjsCode": "YC",
+    "description": "Under s.27 Misuse of Drugs Act 1971"
+  },
+  {
+    "cjsCode": "YD",
+    "description": "Under s.25 Public Order Act 1986"
+  },
+  {
+    "cjsCode": "YE",
+    "description": "Under s.143 Powers of Criminal Courts (Sentencing) Act 2000"
+  },
+  {
+    "cjsCode": "YF",
+    "description": "Of rights under s.143 PCC(S)A 2000"
+  },
+  {
+    "cjsCode": "YG",
+    "description": "Under s.71 Criminal Justice Act 1988"
+  },
+  {
+    "cjsCode": "YH",
+    "description": "Under Drug Trafficking Act 1994"
+  },
+  {
+    "cjsCode": "YJ",
+    "description": "Property"
+  },
+  {
+    "cjsCode": "YK",
+    "description": "Vehicle"
+  },
+  {
+    "cjsCode": "YN",
+    "description": "Under s.23 of the Terrorism Act 2000"
+  },
+  {
+    "cjsCode": "YP",
+    "description": "Effective"
+  },
+  {
+    "cjsCode": "YQ",
+    "description": "Non-effective"
+  },
+  {
+    "cjsCode": "YR",
+    "description": "Penalty points"
+  },
+  {
+    "cjsCode": "YS",
+    "description": "Additional penalty points"
+  },
+  {
+    "cjsCode": "YT",
+    "description": "Sentence varied"
+  },
+  {
+    "cjsCode": "YU",
+    "description": "Disqualification from owning, keeping, participating"
+  },
+  {
+    "cjsCode": "YV",
+    "description": "Disqualification from dealing"
+  },
+  {
+    "cjsCode": "YW",
+    "description": "Disqualification from transporting"
+  },
+  {
+    "cjsCode": "YX",
+    "description": "Article to be destroyed"
+  },
+  {
+    "cjsCode": "YY",
+    "description": "Article to be sold / disposed of"
+  },
+  {
+    "cjsCode": "YZ",
+    "description": "Under Animal Welfare Act 2006"
+  },
+  {
+    "cjsCode": "ZC",
+    "description": "Offender Under 19 Years"
+  }
+]

@@ -1,0 +1,51 @@
+[
+  {
+    "cjsCode": "D",
+    "description": "days",
+    "pncCode": "D",
+    "spiCode": "D",
+    "xhibitCode": "days"
+  },
+  {
+    "cjsCode": "H",
+    "description": "hours",
+    "pncCode": "H",
+    "spiCode": "H",
+    "xhibitCode": "hours"
+  },
+  {
+    "cjsCode": "L",
+    "description": "life",
+    "pncCode": "Y999",
+    "spiCode": "L",
+    "xhibitCode": "life"
+  },
+  {
+    "cjsCode": "M",
+    "description": "months",
+    "pncCode": "M",
+    "spiCode": "M",
+    "xhibitCode": "months"
+  },
+  {
+    "cjsCode": "S",
+    "description": "sessions",
+    "pncCode": "S",
+    "spiCode": "S",
+    "xhibitCode": "sessions"
+  },
+  {
+    "cjsCode": "W",
+    "description": "weeks",
+    "pncCode": "W",
+    "spiCode": "W",
+    "xhibitCode": "weeks"
+  },
+  {
+    "cjsCode": "Y",
+    "description": "years",
+    "pncCode": "Y",
+    "spiCode": "Y",
+    "xhibitCode": "years"
+  }
+]

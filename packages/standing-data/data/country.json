@@ -1,0 +1,958 @@
+[
+  {
+    "cjsCode": "ABW",
+    "description": "Aruba "
+  },
+  {
+    "cjsCode": "AFG",
+    "description": "Afghanistan"
+  },
+  {
+    "cjsCode": "AGO",
+    "description": "Angola, Republic of"
+  },
+  {
+    "cjsCode": "AIA",
+    "description": "Anguilla "
+  },
+  {
+    "cjsCode": "ALB",
+    "description": "Albania, People's Socialist Republic of "
+  },
+  {
+    "cjsCode": "AND",
+    "description": "Andorra, Principality of "
+  },
+  {
+    "cjsCode": "ANT",
+    "description": "Netherlands Antilles "
+  },
+  {
+    "cjsCode": "ARE",
+    "description": "United Arab Emirates (was Trucial States) "
+  },
+  {
+    "cjsCode": "ARG",
+    "description": "Argentina, Argentine Republic "
+  },
+  {
+    "cjsCode": "ARM",
+    "description": "Armenia "
+  },
+  {
+    "cjsCode": "ASM",
+    "description": "American Samoa "
+  },
+  {
+    "cjsCode": "ATA",
+    "description": "Antarctica (the territory South of 60 deg S) "
+  },
+  {
+    "cjsCode": "ATF",
+    "description": "French Southern Territories "
+  },
+  {
+    "cjsCode": "ATG",
+    "description": "Antigua and Barbuda "
+  },
+  {
+    "cjsCode": "AUS",
+    "description": "Australia, Commonwealth of "
+  },
+  {
+    "cjsCode": "AUT",
+    "description": "Austria, Republic of "
+  },
+  {
+    "cjsCode": "AZE",
+    "description": "Azerbaijan, Republic of"
+  },
+  {
+    "cjsCode": "BDI",
+    "description": "Burundi, Republic of "
+  },
+  {
+    "cjsCode": "BEL",
+    "description": "Belgium, Kingdom of "
+  },
+  {
+    "cjsCode": "BEN",
+    "description": "Benin (was Dahomey), People's Republic of"
+  },
+  {
+    "cjsCode": "BFA",
+    "description": "Burkina Faso (was Upper Volta) "
+  },
+  {
+    "cjsCode": "BGD",
+    "description": "Bangladesh, People's Republic of "
+  },
+  {
+    "cjsCode": "BGR",
+    "description": "Bulgaria, People's Republic of "
+  },
+  {
+    "cjsCode": "BHR",
+    "description": "Bahrain, Kingdom of "
+  },
+  {
+    "cjsCode": "BHS",
+    "description": "Bahamas, Commonwealth of the "
+  },
+  {
+    "cjsCode": "BIH",
+    "description": "Bosnia and Herzegovina"
+  },
+  {
+    "cjsCode": "BLR",
+    "description": "Belarus "
+  },
+  {
+    "cjsCode": "BLZ",
+    "description": "Belize "
+  },
+  {
+    "cjsCode": "BMU",
+    "description": "Bermuda "
+  },
+  {
+    "cjsCode": "BOL",
+    "description": "Bolivia, Republic of "
+  },
+  {
+    "cjsCode": "BRA",
+    "description": "Brazil, Federative Republic of"
+  },
+  {
+    "cjsCode": "BRB",
+    "description": "Barbados "
+  },
+  {
+    "cjsCode": "BRN",
+    "description": "Brunei Darussalam "
+  },
+  {
+    "cjsCode": "BTN",
+    "description": "Bhutan, Kingdom of "
+  },
+  {
+    "cjsCode": "BVT",
+    "description": "Bouvet Island (Bouvetoya) "
+  },
+  {
+    "cjsCode": "BWA",
+    "description": "Botswana, Republic of "
+  },
+  {
+    "cjsCode": "CAF",
+    "description": "Central African Republic "
+  },
+  {
+    "cjsCode": "CAN",
+    "description": "Canada "
+  },
+  {
+    "cjsCode": "CCK",
+    "description": "Cocos (Keeling) Islands "
+  },
+  {
+    "cjsCode": "CHE",
+    "description": "Switzerland, Swiss Confederation "
+  },
+  {
+    "cjsCode": "CHL",
+    "description": "Chile, Republic of "
+  },
+  {
+    "cjsCode": "CHN",
+    "description": "China, People's Republic of "
+  },
+  {
+    "cjsCode": "CIV",
+    "description": "Cote D'Ivoire, Ivory Coast, Republic of the"
+  },
+  {
+    "cjsCode": "CMR",
+    "description": "Cameroon, United Republic of "
+  },
+  {
+    "cjsCode": "COD",
+    "description": "Congo, Democratic Republic of (was Zaire) "
+  },
+  {
+    "cjsCode": "COG",
+    "description": "Congo, People's Republic of "
+  },
+  {
+    "cjsCode": "COK",
+    "description": "Cook Islands"
+  },
+  {
+    "cjsCode": "COL",
+    "description": "Colombia, Republic of"
+  },
+  {
+    "cjsCode": "COM",
+    "description": "Comoros, Union of the"
+  },
+  {
+    "cjsCode": "CPV",
+    "description": "Cape Verde, Republic of "
+  },
+  {
+    "cjsCode": "CRI",
+    "description": "Costa Rica, Republic of "
+  },
+  {
+    "cjsCode": "CUB",
+    "description": "Cuba, Republic of "
+  },
+  {
+    "cjsCode": "CXR",
+    "description": "Christmas Island "
+  },
+  {
+    "cjsCode": "CYM",
+    "description": "Cayman Islands "
+  },
+  {
+    "cjsCode": "CYP",
+    "description": "Cyprus, Republic of "
+  },
+  {
+    "cjsCode": "CZE",
+    "description": "Czech Republic "
+  },
+  {
+    "cjsCode": "DEU",
+    "description": "Germany "
+  },
+  {
+    "cjsCode": "DJI",
+    "description": "Djibouti, Republic of (was French Afars and Issas) "
+  },
+  {
+    "cjsCode": "DMA",
+    "description": "Dominica, Commonwealth of "
+  },
+  {
+    "cjsCode": "DNK",
+    "description": "Denmark, Kingdom of "
+  },
+  {
+    "cjsCode": "DOM",
+    "description": "Dominican Republic "
+  },
+  {
+    "cjsCode": "DZA",
+    "description": "Algeria, People's Democratic Republic of"
+  },
+  {
+    "cjsCode": "ECU",
+    "description": "Ecuador, Republic of "
+  },
+  {
+    "cjsCode": "EGY",
+    "description": "Egypt, Arab Republic of "
+  },
+  {
+    "cjsCode": "ERI",
+    "description": "Eritrea "
+  },
+  {
+    "cjsCode": "ESH",
+    "description": "Western Sahara (was Spanish Sahara) "
+  },
+  {
+    "cjsCode": "ESP",
+    "description": "Spain, Spanish State "
+  },
+  {
+    "cjsCode": "EST",
+    "description": "Estonia "
+  },
+  {
+    "cjsCode": "ETH",
+    "description": "Ethiopia "
+  },
+  {
+    "cjsCode": "FIN",
+    "description": "Finland, Republic of"
+  },
+  {
+    "cjsCode": "FJI",
+    "description": "Fiji, Republic of the Fiji Islands"
+  },
+  {
+    "cjsCode": "FLK",
+    "description": "Falkland Islands (Malvinas) "
+  },
+  {
+    "cjsCode": "FRA",
+    "description": "France, French Republic "
+  },
+  {
+    "cjsCode": "FRO",
+    "description": "Faeroe Islands"
+  },
+  {
+    "cjsCode": "FSM",
+    "description": "Micronesia, Federated States of "
+  },
+  {
+    "cjsCode": "GAB",
+    "description": "Gabon, Gabonese Republic "
+  },
+  {
+    "cjsCode": "GBR",
+    "description": "United Kingdom of Great Britain & N. Ireland"
+  },
+  {
+    "cjsCode": "GEO",
+    "description": "Georgia "
+  },
+  {
+    "cjsCode": "GHA",
+    "description": "Ghana, Republic of"
+  },
+  {
+    "cjsCode": "GIB",
+    "description": "Gibraltar "
+  },
+  {
+    "cjsCode": "GIN",
+    "description": "Guinea, Revolutionary People's Rep'c of "
+  },
+  {
+    "cjsCode": "GLP",
+    "description": "Guadaloupe "
+  },
+  {
+    "cjsCode": "GMB",
+    "description": "Gambia, Republic of the "
+  },
+  {
+    "cjsCode": "GNB",
+    "description": "Guinea-Bissau, Republic of (was Portuguese Guinea) "
+  },
+  {
+    "cjsCode": "GNQ",
+    "description": "Equatorial Guinea, Republic of "
+  },
+  {
+    "cjsCode": "GRC",
+    "description": "Greece, Hellenic Republic "
+  },
+  {
+    "cjsCode": "GRD",
+    "description": "Grenada "
+  },
+  {
+    "cjsCode": "GRL",
+    "description": "Greenland "
+  },
+  {
+    "cjsCode": "GTM",
+    "description": "Guatemala, Republic of "
+  },
+  {
+    "cjsCode": "GUF",
+    "description": "French Guiana "
+  },
+  {
+    "cjsCode": "GUM",
+    "description": "Guam "
+  },
+  {
+    "cjsCode": "GUY",
+    "description": "Guyana, Republic of "
+  },
+  {
+    "cjsCode": "HKG",
+    "description": "Hong Kong, Special Administrative Region of China"
+  },
+  {
+    "cjsCode": "HMD",
+    "description": "Heard and McDonald Islands "
+  },
+  {
+    "cjsCode": "HND",
+    "description": "Honduras, Republic of "
+  },
+  {
+    "cjsCode": "HRV",
+    "description": "Hrvatska (Croatia) "
+  },
+  {
+    "cjsCode": "HTI",
+    "description": "Haiti, Republic of "
+  },
+  {
+    "cjsCode": "HUN",
+    "description": "Hungary, Hungarian People's Republic "
+  },
+  {
+    "cjsCode": "IDN",
+    "description": "Indonesia, Republic of "
+  },
+  {
+    "cjsCode": "IND",
+    "description": "India, Republic of "
+  },
+  {
+    "cjsCode": "IOT",
+    "description": "British Indian Ocean Territory (Chagos Archipelago) "
+  },
+  {
+    "cjsCode": "IRL",
+    "description": "Ireland "
+  },
+  {
+    "cjsCode": "IRN",
+    "description": "Iran, Islamic Republic of "
+  },
+  {
+    "cjsCode": "IRQ",
+    "description": "Iraq, Republic of "
+  },
+  {
+    "cjsCode": "ISL",
+    "description": "Iceland, Republic of "
+  },
+  {
+    "cjsCode": "ISR",
+    "description": "Israel, State of "
+  },
+  {
+    "cjsCode": "ITA",
+    "description": "Italy, Italian Republic"
+  },
+  {
+    "cjsCode": "JAM",
+    "description": "Jamaica "
+  },
+  {
+    "cjsCode": "JOR",
+    "description": "Jordan, Hashemite Kingdom of "
+  },
+  {
+    "cjsCode": "JPN",
+    "description": "Japan "
+  },
+  {
+    "cjsCode": "KAZ",
+    "description": "Kazakhstan, Republic of"
+  },
+  {
+    "cjsCode": "KEN",
+    "description": "Kenya, Republic of "
+  },
+  {
+    "cjsCode": "KGZ",
+    "description": "Kyrgyz Republic "
+  },
+  {
+    "cjsCode": "KHM",
+    "description": "Cambodia, Kingdom of (was Khmer Republic/Kampuchea, Democratic) "
+  },
+  {
+    "cjsCode": "KIR",
+    "description": "Kiribati, Republic of (was Gilbert Islands)"
+  },
+  {
+    "cjsCode": "KNA",
+    "description": "St. Kitts and Nevis"
+  },
+  {
+    "cjsCode": "KOR",
+    "description": "Korea, Republic of "
+  },
+  {
+    "cjsCode": "KWT",
+    "description": "Kuwait, State of "
+  },
+  {
+    "cjsCode": "LAO",
+    "description": "Lao People's Democratic Republic "
+  },
+  {
+    "cjsCode": "LBN",
+    "description": "Lebanon, Lebanese Republic "
+  },
+  {
+    "cjsCode": "LBR",
+    "description": "Liberia, Republic of "
+  },
+  {
+    "cjsCode": "LBY",
+    "description": "Libyan Arab Jamahiriya "
+  },
+  {
+    "cjsCode": "LCA",
+    "description": "St. Lucia"
+  },
+  {
+    "cjsCode": "LIE",
+    "description": "Liechtenstein, Principality of "
+  },
+  {
+    "cjsCode": "LKA",
+    "description": "Sri Lanka, Democratic Socialist Republic of (was Ceylon) "
+  },
+  {
+    "cjsCode": "LSO",
+    "description": "Lesotho, Kingdom of "
+  },
+  {
+    "cjsCode": "LTU",
+    "description": "Lithuania "
+  },
+  {
+    "cjsCode": "LUX",
+    "description": "Luxembourg, Grand Duchy of "
+  },
+  {
+    "cjsCode": "LVA",
+    "description": "Latvia "
+  },
+  {
+    "cjsCode": "MAC",
+    "description": "Macao, Special Administrative Region of China"
+  },
+  {
+    "cjsCode": "MAR",
+    "description": "Morocco, Kingdom of "
+  },
+  {
+    "cjsCode": "MCO",
+    "description": "Monaco, Principality of "
+  },
+  {
+    "cjsCode": "MDA",
+    "description": "Moldova, Republic of "
+  },
+  {
+    "cjsCode": "MDG",
+    "description": "Madagascar, Republic of "
+  },
+  {
+    "cjsCode": "MDV",
+    "description": "Maldives, Republic of "
+  },
+  {
+    "cjsCode": "MEX",
+    "description": "Mexico, United Mexican States "
+  },
+  {
+    "cjsCode": "MHL",
+    "description": "Marshall Islands "
+  },
+  {
+    "cjsCode": "MKD",
+    "description": "Macedonia, the former Yugoslav Republic of "
+  },
+  {
+    "cjsCode": "MLI",
+    "description": "Mali, Republic of "
+  },
+  {
+    "cjsCode": "MLT",
+    "description": "Malta, Republic of "
+  },
+  {
+    "cjsCode": "MMR",
+    "description": "Myanmar (was Burma) "
+  },
+  {
+    "cjsCode": "MNG",
+    "description": "Mongolia, Mongolian People's Republic "
+  },
+  {
+    "cjsCode": "MNP",
+    "description": "Northern Mariana Islands "
+  },
+  {
+    "cjsCode": "MOZ",
+    "description": "Mozambique, People's Republic of "
+  },
+  {
+    "cjsCode": "MRT",
+    "description": "Mauritania, Islamic Republic of "
+  },
+  {
+    "cjsCode": "MSR",
+    "description": "Montserrat "
+  },
+  {
+    "cjsCode": "MTQ",
+    "description": "Martinique "
+  },
+  {
+    "cjsCode": "MUS",
+    "description": "Mauritius "
+  },
+  {
+    "cjsCode": "MWI",
+    "description": "Malawi, Republic of "
+  },
+  {
+    "cjsCode": "MYS",
+    "description": "Malaysia"
+  },
+  {
+    "cjsCode": "MYT",
+    "description": "Mayotte"
+  },
+  {
+    "cjsCode": "NAM",
+    "description": "Namibia "
+  },
+  {
+    "cjsCode": "NCL",
+    "description": "New Caledonia "
+  },
+  {
+    "cjsCode": "NER",
+    "description": "Niger, Republic of the "
+  },
+  {
+    "cjsCode": "NFK",
+    "description": "Norfolk Island "
+  },
+  {
+    "cjsCode": "NGA",
+    "description": "Nigeria, Federal Republic of "
+  },
+  {
+    "cjsCode": "NIC",
+    "description": "Nicaragua, Republic of "
+  },
+  {
+    "cjsCode": "NIU",
+    "description": "Niue, Republic of"
+  },
+  {
+    "cjsCode": "NLD",
+    "description": "Netherlands, Kingdom of the "
+  },
+  {
+    "cjsCode": "NOR",
+    "description": "Norway, Kingdom of "
+  },
+  {
+    "cjsCode": "NPL",
+    "description": "Nepal, Kingdom of "
+  },
+  {
+    "cjsCode": "NRU",
+    "description": "Nauru, Republic of "
+  },
+  {
+    "cjsCode": "NZL",
+    "description": "New Zealand "
+  },
+  {
+    "cjsCode": "OMN",
+    "description": "Oman, Sultanate of (was Muscat and Oman) "
+  },
+  {
+    "cjsCode": "PAK",
+    "description": "Pakistan, Islamic Republic of "
+  },
+  {
+    "cjsCode": "PAN",
+    "description": "Panama, Republic of "
+  },
+  {
+    "cjsCode": "PCN",
+    "description": "Pitcairn Island "
+  },
+  {
+    "cjsCode": "PER",
+    "description": "Peru, Republic of "
+  },
+  {
+    "cjsCode": "PHL",
+    "description": "Philippines, Republic of the "
+  },
+  {
+    "cjsCode": "PLW",
+    "description": "Palau "
+  },
+  {
+    "cjsCode": "PNG",
+    "description": "Papua New Guinea "
+  },
+  {
+    "cjsCode": "POL",
+    "description": "Poland, Polish People's Republic "
+  },
+  {
+    "cjsCode": "PRI",
+    "description": "Puerto Rico "
+  },
+  {
+    "cjsCode": "PRK",
+    "description": "Korea, Democratic People's Republic of "
+  },
+  {
+    "cjsCode": "PRT",
+    "description": "Portugal, Portuguese Republic "
+  },
+  {
+    "cjsCode": "PRY",
+    "description": "Paraguay, Republic of "
+  },
+  {
+    "cjsCode": "PSE",
+    "description": "Palestinian Territory, Occupied"
+  },
+  {
+    "cjsCode": "PYF",
+    "description": "French Polynesia "
+  },
+  {
+    "cjsCode": "QAT",
+    "description": "Qatar, State of "
+  },
+  {
+    "cjsCode": "REU",
+    "description": "Reunion"
+  },
+  {
+    "cjsCode": "ROU",
+    "description": "Romania, Socialist Republic of "
+  },
+  {
+    "cjsCode": "RUS",
+    "description": "Russian Federation "
+  },
+  {
+    "cjsCode": "RWA",
+    "description": "Rwanda, Rwandese Republic "
+  },
+  {
+    "cjsCode": "SAU",
+    "description": "Saudi Arabia, Kingdom of "
+  },
+  {
+    "cjsCode": "SCG",
+    "description": "Serbia and Montenegro"
+  },
+  {
+    "cjsCode": "SDN",
+    "description": "Sudan, Democratic Republic of the"
+  },
+  {
+    "cjsCode": "SEN",
+    "description": "Senegal, Republic of"
+  },
+  {
+    "cjsCode": "SGP",
+    "description": "Singapore, Republic of "
+  },
+  {
+    "cjsCode": "SGS",
+    "description": "South Georgia and the South Sandwich Islands"
+  },
+  {
+    "cjsCode": "SHN",
+    "description": "St. Helena"
+  },
+  {
+    "cjsCode": "SJM",
+    "description": "Svalbard & Jan Mayen Islands "
+  },
+  {
+    "cjsCode": "SLB",
+    "description": "Solomon Islands (was British Solomon Islands) "
+  },
+  {
+    "cjsCode": "SLE",
+    "description": "Sierra Leone, Republic of "
+  },
+  {
+    "cjsCode": "SLV",
+    "description": "El Salvador, Republic of"
+  },
+  {
+    "cjsCode": "SMR",
+    "description": "San Marino, Republic of "
+  },
+  {
+    "cjsCode": "SOM",
+    "description": "Somalia, Somali Republic "
+  },
+  {
+    "cjsCode": "SPM",
+    "description": "St. Pierre and Miquelon"
+  },
+  {
+    "cjsCode": "STP",
+    "description": "Sao Tome and Principe, Democratic Republic of "
+  },
+  {
+    "cjsCode": "SUR",
+    "description": "Suriname, Republic of "
+  },
+  {
+    "cjsCode": "SVK",
+    "description": "Slovakia (Slovak Republic) "
+  },
+  {
+    "cjsCode": "SVN",
+    "description": "Slovenia "
+  },
+  {
+    "cjsCode": "SWE",
+    "description": "Sweden, Kingdom of "
+  },
+  {
+    "cjsCode": "SWZ",
+    "description": "Swaziland, Kingdom of "
+  },
+  {
+    "cjsCode": "SYC",
+    "description": "Seychelles, Republic of "
+  },
+  {
+    "cjsCode": "SYR",
+    "description": "Syrian Arab Republic "
+  },
+  {
+    "cjsCode": "TCA",
+    "description": "Turks and Caicos Islands "
+  },
+  {
+    "cjsCode": "TCD",
+    "description": "Chad, Republic of "
+  },
+  {
+    "cjsCode": "TGO",
+    "description": "Togo, Togolese Republic "
+  },
+  {
+    "cjsCode": "THA",
+    "description": "Thailand, Kingdom of "
+  },
+  {
+    "cjsCode": "TJK",
+    "description": "Tajikistan "
+  },
+  {
+    "cjsCode": "TKL",
+    "description": "Tokelau (Tokelau Islands) "
+  },
+  {
+    "cjsCode": "TKM",
+    "description": "Turkmenistan "
+  },
+  {
+    "cjsCode": "TLS",
+    "description": "Timor-Leste, Democratic Republic of"
+  },
+  {
+    "cjsCode": "TON",
+    "description": "Tonga, Kingdom of "
+  },
+  {
+    "cjsCode": "TTO",
+    "description": "Trinidad and Tobago, Republic of "
+  },
+  {
+    "cjsCode": "TUN",
+    "description": "Tunisia, Republic of "
+  },
+  {
+    "cjsCode": "TUR",
+    "description": "Turkey, Republic of "
+  },
+  {
+    "cjsCode": "TUV",
+    "description": "Tuvalu (was part of Gilbert & Ellice Islands) "
+  },
+  {
+    "cjsCode": "TWN",
+    "description": "Taiwan, Province of China "
+  },
+  {
+    "cjsCode": "TZA",
+    "description": "Tanzania, United Republic of"
+  },
+  {
+    "cjsCode": "UGA",
+    "description": "Uganda, Republic of "
+  },
+  {
+    "cjsCode": "UKR",
+    "description": "Ukraine "
+  },
+  {
+    "cjsCode": "UMI",
+    "description": "United States Minor Outlying Islands "
+  },
+  {
+    "cjsCode": "URY",
+    "description": "Uruguay, Eastern Republic of "
+  },
+  {
+    "cjsCode": "USA",
+    "description": "United States of America "
+  },
+  {
+    "cjsCode": "UZB",
+    "description": "Uzbekistan "
+  },
+  {
+    "cjsCode": "VAT",
+    "description": "Holy See (Vatican City State) "
+  },
+  {
+    "cjsCode": "VCT",
+    "description": "St. Vincent and the Grenadines"
+  },
+  {
+    "cjsCode": "VEN",
+    "description": "Venezuela, Bolivarian Republic of "
+  },
+  {
+    "cjsCode": "VGB",
+    "description": "British Virgin Islands "
+  },
+  {
+    "cjsCode": "VIR",
+    "description": "US Virgin Islands "
+  },
+  {
+    "cjsCode": "VNM",
+    "description": "Viet Nam, Socialist Republic of (was Democratic Republic of &Republic of) "
+  },
+  {
+    "cjsCode": "VUT",
+    "description": "Vanuatu (was New Hebrides) "
+  },
+  {
+    "cjsCode": "WLF",
+    "description": "Wallis and Futuna Islands "
+  },
+  {
+    "cjsCode": "WSM",
+    "description": "Samoa, Independent State of (was Western Samoa)"
+  },
+  {
+    "cjsCode": "YEM",
+    "description": "Yemen "
+  },
+  {
+    "cjsCode": "ZAF",
+    "description": "South Africa, Republic of "
+  },
+  {
+    "cjsCode": "ZMB",
+    "description": "Zambia, Republic of "
+  },
+  {
+    "cjsCode": "ZWE",
+    "description": "Zimbabwe (was Southern Rhodesia) "
+  }
+]

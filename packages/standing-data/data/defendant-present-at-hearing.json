@@ -1,0 +1,14 @@
+[
+  {
+    "cjsCode": "A",
+    "description": "Defendant was not present, but appeared by the presence of his/her barrister or solicitor"
+  },
+  {
+    "cjsCode": "N",
+    "description": "No"
+  },
+  {
+    "cjsCode": "Y",
+    "description": "Yes"
+  }
+]

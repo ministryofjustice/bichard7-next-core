@@ -1,0 +1,18 @@
+[
+  {
+    "cjsCode": "D",
+    "description": "Don't Know"
+  },
+  {
+    "cjsCode": "N",
+    "description": "No"
+  },
+  {
+    "cjsCode": "NA",
+    "description": "Not Applicable"
+  },
+  {
+    "cjsCode": "Y",
+    "description": "Yes"
+  }
+]

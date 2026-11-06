@@ -1,0 +1,34 @@
+[
+  {
+    "cjsCode": "1001",
+    "description": "Death",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1002",
+    "description": "Imprisonment",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "AB,AC,AD,AE,AV,AW,AX,AY,AZ,B,C,EF,F,FH,S,YP,YQ,",
+    "resultHalfLifeHours": "72",
+    "type": "F"
+  },
+  {
+    "cjsCode": "1003",
+    "description": "Detained during HM Pleasure",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "",
+    "resultHalfLifeHours": "72",
+    "type": ""
+  },
+  {
+    "cjsCode": "1004",
+    "description": "Restriction Order",
+    "recordableOnPnc": "",
+    "resultCodeQualifiers": "AV,AW,AX,AY,AZ,B,",
+    "resultHalfLifeHours": "72",
+    "type": ""
+  }
+]

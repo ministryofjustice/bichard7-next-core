@@ -1,0 +1,50 @@
+[
+  {
+    "cjsCode": "Back duty",
+    "description": "Back duty"
+  },
+  {
+    "cjsCode": "Central funds costs",
+    "description": "Central funds costs"
+  },
+  {
+    "cjsCode": "Compensation",
+    "description": "Compensation"
+  },
+  {
+    "cjsCode": "Compensation on a TIC",
+    "description": "Compensation on a TIC"
+  },
+  {
+    "cjsCode": "Confiscation",
+    "description": "Confiscation"
+  },
+  {
+    "cjsCode": "Costs",
+    "description": "Costs"
+  },
+  {
+    "cjsCode": "Estreatment of recognisance",
+    "description": "Estreatment of recognisance"
+  },
+  {
+    "cjsCode": "Fine",
+    "description": "Fine"
+  },
+  {
+    "cjsCode": "Fine - daily penalty total",
+    "description": "Fine - daily penalty total"
+  },
+  {
+    "cjsCode": "Forfeiture of monetary security",
+    "description": "Forfeiture of monetary security"
+  },
+  {
+    "cjsCode": "Inter-partes costs",
+    "description": "Inter-partes costs"
+  },
+  {
+    "cjsCode": "Wasted costs",
+    "description": "Wasted costs"
+  }
+]

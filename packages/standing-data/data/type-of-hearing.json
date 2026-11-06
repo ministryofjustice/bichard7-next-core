@@ -1,0 +1,202 @@
+[
+  {
+    "cjsCode": "AAC",
+    "description": "Appeal Against Conviction"
+  },
+  {
+    "cjsCode": "AACS",
+    "description": "Appeal Against Conviction and Sentence"
+  },
+  {
+    "cjsCode": "AAS",
+    "description": "Appeal Against Sentence"
+  },
+  {
+    "cjsCode": "AOP",
+    "description": "Abuse of Process"
+  },
+  {
+    "cjsCode": "AOW",
+    "description": "Appearing on Warrant"
+  },
+  {
+    "cjsCode": "ARDQ",
+    "description": "Application to Remove Disqualification"
+  },
+  {
+    "cjsCode": "AVTD",
+    "description": "Application to Vacate Trial Date"
+  },
+  {
+    "cjsCode": "AWS",
+    "description": "Application for Witness Summons"
+  },
+  {
+    "cjsCode": "AXCTL",
+    "description": "Application to Extend Custody Time Limits"
+  },
+  {
+    "cjsCode": "BA",
+    "description": "Bail Application"
+  },
+  {
+    "cjsCode": "BOB",
+    "description": "Breach of Bail"
+  },
+  {
+    "cjsCode": "BOO",
+    "description": "Breach Of Order"
+  },
+  {
+    "cjsCode": "BV",
+    "description": "Bail Variation"
+  },
+  {
+    "cjsCode": "CAUSE",
+    "description": "Show Cause"
+  },
+  {
+    "cjsCode": "CS",
+    "description": "Committal for Sentence"
+  },
+  {
+    "cjsCode": "CSAB",
+    "description": "Committal for Sentence After Breach"
+  },
+  {
+    "cjsCode": "CSBB",
+    "description": "Committal for Sentence Brought Back"
+  },
+  {
+    "cjsCode": "CSPBV",
+    "description": "Committal for Sentence (Plea Before Venue)"
+  },
+  {
+    "cjsCode": "CTS61",
+    "description": "Committal for Trial, S6(1)"
+  },
+  {
+    "cjsCode": "CTS62",
+    "description": "Committal for Trial, S6(2)"
+  },
+  {
+    "cjsCode": "DS",
+    "description": "Deferred Sentence"
+  },
+  {
+    "cjsCode": "DTC",
+    "description": "Drug Traffic Confiscation"
+  },
+  {
+    "cjsCode": "FH",
+    "description": "First Hearing"
+  },
+  {
+    "cjsCode": "FHEAH",
+    "description": "First Hearing - Early Admin Hearing"
+  },
+  {
+    "cjsCode": "FHEFH",
+    "description": "First Hearing - Early First Hearing"
+  },
+  {
+    "cjsCode": "FTP",
+    "description": "Fitness to Plead"
+  },
+  {
+    "cjsCode": "LST",
+    "description": "Listing"
+  },
+  {
+    "cjsCode": "MNTN",
+    "description": "Mention"
+  },
+  {
+    "cjsCode": "MOT",
+    "description": "Mode Of Trial"
+  },
+  {
+    "cjsCode": "NCO",
+    "description": "Non-Cooperation Order"
+  },
+  {
+    "cjsCode": "NEWT",
+    "description": "Newton"
+  },
+  {
+    "cjsCode": "OTHER",
+    "description": "Other"
+  },
+  {
+    "cjsCode": "PBV",
+    "description": "Plea Before Venue"
+  },
+  {
+    "cjsCode": "PDH",
+    "description": "Plea & Directions Hearing"
+  },
+  {
+    "cjsCode": "PRELM",
+    "description": "Preliminary"
+  },
+  {
+    "cjsCode": "PROOF",
+    "description": "Proof"
+  },
+  {
+    "cjsCode": "PTR",
+    "description": "Pre Trial Review"
+  },
+  {
+    "cjsCode": "REV",
+    "description": "Review"
+  },
+  {
+    "cjsCode": "RMAND",
+    "description": "Remand"
+  },
+  {
+    "cjsCode": "RSOB",
+    "description": "Re-Sentence on Breach"
+  },
+  {
+    "cjsCode": "SOB",
+    "description": "Sex Offender Breach"
+  },
+  {
+    "cjsCode": "SS51",
+    "description": "Sending S51"
+  },
+  {
+    "cjsCode": "SSR",
+    "description": "Sentence Specific Report"
+  },
+  {
+    "cjsCode": "STPSR",
+    "description": "Sentence, Without Pre-Sentence Report"
+  },
+  {
+    "cjsCode": "SWPSR",
+    "description": "Sentence, With Pre-Sentence Report"
+  },
+  {
+    "cjsCode": "TRIAL",
+    "description": "Trial"
+  },
+  {
+    "cjsCode": "VBILL",
+    "description": "Voluntary Bill"
+  },
+  {
+    "cjsCode": "WWB",
+    "description": "Warrant with Bail"
+  },
+  {
+    "cjsCode": "XCERT",
+    "description": "Transfer (Certificate)"
+  },
+  {
+    "cjsCode": "XFER",
+    "description": "Transfer"
+  }
+]
