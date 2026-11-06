@@ -822,6 +822,7 @@ dependencies = [
     { name = "pyarrow" },
     { name = "pyiceberg" },
     { name = "smart-open" },
+    { name = "sqlalchemy" },
 ]
 
 [package.dev-dependencies]
@@ -829,7 +830,6 @@ dev = [
     { name = "duckdb" },
     { name = "marimo" },
     { name = "pytest" },
-    { name = "sqlalchemy" },
     { name = "streamlit" },
 ]
 
@@ -841,6 +841,7 @@ requires-dist = [
     { name = "pyarrow", specifier = ">=26.0.0" },
     { name = "pyiceberg", specifier = ">=0.12.0" },
     { name = "smart-open", specifier = ">=9.0.0" },
+    { name = "sqlalchemy", specifier = ">=2.1.6" },
 ]
 
 [package.metadata.requires-dev]
@@ -848,7 +849,6 @@ dev = [
     { name = "duckdb", specifier = ">=1.5,<2.0.0" },
     { name = "marimo", specifier = ">=0.25.2" },
     { name = "pytest", specifier = ">=9.1.1" },
-    { name = "sqlalchemy", specifier = ">=2.1.6" },
     { name = "streamlit", specifier = ">=1.66.1" },
 ]
 
