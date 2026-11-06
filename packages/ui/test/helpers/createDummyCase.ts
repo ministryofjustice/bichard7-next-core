@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker"
+import { forceCatchmentAreas } from "@moj-bichard7-developers/bichard7-next-data"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
 import communitySentenceAmendOffences from "@moj-bichard7/common/test/dummyData/communitySentenceAmendOffences"
@@ -27,6 +28,18 @@ const randomUsername = (): string =>
   `${faker.person.firstName().toLowerCase()}.${faker.person.lastName().toLowerCase()}`.slice(0, 31)
 
 const randomName = (): string => `${faker.person.lastName().toUpperCase()} ${faker.person.firstName()}`.slice(0, 31)
+
+const randomPfa = (): string | null => {
+  const assignRandomPfa = randomBoolean()
+
+  if (!assignRandomPfa) {
+    return null
+  }
+
+  const pfaEntries = Object.entries(forceCatchmentAreas)
+  const randomIndex = Math.floor(Math.random() * pfaEntries.length)
+  return pfaEntries[randomIndex][0]
+}
 
 export default async (
   dataSource: DataSource | EntityManager,
@@ -129,7 +142,8 @@ export default async (
     triggerResolvedBy: (isResolved && triggersExist) || (triggersExist && !hasUnresolvedTriggers) ? randomName() : null,
     triggerResolvedTimestamp:
       (isResolved && triggersExist) || (triggersExist && !hasUnresolvedTriggers) ? new Date() : null,
-    errorResolvedTimestamp: isResolved ? resolutionDate : null
+    errorResolvedTimestamp: isResolved ? resolutionDate : null,
+    policeForceArea: randomPfa()
   })
 
   return courtCase
