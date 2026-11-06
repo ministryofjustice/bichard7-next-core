@@ -203,19 +203,21 @@ def main() -> None:
 
     if COMMAND == 'smoke_test':
         logger.info("starting smoke test")
-        BUCKET_URL = "tests/data"
+        SRC_BUCKET_URL = "tests/data"
+        DEST_BUCKET_URL = "/tmp"
         MANIFEST_SUMMARY_KEY = "dummy_landing_zone/id1/manifest-summary.json"
     else:
-        BUCKET_URL = "s3://bichard-7-e2e-test-analytics-data-store"
+        SRC_BUCKET_URL = "s3://bichard-7-e2e-test-analytics-data-store"
+        DEST_BUCKET_URL = "s3://bichard-7-e2e-test-analytics-data-store"
         MANIFEST_SUMMARY_KEY = "landing_zone/dynamodb/audit-log/export_date=2026-10-28/AWSDynamoDB/01793145628000-bb5dec7b/manifest-summary.json"
 
     manifest = Manifest.from_summary_file(
-        bucket_uri=BUCKET_URL, summary_file_key=MANIFEST_SUMMARY_KEY
+        bucket_uri=SRC_BUCKET_URL, summary_file_key=MANIFEST_SUMMARY_KEY
     )
     write_disposition = get_write_disposition(manifest.export_type)
 
     files = get_files_resource(
-        bucket_url=BUCKET_URL,
+        bucket_url=SRC_BUCKET_URL,
         file_glob=FILE_GLOB,
         manifest_paths=manifest.data_filepaths,
     )
@@ -229,7 +231,7 @@ def main() -> None:
         columns={"events_count": {"data_type": "bigint"}},
     )
 
-    iceberg_dest = dest_filesystem(bucket_url=BUCKET_URL, destination_name="iceberg_destination")
+    iceberg_dest = dest_filesystem(bucket_url=DEST_BUCKET_URL, destination_name="iceberg_destination")
 
     pipeline = dlt.pipeline(
         # pipeline name -> database name (not used in AWS Glue)
