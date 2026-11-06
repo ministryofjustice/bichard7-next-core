@@ -3,7 +3,7 @@
 set -e
 
 readonly DOCKER_BUILD_IMAGE="nginx-nodejs-24-2023-supervisord" # TODO 
-readonly DOCKER_OUTPUT_TAG="data-loader"
+readonly DOCKER_OUTPUT_TAG="analytics"
 
 function has_local_image() {
   IMAGES=$(docker images --filter=reference="${DOCKER_BUILD_IMAGE}:*" -q | wc -l)
