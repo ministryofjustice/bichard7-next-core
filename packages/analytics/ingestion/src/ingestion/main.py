@@ -185,12 +185,19 @@ def log_pipeline_details(pipeline: Pipeline, load_info: LoadInfo) -> None:
 
 
 def main() -> None:
+    COMMAND = "smoke_test"
     FILE_GLOB = "**/*.json*"
     # BUCKET_NAME = "tests/data"
     # MANIFEST_SUMMARY_PATH = "tests/data/dummy_landing_zone/id1/manifest-summary.json"
     BUCKET_NAME = "bichard-7-e2e-test-analytics-data-store"
     BUCKET_URL = "s3://" + BUCKET_NAME
     MANIFEST_SUMMARY_KEY = "landing_zone/dynamodb/audit-log/export_date=2026-10-28/AWSDynamoDB/01793145628000-bb5dec7b/manifest-summary.json"
+
+    if COMMAND == 'smoke_test':
+        logger.info("smoke test complete")
+        return
+    else:
+        pass
 
     manifest = Manifest.from_summary_file(
         bucket_name=BUCKET_NAME, summary_file_key=MANIFEST_SUMMARY_KEY

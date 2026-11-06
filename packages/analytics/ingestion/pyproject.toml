@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [project.scripts]
-dynamo-to-delta = "ingestion.main:main"
+ingest = "ingestion.main:main"
 
 [build-system]
 requires = ["uv_build>=0.13.4,<0.14.0"]
