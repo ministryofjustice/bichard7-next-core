@@ -1,6 +1,9 @@
 # Use a Python image with uv pre-installed
 FROM ghcr.io/astral-sh/uv:0.13.7-python3.13-trixie-slim@sha256:6ff812e34a0e14b4b8bc9ddf25e77b3e16bac6e0c4d9b67641f40366fa382d4c
 
+# Docker hardened image. Fails with /bin/sh no such file
+# FROM ghcr.io/astral-sh/uv:0.13.7-python3.13-dhi@sha256:5d5f01ad6dc8aedb8e0318b423070642d6e2b2532c019924cbc98de859aaa974
+
 # Setup a non-root user
 RUN groupadd --system --gid 999 nonroot \
  && useradd --system --gid 999 --uid 999 --create-home nonroot
