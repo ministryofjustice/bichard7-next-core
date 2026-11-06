@@ -231,7 +231,8 @@ def main() -> None:
         columns={"events_count": {"data_type": "bigint"}},
     )
 
-    iceberg_dest = dest_filesystem(bucket_url=DEST_BUCKET_URL, destination_name="iceberg_destination")
+    iceberg_dest = dest_filesystem(
+        bucket_url=DEST_BUCKET_URL, destination_name="iceberg_destination")
 
     pipeline = dlt.pipeline(
         # pipeline name -> database name (not used in AWS Glue)
