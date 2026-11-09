@@ -2,7 +2,11 @@ import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/Annotat
 
 import { extractPostcodeFromAddress, validateAndNormalisePostcode } from "./extractPostcodeFromAddress"
 
-const createMockAho = (address?: { AddressLine4?: string; AddressLine5?: string }): AnnotatedHearingOutcome =>
+const createMockAho = (address?: {
+  AddressLine3?: string
+  AddressLine4?: string
+  AddressLine5?: string
+}): AnnotatedHearingOutcome =>
   ({
     AnnotatedHearingOutcome: {
       HearingOutcome: {
@@ -60,18 +64,19 @@ describe("extractPostcodeFromAddress", () => {
       expect(extractPostcodeFromAddress(aho)).toBeNull()
     })
 
-    it("returns null when both AddressLine4 and AddressLine5 are undefined", () => {
+    it("returns null when AddressLine3, 4 and 5 are undefined", () => {
       const aho = createMockAho({})
       expect(extractPostcodeFromAddress(aho)).toBeNull()
     })
 
-    it("returns null when both AddressLine4 and AddressLine5 are whitespace or empty", () => {
-      const aho = createMockAho({ AddressLine4: "   ", AddressLine5: "" })
+    it("returns null when AddressLine3, 4 and 5 are whitespace or empty", () => {
+      const aho = createMockAho({ AddressLine3: "   ", AddressLine4: "   ", AddressLine5: "" })
       expect(extractPostcodeFromAddress(aho)).toBeNull()
     })
 
-    it("returns null when both lines exist but neither is a valid postcode", () => {
+    it("returns null when AddressLine3, 4 and 5 exist but none are a valid postcode", () => {
       const aho = createMockAho({
+        AddressLine3: "Bristol",
         AddressLine4: "Camden",
         AddressLine5: "London"
       })
@@ -103,6 +108,15 @@ describe("extractPostcodeFromAddress", () => {
       expect(extractPostcodeFromAddress(aho)).toBe("CR2 6XH")
     })
 
+    it("falls back to AddressLine3 and normalises it when AddressLine4 and 5 are not postcodes", () => {
+      const aho = createMockAho({
+        AddressLine3: "sw1a1aa",
+        AddressLine4: "Test",
+        AddressLine5: "Greater London"
+      })
+      expect(extractPostcodeFromAddress(aho)).toBe("SW1A 1AA")
+    })
+
     it("falls back to AddressLine4 when AddressLine5 is undefined", () => {
       const aho = createMockAho({
         AddressLine4: "b338th"
@@ -110,9 +124,25 @@ describe("extractPostcodeFromAddress", () => {
       expect(extractPostcodeFromAddress(aho)).toBe("B33 8TH")
     })
 
+    it("falls back to AddressLine3 when AddressLine4 and 5 are undefined", () => {
+      const aho = createMockAho({
+        AddressLine3: "b338th"
+      })
+      expect(extractPostcodeFromAddress(aho)).toBe("B33 8TH")
+    })
+
     it("falls back to AddressLine4 when AddressLine5 is empty string", () => {
       const aho = createMockAho({
         AddressLine4: "dn55 1pt",
+        AddressLine5: ""
+      })
+      expect(extractPostcodeFromAddress(aho)).toBe("DN55 1PT")
+    })
+
+    it("falls back to AddressLine3 when AddressLine4 and 5 are empty strings", () => {
+      const aho = createMockAho({
+        AddressLine3: "dn55 1pt",
+        AddressLine4: "",
         AddressLine5: ""
       })
       expect(extractPostcodeFromAddress(aho)).toBe("DN55 1PT")

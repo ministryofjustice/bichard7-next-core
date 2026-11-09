@@ -34,5 +34,10 @@ export const extractPostcodeFromAddress = (aho: AnnotatedHearingOutcome): null |
     return postcodeFromLine4
   }
 
+  const postcodeFromLine3 = validateAndNormalisePostcode(address.AddressLine3)
+  if (postcodeFromLine3) {
+    return postcodeFromLine3
+  }
+
   return null
 }
