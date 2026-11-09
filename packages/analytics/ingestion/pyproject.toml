@@ -10,16 +10,15 @@ requires-python = ">=3.13"
 dependencies = [
     "boto3>=1.43.36",
     "dlt[hub,s3]>=1.31.0",
-    "duckdb>=1.5,<2.0.0",
     "ibis-framework>=12.0.0",
-    "marimo>=0.25.2",
     "pyarrow>=26.0.0",
     "pyiceberg>=0.12.0",
     "smart-open>=9.0.0",
+    "sqlalchemy>=2.1.6",
 ]
 
 [project.scripts]
-dynamo-to-delta = "ingestion.main:main"
+ingest = "ingestion.main:main"
 
 [build-system]
 requires = ["uv_build>=0.13.4,<0.14.0"]
@@ -28,6 +27,7 @@ build-backend = "uv_build"
 [dependency-groups]
 dev = [
     "pytest>=9.1.1",
+    "marimo>=0.25.2",
+    "duckdb>=1.5,<2.0.0",
     "streamlit>=1.66.1",
-    "sqlalchemy>=2.1.6",
 ]
