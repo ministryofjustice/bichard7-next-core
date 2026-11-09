@@ -20,7 +20,7 @@ $$
                error_count, user_updated_flag, court_date, ptiurn, court_name, resolution_ts, msg_received_ts,
                error_resolved_by, trigger_resolved_by, error_resolved_ts, trigger_resolved_ts, defendant_name,
                org_for_police_filter, court_room, court_reference, error_insert_ts, trigger_insert_ts,
-               pnc_update_enabled FROM br7own.error_list WHERE error_id = 1 INTO before_record;
+               pnc_update_enabled, postcode, police_force_area FROM br7own.error_list WHERE error_id = 1 INTO before_record;
 
         -- Check what we expect to move
         SELECT count(*) FROM br7own.error_list
@@ -60,7 +60,7 @@ $$
                error_count, user_updated_flag, court_date, ptiurn, court_name, resolution_ts, msg_received_ts,
                error_resolved_by, trigger_resolved_by, error_resolved_ts, trigger_resolved_ts, defendant_name,
                org_for_police_filter, court_room, court_reference, error_insert_ts, trigger_insert_ts,
-               pnc_update_enabled FROM br7own.archive_error_list WHERE error_id = 1 INTO after_record;
+               pnc_update_enabled, postcode, police_force_area FROM br7own.archive_error_list WHERE error_id = 1 INTO after_record;
         ASSERT before_record = after_record, 'Data copied does not match';
 
         -- Check we've tied all of the archived records to a log
