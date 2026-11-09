@@ -79,7 +79,8 @@ export const insertSampleCases = (includeValidNextHearingLocation: boolean = tru
       messageReceivedTimestamp: new Date(),
       ptiurn: "commSen",
       defendantName: "Community Sentence Name",
-      hearingOutcome: nextHearingLocationExceptions.hearingOutcomeCommunitySentenceXml
+      hearingOutcome: nextHearingLocationExceptions.hearingOutcomeCommunitySentenceXml,
+      policeForceArea: "E23000001"
     }
   ])
   cy.task("insertTriggers", { caseId: 0, triggers: bailTrigger })

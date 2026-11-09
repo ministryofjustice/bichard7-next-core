@@ -2,6 +2,7 @@ import type { CommunitySentenceReportQuery } from "@moj-bichard7/common/contract
 import type { CommunitySentenceReportDto } from "@moj-bichard7/common/types/reports/CommunitySentence"
 import type { User } from "@moj-bichard7/common/types/User"
 
+import { forceCatchmentAreas } from "@moj-bichard7-developers/bichard7-next-data"
 import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { endOfDay, startOfDay } from "date-fns"
 
@@ -9,16 +10,16 @@ import type { TransactionConnection } from "../../../../types/DatabaseGateway"
 import type { CommunitySentenceRowReport } from "../../../../types/reports/CommunitySentence"
 
 import { processCommunitySentenceReport } from "../../../../useCases/cases/reports/communitySentence/processCommunitySentenceReport"
-import { organisationUnitSql } from "../../organisationUnitSql"
 
 const COMMUNITY_SENTENCE_TRIGGER = TriggerCode.TRPR0031
 const DOMESTIC_VIOLENCE_TRIGGERS = [TriggerCode.TRPR0024, TriggerCode.TRPR0023]
 
 export async function* communitySentenceReport(
   database: TransactionConnection,
-  user: User,
+  _: User,
   filters: CommunitySentenceReportQuery
 ): AsyncGenerator<CommunitySentenceReportDto[]> {
+  const validForceIds = filters.policeForceAreaCodes.flatMap((pfaCode) => forceCatchmentAreas[pfaCode] || [])
   const query = database.connection<CommunitySentenceRowReport[]>`
   SELECT
     el.error_id,
@@ -34,12 +35,18 @@ export async function* communitySentenceReport(
   FROM br7own.error_list el
   WHERE
     el.msg_received_ts BETWEEN ${startOfDay(filters.fromDate)} AND ${endOfDay(filters.toDate)}
-    AND (${organisationUnitSql(database, user)})
     AND EXISTS (
       SELECT 1
       FROM br7own.error_list_triggers elt
       WHERE elt.error_id = el.error_id
         AND elt.trigger_code = ${COMMUNITY_SENTENCE_TRIGGER}
+    )
+    AND (
+      el.police_force_area = ANY (${filters.policeForceAreaCodes})
+      OR (
+        el.police_force_area IS null
+        AND el.org_for_police_filter = ANY(${validForceIds})
+      )
     )
   ORDER BY el.msg_received_ts
   `

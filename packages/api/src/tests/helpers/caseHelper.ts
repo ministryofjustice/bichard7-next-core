@@ -37,6 +37,7 @@ const getDefaultCase = (): Case => ({
   orgForPoliceFilter: "01",
   phase: 1,
   pncUpdateEnabled: "",
+  policeForceArea: null,
   ptiurn: "00112233",
   resolutionAt: null,
   totalPncFailureResubmissions: 0,

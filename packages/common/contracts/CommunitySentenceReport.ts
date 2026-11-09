@@ -8,6 +8,7 @@ const stringResultCodes = TRPR0031_RESULT_CODES.map(String) as string[]
 export const CommunitySentenceReportQuerySchema = z
   .object({
     ...dateRangeShape,
+    policeForceAreaCodes: z.preprocess((val) => (typeof val === "string" ? [val] : val), z.array(z.string())),
     resultCodes: z
       .preprocess((val) => (typeof val === "string" ? [val] : val), z.array(z.enum(stringResultCodes)))
       .optional()

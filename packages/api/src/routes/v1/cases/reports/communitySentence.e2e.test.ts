@@ -65,7 +65,8 @@ describe("community sentence report e2e", () => {
     const caseObj = await createCase(helper.postgres, {
       aho,
       courtDate: subDays(new Date(), 2),
-      messageReceivedAt: subDays(new Date(), 2)
+      messageReceivedAt: subDays(new Date(), 2),
+      policeForceArea: "E23000001"
     })
 
     await createTriggers(helper.postgres, caseObj.errorId, [
@@ -78,6 +79,7 @@ describe("community sentence report e2e", () => {
     query.append("fromDate", subDays(new Date(), 7).toISOString())
     query.append("toDate", new Date().toISOString())
     query.append("resultCodes", validResultCode.toString())
+    query.append("policeForceAreaCodes", "E23000001")
 
     const response = await fetch(`${helper.address}${endpoint}?${query}`, defaultRequest(encodedJwt))
 

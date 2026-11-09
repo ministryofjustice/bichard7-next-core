@@ -26,6 +26,21 @@ describe("community sentence report", () => {
   const testDynamoGateway = new TestDynamoGateway(auditLogDynamoConfig)
   const auditLogGateway = new AuditLogDynamoGateway(auditLogDynamoConfig)
 
+  const buildQueryString = (
+    overrides: { fromDate?: Date; policeForceAreaCodes?: string; resultCodes?: string[]; toDate?: Date } = {}
+  ) => {
+    const query = new URLSearchParams()
+    query.append("fromDate", (overrides.fromDate ?? subDays(new Date(), 7)).toISOString())
+    query.append("toDate", (overrides.toDate ?? new Date()).toISOString())
+    query.append("policeForceAreaCodes", overrides.policeForceAreaCodes ?? "E23000001")
+
+    if (overrides.resultCodes) {
+      overrides.resultCodes.forEach((code) => query.append("resultCodes", code))
+    }
+
+    return query.toString()
+  }
+
   beforeAll(async () => {
     app = await build({ auditLogGateway, database: testDatabaseGateway })
     await app.ready()
@@ -55,15 +70,12 @@ describe("community sentence report", () => {
 
   it("succeeds with required params", async () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
-
-    const query = new URLSearchParams()
-    query.append("fromDate", new Date().toISOString())
-    query.append("toDate", new Date().toISOString())
+    const queryString = buildQueryString({ fromDate: new Date() })
 
     const { statusCode } = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(statusCode).toBe(OK)
@@ -71,16 +83,12 @@ describe("community sentence report", () => {
 
   it("succeeds with optional result code param", async () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
-
-    const query = new URLSearchParams()
-    query.append("fromDate", new Date().toISOString())
-    query.append("toDate", new Date().toISOString())
-    query.append("resultCodes", "1030")
+    const queryString = buildQueryString({ fromDate: new Date(), resultCodes: ["1030"] })
 
     const { statusCode } = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(statusCode).toBe(OK)
@@ -88,17 +96,12 @@ describe("community sentence report", () => {
 
   it("succeeds with multiple result code params", async () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
-
-    const query = new URLSearchParams()
-    query.append("fromDate", new Date().toISOString())
-    query.append("toDate", new Date().toISOString())
-    query.append("resultCodes", "1030")
-    query.append("resultCodes", "1032")
+    const queryString = buildQueryString({ fromDate: new Date(), resultCodes: ["1030", "1032"] })
 
     const { statusCode } = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(statusCode).toBe(OK)
@@ -106,16 +109,12 @@ describe("community sentence report", () => {
 
   it("fails with a non trigger 31 result code param", async () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
-
-    const query = new URLSearchParams()
-    query.append("fromDate", new Date().toISOString())
-    query.append("toDate", new Date().toISOString())
-    query.append("resultCodes", "1234")
+    const queryString = buildQueryString({ fromDate: new Date(), resultCodes: ["1234"] })
 
     const { statusCode } = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(statusCode).toBe(BAD_REQUEST)
@@ -123,15 +122,12 @@ describe("community sentence report", () => {
 
   it("fails with the wrong permissions", async () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.GeneralHandler])
-
-    const query = new URLSearchParams()
-    query.append("fromDate", new Date().toISOString())
-    query.append("toDate", new Date().toISOString())
+    const queryString = buildQueryString({ fromDate: new Date() })
 
     const { statusCode } = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(statusCode).toBe(FORBIDDEN)
@@ -139,15 +135,12 @@ describe("community sentence report", () => {
 
   it("fails if the fromDate is before the toDate", async () => {
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
-
-    const query = new URLSearchParams()
-    query.append("fromDate", addDays(new Date(), 1).toISOString())
-    query.append("toDate", new Date().toISOString())
+    const queryString = buildQueryString({ fromDate: addDays(new Date(), 1) })
 
     const { statusCode } = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(statusCode).toBe(BAD_REQUEST)
@@ -161,14 +154,12 @@ describe("community sentence report", () => {
       2: { courtDate: subDays(new Date(), 2), messageReceivedAt: subDays(new Date(), 2) }
     })
 
-    const query = new URLSearchParams()
-    query.append("fromDate", subDays(new Date(), 7).toISOString())
-    query.append("toDate", new Date().toISOString())
+    const queryString = buildQueryString()
 
     const response = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(response.statusCode).toBe(200)
@@ -184,14 +175,12 @@ describe("community sentence report", () => {
     })
     await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0001 }])
 
-    const query = new URLSearchParams()
-    query.append("fromDate", subDays(new Date(), 7).toISOString())
-    query.append("toDate", new Date().toISOString())
+    const queryString = buildQueryString()
 
     const response = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(response.statusCode).toBe(200)
@@ -207,14 +196,12 @@ describe("community sentence report", () => {
     })
     await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0023 }])
 
-    const query = new URLSearchParams()
-    query.append("fromDate", subDays(new Date(), 7).toISOString())
-    query.append("toDate", new Date().toISOString())
+    const queryString = buildQueryString()
 
     const response = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(response.statusCode).toBe(200)
@@ -227,27 +214,28 @@ describe("community sentence report", () => {
       0: {
         aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
         courtDate: subDays(new Date(), 2),
-        messageReceivedAt: subDays(new Date(), 2)
+        messageReceivedAt: subDays(new Date(), 2),
+        policeForceArea: "E23000001"
       },
       1: {
         courtDate: subDays(new Date(), 2),
-        messageReceivedAt: subDays(new Date(), 2)
+        messageReceivedAt: subDays(new Date(), 2),
+        policeForceArea: "E23000001"
       },
       2: {
         courtDate: subDays(new Date(), 2),
-        messageReceivedAt: subDays(new Date(), 2)
+        messageReceivedAt: subDays(new Date(), 2),
+        policeForceArea: "E23000001"
       }
     })
     await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0031 }])
 
-    const query = new URLSearchParams()
-    query.append("fromDate", subDays(new Date(), 7).toISOString())
-    query.append("toDate", new Date().toISOString())
+    const queryString = buildQueryString()
 
     const response = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(response.statusCode).toBe(200)
@@ -263,20 +251,18 @@ describe("community sentence report", () => {
       0: {
         aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
         courtDate: subDays(new Date(), 2),
-        messageReceivedAt: subDays(new Date(), 2)
+        messageReceivedAt: subDays(new Date(), 2),
+        policeForceArea: "E23000001"
       }
     })
     await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0031 }])
 
-    const query = new URLSearchParams()
-    query.append("fromDate", subDays(new Date(), 7).toISOString())
-    query.append("toDate", new Date().toISOString())
-    query.append("resultCodes", "1115")
+    const queryString = buildQueryString({ resultCodes: ["1115"] })
 
     const response = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(response.statusCode).toBe(200)
@@ -292,20 +278,18 @@ describe("community sentence report", () => {
       0: {
         aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
         courtDate: subDays(new Date(), 2),
-        messageReceivedAt: subDays(new Date(), 2)
+        messageReceivedAt: subDays(new Date(), 2),
+        policeForceArea: "E23000001"
       }
     })
     await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0031 }])
 
-    const query = new URLSearchParams()
-    query.append("fromDate", subDays(new Date(), 7).toISOString())
-    query.append("toDate", new Date().toISOString())
-    query.append("resultCodes", "1030")
+    const queryString = buildQueryString({ resultCodes: ["1030"] })
 
     const response = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(response.statusCode).toBe(200)
@@ -321,20 +305,23 @@ describe("community sentence report", () => {
 
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
     const [caseObj] = await createCases(testDatabaseGateway, 3, {
-      0: { aho: testCommunitySentenceOrderAhoXml.hearingOutcomeXml, courtDate, messageReceivedAt },
-      1: { courtDate, messageReceivedAt },
-      2: { courtDate, messageReceivedAt }
+      0: {
+        aho: testCommunitySentenceOrderAhoXml.hearingOutcomeXml,
+        courtDate,
+        messageReceivedAt,
+        policeForceArea: "E23000001"
+      },
+      1: { courtDate, messageReceivedAt, policeForceArea: "E23000001" },
+      2: { courtDate, messageReceivedAt, policeForceArea: "E23000001" }
     })
     await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0031 }])
 
-    const query = new URLSearchParams()
-    query.append("fromDate", subDays(new Date(), 7).toISOString())
-    query.append("toDate", new Date().toISOString())
+    const queryString = buildQueryString()
 
     const response = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(response.statusCode).toBe(200)
@@ -357,22 +344,26 @@ describe("community sentence report", () => {
       0: {
         aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
         courtDate,
-        messageReceivedAt
+        messageReceivedAt,
+        policeForceArea: "E23000001"
       },
       1: {
         aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
         courtDate,
-        messageReceivedAt
+        messageReceivedAt,
+        policeForceArea: "E23000001"
       },
       2: {
         aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
         courtDate,
-        messageReceivedAt
+        messageReceivedAt,
+        policeForceArea: "E23000001"
       },
       3: {
         aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
         courtDate,
-        messageReceivedAt
+        messageReceivedAt,
+        policeForceArea: "E23000001"
       }
     })
     await createTriggers(testDatabaseGateway, caseObj1.errorId, [{ triggerCode: TriggerCode.TRPR0031 }])
@@ -393,14 +384,12 @@ describe("community sentence report", () => {
       { triggerCode: TriggerCode.TRPR0024 }
     ])
 
-    const query = new URLSearchParams()
-    query.append("fromDate", subDays(new Date(), 7).toISOString())
-    query.append("toDate", new Date().toISOString())
+    const queryString = buildQueryString()
 
     const response = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(response.statusCode).toBe(200)
@@ -420,18 +409,21 @@ describe("community sentence report", () => {
 
     const [jwt] = await createUserAndJwtToken(testDatabaseGateway, [UserGroup.Supervisor])
     const [caseObj] = await createCases(testDatabaseGateway, 1, {
-      0: { aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml, courtDate, messageReceivedAt }
+      0: {
+        aho: testSuspendedSentenceOrderAhoXml.hearingOutcomeXml,
+        courtDate,
+        messageReceivedAt,
+        policeForceArea: "E23000001"
+      }
     })
     await createTriggers(testDatabaseGateway, caseObj.errorId, [{ triggerCode: TriggerCode.TRPR0031 }])
 
-    const query = new URLSearchParams()
-    query.append("fromDate", subDays(new Date(), 7).toISOString())
-    query.append("toDate", new Date().toISOString())
+    const queryString = buildQueryString()
 
     const response = await app.inject({
       headers: { authorization: `Bearer ${jwt}` },
       method: "GET",
-      url: `${V1.CasesReportsCommunitySentence}?${query.toString()}`
+      url: `${V1.CasesReportsCommunitySentence}?${queryString}`
     })
 
     expect(response.statusCode).toBe(200)
