@@ -58,7 +58,7 @@ function pull_and_build_from_aws() {
       ${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_OUTPUT_TAG}:${CODEBUILD_RESOLVED_SOURCE_VERSION}-${CODEBUILD_START_TIME} | tee /tmp/docker.out
     export IMAGE_SHA_HASH=$(cat /tmp/docker.out | grep digest | cut -d':' -f3-4 | cut -d' ' -f2)
 
-    if [ "${IS_CD}" = "true" ]; then
+    if [[ "${IS_CD}" = "true" ]]; then
       cat <<EOF >/tmp/${DOCKER_OUTPUT_TAG}.json
         {
           "source-hash" : "${CODEBUILD_RESOLVED_SOURCE_VERSION}",

@@ -170,7 +170,6 @@ def log_pipeline_details(pipeline: Pipeline, load_info: LoadInfo) -> None:
             logger.info("No trace details available.")
             return
 
-        # Type checkers know trace is not None here:
         logger.info("last extract")
         logger.info(trace.last_extract_info)
 
@@ -189,28 +188,11 @@ def log_pipeline_details(pipeline: Pipeline, load_info: LoadInfo) -> None:
         logger.warning("Could not log pipeline details", exc_info=True)
 
 
-def log_files_details(files_resource: DltResource, manifest_files_list: list[str]):
-    logger.debug("manifest files list......")
-    for file in manifest_files_list:
-        logger.debug("   " + file)
-    logger.debug("dlt source filesystem resource 'relative_path' output.....")
-    for file in list(files_resource):
-        logger.debug("   " + file.get("relative_path"))
-
-
 def main() -> None:
-    FILE_GLOB = "**/*.json*"
-
     SRC_BUCKET_URL = os.environ["SRC_BUCKET_URL"]
     DEST_BUCKET_URL = os.environ["DEST_BUCKET_URL"]
     MANIFEST_SUMMARY_KEY = os.environ["MANIFEST_SUMMARY_KEY"]
-
-    # SRC_BUCKET_URL = "tests/data"
-    # DEST_BUCKET_URL = "/tmp"
-    # MANIFEST_SUMMARY_KEY = "dummy_landing_zone/id1/manifest-summary.json"
-    # SRC_BUCKET_URL = "s3://bichard-7-e2e-test-analytics-data-store"
-    # DEST_BUCKET_URL = "s3://bichard-7-e2e-test-analytics-data-store"
-    # MANIFEST_SUMMARY_KEY = "landing_zone/dynamodb/audit-log/export_date=2026-10-28/AWSDynamoDB/01793145628000-bb5dec7b/manifest-summary.json"
+    FILE_GLOB = "**/*.json*"
 
     manifest = Manifest.from_summary_file(
         bucket_uri=SRC_BUCKET_URL, summary_file_key=MANIFEST_SUMMARY_KEY
@@ -222,8 +204,6 @@ def main() -> None:
         file_glob=FILE_GLOB,
         manifest_paths=manifest.data_filepaths,
     )
-
-    log_files_details(files, manifest.data_filepaths)
 
     jsonl_resource = files | read_dynamodb_export_jsonl()
     jsonl_resource = jsonl_resource.apply_hints(
