@@ -37,6 +37,7 @@ type ErrorListRecord = {
   org_for_police_filter?: string
   phase: number
   pnc_update_enabled?: "N" | "Y"
+  police_force_area?: null | string
   postcode?: null | string
   ptiurn?: string
   resolution_ts?: Date
