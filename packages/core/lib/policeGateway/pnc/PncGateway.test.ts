@@ -1,9 +1,9 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
 
-import type AuditLogger from "../../../types/AuditLogger"
-
 import generateFakeAho from "../../../phase1/tests/helpers/generateFakeAho"
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import AuditLogger from "../../../types/AuditLogger"
 import CoreAuditLogger from "../../auditLog/CoreAuditLogger"
 import PncGateway from "./PncGateway"
 
@@ -129,7 +129,7 @@ describe("PncGateway", () => {
       text: jest.fn().mockResolvedValue(JSON.stringify(pncQueryResponse))
     })
     const result = await pncGateway.query("dummy asn", "dummy correlation id", aho)
-
+    console.log(result)
     expect(isError(result)).toBe(false)
     expect(auditLogger.getEvents()).toEqual([
       {
