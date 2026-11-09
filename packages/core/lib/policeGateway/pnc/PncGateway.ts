@@ -13,6 +13,7 @@ import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
 import dateTransformer from "@moj-bichard7/common/utils/dateTransformer"
 import https from "https"
+import { Agent, fetch } from "undici"
 
 import type PoliceUpdateRequest from "../../../phase3/types/PoliceUpdateRequest"
 import type AuditLogger from "../../../types/AuditLogger"
@@ -22,7 +23,6 @@ import type PoliceGateway from "../../../types/PoliceGateway"
 
 import { pncApiResultSchema } from "../../../schemas/pncApiResult"
 import PoliceApiError from "../PoliceApiError"
-import { fetch } from "undici"
 
 const transform = (apiResponse: PncApiResult): PoliceQueryResult => {
   const getAdjudication = (offence: PncApiOffence): PoliceAdjudication | undefined => {
@@ -101,17 +101,14 @@ const lookupPathFromOperation = (operation: PncOperation): string =>
 
 export default class PncGateway implements PoliceGateway {
   queryTime: Date | undefined
-  
+  private pncFetch: typeof fetch
+
   constructor(
     private readonly config: PncApiConfig,
     private readonly auditLogger: AuditLogger
   ) {
-    this.pncFetch = fetch.create({
-      transformResponse: [dateTransformer]
-    })
-    private async pncFetch(url: string, options: RequestInit = {}) {
-      const response = await fetch(url, options)
-    }
+    this.pncFetch = fetch
+  }
 
   async query(
     asn: string,
@@ -119,19 +116,19 @@ export default class PncGateway implements PoliceGateway {
     aho: AnnotatedHearingOutcome
   ): Promise<PoliceApiError | PoliceQueryResult> {
     this.queryTime = new Date()
-    const pncResult = await this.pncFetch
-      .get(`${this.config.url}/records/${asn}`, {
-        headers: {
-          "X-Api-Key": this.config.key,
-          "x-correlation-id": correlationId,
-          accept: "application/json"
-        },
-        httpsAgent: new https.Agent({
-          rejectUnauthorized: false
-        })
+    const pncResult = await this.pncFetch(`${this.config.url}/records/${asn}`, {
+      headers: {
+        "X-Api-Key": this.config.key,
+        "x-correlation-id": correlationId,
+        accept: "application/json"
+      },
+      dispatcher: new Agent({
+        connect: { rejectUnauthorized: false }
       })
-      .then((result) => {
-        const parsed = pncApiResultSchema.parse(result.data)
+    })
+      .then(async(result) => {
+        const data = await result.json()
+        const parsed = pncApiResultSchema.parse(data)
         return transform(parsed)
       })
       .catch((errors) => {
