@@ -55,8 +55,8 @@ BEGIN
                        (SELECT log_id FROM archive_log) AS archive_log_id,
                        NULL AS audit_logged_at,
                        0 AS audit_log_attempts,        
-                       NULL AS hearing_outcome,
-                       NULL AS updated_hearing_outcome,
+                       hearing_outcome,
+                       updated_hearing_outcome,
                        postcode,
                        police_force_area
                 FROM deleted_errors
