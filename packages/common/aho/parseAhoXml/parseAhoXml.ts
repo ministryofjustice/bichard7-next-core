@@ -207,9 +207,11 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
 })
 
 const mapXmlResultsToAho = (xmlResults: Br7Result | Br7Result[]): Result[] =>
-  Array.isArray(xmlResults)
-    ? xmlResults.map((xmlResult) => mapXmlResultToAho(xmlResult))
-    : [mapXmlResultToAho(xmlResults)]
+  xmlResults
+    ? Array.isArray(xmlResults)
+      ? xmlResults.map((xmlResult) => mapXmlResultToAho(xmlResult))
+      : [mapXmlResultToAho(xmlResults)]
+    : []
 
 const buildFullOffenceCode = (
   offenceCode: CommonLawOffenceCode | IndictmentOffenceCode | NonMatchingOffenceCode
