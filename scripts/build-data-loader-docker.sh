@@ -2,7 +2,7 @@
 
 set -e
 
-readonly DOCKER_BUILD_IMAGE="nginx-nodejs-24-2023-supervisord" # TODO 
+readonly DOCKER_BUILD_IMAGE="amazon-linux2023-base"
 readonly DOCKER_OUTPUT_TAG="analytics"
 
 function has_local_image() {
@@ -37,7 +37,7 @@ function pull_and_build_from_aws() {
     --password-stdin \
     "${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com"
 
-  # Get our latest staged nodejs image
+  # Get our latest staged amazon linux image
   IMAGE_HASH=$(aws ecr describe-images --repository-name "${DOCKER_BUILD_IMAGE}" | jq '.imageDetails|sort_by(.imagePushedAt)[-1].imageDigest' | tr -d '"')
 
   DOCKER_IMAGE_HASH="${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_BUILD_IMAGE}@${IMAGE_HASH}"
