@@ -40,6 +40,7 @@ export function caseToCommunitySentenceDto(
   } as CommunitySentenceReportDto
 
   const reports = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.Offence.flatMap((offence) => {
+    const offenceTitle = offence.OffenceTitle ? offence.OffenceTitle.replace(/\s+/g, " ").trim() : ""
     const offenceLevelDetails = {
       ...caseLevelDetails,
       arrestDate: offence.ArrestDate ? formatDate(offence.ArrestDate, false, true) : "",
@@ -49,7 +50,7 @@ export function caseToCommunitySentenceDto(
       offenceStartDate: offence.ActualOffenceStartDate
         ? formatDate(offence.ActualOffenceStartDate.StartDate, false, true)
         : "",
-      offenceTitle: offence.OffenceTitle ?? ""
+      offenceTitle: offenceTitle
     }
 
     const targetResultCodes = resultCodes?.length ? resultCodes : TRPR0031_RESULT_CODES

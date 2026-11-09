@@ -27,6 +27,14 @@ export const insertSampleCases = (includeValidNextHearingLocation: boolean = tru
     }
   ]
 
+  const communitySentenceTrigger: Partial<TestTrigger>[] = [
+    {
+      triggerCode: TriggerCode.TRPR0031,
+      status: "Unresolved",
+      createdAt: new Date("2022-07-09T10:22:34.000Z")
+    }
+  ]
+
   cy.task("insertCourtCasesWithFields", [
     {
       triggerLockedByUsername: "GeneralHandler",
@@ -65,6 +73,13 @@ export const insertSampleCases = (includeValidNextHearingLocation: boolean = tru
       triggerResolvedTimestamp: new Date(),
       errorReason: "",
       errorReport: ""
+    },
+    {
+      orgForPoliceFilter: "01",
+      messageReceivedTimestamp: new Date(),
+      ptiurn: "commSen",
+      defendantName: "Community Sentence Name",
+      hearingOutcome: nextHearingLocationExceptions.hearingOutcomeCommunitySentenceXml
     }
   ])
   cy.task("insertTriggers", { caseId: 0, triggers: bailTrigger })
@@ -90,4 +105,6 @@ export const insertSampleCases = (includeValidNextHearingLocation: boolean = tru
     errorStatus: "Resolved",
     username: "user1"
   })
+
+  cy.task("insertTriggers", { caseId: 4, triggers: communitySentenceTrigger })
 }

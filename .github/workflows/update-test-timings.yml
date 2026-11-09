@@ -38,16 +38,22 @@ jobs:
     if: needs.changes.outputs.user_service == 'true'
     runs-on: ubuntu-latest
 
+    permissions:
+      actions: read
+      contents: read
+
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Fetch artifacts from the Merge Queue run
+        id: fetch-timings
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           # Locate the merge_group run that tested this exact commit
           MERGE_RUN_ID=$(gh run list \
+            --workflow "build-and-test.yml" \
             --commit "${{ github.sha }}" \
             --event merge_group \
             --status success \
@@ -59,14 +65,21 @@ jobs:
           fi
           
           echo "Downloading timings from merge_group run: $MERGE_RUN_ID"
-          gh run download "$MERGE_RUN_ID" --dir test-timings -p "user-service-e2e-test-timings-*"
+          if gh run download "$MERGE_RUN_ID" --dir test-timings -p "user-service-e2e-test-timings-*"; then
+            echo "Artifacts downloaded successfully."
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No matching timing artifacts found in run $MERGE_RUN_ID (test job was likely skipped)."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Merge Test Timings
+        if: steps.fetch-timings.outputs.found == 'true'
         run: node ./.github/scripts/merge-timings.mjs test-timings timings/timings.json
 
       - name: Save Test Timings
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        if: github.ref == 'refs/heads/main' && always()
+        if: steps.fetch-timings.outputs.found == 'true' && github.ref == 'refs/heads/main'
         with:
           path: timings/timings.json
           key: cypress-timing-user-service-e2e-main-${{ github.sha }}

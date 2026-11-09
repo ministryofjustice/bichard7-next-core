@@ -39,7 +39,9 @@ const DummyCourtCase: Partial<CourtCase> = {
   triggerInsertedTimestamp: new Date("2022-06-30T08:44:11.193Z"),
   pncUpdateEnabled: "Y",
   notes: [],
-  triggers: []
+  triggers: [],
+  postcode: null,
+  policeForceArea: null
 }
 
 export default DummyCourtCase

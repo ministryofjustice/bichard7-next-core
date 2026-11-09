@@ -253,4 +253,18 @@ describe("caseToCommunitySentenceDto", () => {
     expect(results[1].offenceTitle).toBe("Offence 1")
     expect(results[2].offenceTitle).toBe("Offence 2")
   })
+
+  it("should correctly format offence title with excessive whitespace and newlines", () => {
+    const offences = [
+      {
+        OffenceTitle: "Use a motor vehicle on a road / public place without third             \nparty insurance.",
+        Result: [{ CJSresultCode: matchingResultCode, PleaStatus: "Guilty" }]
+      }
+    ]
+    ;(parseHearingOutcome as jest.Mock).mockReturnValue(createMockAho(offences, "2026/000123A"))
+
+    const results = caseToCommunitySentenceDto(mockRow)
+
+    expect(results[0].offenceTitle).toBe("Use a motor vehicle on a road / public place without third party insurance.")
+  })
 })
