@@ -12,7 +12,6 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isError } from "@moj-bichard7/common/types/Result"
 import dateTransformer from "@moj-bichard7/common/utils/dateTransformer"
-import https from "https"
 import { Agent, fetch } from "undici"
 
 import type PoliceUpdateRequest from "../../../phase3/types/PoliceUpdateRequest"
@@ -126,9 +125,10 @@ export default class PncGateway implements PoliceGateway {
         connect: { rejectUnauthorized: false }
       })
     })
-      .then(async(result) => {
-        const data = await result.json()
-        const parsed = pncApiResultSchema.parse(data)
+      .then(async (result) => {
+        const rawText = await result.text()
+        const transformedData = dateTransformer(rawText)
+        const parsed = pncApiResultSchema.parse(JSON.parse(transformedData as string))
         return transform(parsed)
       })
       .catch((errors) => {
@@ -144,7 +144,7 @@ export default class PncGateway implements PoliceGateway {
       "PNC Attempts Made": 1, // Retry is not implemented
       "PNC Request Type": "enquiry",
       "PNC Request Message": aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.ArrestSummonsNumber,
-      "PNC Response Message": isError(pncResult) ? pncResult.message.join(", ") : pncResult,
+      "PNC Response Message": isError(pncResult) ? pncResult.message : pncResult,
       sensitiveAttributes: "PNC Request Message,PNC Response Message"
     }
     this.auditLogger.info(EventCode.PncResponseReceived, auditLogAttributes)
@@ -155,27 +155,29 @@ export default class PncGateway implements PoliceGateway {
   update(request: PoliceUpdateRequest, correlationId: string): Promise<PoliceApiError | void> {
     const path = lookupPathFromOperation(request.operation)
 
-    return this.pncFetch
-      .post(`${this.config.url}/records/${path}`, request.request, {
-        headers: {
-          "X-Api-Key": this.config.key,
-          "x-correlation-id": correlationId
-        },
-        httpsAgent: new https.Agent({
-          rejectUnauthorized: false
-        })
+    return this.pncFetch(`${this.config.url}/records/${path}`, {
+      method: "POST",
+      body: JSON.stringify(request.request),
+      headers: {
+        "X-Api-Key": this.config.key,
+        "x-correlation-id": correlationId,
+        "Content-Type": "application/json"
+      },
+      dispatcher: new Agent({
+        connect: { rejectUnauthorized: false }
       })
+    })
       .then((result) => {
         if (result.status !== 204) {
           return new PoliceApiError(["Error updating PNC"])
         }
       })
-      .catch((e) => {
-        if (e.response?.data?.errors && e.response?.data?.errors.length > 0) {
-          return new PoliceApiError(e.response?.data?.errors)
+      .catch((errors) => {
+        if (errors.response?.data?.errors && errors.response?.data?.errors.length > 0) {
+          return new PoliceApiError(errors.response?.data?.errors)
         }
 
-        return new PoliceApiError([e.message])
+        return new PoliceApiError([errors.message])
       })
   }
 }
