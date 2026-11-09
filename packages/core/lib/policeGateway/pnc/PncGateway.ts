@@ -126,7 +126,7 @@ export default class PncGateway implements PoliceGateway {
         connect: { rejectUnauthorized: false }
       })
     })
-      .then(async(result) => {
+      .then(async (result) => {
         const data = await result.json()
         const parsed = pncApiResultSchema.parse(data)
         return transform(parsed)
