@@ -106,6 +106,7 @@ describe("PncGateway", () => {
 
   beforeEach(() => {
     mockedFetch.mockClear()
+
     auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
     pncGateway = new PncGateway(
       {
@@ -114,6 +115,7 @@ describe("PncGateway", () => {
       },
       auditLogger
     )
+    ;(pncGateway as any).pncFetch = mockedFetch
   })
 
   afterEach(() => {
@@ -121,8 +123,11 @@ describe("PncGateway", () => {
   })
 
   it("should generate audit log event when PNC query is successful", async () => {
-    mockedFetch.mockResolvedValue({ data: pncQueryResponse })
-
+    mockedFetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      text: jest.fn().mockResolvedValue(JSON.stringify(pncQueryResponse))
+    })
     const result = await pncGateway.query("dummy asn", "dummy correlation id", aho)
 
     expect(isError(result)).toBe(false)
