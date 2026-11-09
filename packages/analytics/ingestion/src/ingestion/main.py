@@ -1,4 +1,5 @@
 import logging
+import os
 from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any, Literal
@@ -198,18 +199,18 @@ def log_files_details(files_resource: DltResource, manifest_files_list: list[str
 
 
 def main() -> None:
-    COMMAND = "smoke_test"
     FILE_GLOB = "**/*.json*"
 
-    if COMMAND == 'smoke_test':
-        logger.info("starting smoke test")
-        SRC_BUCKET_URL = "tests/data"
-        DEST_BUCKET_URL = "/tmp"
-        MANIFEST_SUMMARY_KEY = "dummy_landing_zone/id1/manifest-summary.json"
-    else:
-        SRC_BUCKET_URL = "s3://bichard-7-e2e-test-analytics-data-store"
-        DEST_BUCKET_URL = "s3://bichard-7-e2e-test-analytics-data-store"
-        MANIFEST_SUMMARY_KEY = "landing_zone/dynamodb/audit-log/export_date=2026-10-28/AWSDynamoDB/01793145628000-bb5dec7b/manifest-summary.json"
+    SRC_BUCKET_URL = os.environ["SRC_BUCKET_URL"]
+    DEST_BUCKET_URL = os.environ["DEST_BUCKET_URL"]
+    MANIFEST_SUMMARY_KEY = os.environ["MANIFEST_SUMMARY_KEY"]
+
+    # SRC_BUCKET_URL = "tests/data"
+    # DEST_BUCKET_URL = "/tmp"
+    # MANIFEST_SUMMARY_KEY = "dummy_landing_zone/id1/manifest-summary.json"
+    # SRC_BUCKET_URL = "s3://bichard-7-e2e-test-analytics-data-store"
+    # DEST_BUCKET_URL = "s3://bichard-7-e2e-test-analytics-data-store"
+    # MANIFEST_SUMMARY_KEY = "landing_zone/dynamodb/audit-log/export_date=2026-10-28/AWSDynamoDB/01793145628000-bb5dec7b/manifest-summary.json"
 
     manifest = Manifest.from_summary_file(
         bucket_uri=SRC_BUCKET_URL, summary_file_key=MANIFEST_SUMMARY_KEY
