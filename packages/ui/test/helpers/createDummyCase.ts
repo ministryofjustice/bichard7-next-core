@@ -29,7 +29,7 @@ const randomUsername = (): string =>
 
 const randomName = (): string => `${faker.person.lastName().toUpperCase()} ${faker.person.firstName()}`.slice(0, 31)
 
-const randomPfa = (): string | null => {
+const randomPoliceForAreaCode = (): string | null => {
   const assignRandomPfa = randomBoolean()
 
   if (!assignRandomPfa) {
@@ -143,7 +143,7 @@ export default async (
     triggerResolvedTimestamp:
       (isResolved && triggersExist) || (triggersExist && !hasUnresolvedTriggers) ? new Date() : null,
     errorResolvedTimestamp: isResolved ? resolutionDate : null,
-    policeForceArea: randomPfa()
+    policeForceArea: randomPoliceForAreaCode()
   })
 
   return courtCase

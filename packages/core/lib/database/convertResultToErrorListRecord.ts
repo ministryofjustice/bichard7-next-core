@@ -105,7 +105,7 @@ const convertResultToErrorListRecord = (result: PhaseResult): ErrorListRecord =>
     org_for_police_filter: generateOrgForPoliceFilter(caseElem.ForceOwner),
     court_room: hearing.CourtHearingLocation.BottomLevelCode || undefined,
     pnc_update_enabled: "Y",
-    postcode: postcode
+    postcode
   }
 }
 
