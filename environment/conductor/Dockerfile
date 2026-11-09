@@ -4,7 +4,7 @@ ARG CONDUCTOR_VERSION="v3.32.1"
 # ===========================================================================================================
 # 0. Source stage
 # ===========================================================================================================
-FROM alpine/git@sha256:e8ceedc73bd80992ae8d58a7d24c58b8322146c354f1d2e81a97db4452068ec0 AS src
+FROM alpine/git@sha256:ac6c828f15d82775d204d3d75112e1d34af8945da80ccf922713c9891ba68e7a AS src
 ARG CONDUCTOR_VERSION
 
 RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss/conductor.git /conductor
@@ -12,7 +12,7 @@ RUN git clone --depth=1 -b ${CONDUCTOR_VERSION} https://github.com/conductor-oss
 # ===========================================================================================================
 # 1. UI Builder stage
 # ===========================================================================================================
-FROM node:24-alpine@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 AS ui-builder
+FROM node:24-alpine@sha256:8a32c8cf649a49915a66e81e7a609223c708d0adabf288ee3f4077d765542f85 AS ui-builder
 
 COPY --from=src /conductor/ui /conductor/ui
 
@@ -26,7 +26,12 @@ RUN npm install --legacy-peer-deps --ignore-scripts --no-audit && \
 # ===========================================================================================================
 # 2. Java Builder stage
 # ===========================================================================================================
-FROM eclipse-temurin:21-jdk-jammy@sha256:4e61d0b3471137e239397789661f6adeaf8db9adcfae45916b22f628c8a32dc0 AS builder
+FROM eclipse-temurin:21-jdk-jammy@sha256:4b1a74fbffbe6b4e7b6f0171a472478282fb463790a51edf10e465d578f22b69 AS builder
+
+USER root
+
+COPY --chown=root:root blocked.certs ${JAVA_HOME}/lib/security/blocked.certs
+RUN chmod 644 "${JAVA_HOME}/lib/security/blocked.certs"
 
 COPY --from=src /conductor /conductor
 
@@ -65,6 +70,7 @@ USER root
 
 COPY files/openssl.cnf /tmp/openssl.cnf
 COPY files/nginx.repo /etc/yum.repos.d/nginx.repo
+COPY blocked.certs /tmp/blocked.certs
 
 RUN mkdir -p /certs /var/log/supervisor && \
     yum install -y --setopt=install_weak_deps=False --releasever=latest \
@@ -79,7 +85,14 @@ RUN mkdir -p /certs /var/log/supervisor && \
     openssl req -x509 -nodes -days 730 -newkey rsa:4096 \
     -out /certs/server.crt -keyout /certs/server.key \
     -config /tmp/openssl.cnf -extensions 'v3_req' && \
-    rm -rf /tmp/openssl.cnf
+    rm -rf /tmp/openssl.cnf && \
+    JAVA_BIN=$(readlink -f $(command -v java)) && \
+    JAVA_DIR=$(dirname $(dirname "$JAVA_BIN")) && \
+    mkdir -p "${JAVA_DIR}/lib/security" && \
+    mv /tmp/blocked.certs "${JAVA_DIR}/lib/security/blocked.certs" && \
+    chmod 644 "${JAVA_DIR}/lib/security/blocked.certs" && \
+    chown root:root "${JAVA_DIR}/lib/security/blocked.certs" && \
+    ln -s "${JAVA_DIR}" /usr/lib/jvm/java-21
 
 # Make app folders
 RUN mkdir -p /app/config /app/logs /app/libs
