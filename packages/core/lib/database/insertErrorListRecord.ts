@@ -1,14 +1,24 @@
 import type { PostgresError, Sql } from "postgres"
 
+import { isError } from "@moj-bichard7/common/types/Result"
+
 import type ErrorListRecord from "../../types/ErrorListRecord"
 import type PhaseResult from "../../types/PhaseResult"
 
 import convertResultToErrorListRecord from "./convertResultToErrorListRecord"
+import getPoliceForceAreaCode from "./getPoliceForceAreaCode"
 
 const insertErrorListRecord = async (db: Sql, result: PhaseResult): Promise<number> => {
   const errorListRecord = convertResultToErrorListRecord(result)
   let newRecordId: number | undefined
   try {
+    if (errorListRecord.postcode) {
+      const pfaResult = await getPoliceForceAreaCode(db, errorListRecord.postcode)
+      if (!isError(pfaResult)) {
+        errorListRecord.police_force_area = pfaResult.police_force_area
+      }
+    }
+
     const newRecordResult = await db<ErrorListRecord[]>`
       INSERT INTO br7own.error_list ${db(errorListRecord)} RETURNING *`
 
