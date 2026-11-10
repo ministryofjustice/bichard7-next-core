@@ -1,4 +1,5 @@
 import fs from "node:fs"
+import path from "node:path"
 import type { TriggerCode } from "@moj-bichard7/standing-data/types/types"
 import { excludedTriggerConfig } from "@moj-bichard7/standing-data"
 
@@ -10,6 +11,6 @@ const generateForceConfig = (force: string, triggers: TriggerCode[]): string => 
 const forces: string[] = Object.keys(excludedTriggerConfig).sort()
 
 fs.writeFileSync(
-  "./output-data/data/triggers.properties",
+  path.resolve(__dirname, "../../../standing-data/data/triggers.properties"),
   forces.map((force) => generateForceConfig(force, excludedTriggerConfig[force])).join("\n\n")
 )

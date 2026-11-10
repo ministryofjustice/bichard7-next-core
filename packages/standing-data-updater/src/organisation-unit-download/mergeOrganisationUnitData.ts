@@ -1,4 +1,5 @@
 import fs from "node:fs/promises"
+import path from "node:path"
 import { organisationUnit as existingOrganisationUnitData } from "@moj-bichard7/standing-data"
 import { consistentSort } from "../lib/consistentSort"
 import { mergeOrganisationUnits } from "./mergeOrganisationUnits"
@@ -13,7 +14,10 @@ export const mergeOrganisationUnitData = async () => {
   const allOrganisationUnitData = cjsOrganisationUnitData.concat(policeOrganisationUnitData)
   const mergedData = mergeOrganisationUnits(allOrganisationUnitData, existingOrganisationUnitData)
   const sortedData = consistentSort(mergedData)
-  await fs.writeFile("output-data/data/organisation-unit.json", JSON.stringify(sortedData, null, 2))
+  await fs.writeFile(
+    path.resolve(__dirname, "../../../standing-data/data/organisation-unit.json"),
+    JSON.stringify(sortedData, null, 2)
+  )
 
   console.log("Organisation Unit data successfully downloaded")
 }

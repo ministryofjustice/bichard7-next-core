@@ -1,4 +1,5 @@
 import fs from "node:fs/promises"
+import path from "node:path"
 import { offenceCode as currentOffenceCodes } from "@moj-bichard7/standing-data"
 import { consistentSort } from "./lib/consistentSort"
 import { createOffenceCodeLookup } from "./lib/createOffenceCodeLookup"
@@ -65,7 +66,10 @@ const main = async () => {
   )
   const mergedData = merger.merge()
   const sortedData = consistentSort(mergedData)
-  await fs.writeFile("output-data/data/offence-code.json", JSON.stringify(sortedData, null, 2))
+  await fs.writeFile(
+    path.resolve(__dirname, "../../standing-data/data/offence-code.json"),
+    JSON.stringify(sortedData, null, 2)
+  )
 }
 
 main()
