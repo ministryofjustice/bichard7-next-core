@@ -8,7 +8,9 @@
     "src/input-data/offence-code/pnc-ccjs-cjs-offences.json",
     "src/input-data/offence-code/pnld-offences.json",
     "src/input-data/organisation-unit/cjs-data.json",
-    "src/input-data/organisation-unit/police-forces.json"
+    "src/input-data/organisation-unit/police-forces.json",
+    "test-data/expected-output/cjs-result-codes.json",
+    "test-data/expected-output/cjs-result-codes-missing-fields.json"
   ],
   "exclude": ["node_modules"],
   "compilerOptions": {
