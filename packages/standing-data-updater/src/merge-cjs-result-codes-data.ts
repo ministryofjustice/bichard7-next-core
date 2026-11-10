@@ -1,4 +1,4 @@
-import mergeAndWriteCjsResultCodes from "./cjs-result-codes-download/mergeAndWriteCjsResultCodes"
+import { mergeAndWriteCjsResultCodes } from "./cjs-result-codes-download/mergeAndWriteCjsResultCodes"
 
 const main = async () => {
   await mergeAndWriteCjsResultCodes()

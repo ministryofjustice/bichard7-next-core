@@ -3,9 +3,9 @@ import https from "https"
 import { v4 as uuidv4 } from "uuid"
 import { getOffenceApiResultSchema } from "../schemas/standingDataAPIResult"
 import type { ApiOffence } from "../types/StandingDataAPIResult"
-import config from "./config"
+import { config } from "./config"
 
-const getOffence = async (alphaChar: string): Promise<ApiOffence[] | Error> => {
+export const getOffence = async (alphaChar: string): Promise<ApiOffence[] | Error> => {
   try {
     const result = await axios.post(
       config.endPoint,
@@ -67,5 +67,3 @@ const getOffence = async (alphaChar: string): Promise<ApiOffence[] | Error> => {
     return error as Error
   }
 }
-
-export default getOffence

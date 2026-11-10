@@ -24,7 +24,7 @@ const emptyOrInvalidRow = (row: OrganisationUnit | undefined): boolean => {
   return row === undefined || row.thirdLevelName === undefined || row.thirdLevelName === ""
 }
 
-const convertOrgUnitDataXls = (fileContents: Buffer): OrganisationUnit[] => {
+export const convertOrgUnitDataXls = (fileContents: Buffer): OrganisationUnit[] => {
   const workbook = XLSX.read(fileContents)
   const worksheet = workbook.Sheets[workbook.SheetNames[0]]
   const jsonWorksheet: SheetData[] = XLSX.utils.sheet_to_json(worksheet, {
@@ -54,5 +54,3 @@ const convertOrgUnitDataXls = (fileContents: Buffer): OrganisationUnit[] => {
     })
     .filter((record) => !emptyOrInvalidRow(record)) as OrganisationUnit[]
 }
-
-export default convertOrgUnitDataXls

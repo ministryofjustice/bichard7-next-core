@@ -1,4 +1,4 @@
-import * as fs from "fs"
+import fs from "node:fs"
 import type { ElementHandle, Browser, Page } from "puppeteer"
 import puppeteer from "puppeteer"
 import { parse } from "date-fns"
@@ -10,7 +10,7 @@ export type PnldFile = {
   fileName?: string
 }
 
-export default class PnldFileDownloader {
+export class PnldFileDownloader {
   browser: Browser
 
   page: Page

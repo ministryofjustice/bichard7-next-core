@@ -1,6 +1,6 @@
-import valueToDate from "./valueToDate"
+import { valueToDate } from "./valueToDate"
 
-const isActiveOrganisationUnit = (start?: string, end?: string): boolean => {
+export const isActiveOrganisationUnit = (start?: string, end?: string): boolean => {
   const startDate = valueToDate(start)
   const endDate = valueToDate(end)
   const currentDate = new Date()
@@ -11,5 +11,3 @@ const isActiveOrganisationUnit = (start?: string, end?: string): boolean => {
     (endDate === undefined || endDate.getTime() >= currentDate.getTime())
   )
 }
-
-export default isActiveOrganisationUnit

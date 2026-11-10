@@ -2,7 +2,7 @@ import axios from "axios"
 
 const dataStandardsUrl = "https://www.gov.uk/guidance/criminal-justice-system-data-standards-forum-guidance"
 
-export default (downloadLinkRegex: RegExp): Promise<string> =>
+export const getDownloadUrl = (downloadLinkRegex: RegExp): Promise<string> =>
   axios({
     url: dataStandardsUrl,
     method: "GET",

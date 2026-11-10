@@ -1,14 +1,14 @@
 import type { OffenceCode } from "../types/OffenceCode"
-import type HomeOfficeClassifictionPriority from "./HomeOfficeClassificationPriority"
-import type NotifiableToHOPriority from "./NotifiableToHOPriority"
-import type OffenceCategoryPriority from "./OffenceCategoryPriority"
-import type OffenceTitlePriority from "./OffenceTitlePriority"
-import type RecordableOnPncPriority from "./RecordableOnPncPriority"
+import type { HomeOfficeClassificationPriority } from "./HomeOfficeClassificationPriority"
+import type { NotifiableToHOPriority } from "./NotifiableToHOPriority"
+import type { OffenceCategoryPriority } from "./OffenceCategoryPriority"
+import type { OffenceTitlePriority } from "./OffenceTitlePriority"
+import type { RecordableOnPncPriority } from "./RecordableOnPncPriority"
 
-export default class OffenceCodeMerger {
+export class OffenceCodeMerger {
   constructor(
     private offenceCodeKeys: Set<string>,
-    private homeOfficeClassification: HomeOfficeClassifictionPriority,
+    private homeOfficeClassification: HomeOfficeClassificationPriority,
     private notifiableToHo: NotifiableToHOPriority,
     private offenceCategory: OffenceCategoryPriority,
     private offenceTitle: OffenceTitlePriority,

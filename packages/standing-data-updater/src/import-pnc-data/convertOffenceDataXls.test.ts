@@ -1,5 +1,5 @@
-import fs from "fs"
-import convertOffenceDataXls from "./convertOffenceDataXls"
+import fs from "node:fs"
+import { convertOffenceDataXls } from "./convertOffenceDataXls"
 
 const expectedCCJSOffenceCodesFile = "test-data/expected-output/pnc-ccjs-expected.json"
 

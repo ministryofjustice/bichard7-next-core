@@ -1,6 +1,6 @@
 import type { OffenceCodeLookup } from "../types/OffenceCodeLookup"
 
-export default class OffenceCategoryPriority {
+export class OffenceCategoryPriority {
   constructor(
     private currentOffenceCodes: OffenceCodeLookup,
     private cjsOffenceCodes: OffenceCodeLookup,

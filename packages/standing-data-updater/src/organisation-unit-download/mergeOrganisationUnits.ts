@@ -3,7 +3,10 @@ import type { OrganisationUnit } from "../types/OrganisationUnit"
 const matchingValues = (firstValue: string, secondValue: string): boolean =>
   firstValue.trim().toLowerCase() === secondValue.trim().toLowerCase()
 
-const mergeOrganisationUnits = (newData: OrganisationUnit[], existingData: OrganisationUnit[]): OrganisationUnit[] => {
+export const mergeOrganisationUnits = (
+  newData: OrganisationUnit[],
+  existingData: OrganisationUnit[]
+): OrganisationUnit[] => {
   newData.forEach((record) => {
     const existingRecord = existingData.find(
       (oldR) =>
@@ -25,5 +28,3 @@ const mergeOrganisationUnits = (newData: OrganisationUnit[], existingData: Organ
 
   return existingData
 }
-
-export default mergeOrganisationUnits

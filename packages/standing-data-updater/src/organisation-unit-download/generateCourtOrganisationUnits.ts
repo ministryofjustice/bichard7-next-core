@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx"
 import type { OrganisationUnit } from "../types/OrganisationUnit"
-import isActiveOrganisationUnit from "./isActiveOrganisationUnit"
+import { isActiveOrganisationUnit } from "./isActiveOrganisationUnit"
 
 export type OrganisationUnitData = {
   A: string
@@ -29,7 +29,7 @@ const emptyRow = (row: OrganisationUnit | undefined): boolean => {
   )
 }
 
-const generateOrganisationUnitObjects = (fileContents: Buffer): OrganisationUnit[] => {
+export const generateCourtOrganisationUnits = (fileContents: Buffer): OrganisationUnit[] => {
   const workbook = XLSX.read(fileContents)
   const worksheet = workbook.Sheets[workbook.SheetNames[1]]
   const jsonWorksheet: OrganisationUnitData[] = XLSX.utils.sheet_to_json(worksheet, {
@@ -58,5 +58,3 @@ const generateOrganisationUnitObjects = (fileContents: Buffer): OrganisationUnit
     })
     .filter((record) => !emptyRow(record)) as OrganisationUnit[]
 }
-
-export default generateOrganisationUnitObjects

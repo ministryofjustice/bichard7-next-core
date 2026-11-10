@@ -1,5 +1,5 @@
-import cjsDownload from "./cjs-download"
-import pnldDownload from "./pnld-download"
+import { cjsDownload } from "./cjs-download"
+import { pnldDownload } from "./pnld-download"
 
 const main = async () => {
   await pnldDownload()

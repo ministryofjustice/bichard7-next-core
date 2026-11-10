@@ -1,6 +1,6 @@
 import * as XLSX from "xlsx"
-import consistentWhitespace from "../lib/consistentWhitespace"
-import valueToBoolean from "../lib/valueToBoolean"
+import { consistentWhitespace } from "../lib/consistentWhitespace"
+import { valueToBoolean } from "../lib/valueToBoolean"
 import type { OffenceCode } from "../types/OffenceCode"
 
 export type CjsOffenceCode = {
@@ -11,7 +11,7 @@ export type CjsOffenceCode = {
   "Recordable On PNC Indicator": string
 }
 
-export default (data: Buffer): OffenceCode[] => {
+export const convertOds = (data: Buffer): OffenceCode[] => {
   const workbook = XLSX.read(data)
 
   if (workbook.SheetNames.length !== 1) {

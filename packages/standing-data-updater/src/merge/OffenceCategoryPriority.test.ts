@@ -1,5 +1,5 @@
 import type { OffenceCodeLookup } from "../types/OffenceCodeLookup"
-import OffenceCategoryPriority from "./OffenceCategoryPriority"
+import { OffenceCategoryPriority } from "./OffenceCategoryPriority"
 
 const cjsCode = "ABC123"
 

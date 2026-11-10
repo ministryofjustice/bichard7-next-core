@@ -1,4 +1,4 @@
-import mergeOrganisationUnitData from "./organisation-unit-download/mergeOrganisationUnitData"
+import { mergeOrganisationUnitData } from "./organisation-unit-download/mergeOrganisationUnitData"
 
 const main = async () => {
   await mergeOrganisationUnitData()

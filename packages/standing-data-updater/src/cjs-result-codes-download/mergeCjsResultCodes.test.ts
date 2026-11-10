@@ -1,5 +1,5 @@
 import type { ResultCode } from "@moj-bichard7/standing-data/types/types"
-import mergeCjsResultCodes from "./mergeCjsResultCodes"
+import { mergeCjsResultCodes } from "./mergeCjsResultCodes"
 
 describe("MergeCjsResultCodes", () => {
   it("Merges the downloaded cjs result codes with the existing ones", () => {

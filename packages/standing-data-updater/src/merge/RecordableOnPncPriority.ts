@@ -5,7 +5,7 @@ const getValue = (offences: OffenceCodeLookup, code: string): boolean | undefine
   return typeof match === "boolean" ? match : undefined
 }
 
-export default class RecordableOnPncPriority {
+export class RecordableOnPncPriority {
   constructor(
     private currentOffenceCodes: OffenceCodeLookup,
     private pnldOffenceCodes: OffenceCodeLookup,

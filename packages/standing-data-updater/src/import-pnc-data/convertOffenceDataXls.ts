@@ -1,8 +1,8 @@
 import * as XLSX from "xlsx"
-import cjsCodeFilter from "../lib/cjsCodeFilter"
-import consistentWhitespace from "../lib/consistentWhitespace"
-import fixPoundSign from "../lib/fixPoundSign"
-import valueToBoolean from "../lib/valueToBoolean"
+import { cjsCodeFilter } from "../lib/cjsCodeFilter"
+import { consistentWhitespace } from "../lib/consistentWhitespace"
+import { fixPoundSign } from "../lib/fixPoundSign"
+import { valueToBoolean } from "../lib/valueToBoolean"
 import type { OffenceCode } from "../types/OffenceCode"
 
 export type PncOffenceCode = {
@@ -11,7 +11,7 @@ export type PncOffenceCode = {
   F: string
 }
 
-export default (fileContents: Buffer): OffenceCode[] => {
+export const convertOffenceDataXls = (fileContents: Buffer): OffenceCode[] => {
   const workbook = XLSX.read(fileContents)
 
   if (workbook.SheetNames.length !== 1) {

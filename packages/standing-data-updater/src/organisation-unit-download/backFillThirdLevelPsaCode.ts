@@ -3,7 +3,10 @@ import type { OrganisationUnit } from "../types/OrganisationUnit"
 const matchingValues = (firstValue: string, secondValue: string): boolean =>
   firstValue.trim().toLowerCase() === secondValue.trim().toLowerCase()
 
-const backFillThirdLevelPsaCode = (newData: OrganisationUnit[], oldData: OrganisationUnit[]): OrganisationUnit[] => {
+export const backFillThirdLevelPsaCode = (
+  newData: OrganisationUnit[],
+  oldData: OrganisationUnit[]
+): OrganisationUnit[] => {
   const matchNotFoundForRecords: OrganisationUnit[] = []
 
   newData.forEach((record) => {
@@ -27,5 +30,3 @@ const backFillThirdLevelPsaCode = (newData: OrganisationUnit[], oldData: Organis
 
   return newData
 }
-
-export default backFillThirdLevelPsaCode

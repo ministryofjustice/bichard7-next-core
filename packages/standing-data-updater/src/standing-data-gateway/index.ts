@@ -1,10 +1,11 @@
-import * as fs from "fs"
-import consistentSort from "../lib/consistentSort"
-import convertApiResponse from "./convertApiResponse"
-import getOffence from "./getOffence"
+import fs from "node:fs/promises"
+import { consistentSort } from "../lib/consistentSort"
+import { convertApiResponse } from "./convertApiResponse"
+import { getOffence } from "./getOffence"
 
-export default async () => {
+export const standingDataDownload = async () => {
   console.log("Calling Standing Data API")
+
   const alphaChar = [..."ABCDEFGHIJKLMNOPRSTUVWXYZ"] // "Q" Removed as not a valid request
   const chunks = 5
   const allApiResponses = []
@@ -18,7 +19,7 @@ export default async () => {
 
   const offenceCodes = allApiResponses.flat().map(convertApiResponse)
   const data = consistentSort(offenceCodes.flat())
-  await fs.promises.writeFile("input-data/offence-code/standing-data-offences.json", JSON.stringify(data, null, 2))
+  await fs.writeFile("input-data/offence-code/standing-data-offences.json", JSON.stringify(data, null, 2))
 
   console.log("Standing Data API data successfully retrieved")
 }

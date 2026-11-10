@@ -1,11 +1,11 @@
-import fs from "fs"
+import fs from "node:fs"
 import type { OrganisationUnit } from "@moj-bichard7/standing-data/types/types"
-import generatePoliceOrganisationUnits from "./convertOrgUnitDataXls"
+import { convertOrgUnitDataXls } from "./convertOrgUnitDataXls"
 
 describe("GeneratePoliceUnits", () => {
   it("should not include empty rows", () => {
     const fileContents = fs.readFileSync("./test-data/input/INC275907.UT400J.FSCODES-short.xlsx")
-    const policeData = generatePoliceOrganisationUnits(fileContents)
+    const policeData = convertOrgUnitDataXls(fileContents)
 
     expect(policeData).toHaveLength(4)
 

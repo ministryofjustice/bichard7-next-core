@@ -1,6 +1,6 @@
 import axios from "axios"
 
-export default (downloadLocation: string): Promise<Buffer> =>
+export const downloadFile = (downloadLocation: string): Promise<Buffer> =>
   axios({
     url: downloadLocation,
     method: "GET",

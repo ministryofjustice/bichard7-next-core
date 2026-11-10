@@ -1,6 +1,6 @@
 import { XMLParser } from "fast-xml-parser"
-import valueToBoolean from "../lib/valueToBoolean"
 import type { OffenceCode } from "../types/OffenceCode"
+import { valueToBoolean } from "../lib/valueToBoolean"
 
 export type PnldOffenceParsedXml = {
   documents: {
@@ -27,7 +27,7 @@ export type PnldOffenceParsedXml = {
   }
 }
 
-export default (xmlData: string): OffenceCode => {
+export const convertXml = (xmlData: string): OffenceCode => {
   const options = {
     ignoreAttributes: false,
     removeNSPrefix: true

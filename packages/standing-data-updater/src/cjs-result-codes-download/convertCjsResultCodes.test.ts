@@ -1,6 +1,6 @@
-import fs from "fs"
+import fs from "node:fs"
 import type { ResultCode } from "@moj-bichard7/standing-data/types/types"
-import convertCjsResultCodes from "./convertCjsResultCodes"
+import { convertCjsResultCodes } from "./convertCjsResultCodes"
 import { readFile } from "../lib/readFile"
 
 describe("convertResultCodes", () => {

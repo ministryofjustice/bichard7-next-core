@@ -1,4 +1,4 @@
-import valueToBoolean from "./valueToBoolean"
+import { valueToBoolean } from "./valueToBoolean"
 
 describe("valueToBoolean", () => {
   test.each(["Y", "y", true, " y "])("it converts true values to true", (value) => {

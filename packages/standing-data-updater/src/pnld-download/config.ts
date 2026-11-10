@@ -23,7 +23,7 @@ if (!process.env.PNLD_DOWNLOAD_URL) {
   throw new Error("PNLD_DOWNLOAD_URL environment variable is not set")
 }
 
-const config: PnldConfig = {
+export const config: PnldConfig = {
   username: process.env.PNLD_USERNAME,
   password: process.env.PNLD_PASSWORD,
   loginUrl: process.env.PNLD_LOGIN_URL,
@@ -31,5 +31,3 @@ const config: PnldConfig = {
   tmpDir: process.env.TMP_DIR || "./tmp",
   headless: process.env.HEADLESS === "true"
 }
-
-export default config

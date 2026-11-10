@@ -1,4 +1,4 @@
-import consistentSort from "./consistentSort"
+import { consistentSort } from "./consistentSort"
 
 describe("consistentSort", () => {
   it("should sort arrays of objects by ordered key", () => {
@@ -8,6 +8,7 @@ describe("consistentSort", () => {
       { b: "a", a: "b", c: "c" }
     ]
     const sorted = consistentSort(input)
+
     expect(JSON.stringify(sorted)).toBe(
       '[{"a":"a","b":"b","c":"c"},{"a":"b","b":"a","c":"c"},{"a":"c","b":"b","c":"a"}]'
     )

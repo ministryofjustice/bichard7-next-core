@@ -1,6 +1,6 @@
 import type { ResultCode } from "@moj-bichard7/standing-data/types/types"
 
-const mergeCjsResultCodes = (newData: ResultCode[], existingData: ResultCode[]): ResultCode[] => {
+export const mergeCjsResultCodes = (newData: ResultCode[], existingData: ResultCode[]): ResultCode[] => {
   newData.forEach((newItem) => {
     const existingRecord = existingData.find((existingItem) => existingItem.cjsCode.trim() === newItem.cjsCode.trim())
 
@@ -17,5 +17,3 @@ const mergeCjsResultCodes = (newData: ResultCode[], existingData: ResultCode[]):
 
   return existingData
 }
-
-export default mergeCjsResultCodes

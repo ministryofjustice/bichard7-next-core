@@ -1,4 +1,4 @@
-import downloadCjsResultCodes from "./cjs-result-codes-download/downloadCjsResultCodes"
+import { downloadCjsResultCodes } from "./cjs-result-codes-download/downloadCjsResultCodes"
 
 const main = async () => {
   await downloadCjsResultCodes()

@@ -1,7 +1,7 @@
-import consistentWhitespace from "../lib/consistentWhitespace"
+import { consistentWhitespace } from "../lib/consistentWhitespace"
 import type { OffenceCodeLookup } from "../types/OffenceCodeLookup"
 
-export default class OffenceTitlePriority {
+export class OffenceTitlePriority {
   constructor(
     private currentOffenceCodes: OffenceCodeLookup,
     private pnldOffenceCodes: OffenceCodeLookup,

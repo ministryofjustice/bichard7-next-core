@@ -1,5 +1,5 @@
 import type { OrganisationUnit } from "../types/OrganisationUnit"
-import backFillThirdLevelPsaCode from "./backFillThirdLevelPsaCode"
+import { backFillThirdLevelPsaCode } from "./backFillThirdLevelPsaCode"
 
 describe("BackfillThirdLevelPsaCode", () => {
   it("backfills the third level PSA code from the existing data when codes are matching", () => {

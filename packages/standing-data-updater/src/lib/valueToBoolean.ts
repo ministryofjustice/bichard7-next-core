@@ -1,4 +1,4 @@
-export default (value?: string | boolean | null): boolean | undefined => {
+export const valueToBoolean = (value?: string | boolean | null): boolean | undefined => {
   if (value === undefined || value === null) {
     return undefined
   }

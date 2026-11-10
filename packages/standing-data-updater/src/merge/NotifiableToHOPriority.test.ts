@@ -1,5 +1,5 @@
 import type { OffenceCodeLookup } from "../types/OffenceCodeLookup"
-import NotifiableToHOPriority from "./NotifiableToHOPriority"
+import { NotifiableToHOPriority } from "./NotifiableToHOPriority"
 
 const cjsCode = "ABC123"
 const notifiableToHo = true

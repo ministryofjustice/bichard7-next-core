@@ -1,4 +1,4 @@
-import downloadCjsOuCodes from "./organisation-unit-download/downloadCjsOuCodes"
+import { downloadCjsOuCodes } from "./organisation-unit-download/downloadCjsOuCodes"
 
 const main = async () => {
   await downloadCjsOuCodes()

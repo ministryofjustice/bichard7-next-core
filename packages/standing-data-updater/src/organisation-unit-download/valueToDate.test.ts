@@ -1,4 +1,4 @@
-import valueToDate from "./valueToDate"
+import { valueToDate } from "./valueToDate"
 
 describe("valueToDate", () => {
   it("should return undefined when the date format is invalid", () => {

@@ -1,4 +1,4 @@
-const valueToDate = (value?: string | number | null): Date | undefined => {
+export const valueToDate = (value?: string | number | null): Date | undefined => {
   let result: Date | undefined
 
   if (value === undefined || value === null || (typeof value === "string" && value.trim()) === "") {
@@ -18,5 +18,3 @@ const valueToDate = (value?: string | number | null): Date | undefined => {
 
   return result
 }
-
-export default valueToDate

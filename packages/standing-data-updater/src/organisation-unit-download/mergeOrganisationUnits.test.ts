@@ -1,5 +1,5 @@
 import type { OrganisationUnit } from "../types/OrganisationUnit"
-import mergeOrganisationUnits from "./mergeOrganisationUnits"
+import { mergeOrganisationUnits } from "./mergeOrganisationUnits"
 
 describe("MergeOrganisationUnits", () => {
   it("Merges the downloaded organisation units with the existing data", () => {

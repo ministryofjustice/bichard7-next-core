@@ -1,11 +1,12 @@
-import * as fs from "fs"
-import type { OffenceCode } from "../types/OffenceCode"
-import type { PromiseResult } from "../types/Result"
-import convertXml from "./convertXml"
-import type { PnldFile } from "./PnldFileDownloader"
+import fs from "node:fs/promises"
+import path from "node:path"
 import { execFile } from "node:child_process"
 import { promisify } from "node:util"
-import path from "node:path"
+import type { OffenceCode } from "../types/OffenceCode"
+import type { PromiseResult } from "../types/Result"
+import type { PnldFile } from "./PnldFileDownloader"
+import { convertXml } from "./convertXml"
+import { fileExists } from "../lib/fileExists"
 
 const execFilePromise = promisify(execFile)
 
@@ -21,25 +22,26 @@ const unzipFile = async (file: PnldFile, outDir: string): PromiseResult<void> =>
   const absoluteFilePath = path.resolve(file.fileName)
   const absoluteOutDir = path.resolve(outDir)
 
-  if (fs.existsSync(absoluteOutDir)) {
-    await fs.promises.rm(absoluteOutDir, { recursive: true })
+  if (await fileExists(absoluteOutDir)) {
+    await fs.rm(absoluteOutDir, { recursive: true })
   }
 
-  await fs.promises.mkdir(absoluteOutDir, { recursive: true })
+  await fs.mkdir(absoluteOutDir, { recursive: true })
 
   await execFilePromise("unzip", ["-q", absoluteFilePath, "-d", absoluteOutDir])
 }
 
 const getAllFiles = async (startDir: string): Promise<string[]> => {
   const output = []
-  const contents = await fs.promises.readdir(startDir)
+  const contents = await fs.readdir(startDir)
   for (const file of contents) {
     const fullFile = `${startDir}/${file}`
     if (file.endsWith(".xml")) {
       output.push(fullFile)
     }
 
-    if (fs.statSync(fullFile).isDirectory()) {
+    const fileStat = await fs.stat(fullFile)
+    if (fileStat.isDirectory()) {
       const subDirFiles = await getAllFiles(fullFile)
       for (const subFile of subDirFiles) {
         output.push(subFile)
@@ -59,7 +61,7 @@ const processZip = async (file: PnldFile, output: OffenceCodeMap): Promise<void>
   await unzipFile(file, outDir)
   const xmlFiles = await getAllFiles(outDir)
   for (const xmlFile of xmlFiles) {
-    const xmlData = await fs.promises.readFile(xmlFile)
+    const xmlData = await fs.readFile(xmlFile)
     try {
       const record = convertXml(xmlData.toString())
 
@@ -71,7 +73,7 @@ const processZip = async (file: PnldFile, output: OffenceCodeMap): Promise<void>
   }
 }
 
-export default async (files: PnldFile[]): Promise<OffenceCode[]> => {
+export const processPnldFiles = async (files: PnldFile[]): Promise<OffenceCode[]> => {
   const output: OffenceCodeMap = {}
   for (const file of files.reverse()) {
     await processZip(file, output)

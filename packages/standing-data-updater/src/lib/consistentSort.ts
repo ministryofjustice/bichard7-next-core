@@ -1,7 +1,7 @@
 import lodash from "lodash"
 import { sortJsonKeys } from "sort-json-keys"
 
-export default (input: object[]): object[] => {
+export const consistentSort = (input: object[]): object[] => {
   if (input.length === 0) {
     return []
   }

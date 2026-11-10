@@ -1,6 +1,6 @@
-import fs from "fs"
-import importOffenceData from "./import-pnc-data/importOffenceData"
-import importOrgUnitData from "./import-pnc-data/importOrgUnitData"
+import fs from "node:fs/promises"
+import { importOffenceData } from "./import-pnc-data/importOffenceData"
+import { importOrgUnitData } from "./import-pnc-data/importOrgUnitData"
 
 type InputFiles = {
   offenceDataFile: string
@@ -8,7 +8,7 @@ type InputFiles = {
 }
 
 const getFiles = async (): Promise<InputFiles> => {
-  const dirListing = await fs.promises.readdir(".")
+  const dirListing = await fs.readdir(".")
   const offenceDataFiles = dirListing.filter((f) => /.*CJS\.xlsx/.test(f))
   const orgUnitDataFiles = dirListing.filter((f) => /.*FSCODE?\.xlsx/.test(f))
   if (offenceDataFiles.length !== 1 || orgUnitDataFiles.length !== 1) {

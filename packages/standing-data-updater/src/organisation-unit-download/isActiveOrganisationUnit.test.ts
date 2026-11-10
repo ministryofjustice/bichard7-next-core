@@ -1,5 +1,5 @@
 import MockDate from "mockdate"
-import isActiveOrganisationUnit from "./isActiveOrganisationUnit"
+import { isActiveOrganisationUnit } from "./isActiveOrganisationUnit"
 
 afterEach(() => {
   MockDate.reset()

@@ -11,7 +11,7 @@ const getValue = (offences: OffenceCodeLookup, code: string): string | undefined
   return match
 }
 
-export default class HomeOfficeClassificationPriority {
+export class HomeOfficeClassificationPriority {
   constructor(
     private currentOffenceCodes: OffenceCodeLookup,
     private pnldOffenceCodes: OffenceCodeLookup
