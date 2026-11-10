@@ -10,9 +10,8 @@
     "src/input-data/organisation-unit/cjs-data.json",
     "src/input-data/organisation-unit/police-forces.json"
   ],
-  "exclude": ["dist", "node_modules"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
-    "types": ["jest", "puppeteer"],
-    "outDir": "dist"
+    "types": ["jest", "puppeteer"]
   }
 }

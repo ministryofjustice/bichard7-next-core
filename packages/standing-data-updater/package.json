@@ -2,7 +2,7 @@
   "name": "@moj-bichard7/standing-data-updater",
   "version": "1.0.0",
   "scripts": {
-    "build": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "tsc --noEmit",
     "test": "jest",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
