@@ -17,6 +17,7 @@ jobs:
       common: ${{ fromJSON(steps.evaluate.outputs.filters).common }}
       characterisation: ${{ fromJSON(steps.evaluate.outputs.filters).characterisation }}
       ui_component: ${{ fromJSON(steps.evaluate.outputs.filters).ui_component }}
+      standing_data_updater: ${{ fromJSON(steps.evaluate.outputs.filters).standing_data_updater }}
 
     steps:
       - name: Checkout repository
@@ -45,6 +46,10 @@ jobs:
               - 'packages/common/**'
               - 'packages/core/**'
               - 'packages/ui/**'
+            standing_data_updater:
+              - '.nvmrc'
+              - '.github/workflows/unit-tests.yml'
+              - 'packages/standing-data-updater/**'
 
 
   test_common:
@@ -165,3 +170,33 @@ jobs:
           path: |
             packages/ui/cypress/videos
             packages/ui/cypress/screenshots
+
+  test_standing_data_updater:
+    name: Test Standing Data Updater
+    needs: changes
+    if: needs.changes.outputs.standing_data_updater == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+
+      - name: ⛓️ SLSA Supply Chain Security
+        uses: ministryofjustice/devsecops-actions/sca/slsa@7dc13c20e2bf541b8a77fa1320a04983b18846f6 # v1.6.0
+        with:
+          security-patch-package-exclusion: '@moj-bichard7-developers/bichard7-next-data' # for release workflow
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Typecheck
+        run: npm run typecheck -w packages/standing-data-updater
+
+      - name: Run tests
+        run: npm run test -w packages/standing-data-updater
