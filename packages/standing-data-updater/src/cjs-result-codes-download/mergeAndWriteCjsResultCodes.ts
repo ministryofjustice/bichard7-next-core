@@ -1,13 +1,15 @@
-import * as fs from "node:fs"
+import * as fs from "node:fs/promises"
 import { resultCode as existingCjsResultCodes } from "@moj-bichard7/standing-data"
+import type { ResultCode } from "@moj-bichard7/standing-data/types/types"
 import mergeCjsResultCodes from "./mergeCjsResultCodes"
-import newCjsResultCodes from "../input-data/cjs-result-codes/cjs-result-data.json"
 import consistentSort from "../lib/consistentSort"
+import { readFile } from "../lib/readFile"
 
 const mergeAndWriteCjsResultCodes = async () => {
+  const newCjsResultCodes = await readFile<ResultCode[]>("../input-data/cjs-result-codes/cjs-result-data.json")
   const mergedData = mergeCjsResultCodes(newCjsResultCodes, existingCjsResultCodes)
   const sortedData = consistentSort(mergedData)
-  await fs.promises.writeFile("output-data/data/result-code.json", JSON.stringify(sortedData, null, 2))
+  await fs.writeFile("output-data/data/result-code.json", JSON.stringify(sortedData, null, 2))
 }
 
 export default mergeAndWriteCjsResultCodes

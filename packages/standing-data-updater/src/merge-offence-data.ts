@@ -1,9 +1,5 @@
-import fs from "node:fs"
+import fs from "node:fs/promises"
 import { offenceCode as currentOffenceCodes } from "@moj-bichard7/standing-data"
-import offenceCodeB7CategoryOverrides from "./input-data/offence-code/b7-overrides.json"
-import cjsOffenceCodes from "./input-data/offence-code/cjs-offences.json"
-import pncOffenceCodes from "./input-data/offence-code/pnc-ccjs-cjs-offences.json"
-import pnldOffenceCodes from "./input-data/offence-code/pnld-offences.json"
 import consistentSort from "./lib/consistentSort"
 import createOffenceCodeLookup from "./lib/createOffenceCodeLookup"
 import HomeOfficeClassificationPriority from "./merge/HomeOfficeClassificationPriority"
@@ -12,25 +8,32 @@ import OffenceCategoryPriority from "./merge/OffenceCategoryPriority"
 import OffenceCodeMerger from "./merge/OffenceCodeMerger"
 import OffenceTitlePriority from "./merge/OffenceTitlePriority"
 import RecordableOnPncPriority from "./merge/RecordableOnPncPriority"
-
-const currentOffenceCodeLookup = createOffenceCodeLookup(currentOffenceCodes)
-const cjsOffenceCodeLookup = createOffenceCodeLookup(cjsOffenceCodes)
-const pnldOffenceCodeLookup = createOffenceCodeLookup(pnldOffenceCodes)
-const pncOffenceCodeLookup = createOffenceCodeLookup(pncOffenceCodes)
+import type { OffenceCode } from "./types/OffenceCode"
+import { readFile } from "./lib/readFile"
 
 const validOffenceCodeFilter = (oc: string): boolean => /^[0-9A-Za-z]+$/.test(oc)
 
-const allOffenceCodeKeys = new Set(
-  Object.keys(currentOffenceCodeLookup)
-    .concat(Object.keys(pnldOffenceCodeLookup), Object.keys(cjsOffenceCodeLookup), Object.keys(pncOffenceCodeLookup))
-    .filter(validOffenceCodeFilter)
-)
-
 const main = async () => {
+  const cjsOffenceCodes = await readFile<OffenceCode[]>("../input-data/offence-code/cjs-offences.json")
+  const pnldOffenceCodes = await readFile<OffenceCode[]>("../input-data/offence-code/pnld-offences.json")
+  const pncOffenceCodes = await readFile<OffenceCode[]>("../input-data/offence-code/pnc-ccjs-cjs-offences.json")
+
+  const currentOffenceCodeLookup = createOffenceCodeLookup(currentOffenceCodes)
+  const cjsOffenceCodeLookup = createOffenceCodeLookup(cjsOffenceCodes)
+  const pnldOffenceCodeLookup = createOffenceCodeLookup(pnldOffenceCodes)
+  const pncOffenceCodeLookup = createOffenceCodeLookup(pncOffenceCodes)
+
+  const allOffenceCodeKeys = new Set(
+    Object.keys(currentOffenceCodeLookup)
+      .concat(Object.keys(pnldOffenceCodeLookup), Object.keys(cjsOffenceCodeLookup), Object.keys(pncOffenceCodeLookup))
+      .filter(validOffenceCodeFilter)
+  )
+
   const hoClassification = new HomeOfficeClassificationPriority(currentOffenceCodeLookup, pnldOffenceCodeLookup)
 
   const notifiableToHo = new NotifiableToHOPriority(currentOffenceCodeLookup, pnldOffenceCodeLookup)
 
+  const offenceCodeB7CategoryOverrides = await readFile<string[]>("../input-data/offence-code/b7-overrides.json")
   const offenceCategory = new OffenceCategoryPriority(
     currentOffenceCodeLookup,
     cjsOffenceCodeLookup,
@@ -62,7 +65,7 @@ const main = async () => {
   )
   const mergedData = merger.merge()
   const sortedData = consistentSort(mergedData)
-  await fs.promises.writeFile("output-data/data/offence-code.json", JSON.stringify(sortedData, null, 2))
+  await fs.writeFile("output-data/data/offence-code.json", JSON.stringify(sortedData, null, 2))
 }
 
 main()
