@@ -15,8 +15,7 @@
     "@emnapi/wasi-threads": "^2.2.0",
     "jest": "^30.5.2",
     "jest-extended": "^7.0.0",
-    "ts-jest": "^29.4.15",
-    "typescript": "^6.0.3"
+    "ts-jest": "^29.4.15"
   },
   "lint-staged": {
     "*.{js,ts}": "eslint --cache --fix"
