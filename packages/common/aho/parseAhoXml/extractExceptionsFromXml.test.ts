@@ -108,4 +108,34 @@ describe("extractExceptionsFromXml", () => {
 
     expect(actualExceptions).toEqual(expected)
   })
+
+  it("Should handle offences without results", () => {
+    const expected = [
+      {
+        code: "HO100301",
+        path: ["AnnotatedHearingOutcome", "HearingOutcome", "Case", "HearingDefendant", "ArrestSummonsNumber"]
+      },
+      {
+        code: "HO100324",
+        path: [
+          "AnnotatedHearingOutcome",
+          "HearingOutcome",
+          "Case",
+          "HearingDefendant",
+          "Offence",
+          1,
+          "Result",
+          0,
+          "ResultClass"
+        ]
+      }
+    ]
+    const inputXml = fs
+      .readFileSync(path.resolve(__dirname, "fixtures", "AnnotatedHO1-offence-without-result.xml"))
+      .toString()
+
+    const actualExceptions = extractExceptionsFromXml(inputXml)
+
+    expect(actualExceptions).toEqual(expected)
+  })
 })

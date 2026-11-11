@@ -93,7 +93,7 @@ export default (xml: string): Exception[] => {
         offence.Result = [results]
       }
 
-      offence.Result.forEach((result: Result) => {
+      offence.Result?.forEach((result: Result) => {
         if (result.ResultQualifierVariable && !Array.isArray(result.ResultQualifierVariable)) {
           result.ResultQualifierVariable = [result.ResultQualifierVariable]
         }

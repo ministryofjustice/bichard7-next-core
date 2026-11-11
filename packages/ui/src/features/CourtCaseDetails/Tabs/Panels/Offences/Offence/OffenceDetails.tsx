@@ -163,10 +163,10 @@ export const OffenceDetails = ({
         ></OffenceMatching>
         <InfoRow label="Court offence sequence number" value={offence.CourtOffenceSequenceNumber} />
         <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].PleaStatus !== undefined}>
-          <InfoRow label="Plea" value={getPleaStatus(offence.Result[0].PleaStatus)} />
+          <InfoRow label="Plea" value={offence.Result.length > 0 && getPleaStatus(offence.Result[0].PleaStatus)} />
         </ConditionalRender>
         <ConditionalRender isRendered={offence.Result.length > 0 && offence.Result[0].Verdict !== undefined}>
-          <InfoRow label="Verdict" value={getVerdict(offence.Result[0].Verdict)} />
+          <InfoRow label="Verdict" value={offence.Result.length > 0 && getVerdict(offence.Result[0].Verdict)} />
         </ConditionalRender>
         <InfoRow label="Offence category" value={offenceCategoryWithDescription} />
         <InfoRow label="Recordable on PNC" value={getYesOrNo(offence.RecordableOnPNCindicator)} />

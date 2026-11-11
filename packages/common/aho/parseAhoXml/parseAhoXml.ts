@@ -206,10 +206,17 @@ const mapXmlResultToAho = (xmlResult: Br7Result): Result => ({
   WarrantIssueDate: xmlResult["ds:WarrantIssueDate"] ? new Date(xmlResult["ds:WarrantIssueDate"]["#text"]) : undefined
 })
 
-const mapXmlResultsToAho = (xmlResults: Br7Result | Br7Result[]): Result[] =>
-  Array.isArray(xmlResults)
-    ? xmlResults.map((xmlResult) => mapXmlResultToAho(xmlResult))
-    : [mapXmlResultToAho(xmlResults)]
+const mapXmlResultsToAho = (xmlResults: Br7Result | Br7Result[]): Result[] => {
+  if (!xmlResults) {
+    return []
+  }
+
+  if (Array.isArray(xmlResults)) {
+    return xmlResults.map((xmlResult) => mapXmlResultToAho(xmlResult))
+  }
+
+  return [mapXmlResultToAho(xmlResults)]
+}
 
 const buildFullOffenceCode = (
   offenceCode: CommonLawOffenceCode | IndictmentOffenceCode | NonMatchingOffenceCode

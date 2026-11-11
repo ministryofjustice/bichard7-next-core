@@ -3,6 +3,7 @@ import DummyMultipleOffencesNoErrorAho from "../../../../test/test-data/Annotate
 import DummyHO100200Aho from "../../../../test/test-data/HO100200_1.json"
 import DummyHO100302Aho from "../../../../test/test-data/HO100302_1.json"
 import dummyMultipleHearingResultsAho from "../../../../test/test-data/multipleHearingResultsOnOffence.json"
+import OffenceWithoutHearingResult from "../../../../test/test-data/OffenceWithoutHearingResult.json"
 import type { TestTrigger } from "../../../../test/utils/manageTriggers"
 import canReallocateTestData from "../../../fixtures/canReallocateTestData.json"
 import a11yConfig from "../../../support/a11yConfig"
@@ -517,6 +518,53 @@ describe("View case details", () => {
     cy.contains("dt", "PNC disposal type").siblings().contains("1015")
     cy.contains("dt", "Type of result").siblings().contains("Judgement with final result")
     cy.contains("dt", "PNC adjudication exists").siblings().contains("N")
+  })
+
+  it("should display only offence details when there is no hearing result", () => {
+    cy.task("insertCourtCasesWithFields", [
+      {
+        orgForPoliceFilter: "01",
+        hearingOutcome: OffenceWithoutHearingResult.hearingOutcomeXml,
+        errorCount: 1
+      }
+    ])
+    loginAndVisit("/bichard/court-cases/0")
+    clickTab("Offences")
+
+    cy.get("tbody tr:nth-child(3) td:nth-child(5) a").click()
+
+    cy.contains("h2", "Offence 3 of 3")
+    cy.contains("dt", "Offence code").siblings().contains("RT88191")
+    cy.contains("dt", "Offence title")
+      .siblings()
+      .contains("Use a motor vehicle on a road / public place without third party insurance")
+    cy.contains("dt", "Offence start date").siblings().should("contain.text", "On or in")
+    cy.contains("dt", "Offence start date").siblings().should("contain.text", "28/11/2010")
+    cy.contains("dt", "Offence start date").siblings().should("contain.text", "Date code: 1")
+    cy.contains("dt", "Arrest date").siblings().contains("01/12/2010")
+    cy.contains("dt", "Charge date").siblings().contains("02/12/2010")
+    cy.contains("dt", "Conviction date").siblings().contains("26/09/2011")
+    cy.contains("dt", "Offence description").siblings().contains("Use a motor vehicle without third party insurance.")
+    cy.contains("dt", "Offence location").siblings().contains("Kingston High Street")
+    cy.contains("dt", "PNC sequence number").siblings().contains("003")
+    cy.contains("dt", "Court offence sequence number").siblings().contains("3")
+    cy.contains("dt", "Added by the Court").should("not.exist")
+    cy.contains("dt", "Plea").should("not.exist")
+    cy.contains("dt", "Verdict").should("not.exist")
+    cy.contains("dt", "Offence category").siblings().contains("CM (summary motoring)")
+    cy.contains("dt", "Recordable on PNC").siblings().contains("No")
+    cy.contains("dt", "Committed on bail").siblings().contains("D (Don't know)")
+    cy.contains("dt", "Notifiable to Home Office").siblings().contains("No")
+    cy.contains("dt", "Home Office classification").siblings().contains("809/01")
+
+    cy.contains("dt", "CJS Code").should("not.exist")
+    cy.contains("dt", "Result hearing type").should("not.exist")
+    cy.contains("dt", "Result hearing date").should("not.exist")
+    cy.contains("dt", "Type of trial").should("not.exist")
+    cy.contains("dt", "Hearing result description").should("not.exist")
+    cy.contains("dt", "PNC disposal type").should("not.exist")
+    cy.contains("dt", "Type of result").should("not.exist")
+    cy.contains("dt", "PNC adjudication exists").should("not.exist")
   })
 
   it("Should be able to see 'Hearing result' heading before every hearing result, when there are multiple", () => {
