@@ -11,14 +11,11 @@ const findDisposalsByAsn = async (asn: string) => {
     process.exit(1)
   }
 
-  const shouldSkipTlsVerification = !["production", "preprod"].includes(process.env.WORKSPACE!)
-  const dispatcher = shouldSkipTlsVerification
-    ? new Agent({
-        connect: {
-          rejectUnauthorized: false
-        }
-      })
-    : undefined
+  const dispatcher = new Agent({
+    connect: {
+      rejectUnauthorized: false
+    }
+  })
 
   const requestHeaders = generateRequestHeaders(randomUUID(), LedsActionCode.QueryByAsn, authToken)
   const requestBody = {
