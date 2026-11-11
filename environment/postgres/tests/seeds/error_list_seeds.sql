@@ -7,11 +7,12 @@ INSERT INTO br7own.error_list (error_id, msg_received_ts, error_locked_by_id, tr
                                error_quality_checked, trigger_quality_checked, asn, court_code, updated_msg,
                                error_reason, trigger_reason, court_date, ptiurn, court_name, resolution_ts,
                                error_resolved_by, trigger_resolved_by, error_resolved_ts, trigger_resolved_ts,
-                               defendant_name, court_room, error_insert_ts, trigger_insert_ts, pnc_update_enabled)
+                               defendant_name, court_room, error_insert_ts, trigger_insert_ts, pnc_update_enabled,
+                               postcode, police_force_area)
 VALUES (1, CURRENT_TIMESTAMP - INTERVAL '17 days', NULL, NULL, 'message01', 1, 1, 1, 0, 'to move', 'to move2',
         CURRENT_TIMESTAMP, 0, '', '01X', NULL, 4, 5, 6, 'asn', 'crtcode', 'updated_msg', 'error_reason', 'trigger_reason',
         CURRENT_TIMESTAMP, 'ptiurn', 'court_name', CURRENT_TIMESTAMP - INTERVAL '367 days', 'error_resolved_by', 'trigger_resolved_by',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'defendant_name', 'xx', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'x');
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'defendant_name', 'xx', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'x', 'postcode', 'pfa');
 
 INSERT INTO br7own.error_list_triggers (error_id, trigger_code, status, create_ts)
 VALUES (1, 'TRPR0002', 1, CURRENT_TIMESTAMP);
@@ -168,11 +169,12 @@ INSERT INTO br7own.error_list (error_id, msg_received_ts, error_locked_by_id, tr
                                error_quality_checked, trigger_quality_checked, asn, court_code, updated_msg,
                                error_reason, trigger_reason, court_date, ptiurn, court_name, resolution_ts,
                                error_resolved_by, trigger_resolved_by, error_resolved_ts, trigger_resolved_ts,
-                               defendant_name, court_room, error_insert_ts, trigger_insert_ts, pnc_update_enabled)
+                               defendant_name, court_room, error_insert_ts, trigger_insert_ts, pnc_update_enabled,
+                               postcode, police_force_area)
 VALUES (12, CURRENT_TIMESTAMP - INTERVAL '17 days', NULL, NULL, 'message12', 1, 1, 1, 0, 'to resolve', 'to resolve2',
         CURRENT_TIMESTAMP, 0, '', '01X', NULL, 4, 5, 6, 'asn', 'crtcode', 'updated_msg', 'error_reason', 'trigger_reason',
         CURRENT_TIMESTAMP, 'ptiurn', 'court_name', CURRENT_TIMESTAMP - INTERVAL '367 days', 'error_resolved_by', 'trigger_resolved_by',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'defendant_name', 'xx', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'x');
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'defendant_name', 'xx', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'x', 'postcode', 'pfa');
 
 INSERT INTO br7own.error_list (error_id, msg_received_ts, error_locked_by_id, trigger_locked_by_id, message_id, phase,
                                trigger_count, error_count, is_urgent, annotated_msg, error_report, create_ts,
@@ -180,11 +182,12 @@ INSERT INTO br7own.error_list (error_id, msg_received_ts, error_locked_by_id, tr
                                error_quality_checked, trigger_quality_checked, asn, court_code, updated_msg,
                                error_reason, trigger_reason, court_date, ptiurn, court_name, resolution_ts,
                                error_resolved_by, trigger_resolved_by, error_resolved_ts, trigger_resolved_ts,
-                               defendant_name, court_room, error_insert_ts, trigger_insert_ts, pnc_update_enabled)
+                               defendant_name, court_room, error_insert_ts, trigger_insert_ts, pnc_update_enabled,
+                               postcode, police_force_area)
 VALUES (13, CURRENT_TIMESTAMP - INTERVAL '17 days', NULL, NULL, 'message13', 1, 1, 1, 0, 'to resolve', 'to resolve2',
         CURRENT_TIMESTAMP, 0, '', '01X', NULL, 4, 5, 6, 'asn', 'crtcode', 'updated_msg', 'error_reason', 'trigger_reason',
         CURRENT_TIMESTAMP, 'ptiurn', 'court_name', CURRENT_TIMESTAMP - INTERVAL '367 days', 'error_resolved_by', 'trigger_resolved_by',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'defendant_name', 'xx', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'x');
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'defendant_name', 'xx', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'x', 'postcode', 'pfa');
 
 INSERT INTO br7own.error_list (error_id, msg_received_ts, error_locked_by_id, trigger_locked_by_id, message_id, phase,
                                trigger_count, error_count, is_urgent, annotated_msg, error_report, create_ts,
@@ -192,8 +195,9 @@ INSERT INTO br7own.error_list (error_id, msg_received_ts, error_locked_by_id, tr
                                error_quality_checked, trigger_quality_checked, asn, court_code, updated_msg,
                                error_reason, trigger_reason, court_date, ptiurn, court_name, resolution_ts,
                                error_resolved_by, trigger_resolved_by, error_resolved_ts, trigger_resolved_ts,
-                               defendant_name, court_room, error_insert_ts, trigger_insert_ts, pnc_update_enabled)
+                               defendant_name, court_room, error_insert_ts, trigger_insert_ts, pnc_update_enabled,
+                               postcode, police_force_area)
 VALUES (14, CURRENT_TIMESTAMP - INTERVAL '17 days', NULL, NULL, 'message14', 1, 1, 1, 0, 'to resolve', 'to resolve2',
         CURRENT_TIMESTAMP, 0, '', '01X', NULL, 4, 5, 6, 'asn', 'crtcode', 'updated_msg', 'error_reason', 'trigger_reason',
         CURRENT_TIMESTAMP, 'ptiurn', 'court_name', CURRENT_TIMESTAMP - INTERVAL '367 days', 'error_resolved_by', 'trigger_resolved_by',
-        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'defendant_name', 'xx', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'x');
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'defendant_name', 'xx', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'x', 'postcode', 'pfa');

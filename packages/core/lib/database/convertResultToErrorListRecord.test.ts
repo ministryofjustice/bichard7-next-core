@@ -14,7 +14,20 @@ describe("convertResultToErrorListRecord", () => {
     it("should generate the error list record", () => {
       const phase1Result = generateMockPhase1Result({
         triggers: [{ code: TriggerCode.TRPR0001 }],
-        hearingOutcome: { Exceptions: [{ code: ExceptionCode.HO100100, path: errorPaths.case.asn }] }
+        hearingOutcome: {
+          Exceptions: [{ code: ExceptionCode.HO100100, path: errorPaths.case.asn }],
+          AnnotatedHearingOutcome: {
+            HearingOutcome: {
+              Case: {
+                HearingDefendant: {
+                  Address: {
+                    AddressLine4: "SW1A 2AA"
+                  }
+                }
+              }
+            }
+          }
+        }
       })
 
       const convertedResult = convertResultToErrorListRecord(phase1Result)
@@ -30,7 +43,8 @@ describe("convertResultToErrorListRecord", () => {
         updated_hearing_outcome: expect.any(Object),
         annotated_msg: expect.any(String),
         updated_msg: expect.any(String),
-        message_id: expect.any(String)
+        message_id: expect.any(String),
+        postcode: "SW1A 2AA"
       })
     })
 
@@ -93,7 +107,18 @@ describe("convertResultToErrorListRecord", () => {
         triggers: [{ code: TriggerCode.TRPS0002 }],
         outputMessage: {
           Exceptions: [{ code: ExceptionCode.HO200100, path: errorPaths.case.asn }],
-          PncOperations: [{ code: PncOperation.SENTENCE_DEFERRED, status: "NotAttempted" }]
+          PncOperations: [{ code: PncOperation.SENTENCE_DEFERRED, status: "NotAttempted" }],
+          AnnotatedHearingOutcome: {
+            HearingOutcome: {
+              Case: {
+                HearingDefendant: {
+                  Address: {
+                    AddressLine4: "SW1A 2AA"
+                  }
+                }
+              }
+            }
+          }
         } as PncUpdateDataset
       })
       const convertedResult = convertResultToErrorListRecord(phase2Result)

@@ -11,6 +11,7 @@ import { unvalidatedHearingOutcomeSchema } from "@moj-bichard7/common/schemas/un
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
+import logger from "@moj-bichard7/common/utils/logger"
 import postgres from "postgres"
 
 import CoreAuditLogger from "../../lib/auditLog/CoreAuditLogger"
@@ -42,9 +43,18 @@ const processPhase1: ConductorWorker = {
       return failed(`Could not put file to S3: ${s3TaskDataPath}`, s3PutResult.message)
     }
 
-    let hasTriggersOrExceptions =
-      ("triggers" in result && result.triggers.length > 0) ||
-      ("hearingOutcome" in result && result.hearingOutcome.Exceptions.length > 0)
+    const hasExceptions = "hearingOutcome" in result && result.hearingOutcome.Exceptions.length > 0
+    let hasTriggersOrExceptions = ("triggers" in result && result.triggers.length > 0) || hasExceptions
+
+    if (hasExceptions) {
+      result.hearingOutcome.Exceptions.forEach((exception) => {
+        logger.info({
+          correlationId: result.correlationId,
+          message: "Exception generated",
+          exceptionCode: exception.code
+        })
+      })
+    }
 
     if (!hasTriggersOrExceptions) {
       const existingTriggersCount = await getTriggersCount(db, result.correlationId)

@@ -21,7 +21,7 @@ interface TriggerGroupProps {
 const TriggerGroups = ({ dispatch, reasonCodes }: TriggerGroupProps): React.ReactNode => {
   const currentUser = useCurrentUser()
   const excludedTriggers = allExcludedTriggers(currentUser, forceExcludedTriggers)
-  const excludedTriggersForUser: string[] = [] //  currentUser.excludedTriggers - disable this until ready for go-ahead
+  const excludedTriggersForUser = currentUser.excludedTriggers
 
   const activeTriggerGroups: Record<string, string[]> = {}
   const excludedTriggerGroupsForUser: Record<string, string[]> = {}

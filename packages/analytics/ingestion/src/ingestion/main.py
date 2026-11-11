@@ -1,4 +1,5 @@
 import logging
+import os
 from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any, Literal
@@ -9,9 +10,10 @@ from dlt.common import json
 from dlt.common.pipeline import LoadInfo
 from dlt.common.storages.fsspec_filesystem import FileItemDict
 from dlt.common.typing import TDataItems
+from dlt.destinations import filesystem as dest_filesystem
 from dlt.extract import DltResource
 from dlt.pipeline import Pipeline
-from dlt.sources.filesystem import filesystem
+from dlt.sources.filesystem import filesystem as src_filesystem
 from smart_open import open
 
 logging.basicConfig(
@@ -92,10 +94,11 @@ class Manifest:
     item_count: int | None
 
     @classmethod
-    def from_summary_file(cls, bucket_name: str, summary_file_key: str) -> "Manifest":
+    def from_summary_file(cls, bucket_uri: str, summary_file_key: str) -> "Manifest":
         """Factory method to parse and construct a Manifest from a summary file."""
-        summary_uri = "s3://" + bucket_name + \
-            "/" + summary_file_key.lstrip("/")
+        summary_uri = (
+            bucket_uri.rstrip("/") + "/" + summary_file_key.lstrip("/")
+        )
         summary = cls._load_json(summary_uri)
 
         export_type: ExportType = "incremental" if summary.get(
@@ -105,7 +108,7 @@ class Manifest:
 
         manifest_files_key = summary["manifestFilesS3Key"]
         manifest_files_uri = (
-            "s3://" + bucket_name + "/" + manifest_files_key.lstrip("/")
+            bucket_uri.rstrip("/") + "/" + manifest_files_key.lstrip("/")
         )
         manifest_files = cls._load_jsonl(manifest_files_uri)
 
@@ -119,11 +122,13 @@ class Manifest:
 
     @staticmethod
     def _load_json(uri: str) -> dict[str, Any]:
+        logger.debug(f"Opening '{uri}'")
         with open(uri, "r", encoding="utf-8") as f:
             return json.load(f)
 
     @staticmethod
     def _load_jsonl(uri: str) -> list[dict[str, Any]]:
+        logger.debug(f"Opening '{uri}'")
         with open(uri, "r", encoding="utf-8") as f:
             return [json.loads(line) for line in f if line.strip()]
 
@@ -144,8 +149,8 @@ def get_write_disposition(
 def get_files_resource(
     bucket_url: str, file_glob: str, manifest_paths: list[str]
 ) -> DltResource:
-    files = filesystem(bucket_url=bucket_url, file_glob=file_glob)
-    logger.debug("filesystem output (pre filter).....")
+    files = src_filesystem(bucket_url=bucket_url, file_glob=file_glob)
+    logger.debug("source filesystem output (pre filter).....")
     # logger.info(list(files)[0])
     for file in list(files):
         logger.debug(file)
@@ -165,7 +170,6 @@ def log_pipeline_details(pipeline: Pipeline, load_info: LoadInfo) -> None:
             logger.info("No trace details available.")
             return
 
-        # Type checkers know trace is not None here:
         logger.info("last extract")
         logger.info(trace.last_extract_info)
 
@@ -185,30 +189,21 @@ def log_pipeline_details(pipeline: Pipeline, load_info: LoadInfo) -> None:
 
 
 def main() -> None:
+    SRC_BUCKET_URL = os.environ["SRC_BUCKET_URL"]
+    DEST_BUCKET_URL = os.environ["DEST_BUCKET_URL"]
+    MANIFEST_SUMMARY_KEY = os.environ["MANIFEST_SUMMARY_KEY"]
     FILE_GLOB = "**/*.json*"
-    # BUCKET_NAME = "tests/data"
-    # MANIFEST_SUMMARY_PATH = "tests/data/dummy_landing_zone/id1/manifest-summary.json"
-    BUCKET_NAME = "bichard-7-e2e-test-analytics-data-store"
-    BUCKET_URL = "s3://" + BUCKET_NAME
-    MANIFEST_SUMMARY_KEY = "landing_zone/dynamodb/audit-log/export_date=2026-10-28/AWSDynamoDB/01793145628000-bb5dec7b/manifest-summary.json"
 
     manifest = Manifest.from_summary_file(
-        bucket_name=BUCKET_NAME, summary_file_key=MANIFEST_SUMMARY_KEY
+        bucket_uri=SRC_BUCKET_URL, summary_file_key=MANIFEST_SUMMARY_KEY
     )
     write_disposition = get_write_disposition(manifest.export_type)
 
     files = get_files_resource(
-        bucket_url=BUCKET_URL,
+        bucket_url=SRC_BUCKET_URL,
         file_glob=FILE_GLOB,
         manifest_paths=manifest.data_filepaths,
     )
-
-    logger.debug("manifest files list......")
-    for file in manifest.data_filepaths:
-        logger.debug("   " + file)
-    logger.debug("dlt filesystem resource 'relative_path' output.....")
-    for file in list(files):
-        logger.debug("   " + file.get("relative_path"))
 
     jsonl_resource = files | read_dynamodb_export_jsonl()
     jsonl_resource = jsonl_resource.apply_hints(
@@ -217,11 +212,14 @@ def main() -> None:
         columns={"events_count": {"data_type": "bigint"}},
     )
 
+    iceberg_dest = dest_filesystem(
+        bucket_url=DEST_BUCKET_URL, destination_name="iceberg_destination")
+
     pipeline = dlt.pipeline(
-        # database name (not used in AWS Glue)
+        # pipeline name -> database name (not used in AWS Glue)
         pipeline_name="audit_log_landing_to_bronze",
-        destination="iceberg",
-        # schema name (database name in AWS Glue)
+        destination=iceberg_dest,
+        # dataset name -> schema name (database name in AWS Glue)
         dataset_name="bronze_audit_log",
         progress="log",
         dev_mode=True,
