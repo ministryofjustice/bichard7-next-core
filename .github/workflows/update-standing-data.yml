@@ -37,7 +37,7 @@ jobs:
 
       - name: Install Chrome for Puppeteer
         working-directory: packages/standing-data-updater
-        run: npx puppeteer browsers install
+        run: npm run browsers:install
 
       - name: Download offence code data files
         working-directory: packages/standing-data-updater
