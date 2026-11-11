@@ -32,6 +32,7 @@ import typeOfHearingData from "./data/type-of-hearing.json"
 import vehicleCodeData from "./data/vehicle-code.json"
 import verdictData from "./data/verdict.json"
 import yesNoData from "./data/yes-no.json"
+import forceCatchmentAreasData from "./data/force-catchment-areas.json"
 import GroupedTriggerCodes from "./types/GroupedTriggerCodes"
 import type {
   ActualOffenceDate,
@@ -46,9 +47,10 @@ import type {
   ExceptionDefinition,
   ExcludedTriggerConfig,
   Force,
+  ForceCatchmentArea,
   Gender,
   ModeOfTrialReason,
-  Number,
+  Number as NumberData,
   OffenceCategory,
   OffenceCode,
   OffenceInitiation,
@@ -83,7 +85,7 @@ export const excludedTriggerConfig = excudedTriggerConfigData as ExcludedTrigger
 export const forces = forcesData as Force[]
 export const gender: Gender[] = genderData
 export const modeOfTrialReason: ModeOfTrialReason[] = modeOfTrialReasonData
-export const number: Number[] = numberData
+export const number: NumberData[] = numberData
 export const offenceCategory: OffenceCategory[] = offenceCategoryData
 export const offenceCode: OffenceCode[] = offenceCodeData
 export const offenceInitiation: OffenceInitiation[] = offenceInitiationData
@@ -104,6 +106,7 @@ export const typeOfHearing: TypeOfHearing[] = typeOfHearingData
 export const vehicleCode: VehicleCode[] = vehicleCodeData
 export const verdict: Verdict[] = verdictData
 export const yesNo: YesNo[] = yesNoData
+export const forceCatchmentAreas: ForceCatchmentArea = forceCatchmentAreasData
 
 export default {
   actualOffenceDate,
@@ -140,5 +143,6 @@ export default {
   vehicleCode,
   verdict,
   yesNo,
+  forceCatchmentAreas,
   GroupedTriggerCodes
 }

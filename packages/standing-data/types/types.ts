@@ -160,3 +160,7 @@ export type Force = {
   code: string
   name: string
 }
+
+export type ForceCatchmentArea = {
+  [key: string]: string[]
+}
