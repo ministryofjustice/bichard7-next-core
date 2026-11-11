@@ -4,16 +4,16 @@
 # re-resolve SSM parameters referenced in the task definition.
 #
 # Usage:
-#   ./restart-ecs-service.sh <cluster> <service> [region]
+#   ./restart-ecs-service.sh <cluster> <service>
 #
 # Or with environment variables:
-#   ECS_CLUSTER=my-cluster ECS_SERVICE=my-service AWS_REGION=eu-west-2 ./restart-ecs-service.sh
+#   ECS_CLUSTER=my-cluster ECS_SERVICE=my-service ./restart-ecs-service.sh
 
 set -euo pipefail
 
 CLUSTER="${1:-${ECS_CLUSTER:-}}"
 SERVICE="${2:-${ECS_SERVICE:-}}"
-REGION="${3:-${AWS_REGION:-${AWS_DEFAULT_REGION:-}}}"
+REGION="eu-west-2"
 
 if [[ -z "$CLUSTER" || -z "$SERVICE" ]]; then
   echo "Usage: $0 <cluster> <service> [region]" >&2
