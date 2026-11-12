@@ -3,7 +3,7 @@
 set -e
 
 readonly DOCKER_BUILD_IMAGE="amazon-linux2023-base"
-readonly DOCKER_OUTPUT_TAG="analytics"
+readonly DOCKER_OUTPUT_TAG="analytics-ingestion"
 
 function has_local_image() {
   IMAGES=$(docker images --filter=reference="${DOCKER_BUILD_IMAGE}:*" -q | wc -l)
