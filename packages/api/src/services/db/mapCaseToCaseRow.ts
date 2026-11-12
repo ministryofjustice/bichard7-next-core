@@ -34,6 +34,7 @@ const mapCaseToCaseRow = (caseObj: Case): CaseRow => ({
   org_for_police_filter: caseObj.orgForPoliceFilter,
   phase: caseObj.phase,
   pnc_update_enabled: caseObj.pncUpdateEnabled,
+  police_force_area: caseObj.policeForceArea,
   ptiurn: caseObj.ptiurn,
   resolution_ts: caseObj.resolutionAt,
   total_pnc_failure_resubmissions: caseObj.totalPncFailureResubmissions,

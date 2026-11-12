@@ -35,6 +35,7 @@ const getDefaultCase = (): Omit<CaseRow, "court_name_upper" | "defendant_name_up
   msg_received_ts: new Date("2025-05-23"),
   org_for_police_filter: "01",
   phase: 1,
+  police_force_area: null,
   pnc_update_enabled: "",
   ptiurn: "00112233",
   resolution_ts: null,

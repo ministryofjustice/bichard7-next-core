@@ -58,13 +58,15 @@ describe("communitySentenceReport - Integration", () => {
         aho: ahoWithCommunityOrderResultCode(),
         defendantName: "Trigger31 Defendant",
         messageReceivedAt: today,
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        policeForceArea: "E23000001"
       },
       1: {
         aho: ahoWithCommunityOrderResultCode(),
         defendantName: "Non Trigger31 Defendant",
         messageReceivedAt: today,
-        orgForPoliceFilter: "01"
+        orgForPoliceFilter: "01",
+        policeForceArea: "E23000001"
       }
     })
 
@@ -82,6 +84,7 @@ describe("communitySentenceReport - Integration", () => {
 
     const filters: CommunitySentenceReportQuery = {
       fromDate: subDays(today, 1),
+      policeForceAreaCodes: ["E23000001"],
       toDate: addDays(today, 1)
     }
 
@@ -132,6 +135,7 @@ describe("communitySentenceReport - Integration", () => {
 
     const filters: CommunitySentenceReportQuery = {
       fromDate: yesterday,
+      policeForceAreaCodes: ["E23000001"],
       toDate: tomorrow
     }
 
@@ -173,6 +177,7 @@ describe("communitySentenceReport - Integration", () => {
 
     const filters: CommunitySentenceReportQuery = {
       fromDate: subDays(today, 1),
+      policeForceAreaCodes: ["E23000001"],
       resultCodes: ["1030"],
       toDate: addDays(today, 1)
     }
@@ -223,6 +228,7 @@ describe("communitySentenceReport - Integration", () => {
 
     const filters: CommunitySentenceReportQuery = {
       fromDate: subDays(today, 1),
+      policeForceAreaCodes: ["E23000001"],
       toDate: addDays(today, 1)
     }
 
@@ -256,7 +262,7 @@ describe("communitySentenceReport - Integration", () => {
         aho: ahoWithCommunityOrderResultCode(),
         defendantName: "Restricted Org Case",
         messageReceivedAt: today,
-        orgForPoliceFilter: "02"
+        orgForPoliceFilter: "04"
       }
     })
 
@@ -270,6 +276,7 @@ describe("communitySentenceReport - Integration", () => {
 
     const filters: CommunitySentenceReportQuery = {
       fromDate: subDays(today, 1),
+      policeForceAreaCodes: ["E23000001"],
       toDate: addDays(today, 1)
     }
 
@@ -282,5 +289,148 @@ describe("communitySentenceReport - Integration", () => {
 
     expect(results).toHaveLength(1)
     expect(results[0].defendantName).toBe("Visible Org Case")
+  })
+
+  it("should only return results with matching police force area code", async () => {
+    const today = startOfDay(new Date())
+
+    const cases = await createCases(database, 2, {
+      0: {
+        aho: ahoWithCommunityOrderResultCode(),
+        defendantName: "Matching PFA code",
+        messageReceivedAt: today,
+        orgForPoliceFilter: "01",
+        policeForceArea: "E23000001"
+      },
+      1: {
+        aho: ahoWithCommunityOrderResultCode(),
+        defendantName: "Non-matching PFA code",
+        messageReceivedAt: today,
+        orgForPoliceFilter: "01",
+        policeForceArea: "E23000002"
+      }
+    })
+
+    for (const c of cases) {
+      await createTriggers(database, c.errorId, [
+        {
+          triggerCode: TriggerCode.TRPR0031
+        }
+      ])
+    }
+
+    const filters: CommunitySentenceReportQuery = {
+      fromDate: subDays(today, 1),
+      policeForceAreaCodes: ["E23000001"],
+      toDate: addDays(today, 1)
+    }
+
+    const results: CommunitySentenceReportDto[] = []
+    await database.writable.transaction(async (trx) => {
+      for await (const batch of communitySentenceReport(trx, mockUser, filters)) {
+        results.push(...batch)
+      }
+    })
+
+    expect(results).toHaveLength(1)
+    expect(results[0].defendantName).toBe("Matching PFA code")
+  })
+
+  it("should return results when multiple police force area codes are provided", async () => {
+    const today = startOfDay(new Date())
+
+    const cases = await createCases(database, 2, {
+      0: {
+        aho: ahoWithCommunityOrderResultCode(),
+        defendantName: "Included PFA code 1",
+        messageReceivedAt: today,
+        orgForPoliceFilter: "01",
+        policeForceArea: "E23000001"
+      },
+      1: {
+        aho: ahoWithCommunityOrderResultCode(),
+        defendantName: "Included PFA code 2",
+        messageReceivedAt: today,
+        orgForPoliceFilter: "01",
+        policeForceArea: "E23000002"
+      },
+      2: {
+        aho: ahoWithCommunityOrderResultCode(),
+        defendantName: "Not included PFA code",
+        messageReceivedAt: today,
+        orgForPoliceFilter: "01",
+        policeForceArea: "E23000003"
+      }
+    })
+
+    for (const c of cases) {
+      await createTriggers(database, c.errorId, [
+        {
+          triggerCode: TriggerCode.TRPR0031
+        }
+      ])
+    }
+
+    const filters: CommunitySentenceReportQuery = {
+      fromDate: subDays(today, 1),
+      policeForceAreaCodes: ["E23000001", "E23000002"],
+      toDate: addDays(today, 1)
+    }
+
+    const results: CommunitySentenceReportDto[] = []
+    await database.writable.transaction(async (trx) => {
+      for await (const batch of communitySentenceReport(trx, mockUser, filters)) {
+        results.push(...batch)
+      }
+    })
+
+    expect(results).toHaveLength(2)
+    expect(results[0].defendantName).toBe("Included PFA code 1")
+    expect(results[1].defendantName).toBe("Included PFA code 2")
+  })
+
+  it("should return results which have no police_force_area when their assigned force maps to given police force area code", async () => {
+    const today = startOfDay(new Date())
+
+    const cases = await createCases(database, 2, {
+      0: {
+        aho: ahoWithCommunityOrderResultCode(),
+        defendantName: "No PFA but matching force",
+        messageReceivedAt: today,
+        orgForPoliceFilter: "01",
+        policeForceArea: null
+      },
+      1: {
+        aho: ahoWithCommunityOrderResultCode(),
+        defendantName: "No PFA and non-matching force",
+        messageReceivedAt: today,
+        orgForPoliceFilter: "04",
+        policeForceArea: null
+      }
+    })
+
+    for (const c of cases) {
+      await createTriggers(database, c.errorId, [
+        {
+          triggerCode: TriggerCode.TRPR0031
+        }
+      ])
+    }
+
+    const filters: CommunitySentenceReportQuery = {
+      fromDate: subDays(today, 1),
+      policeForceAreaCodes: ["E23000001"],
+      toDate: addDays(today, 1)
+    }
+
+    const results: CommunitySentenceReportDto[] = []
+    await database.writable.transaction(async (trx) => {
+      for await (const batch of communitySentenceReport(trx, mockUser, filters)) {
+        results.push(...batch)
+      }
+    })
+
+    expect(results).toHaveLength(1)
+    expect(results[0].defendantName).toBe("No PFA but matching force")
   })
 })
