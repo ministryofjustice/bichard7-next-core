@@ -1,0 +1,100 @@
+name: Update standing data
+
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  update_standing_data:
+    name: Update standing data
+    runs-on: ubuntu-latest
+    env:
+      PNLD_DOWNLOAD_URL: ${{ secrets.PNLD_DOWNLOAD_URL }}
+      PNLD_LOGIN_URL: ${{ secrets.PNLD_LOGIN_URL }}
+      PNLD_PASSWORD: ${{ secrets.PNLD_PASSWORD }}
+      PNLD_USERNAME: ${{ secrets.PNLD_USERNAME }}
+      GOOGLE_API_KEY: ${{ secrets.SHEETSAPIKEY }}
+      SD_USERNAME: ${{ secrets.SD_USERNAME }}
+      SD_PASSWORD: ${{ secrets.SD_PASSWORD }}
+      SD_END_POINT: ${{ secrets.SD_END_POINT }}
+      HEADLESS: "true"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: 'npm'
+
+      - name: ⛓️ SLSA Supply Chain Security
+        uses: ministryofjustice/devsecops-actions/sca/slsa@7dc13c20e2bf541b8a77fa1320a04983b18846f6 # v1.6.0
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Install Chrome for Puppeteer
+        working-directory: packages/standing-data-updater
+        run: npm run browsers:install
+
+      - name: Download offence code data files
+        working-directory: packages/standing-data-updater
+        run: npm run download-offence-code-data
+
+      - name: Merge offence code data files
+        working-directory: packages/standing-data-updater
+        run: npm run merge-offence-data
+
+      - name: Download Organisation Unit data files
+        working-directory: packages/standing-data-updater
+        run: npm run download-organisation-unit-data
+
+      - name: Merge Organisation Unit data files
+        working-directory: packages/standing-data-updater
+        run: npm run merge-organisation-unit-data
+
+      - name: Download CJS result codes data file
+        working-directory: packages/standing-data-updater
+        run: npm run download-cjs-result-codes-data
+
+      - name: Merge CJS result codes data files
+        working-directory: packages/standing-data-updater
+        run: npm run merge-cjs-result-codes-data
+
+      - name: Report Status
+        if: failure()
+        uses: slackapi/slack-github-action@485a9d42d3a73031f12ec201c457e2162c45d02d #v2.0.0
+        with:
+          webhook-type: incoming-webhook
+          payload: |
+            text: "GitHub action failed"  
+            attachments:  
+              - color: "#a30000" # Red  
+                blocks:  
+                  - type: "section"  
+                    text:  
+                      type: "mrkdwn"  
+                      text: ":elmo-fire: *${{ github.workflow }}* failed in <${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>"  
+                  - type: "context"  
+                    elements:  
+                      - type: "mrkdwn"  
+                        text: "Linked to Repo <${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}>"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
+
+      - name: Create pull request
+        id: cpr
+        uses: ./.github/actions/create-pull-request@main
+        with:
+          github_token: ${{ github.token }}
+          branch: "auto/update-standing-data"
+          commit_message: "Update standing data"
+          pr_title: "Update standing data"
+          update_type: "standing data update"
+
+      - name: Check PR information
+        run: |
+          echo "PR #${{ steps.cpr.outputs.pull-request-number}}"
+          echo "${{ steps.cpr.outputs.pull-request-url }}"

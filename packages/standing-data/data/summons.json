@@ -1,0 +1,18 @@
+[
+  {
+    "cjsCode": "A",
+    "description": "On Application"
+  },
+  {
+    "cjsCode": "E",
+    "description": "Serious and Either Way Offences"
+  },
+  {
+    "cjsCode": "M",
+    "description": "MC Act"
+  },
+  {
+    "cjsCode": "W",
+    "description": "Witness Statement"
+  }
+]

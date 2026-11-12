@@ -1,0 +1,44 @@
+[
+  {
+    "cjsCode": "CB",
+    "description": "Conditional Bail",
+    "pncCode": "B",
+    "spiCode": "B"
+  },
+  {
+    "cjsCode": "LA",
+    "description": "Care",
+    "pncCode": "O",
+    "spiCode": "L"
+  },
+  {
+    "cjsCode": "NA",
+    "description": "Not Applicable",
+    "pncCode": "A",
+    "spiCode": "A"
+  },
+  {
+    "cjsCode": "PB",
+    "description": "Custody",
+    "pncCode": "C",
+    "spiCode": "P"
+  },
+  {
+    "cjsCode": "PR",
+    "description": "Custody",
+    "pncCode": "C",
+    "spiCode": "C"
+  },
+  {
+    "cjsCode": "SA",
+    "description": "Secure Care",
+    "pncCode": "O",
+    "spiCode": "S"
+  },
+  {
+    "cjsCode": "UB",
+    "description": "Unconditional Bail",
+    "pncCode": "B",
+    "spiCode": "U"
+  }
+]

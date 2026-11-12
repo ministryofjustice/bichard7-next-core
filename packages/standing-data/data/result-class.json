@@ -1,0 +1,34 @@
+[
+  {
+    "cjsCode": "Adjournment",
+    "description": "Adjournment"
+  },
+  {
+    "cjsCode": "Adjournment post Judgement",
+    "description": "Adjournment post Judgement"
+  },
+  {
+    "cjsCode": "Adjournment pre Judgement",
+    "description": "Adjournment pre Judgement"
+  },
+  {
+    "cjsCode": "Adjournment with Judgement",
+    "description": "Adjournment with Judgement"
+  },
+  {
+    "cjsCode": "Appeal Outcome",
+    "description": "Appeal Outcome"
+  },
+  {
+    "cjsCode": "Judgement with final result",
+    "description": "Judgement with final result"
+  },
+  {
+    "cjsCode": "Sentence",
+    "description": "Sentence"
+  },
+  {
+    "cjsCode": "Unresulted",
+    "description": "Unresulted"
+  }
+]
