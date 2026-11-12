@@ -8,7 +8,7 @@ Contact the Bichard team for support at [moj-bichard7@madetech.com](mailto:moj-b
 ## Triggers and exceptions
 
 - [Exceptions list](triggers-and-exceptions/exceptions/)
-- [Exception resolution](triggers-and-exceptions/exception-resolution)
+- [Exception resolution](triggers-and-exceptions/exception-resolution/)
 - [Triggers list](triggers-and-exceptions/triggers/)
 
 ## System help
