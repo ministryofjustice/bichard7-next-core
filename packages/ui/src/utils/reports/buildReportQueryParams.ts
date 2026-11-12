@@ -30,11 +30,12 @@ export const buildReportQueryParams = (
     }
 
     case "community sentence": {
-      const parsedAreaCodes = Object.entries(forceCatchmentAreas)
-        .filter(([, forces]) => forces.some((force) => visibleForces.includes(force)))
-        .map(([areaCode]) => areaCode)
+      const normalizeForceCode = (code: string) => code.replace(/^0+/, "")
+      const normalizedVisibleForces = new Set(visibleForces.map(normalizeForceCode))
 
-      parsedAreaCodes.forEach((code) => query.append("policeForceAreaCodes", code))
+      Object.entries(forceCatchmentAreas)
+        .filter(([, forces]) => forces.some((force) => normalizedVisibleForces.has(normalizeForceCode(force))))
+        .forEach(([areaCode]) => query.append("policeForceAreaCodes", areaCode))
 
       const allSelected = TRPR0031_RESULTS.every((option) => filterValues.resultCodes.includes(option.id))
 
