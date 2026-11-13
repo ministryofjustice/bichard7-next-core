@@ -218,7 +218,7 @@ jobs:
         run: npm ci --ignore-scripts --no-audit
 
       - name: Build Common
-        run: npm run build -w packages/common
+        run: npm run build:common
 
       - name: Spin up the PostgreSQL database
         run: npm run postgres
@@ -266,7 +266,7 @@ jobs:
         run: npm ci --ignore-scripts --no-audit
 
       - name: Build Common
-        run: npm run build -w packages/common
+        run: npm run build:common
 
       - name: Build Core
         run: npm run build -w packages/core
@@ -314,7 +314,7 @@ jobs:
         run: npm ci --ignore-scripts --no-audit
 
       - name: Build Common
-        run: npm run build -w packages/common
+        run: npm run build:common
 
       - name: Start Services
         run: docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait db-seed audit-log-api
@@ -369,11 +369,8 @@ jobs:
       - name: Install GOV.UK Assets
         run: npm run -w packages/user-service install:assets
 
-      - name: Build Common
-        run: npm run build -w packages/common
-
       - name: Build the user service
-        run: npm run -w packages/user-service build
+        run: npm run build:user-service
 
       - name: Start Services
         run: docker compose --project-name bichard -f environment/docker-compose.yml up -d --wait db-seed audit-log-api

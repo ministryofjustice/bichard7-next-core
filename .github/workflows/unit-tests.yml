@@ -106,7 +106,7 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Build common
-        run: npm run build -w packages/common
+        run: npm run build:common
 
       - name: Run tests against core code
         run: npm run test:characterisation -w packages/core

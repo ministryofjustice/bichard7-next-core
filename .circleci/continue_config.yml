@@ -81,7 +81,7 @@ commands:
     steps:
       - run:
           name: Build Common
-          command: npm run build -w packages/common
+          command: npm run build:common
 
   build_core:
     steps:

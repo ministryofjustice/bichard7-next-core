@@ -36,6 +36,7 @@ COPY packages/core ./packages/core
 COPY packages/common ./packages/common
 COPY packages/conductor ./packages/conductor
 
+RUN npm run build -w packages/standing-data
 RUN npm run build -w packages/common
 RUN npm run build -w packages/core
 RUN npm run build -w packages/conductor
