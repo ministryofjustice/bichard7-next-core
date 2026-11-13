@@ -66,9 +66,6 @@ RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
 
 COPY --from=builder /core/node_modules ./node_modules
 
-COPY --from=builder /core/packages/standing-data/package.json ./packages/standing-data/package.json
-COPY --from=builder /core/packages/standing-data/node_modules ./packages/standing-data/node_modules
-
 COPY --from=builder /core/packages/common/package.json ./packages/common/package.json
 COPY --from=builder /core/packages/common/dist ./packages/common/dist
 COPY --from=builder /core/packages/common/node_modules ./packages/common/node_modules
