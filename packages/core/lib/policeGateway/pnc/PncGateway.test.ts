@@ -1,18 +1,19 @@
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
 import { isError } from "@moj-bichard7/common/types/Result"
-import axios from "axios"
-
-import type AuditLogger from "../../../types/AuditLogger"
 
 import generateFakeAho from "../../../phase1/tests/helpers/generateFakeAho"
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import AuditLogger from "../../../types/AuditLogger"
 import CoreAuditLogger from "../../auditLog/CoreAuditLogger"
 import PncGateway from "./PncGateway"
 
-jest.mock("axios")
-const mockedGet = jest.fn()
-;(axios.create as jest.Mock).mockReturnValue({
-  get: mockedGet
-})
+jest.mock("undici", () => ({
+  ...jest.requireActual("undici"),
+  fetch: jest.fn()
+}))
+
+const mockedFetch = jest.fn()
+global.fetch = mockedFetch
 
 const pncResponseMessageAttribute = {
   checkName: "TRTHREE",
@@ -104,7 +105,8 @@ describe("PncGateway", () => {
   const aho = generateFakeAho({})
 
   beforeEach(() => {
-    mockedGet.mockClear()
+    mockedFetch.mockClear()
+
     auditLogger = new CoreAuditLogger(AuditLogEventSource.CorePhase1)
     pncGateway = new PncGateway(
       {
@@ -113,6 +115,7 @@ describe("PncGateway", () => {
       },
       auditLogger
     )
+    ;(pncGateway as any).pncFetch = mockedFetch
   })
 
   afterEach(() => {
@@ -120,10 +123,13 @@ describe("PncGateway", () => {
   })
 
   it("should generate audit log event when PNC query is successful", async () => {
-    mockedGet.mockResolvedValue({ data: pncQueryResponse })
-
+    mockedFetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      text: jest.fn().mockResolvedValue(JSON.stringify(pncQueryResponse))
+    })
     const result = await pncGateway.query("dummy asn", "dummy correlation id", aho)
-
+    console.log(result)
     expect(isError(result)).toBe(false)
     expect(auditLogger.getEvents()).toEqual([
       {
@@ -145,7 +151,7 @@ describe("PncGateway", () => {
   })
 
   it("should generate audit log event when PNC query fails and returns PNC errors", async () => {
-    mockedGet.mockRejectedValue({ response: { data: { errors: ["PNC error", "PNC error 2"] } } })
+    mockedFetch.mockRejectedValue({ response: { data: { errors: ["PNC error", "PNC error 2"] } } })
 
     const result = await pncGateway.query("dummy asn", "dummy correlation id", aho)
 
@@ -170,7 +176,7 @@ describe("PncGateway", () => {
   })
 
   it("should generate audit log event when PNC query fails but now PNC errors are returned", async () => {
-    mockedGet.mockRejectedValue(new Error("Network error"))
+    mockedFetch.mockRejectedValue(new Error("Network error"))
 
     const result = await pncGateway.query("dummy asn", "dummy correlation id", aho)
 
