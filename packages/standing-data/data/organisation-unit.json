@@ -16285,10 +16285,10 @@
     "secondLevelCode": "12",
     "secondLevelName": "North Yorkshire",
     "thirdLevelCode": "GH",
-    "thirdLevelName": "HARROGATE DX 11995 HARROGATE 1",
-    "thirdLevelPsaCode": "",
-    "topLevelCode": "",
-    "topLevelName": "Police Service"
+    "thirdLevelName": "Harrogate",
+    "thirdLevelPsaCode": "2370",
+    "topLevelCode": "B",
+    "topLevelName": "Magistrates' Courts"
   },
   {
     "bottomLevelCode": "00",
@@ -16296,10 +16296,10 @@
     "secondLevelCode": "12",
     "secondLevelName": "North Yorkshire",
     "thirdLevelCode": "GH",
-    "thirdLevelName": "Harrogate",
-    "thirdLevelPsaCode": "2370",
-    "topLevelCode": "B",
-    "topLevelName": "Magistrates' Courts"
+    "thirdLevelName": "HARROGATE DX 11995 HARROGATE 1",
+    "thirdLevelPsaCode": "",
+    "topLevelCode": "",
+    "topLevelName": "Police Service"
   },
   {
     "bottomLevelCode": "00",
@@ -31850,10 +31850,10 @@
     "secondLevelCode": "31",
     "secondLevelName": "Nottinghamshire",
     "thirdLevelCode": "NT",
-    "thirdLevelName": "NOTTINGHAM SUMMONS PROCESSING UNIT",
-    "thirdLevelPsaCode": "",
-    "topLevelCode": "",
-    "topLevelName": "Police Service"
+    "thirdLevelName": "Nottingham",
+    "thirdLevelPsaCode": "0444",
+    "topLevelCode": "C",
+    "topLevelName": "Crown Courts"
   },
   {
     "bottomLevelCode": "00",
@@ -31861,10 +31861,10 @@
     "secondLevelCode": "31",
     "secondLevelName": "Nottinghamshire",
     "thirdLevelCode": "NT",
-    "thirdLevelName": "Nottingham",
-    "thirdLevelPsaCode": "0444",
-    "topLevelCode": "C",
-    "topLevelName": "Crown Courts"
+    "thirdLevelName": "NOTTINGHAM SUMMONS PROCESSING UNIT",
+    "thirdLevelPsaCode": "",
+    "topLevelCode": "",
+    "topLevelName": "Police Service"
   },
   {
     "bottomLevelCode": "00",
@@ -37108,10 +37108,10 @@
     "secondLevelCode": "36",
     "secondLevelName": "Norfolk",
     "thirdLevelCode": "KL",
-    "thirdLevelName": "KINGS LYNN PIC NORFOLK NSPIS",
-    "thirdLevelPsaCode": "",
-    "topLevelCode": "",
-    "topLevelName": "Police Service"
+    "thirdLevelName": "King's Lynn",
+    "thirdLevelPsaCode": "0765",
+    "topLevelCode": "C",
+    "topLevelName": "Crown Courts"
   },
   {
     "bottomLevelCode": "00",
@@ -37119,10 +37119,10 @@
     "secondLevelCode": "36",
     "secondLevelName": "Norfolk",
     "thirdLevelCode": "KL",
-    "thirdLevelName": "King's Lynn",
-    "thirdLevelPsaCode": "0765",
-    "topLevelCode": "C",
-    "topLevelName": "Crown Courts"
+    "thirdLevelName": "KINGS LYNN PIC NORFOLK NSPIS",
+    "thirdLevelPsaCode": "",
+    "topLevelCode": "",
+    "topLevelName": "Police Service"
   },
   {
     "bottomLevelCode": "00",
@@ -38076,10 +38076,10 @@
     "secondLevelCode": "37",
     "secondLevelName": "Suffolk",
     "thirdLevelCode": "IP",
-    "thirdLevelName": "IPSWICH",
-    "thirdLevelPsaCode": "",
-    "topLevelCode": "",
-    "topLevelName": "Police Service"
+    "thirdLevelName": "Ipswich",
+    "thirdLevelPsaCode": "0426",
+    "topLevelCode": "C",
+    "topLevelName": "Crown Courts"
   },
   {
     "bottomLevelCode": "00",
@@ -38087,10 +38087,10 @@
     "secondLevelCode": "37",
     "secondLevelName": "Suffolk",
     "thirdLevelCode": "IP",
-    "thirdLevelName": "Ipswich",
-    "thirdLevelPsaCode": "0426",
-    "topLevelCode": "C",
-    "topLevelName": "Crown Courts"
+    "thirdLevelName": "IPSWICH",
+    "thirdLevelPsaCode": "",
+    "topLevelCode": "",
+    "topLevelName": "Police Service"
   },
   {
     "bottomLevelCode": "00",
@@ -40056,10 +40056,10 @@
     "secondLevelCode": "40",
     "secondLevelName": "Bedfordshire",
     "thirdLevelCode": "BC",
-    "thirdLevelName": "BEDFORD MOBILE CUSTODY UNIT",
-    "thirdLevelPsaCode": "",
-    "topLevelCode": "",
-    "topLevelName": "Police Service"
+    "thirdLevelName": "Bedford",
+    "thirdLevelPsaCode": "1080",
+    "topLevelCode": "B",
+    "topLevelName": "Magistrates' Courts"
   },
   {
     "bottomLevelCode": "00",
@@ -40067,10 +40067,10 @@
     "secondLevelCode": "40",
     "secondLevelName": "Bedfordshire",
     "thirdLevelCode": "BC",
-    "thirdLevelName": "Bedford",
-    "thirdLevelPsaCode": "1080",
-    "topLevelCode": "B",
-    "topLevelName": "Magistrates' Courts"
+    "thirdLevelName": "BEDFORD MOBILE CUSTODY UNIT",
+    "thirdLevelPsaCode": "",
+    "topLevelCode": "",
+    "topLevelName": "Police Service"
   },
   {
     "bottomLevelCode": "00",
@@ -47811,10 +47811,10 @@
     "secondLevelCode": "46",
     "secondLevelName": "Kent",
     "thirdLevelCode": "LN",
-    "thirdLevelName": "SHEERNESS PORT UNIT",
-    "thirdLevelPsaCode": "",
-    "topLevelCode": "",
-    "topLevelName": "Police Service"
+    "thirdLevelName": "Sevenoaks",
+    "thirdLevelPsaCode": "1960",
+    "topLevelCode": "B",
+    "topLevelName": "Magistrates' Courts"
   },
   {
     "bottomLevelCode": "00",
@@ -47822,10 +47822,10 @@
     "secondLevelCode": "46",
     "secondLevelName": "Kent",
     "thirdLevelCode": "LN",
-    "thirdLevelName": "Sevenoaks",
-    "thirdLevelPsaCode": "1960",
-    "topLevelCode": "B",
-    "topLevelName": "Magistrates' Courts"
+    "thirdLevelName": "SHEERNESS PORT UNIT",
+    "thirdLevelPsaCode": "",
+    "topLevelCode": "",
+    "topLevelName": "Police Service"
   },
   {
     "bottomLevelCode": "00",
@@ -47866,10 +47866,10 @@
     "secondLevelCode": "46",
     "secondLevelName": "Kent",
     "thirdLevelCode": "MA",
-    "thirdLevelName": "MAJOR INCIDENT ROOM ONE NACKINGTON",
-    "thirdLevelPsaCode": "",
-    "topLevelCode": "",
-    "topLevelName": "Police Service"
+    "thirdLevelName": "Maidstone",
+    "thirdLevelPsaCode": "0434",
+    "topLevelCode": "C",
+    "topLevelName": "Crown Courts"
   },
   {
     "bottomLevelCode": "00",
@@ -47877,10 +47877,10 @@
     "secondLevelCode": "46",
     "secondLevelName": "Kent",
     "thirdLevelCode": "MA",
-    "thirdLevelName": "Maidstone",
-    "thirdLevelPsaCode": "0434",
-    "topLevelCode": "C",
-    "topLevelName": "Crown Courts"
+    "thirdLevelName": "MAJOR INCIDENT ROOM ONE NACKINGTON",
+    "thirdLevelPsaCode": "",
+    "topLevelCode": "",
+    "topLevelName": "Police Service"
   },
   {
     "bottomLevelCode": "00",
@@ -54312,10 +54312,10 @@
     "secondLevelCode": "53",
     "secondLevelName": "Gloucestershire",
     "thirdLevelCode": "GC",
-    "thirdLevelName": "CUSTODY",
-    "thirdLevelPsaCode": "",
-    "topLevelCode": "",
-    "topLevelName": "Police Service"
+    "thirdLevelName": "Cirencester (Gloucester)",
+    "thirdLevelPsaCode": "0424",
+    "topLevelCode": "C",
+    "topLevelName": "Crown Courts"
   },
   {
     "bottomLevelCode": "00",
@@ -54323,10 +54323,10 @@
     "secondLevelCode": "53",
     "secondLevelName": "Gloucestershire",
     "thirdLevelCode": "GC",
-    "thirdLevelName": "Cirencester (Gloucester)",
-    "thirdLevelPsaCode": "0424",
-    "topLevelCode": "C",
-    "topLevelName": "Crown Courts"
+    "thirdLevelName": "CUSTODY",
+    "thirdLevelPsaCode": "",
+    "topLevelCode": "",
+    "topLevelName": "Police Service"
   },
   {
     "bottomLevelCode": "00",
@@ -59361,10 +59361,10 @@
     "secondLevelCode": "61",
     "secondLevelName": "Gwent",
     "thirdLevelCode": "NP",
-    "thirdLevelName": "NON-POLICE PROSECUTIONS",
-    "thirdLevelPsaCode": "",
-    "topLevelCode": "",
-    "topLevelName": "Police Service"
+    "thirdLevelName": "Newport",
+    "thirdLevelPsaCode": "3211",
+    "topLevelCode": "B",
+    "topLevelName": "Magistrates' Courts"
   },
   {
     "bottomLevelCode": "00",
@@ -59372,10 +59372,10 @@
     "secondLevelCode": "61",
     "secondLevelName": "Gwent",
     "thirdLevelCode": "NP",
-    "thirdLevelName": "Newport",
-    "thirdLevelPsaCode": "3211",
-    "topLevelCode": "B",
-    "topLevelName": "Magistrates' Courts"
+    "thirdLevelName": "NON-POLICE PROSECUTIONS",
+    "thirdLevelPsaCode": "",
+    "topLevelCode": "",
+    "topLevelName": "Police Service"
   },
   {
     "bottomLevelCode": "00",
