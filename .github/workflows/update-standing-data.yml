@@ -9,16 +9,17 @@ jobs:
   update_standing_data:
     name: Update standing data
     runs-on: ubuntu-latest
+
     env:
       PNLD_DOWNLOAD_URL: ${{ secrets.PNLD_DOWNLOAD_URL }}
       PNLD_LOGIN_URL: ${{ secrets.PNLD_LOGIN_URL }}
       PNLD_PASSWORD: ${{ secrets.PNLD_PASSWORD }}
       PNLD_USERNAME: ${{ secrets.PNLD_USERNAME }}
-      GOOGLE_API_KEY: ${{ secrets.SHEETSAPIKEY }}
       SD_USERNAME: ${{ secrets.SD_USERNAME }}
       SD_PASSWORD: ${{ secrets.SD_PASSWORD }}
       SD_END_POINT: ${{ secrets.SD_END_POINT }}
       HEADLESS: "true"
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
