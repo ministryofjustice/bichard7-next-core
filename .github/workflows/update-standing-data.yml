@@ -89,7 +89,7 @@ jobs:
 
       - name: Create pull request
         id: cpr
-        uses: ./.github/actions/create-pull-request@main
+        uses: ./.github/actions/create-pull-request
         with:
           github_token: ${{ github.token }}
           branch: "auto/update-standing-data"
