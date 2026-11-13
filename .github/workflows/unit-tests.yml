@@ -80,6 +80,9 @@ jobs:
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
+      - name: Build standing data
+        run: npm run build -w packages/standing-data
+
       - name: Run Unit Test Common
         run: npm run test -w packages/common
 
@@ -220,6 +223,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --ignore-scripts
+
+      - name: Build standing data
+        run: npm run build -w packages/standing-data
 
       - name: Typecheck
         run: npm run typecheck -w packages/standing-data-updater
