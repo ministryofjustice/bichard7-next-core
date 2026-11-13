@@ -1,0 +1,62 @@
+# Verify the non-root user and group exist with exact IDs
+user:
+  nonroot:
+    exists: true
+    uid: 999
+    gid: 999
+    groups:
+      - nonroot
+    home: /home/nonroot
+
+group:
+  nonroot:
+    exists: true
+    gid: 999
+
+# Verify critical application files, virtualenv, and entrypoint script exist
+file:
+  /app:
+    exists: true
+    filetype: directory
+  /app/pyproject.toml:
+    exists: true
+    filetype: file
+  /app/uv.lock:
+    exists: true
+    filetype: file
+  /app/src:
+    exists: true
+    filetype: directory
+  /app/.venv/bin/python:
+    exists: true
+    filetype: symlink
+  /app/.venv/bin/ingest:
+    exists: true
+    filetype: file
+    mode: "0755"
+
+# Verify runtime execution, environment, and permissions as nonroot
+command:
+  # Confirm container actually runs as nonroot (UID 999)
+  whoami:
+    exit-status: 0
+    stdout:
+      - nonroot
+
+  # Confirm PATH prioritizes /app/.venv/bin and Python 3.13 is active
+  python --version:
+    exit-status: 0
+    stdout:
+      - "Python 3.13"
+
+  # Confirm the installed console script is on PATH and executable
+  which ingest:
+    exit-status: 0
+    stdout:
+      - "/app/.venv/bin/ingest"
+
+  # Confirm the main module can be imported
+  python -c "import ingestion.main; print('OK')":
+    exit-status: 0
+    stdout:
+      - "OK"
