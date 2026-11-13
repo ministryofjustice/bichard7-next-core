@@ -15,9 +15,15 @@ import { readFile } from "./lib/readFile"
 const validOffenceCodeFilter = (oc: string): boolean => /^[0-9A-Za-z]+$/.test(oc)
 
 const main = async () => {
-  const cjsOffenceCodes = await readFile<OffenceCode[]>("../input-data/offence-code/cjs-offences.json")
-  const pnldOffenceCodes = await readFile<OffenceCode[]>("../input-data/offence-code/pnld-offences.json")
-  const pncOffenceCodes = await readFile<OffenceCode[]>("../input-data/offence-code/pnc-ccjs-cjs-offences.json")
+  const cjsOffenceCodes = await readFile<OffenceCode[]>(
+    path.resolve(__dirname, "../input-data/offence-code/cjs-offences.json")
+  )
+  const pnldOffenceCodes = await readFile<OffenceCode[]>(
+    path.resolve(__dirname, "../input-data/offence-code/pnld-offences.json")
+  )
+  const pncOffenceCodes = await readFile<OffenceCode[]>(
+    path.resolve(__dirname, "../input-data/offence-code/pnc-ccjs-cjs-offences.json")
+  )
 
   const currentOffenceCodeLookup = createOffenceCodeLookup(currentOffenceCodes)
   const cjsOffenceCodeLookup = createOffenceCodeLookup(cjsOffenceCodes)
@@ -34,7 +40,9 @@ const main = async () => {
 
   const notifiableToHo = new NotifiableToHOPriority(currentOffenceCodeLookup, pnldOffenceCodeLookup)
 
-  const offenceCodeB7CategoryOverrides = await readFile<string[]>("../input-data/offence-code/b7-overrides.json")
+  const offenceCodeB7CategoryOverrides = await readFile<string[]>(
+    path.resolve(__dirname, "../input-data/offence-code/b7-overrides.json")
+  )
   const offenceCategory = new OffenceCategoryPriority(
     currentOffenceCodeLookup,
     cjsOffenceCodeLookup,

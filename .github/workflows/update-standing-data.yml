@@ -9,16 +9,17 @@ jobs:
   update_standing_data:
     name: Update standing data
     runs-on: ubuntu-latest
+
     env:
       PNLD_DOWNLOAD_URL: ${{ secrets.PNLD_DOWNLOAD_URL }}
       PNLD_LOGIN_URL: ${{ secrets.PNLD_LOGIN_URL }}
       PNLD_PASSWORD: ${{ secrets.PNLD_PASSWORD }}
       PNLD_USERNAME: ${{ secrets.PNLD_USERNAME }}
-      GOOGLE_API_KEY: ${{ secrets.SHEETSAPIKEY }}
       SD_USERNAME: ${{ secrets.SD_USERNAME }}
       SD_PASSWORD: ${{ secrets.SD_PASSWORD }}
       SD_END_POINT: ${{ secrets.SD_END_POINT }}
       HEADLESS: "true"
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -31,6 +32,8 @@ jobs:
 
       - name: ⛓️ SLSA Supply Chain Security
         uses: ministryofjustice/devsecops-actions/sca/slsa@7dc13c20e2bf541b8a77fa1320a04983b18846f6 # v1.6.0
+        with:
+          security-patch-package-exclusion: '@moj-bichard7-developers/bichard7-next-data'
 
       - name: Install dependencies
         run: npm ci --ignore-scripts
@@ -86,7 +89,7 @@ jobs:
 
       - name: Create pull request
         id: cpr
-        uses: ./.github/actions/create-pull-request@main
+        uses: ./.github/actions/create-pull-request
         with:
           github_token: ${{ github.token }}
           branch: "auto/update-standing-data"
