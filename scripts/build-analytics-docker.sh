@@ -42,12 +42,12 @@ function pull_and_build_from_aws() {
 
   DOCKER_IMAGE_HASH="${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/${DOCKER_BUILD_IMAGE}@${IMAGE_HASH}"
 
-  docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/analytics/Dockerfile .
+  docker build --build-arg "BUILD_IMAGE=${DOCKER_IMAGE_HASH}" -t ${DOCKER_OUTPUT_TAG}:latest -f packages/analytics/ingestion/Dockerfile .
 
   if [[ -n "${CODEBUILD_RESOLVED_SOURCE_VERSION}" && -n "${CODEBUILD_START_TIME}" ]]; then
 
     ## Run goss tests
-    GOSS_FILES_PATH=packages/analytics dgoss run "${DOCKER_OUTPUT_TAG}:latest"
+    GOSS_FILES_PATH=packages/analytics/ingestion dgoss run "${DOCKER_OUTPUT_TAG}:latest"
 
     docker tag \
       ${DOCKER_OUTPUT_TAG}:latest \
@@ -74,7 +74,7 @@ EOF
 
 if [[ "$(has_local_image)" -gt 0 ]]; then
   echo "Building local image"
-  docker build -f packages/analytics/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest  .
+  docker build -f packages/analytics/ingestion/Dockerfile -t ${DOCKER_OUTPUT_TAG}:latest  .
 else
   pull_and_build_from_aws
 fi
