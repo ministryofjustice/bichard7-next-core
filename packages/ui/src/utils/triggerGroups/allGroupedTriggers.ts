@@ -1,6 +1,6 @@
-import GroupedTriggerCodes from "@moj-bichard7-developers/bichard7-next-data/dist/types/GroupedTriggerCodes"
-import type { TriggerCodeGroups } from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
-import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import GroupedTriggerCodes from "@moj-bichard7/standing-data/types/GroupedTriggerCodes"
+import type { TriggerCodeGroups } from "@moj-bichard7/standing-data/types/TriggerCode"
+import type TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 const allGroupedTriggers = (key: string, excludedTriggers: string[]): TriggerCode[] => {
   const refinedGroupedTriggers = Object.fromEntries(

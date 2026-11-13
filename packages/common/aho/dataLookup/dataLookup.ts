@@ -1,3 +1,4 @@
+import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
 import type {
   ActualOffenceDate,
   CourtType,
@@ -18,8 +19,7 @@ import type {
   VehicleCode,
   Verdict,
   YesNo
-} from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+} from "@moj-bichard7/standing-data/types/types"
 
 import {
   actualOffenceDate,

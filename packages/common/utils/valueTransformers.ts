@@ -1,8 +1,8 @@
-import type { Duration } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import type { Duration } from "@moj-bichard7/standing-data/types/types"
 
-import pleaStatus from "@moj-bichard7-developers/bichard7-next-data/dist/data/plea-status.json"
-import verdicts from "@moj-bichard7-developers/bichard7-next-data/dist/data/verdict.json"
-import { Durations } from "@moj-bichard7-developers/bichard7-next-data/dist/types/Duration"
+import pleaStatus from "@moj-bichard7/standing-data/data/plea-status.json"
+import verdicts from "@moj-bichard7/standing-data/data/verdict.json"
+import { Durations } from "@moj-bichard7/standing-data/types/Duration"
 import { addDays, addHours, addMonths, addWeeks, addYears } from "date-fns"
 
 export const capitalizeString = (str = ""): string => {

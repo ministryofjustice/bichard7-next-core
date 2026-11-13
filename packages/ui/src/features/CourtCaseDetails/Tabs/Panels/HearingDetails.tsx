@@ -1,4 +1,4 @@
-import courtTypes from "@moj-bichard7-developers/bichard7-next-data/dist/data/court-type.json"
+import courtTypes from "@moj-bichard7/standing-data/data/court-type.json"
 import { Hearing } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { Card } from "components/Card"
 import { formatDisplayedDate } from "utils/date/formattedDate"

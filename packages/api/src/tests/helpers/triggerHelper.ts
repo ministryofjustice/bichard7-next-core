@@ -1,7 +1,7 @@
 import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { ResolutionStatus, ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 import type End2EndPostgres from "../testGateways/e2ePostgres"
 

@@ -1,13 +1,13 @@
 jest.setTimeout(30_000)
 import "../../tests/helpers/setEnvironmentVariables"
 
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import createS3Config from "@moj-bichard7/common/s3/createS3Config"
-import "jest-xml-matcher"
 import * as putFileToS3Module from "@moj-bichard7/common/s3/putFileToS3"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
+import "jest-xml-matcher"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import postgres from "postgres"
 
 import type Phase2Result from "../../phase2/types/Phase2Result"

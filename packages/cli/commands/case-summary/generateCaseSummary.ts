@@ -1,6 +1,6 @@
 import { DynamoDBClient, ExecuteStatementCommand } from "@aws-sdk/client-dynamodb"
 import { S3Client } from "@aws-sdk/client-s3"
-import { exceptionDefinitions, triggerDefinitions } from "@moj-bichard7-developers/bichard7-next-data/dist"
+import { exceptionDefinitions, triggerDefinitions } from "@moj-bichard7/standing-data"
 import AuditLogDynamoGateway from "@moj-bichard7/api/services/gateways/dynamo/AuditLogDynamoGateway/AuditLogDynamoGateway"
 import type { ApiAuditLogEvent, AuditLogEventAttributes } from "@moj-bichard7/api/types/AuditLogEvent"
 import EventCode from "@moj-bichard7/common/types/EventCode"

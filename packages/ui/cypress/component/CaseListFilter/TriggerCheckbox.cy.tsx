@@ -1,5 +1,5 @@
-import GroupedTriggerCodes from "@moj-bichard7-developers/bichard7-next-data/dist/types/GroupedTriggerCodes"
-import { TriggerCodeGroups } from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import GroupedTriggerCodes from "@moj-bichard7/standing-data/types/GroupedTriggerCodes"
+import { TriggerCodeGroups } from "@moj-bichard7/standing-data/types/TriggerCode"
 import TriggerCheckbox from "components/SearchFilters/TriggerCheckbox"
 import { Dispatch } from "react"
 import { FilterAction } from "types/CourtCaseFilter"

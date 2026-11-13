@@ -2,7 +2,7 @@ import type { WarrantsReportQuery } from "@moj-bichard7/common/contracts/Warrant
 import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/reports/Warrants"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { endOfDay, startOfDay } from "date-fns"
 
 import type { TransactionConnection } from "../../../../types/DatabaseGateway"

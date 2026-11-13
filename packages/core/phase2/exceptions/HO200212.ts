@@ -1,8 +1,8 @@
 import type { AnnotatedHearingOutcome, Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type Exception from "@moj-bichard7/common/types/Exception"
 
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 
 import type { ExceptionGenerator } from "../../types/ExceptionGenerator"
 

@@ -1,7 +1,7 @@
 import type { GenderCode } from "@moj-bichard7-developers/bichard7-next-data/types/GenderCode"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { GenderCodes } from "@moj-bichard7-developers/bichard7-next-data/dist/types/GenderCode"
+import { GenderCodes } from "@moj-bichard7/standing-data/types/GenderCode"
 
 export const gender = (aho: AnnotatedHearingOutcome) => {
   const genderValue = aho.AnnotatedHearingOutcome.HearingOutcome.Case.HearingDefendant.DefendantDetail?.Gender

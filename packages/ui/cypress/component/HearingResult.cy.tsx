@@ -1,5 +1,5 @@
-import verdicts from "@moj-bichard7-developers/bichard7-next-data/dist/data/verdict.json"
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import verdicts from "@moj-bichard7/standing-data/data/verdict.json"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import Permission from "@moj-bichard7/common/types/Permission"
 import { CjsPlea } from "@moj-bichard7/common/types/Plea"
 import ResultClass from "@moj-bichard7/common/types/ResultClass"

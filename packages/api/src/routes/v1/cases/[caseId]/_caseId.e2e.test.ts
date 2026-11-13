@@ -1,7 +1,6 @@
 import type { Case, CaseDto } from "@moj-bichard7/common/types/Case"
 import type { FastifyInstance } from "fastify"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { auditLogEventLookup as AuditLogEventLookup } from "@moj-bichard7/common/types/AuditLogEvent"
 import EventCategory from "@moj-bichard7/common/types/EventCategory"
@@ -9,6 +8,7 @@ import EventCode from "@moj-bichard7/common/types/EventCode"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { randomUUID } from "crypto"
 import { OK } from "http-status"
 

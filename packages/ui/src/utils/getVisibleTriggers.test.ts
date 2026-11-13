@@ -1,7 +1,7 @@
 import getVisibleTriggers from "./getVisibleTriggers"
 import type { DisplayFullUser } from "../types/display/Users"
-import type { TriggerDefinition } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import type { TriggerDefinition } from "@moj-bichard7/standing-data/types/types"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 describe("getVisibleTriggers", () => {
   const triggerDefinitions: TriggerDefinition[] = [

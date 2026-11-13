@@ -1,5 +1,5 @@
 import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { TestTrigger } from "../../../../../test/utils/manageTriggers"
 import { caseURL } from "../../../../fixtures/triggers"
 import { clickTab } from "../../../../support/helpers"

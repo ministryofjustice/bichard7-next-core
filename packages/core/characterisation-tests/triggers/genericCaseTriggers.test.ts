@@ -1,5 +1,5 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import PostgresHelper from "@moj-bichard7/common/db/PostgresHelper"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 import TriggerRecordable from "../../types/TriggerRecordable"
 import generateSpiMessage from "../helpers/generateSpiMessage"

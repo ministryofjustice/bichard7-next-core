@@ -4,10 +4,10 @@ import type { CommunitySentenceReportDto } from "@moj-bichard7/common/types/repo
 import type { Result } from "@moj-bichard7/common/types/Result"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
 import { isError } from "@moj-bichard7/common/types/Result"
 import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { addDays, startOfDay, subDays } from "date-fns"
 
 import { testAhoXml } from "../../../../tests/helpers/ahoHelper"

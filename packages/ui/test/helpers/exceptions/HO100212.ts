@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker"
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 export default function (aho: AnnotatedHearingOutcome): AnnotatedHearingOutcome {

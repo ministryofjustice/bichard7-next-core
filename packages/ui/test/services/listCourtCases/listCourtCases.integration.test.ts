@@ -1,6 +1,6 @@
 import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import createDbConfig from "@moj-bichard7/common/db/createDbConfig"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import type ErrorListRecord from "@moj-bichard7/core/types/ErrorListRecord"

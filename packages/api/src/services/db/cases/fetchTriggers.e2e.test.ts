@@ -3,9 +3,9 @@ import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { sortBy } from "lodash"
 
 import type { Filters } from "../../../types/CaseIndexQuerystring"

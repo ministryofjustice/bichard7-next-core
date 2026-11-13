@@ -2,8 +2,8 @@ import type { UserPerformanceDetailReportQuery } from "@moj-bichard7/common/cont
 import type { UserPerformanceDetailDto } from "@moj-bichard7/common/types/reports/UserPerformanceDetail"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { endOfDay, startOfDay, subDays } from "date-fns"
 
 import { createCases } from "../../../../tests/helpers/caseHelper"

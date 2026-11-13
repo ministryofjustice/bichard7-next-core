@@ -1,4 +1,4 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 

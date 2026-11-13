@@ -1,4 +1,4 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
 import validHO from "../../../../test/test-data/AnnotatedHO1.json"
 import HO100102_1 from "../../../../test/test-data/HO100102_1.json"

@@ -1,6 +1,5 @@
 import "./helpers/setEnvironmentVariables"
 
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import AuditLogApiClient from "@moj-bichard7/common/AuditLogApiClient/AuditLogApiClient"
 import createApiConfig from "@moj-bichard7/common/AuditLogApiClient/createApiConfig"
@@ -17,6 +16,7 @@ import { putIncomingMessageToS3 } from "@moj-bichard7/common/test/s3/putIncoming
 import { isError } from "@moj-bichard7/common/types/Result"
 import insertErrorListRecord from "@moj-bichard7/core/lib/database/insertErrorListRecord"
 import generateMockPhase2Result from "@moj-bichard7/core/phase2/tests/helpers/generateMockPhase2Result"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import { randomUUID } from "crypto"
 import postgres from "postgres"
 

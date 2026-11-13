@@ -1,4 +1,4 @@
-import type { OffenceCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import type { OffenceCode } from "@moj-bichard7/standing-data/types/types"
 
 import { offenceCode } from "@moj-bichard7-developers/bichard7-next-data"
 

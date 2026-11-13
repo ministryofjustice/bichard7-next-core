@@ -1,8 +1,8 @@
-import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import type TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import type { Trigger } from "@moj-bichard7/core/types/Trigger"
 import { isEmpty } from "lodash"
-import { OUT_OF_AREA_TRIGGER_CODE, REALLOCATE_CASE_TRIGGER_CODE } from "../../config"
-import type { TriggersOutcome } from "../../types/TriggersOutcome"
+import { OUT_OF_AREA_TRIGGER_CODE, REALLOCATE_CASE_TRIGGER_CODE } from "config"
+import type { TriggersOutcome } from "types/TriggersOutcome"
 import type { default as TriggerEntity } from "../entities/Trigger"
 
 type PartialTriggerEntity = Pick<TriggerEntity, "triggerCode" | "triggerItemIdentity" | "status">

@@ -1,8 +1,8 @@
-import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type Exception from "@moj-bichard7/common/types/Exception"
 import type { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import type { Operation } from "@moj-bichard7/common/types/PncUpdateDataset"
+import type ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 
 import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import { isPncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"

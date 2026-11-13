@@ -1,7 +1,7 @@
 import { DisplayTrigger } from "types/display/Triggers"
 import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import React from "react"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import TriggersList from "features/CourtCaseDetails/Sidebar/TriggersList"
 import { mount } from "cypress/react"
 import { MockNextRouter } from "../../support/MockNextRouter"

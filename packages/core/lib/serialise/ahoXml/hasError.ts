@@ -1,6 +1,6 @@
 import type Exception from "@moj-bichard7/common/types/Exception"
 
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 
 const errorElementHierarchy = ["Hearing", "Case", "HearingDefendant", "Offence", "Result"]
 const warningOnlyCodes = [ExceptionCode.HO200200]

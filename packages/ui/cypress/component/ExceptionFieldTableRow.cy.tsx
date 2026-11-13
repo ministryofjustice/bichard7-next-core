@@ -1,4 +1,4 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import { BadgeColours } from "components/Badge"
 import { ExceptionBadgeType } from "utils/exceptions/exceptionBadgeType"
 import ErrorPromptMessage from "../../src/components/ErrorPromptMessage"

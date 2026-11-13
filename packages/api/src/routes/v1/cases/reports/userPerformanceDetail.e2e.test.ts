@@ -1,9 +1,9 @@
 import type { FastifyInstance } from "fastify"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { subDays } from "date-fns"
 
 import { createCases } from "../../../../tests/helpers/caseHelper"

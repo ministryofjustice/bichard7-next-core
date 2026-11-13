@@ -1,4 +1,4 @@
-import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import type TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 import type PoliceUpdateRequest from "../../phase3/types/PoliceUpdateRequest"
 import type ErrorListNoteRecord from "../../types/ErrorListNoteRecord"

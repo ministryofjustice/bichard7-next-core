@@ -3,9 +3,9 @@ import type { CommunitySentenceReportDto } from "@moj-bichard7/common/types/repo
 import type { FastifyInstance } from "fastify"
 
 import { expect } from "@jest/globals"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { addDays, subDays } from "date-fns"
 import { BAD_REQUEST, FORBIDDEN, OK } from "http-status"
 

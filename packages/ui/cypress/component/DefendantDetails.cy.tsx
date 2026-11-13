@@ -1,4 +1,4 @@
-import { GenderCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/GenderCode"
+import { GenderCode } from "@moj-bichard7/standing-data/types/GenderCode"
 import Permission from "@moj-bichard7/common/types/Permission"
 import getShortAsn from "@moj-bichard7/common/utils/getShortAsn"
 import { HearingDefendant } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"

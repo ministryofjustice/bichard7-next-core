@@ -2,7 +2,7 @@ import type { BailsReportQuery } from "@moj-bichard7/common/contracts/BailsRepor
 import type { CaseForBailsReportDto } from "@moj-bichard7/common/types/reports/Bails"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { endOfDay, startOfDay } from "date-fns"
 
 import type { TransactionConnection } from "../../../../types/DatabaseGateway"

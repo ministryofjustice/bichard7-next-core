@@ -2,8 +2,8 @@ import type { ExceptionReportQuery } from "@moj-bichard7/common/contracts/Except
 import type { ExceptionReportDto } from "@moj-bichard7/common/types/reports/Exceptions"
 import type { User } from "@moj-bichard7/common/types/User"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode" // Update this path
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode" // Update this path
 import { parse, startOfDay, subDays } from "date-fns"
 
 import { createCases } from "../../../../tests/helpers/caseHelper"

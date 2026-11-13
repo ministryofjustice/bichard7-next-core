@@ -3,10 +3,10 @@ import type { Trigger } from "@moj-bichard7/common/types/Trigger"
 import type { User } from "@moj-bichard7/common/types/User"
 import type { FastifyInstance } from "fastify"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { Reason } from "@moj-bichard7/common/types/ApiCaseQuery"
 import { CaseAge } from "@moj-bichard7/common/types/CaseAge"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { subDays } from "date-fns"
 import MockDate from "mockdate"
 

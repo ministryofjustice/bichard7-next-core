@@ -4,7 +4,6 @@ import type {
 } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 import { remandStatus } from "@moj-bichard7-developers/bichard7-next-data"
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import {
   lookupCourtTypeByCjsCode,
   lookupDurationTypeByCjsCode,
@@ -23,6 +22,7 @@ import {
   lookupVerdictByCjsCode,
   lookupYesNoByCjsCode
 } from "@moj-bichard7/common/aho/dataLookup/index"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import { z } from "zod"
 
 import { isAsnFormatValid, isAsnOrganisationUnitValid } from "../phase1/lib/isAsnValid"

@@ -1,6 +1,6 @@
-import offenceCategory from "@moj-bichard7-developers/bichard7-next-data/dist/data/offence-category.json"
-import yesNo from "@moj-bichard7-developers/bichard7-next-data/dist/data/yes-no.json"
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import offenceCategory from "@moj-bichard7/standing-data/data/offence-category.json"
+import yesNo from "@moj-bichard7/standing-data/data/yes-no.json"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import {
   capitaliseExpression,

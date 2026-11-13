@@ -1,9 +1,9 @@
 import type { PncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
 
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 import generateMockPhase1Result from "../../phase1/tests/helpers/generateMockPhase1Result"
 import generateMockPhase2Result from "../../phase2/tests/helpers/generateMockPhase2Result"
