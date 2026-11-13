@@ -1,7 +1,6 @@
 import type { Duration } from "@moj-bichard7/standing-data/types/types"
 
-import pleaStatus from "@moj-bichard7/standing-data/data/plea-status.json"
-import verdicts from "@moj-bichard7/standing-data/data/verdict.json"
+import { pleaStatus, verdict } from "@moj-bichard7/standing-data"
 import { Durations } from "@moj-bichard7/standing-data/types/Duration"
 import { addDays, addHours, addMonths, addWeeks, addYears } from "date-fns"
 
@@ -95,7 +94,7 @@ export const getPleaStatus = (pleaCode: string | undefined) => {
 
 export const getVerdict = (verdictCode: string | undefined) => {
   let verdictDescription = verdictCode
-  verdicts.forEach((verdict) => {
+  verdict.forEach((verdict) => {
     if (verdict.cjsCode === verdictCode) {
       verdictDescription = `${verdictCode} (${capitaliseExpression(verdict.description)})`
     }

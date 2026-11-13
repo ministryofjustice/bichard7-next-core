@@ -39,6 +39,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1156.0",
     "@io-orkes/conductor-javascript": "^4.0.0",
+    "@moj-bichard7/standing-data": "*",
     "@stomp/stompjs": "^7.5.0",
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",

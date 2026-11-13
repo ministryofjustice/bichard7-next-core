@@ -10,15 +10,16 @@ import {
   getYesOrNo
 } from "./valueTransformers"
 
-jest.mock("@moj-bichard7/standing-data/data/plea-status.json", () => [
-  { cjsCode: "G", description: "GUILTY" },
-  { cjsCode: "NG", description: "NOT GUILTY" }
-])
-
-jest.mock("@moj-bichard7/standing-data/data/verdict.json", () => [
-  { cjsCode: "G", description: "GUILTY" },
-  { cjsCode: "NG", description: "NOT GUILTY" }
-])
+jest.mock("@moj-bichard7/standing-data", () => ({
+  pleaStatus: [
+    { cjsCode: "G", description: "GUILTY" },
+    { cjsCode: "NG", description: "NOT GUILTY" }
+  ],
+  verdict: [
+    { cjsCode: "G", description: "GUILTY" },
+    { cjsCode: "NG", description: "NOT GUILTY" }
+  ]
+}))
 
 jest.mock("@moj-bichard7/standing-data/types/Duration", () => ({
   Durations: {
