@@ -2,13 +2,16 @@ import fs from "node:fs"
 import type { ResultCode } from "@moj-bichard7/standing-data/types/types"
 import { convertCjsResultCodes } from "./convertCjsResultCodes"
 import { readFile } from "../lib/readFile"
+import path from "node:path"
 
 describe("convertResultCodes", () => {
   it("converts XLSX buffer into ResultCode[]", async () => {
     const fileContent = fs.readFileSync("./test-data/input/cjs-result-codes.xlsx")
 
     const convertedCjsResultCodes = convertCjsResultCodes(fileContent)
-    const expectedCjsResultCodes = await readFile<ResultCode[]>("../../test-data/expected-output/cjs-result-codes.json")
+    const expectedCjsResultCodes = await readFile<ResultCode[]>(
+      path.resolve(__dirname, "../../test-data/expected-output/cjs-result-codes.json")
+    )
 
     expect(convertedCjsResultCodes).toEqual(expectedCjsResultCodes)
   })
@@ -18,7 +21,7 @@ describe("convertResultCodes", () => {
 
     const convertedCjsResultCodes = convertCjsResultCodes(fileContent)
     const expectedResultCodesMissingFields = await readFile<ResultCode[]>(
-      "../../test-data/expected-output/cjs-result-codes-missing-fields.json"
+      path.resolve(__dirname, "../../test-data/expected-output/cjs-result-codes-missing-fields.json")
     )
 
     expect(convertedCjsResultCodes).toEqual(expectedResultCodesMissingFields)
