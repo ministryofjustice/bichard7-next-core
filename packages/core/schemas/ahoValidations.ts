@@ -3,7 +3,6 @@ import type {
   NumberSpecifiedInResult
 } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { remandStatus } from "@moj-bichard7-developers/bichard7-next-data"
 import {
   lookupCourtTypeByCjsCode,
   lookupDurationTypeByCjsCode,
@@ -22,6 +21,7 @@ import {
   lookupVerdictByCjsCode,
   lookupYesNoByCjsCode
 } from "@moj-bichard7/common/aho/dataLookup/index"
+import { remandStatus } from "@moj-bichard7/standing-data"
 import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import { z } from "zod"
 

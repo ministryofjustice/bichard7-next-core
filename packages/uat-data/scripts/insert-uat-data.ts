@@ -1,5 +1,5 @@
 import { fakerEN_GB as faker } from "@faker-js/faker"
-import { organisationUnit } from "@moj-bichard7-developers/bichard7-next-data"
+import { organisationUnit } from "@moj-bichard7/standing-data"
 import IncomingMessageBucket from "@moj-bichard7/e2e-tests/helpers/IncomingMessageBucket"
 import ASN from "@moj-bichard7/e2e-tests/utils/asn"
 import defaults from "@moj-bichard7/e2e-tests/utils/defaults"

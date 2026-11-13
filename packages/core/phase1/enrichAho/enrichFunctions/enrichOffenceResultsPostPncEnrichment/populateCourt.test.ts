@@ -1,7 +1,7 @@
 jest.mock("@moj-bichard7/common/aho/dataLookup/index")
 jest.mock("@moj-bichard7/common/aho/dataLookup/getCourtDetails")
-import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
 import type { AnnotatedHearingOutcome, Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { OrganisationUnit } from "@moj-bichard7/standing-data/types/types"
 
 import getCourtDetails from "@moj-bichard7/common/aho/dataLookup/getCourtDetails"
 import { lookupOrganisationUnitByCode } from "@moj-bichard7/common/aho/dataLookup/index"

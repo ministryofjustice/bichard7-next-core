@@ -1,6 +1,6 @@
 import { OrganisationUnitsContext, OrganisationUnitsContextType } from "@/context/OrganisationUnitsContext"
 import apiLogger from "@/services/api/apiLogger"
-import OrganisationUnits from "@moj-bichard7-developers/bichard7-next-data/data/organisation-unit.json"
+import OrganisationUnits from "@moj-bichard7/standing-data/data/organisation-unit.json"
 import { OrganisationUnit } from "@moj-bichard7/standing-data/types/types"
 import Permission from "@moj-bichard7/common/types/Permission"
 import UnlockReason from "@moj-bichard7/common/types/UnlockReason"

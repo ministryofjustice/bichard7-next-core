@@ -1,6 +1,6 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { excludedTriggerConfig as excludedTriggers } from "@moj-bichard7-developers/bichard7-next-data"
+import { excludedTriggerConfig as excludedTriggers } from "@moj-bichard7/standing-data"
 import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 import TRPR0027 from "./TRPR0027"

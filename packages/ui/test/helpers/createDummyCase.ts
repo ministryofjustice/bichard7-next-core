@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker"
-import { forceCatchmentAreas } from "@moj-bichard7-developers/bichard7-next-data"
+import { forceCatchmentAreas } from "@moj-bichard7/standing-data"
 import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
 import communitySentenceAmendOffences from "@moj-bichard7/common/test/dummyData/communitySentenceAmendOffences"
@@ -11,8 +11,8 @@ import sample from "lodash.sample"
 import type Trigger from "services/entities/Trigger"
 import type { DataSource, EntityManager } from "typeorm"
 import CourtCase from "../../src/services/entities/CourtCase"
-import type { Result } from "../../src/types/Result"
-import { isError } from "../../src/types/Result"
+import type { Result } from "types/Result"
+import { isError } from "types/Result"
 import createDummyAsn from "./createDummyAsn"
 import createDummyCourtCode from "./createDummyCourtCode"
 import createDummyExceptions from "./createDummyExceptions"
@@ -100,7 +100,7 @@ export default async (
     ahoWithoutExceptionsXml = serialiseToXml(parsedAho)
   }
 
-  const courtCase = await dataSource.getRepository(CourtCase).save({
+  return await dataSource.getRepository(CourtCase).save({
     errorId: caseId,
     messageId: randomUUID(),
     orgForPoliceFilter: orgCode,
@@ -145,6 +145,4 @@ export default async (
     errorResolvedTimestamp: isResolved ? resolutionDate : null,
     policeForceArea: randomPoliceForAreaCode()
   })
-
-  return courtCase
 }

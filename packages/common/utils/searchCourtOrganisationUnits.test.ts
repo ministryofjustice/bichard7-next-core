@@ -1,4 +1,4 @@
-import OrganisationUnits from "@moj-bichard7-developers/bichard7-next-data/data/organisation-unit.json"
+import OrganisationUnits from "@moj-bichard7/standing-data/data/organisation-unit.json"
 
 import searchCourtOrganisationUnits, {
   getFullOrganisationName,

@@ -1,4 +1,4 @@
-import { organisationUnit } from "@moj-bichard7-developers/bichard7-next-data"
+import { organisationUnit } from "@moj-bichard7/standing-data"
 import type { IncomingMessageParsedXml } from "@moj-bichard7/common/types/SpiResult"
 import type CourtCase from "../../../types/LedsTestApiHelper/CourtCase"
 import type { NonEmptyCourtCaseArray } from "../../../types/LedsTestApiHelper/CourtCase"

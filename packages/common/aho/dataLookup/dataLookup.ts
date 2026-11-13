@@ -1,4 +1,4 @@
-import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+import type { OrganisationUnit } from "@moj-bichard7/standing-data/types/types"
 import type {
   ActualOffenceDate,
   CourtType,
@@ -46,7 +46,7 @@ import {
   vehicleCode,
   verdict,
   yesNo
-} from "@moj-bichard7-developers/bichard7-next-data"
+} from "@moj-bichard7/standing-data"
 
 import type { SpiPlea } from "../../types/Plea"
 

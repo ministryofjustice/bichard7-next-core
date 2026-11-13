@@ -1,6 +1,6 @@
-import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/types/types"
+import type { OrganisationUnit } from "@moj-bichard7/standing-data/types/types"
 
-import { organisationUnit } from "@moj-bichard7-developers/bichard7-next-data"
+import { organisationUnit } from "@moj-bichard7/standing-data"
 
 import type { OrganisationUnitCodes } from "../../types/AnnotatedHearingOutcome"
 
