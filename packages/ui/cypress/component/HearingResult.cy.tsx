@@ -1,4 +1,4 @@
-import verdicts from "@moj-bichard7/standing-data/data/verdict.json"
+import { verdict } from "@moj-bichard7/standing-data"
 import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import Permission from "@moj-bichard7/common/types/Permission"
 import { CjsPlea } from "@moj-bichard7/common/types/Plea"
@@ -8,7 +8,7 @@ import { CourtCaseContext } from "context/CourtCaseContext"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { DisplayFullCourtCase } from "types/display/CourtCases"
 import { DisplayFullUser } from "types/display/Users"
-import { HearingResult } from "../../src/features/CourtCaseDetails/Tabs/Panels/Offences/Offence/HearingResult"
+import { HearingResult } from "features/CourtCaseDetails/Tabs/Panels/Offences/Offence/HearingResult"
 
 const courtCase = {
   aho: {
@@ -62,7 +62,7 @@ describe("Hearing Result", () => {
       ResultHearingDate: new Date("2022-09-10"),
       NextHearingDate: new Date("2022-09-11"),
       PleaStatus: CjsPlea.Guilty,
-      Verdict: verdicts[1].cjsCode,
+      Verdict: verdict[1].cjsCode,
       ModeOfTrialReason: "reason",
       ResultVariableText: "this is some text",
       PNCDisposalType: 1,
