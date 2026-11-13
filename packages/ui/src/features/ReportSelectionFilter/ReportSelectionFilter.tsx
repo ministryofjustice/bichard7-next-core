@@ -1,5 +1,6 @@
 import { FormGroup } from "@/components/FormGroup"
 import ResolveByFilter from "@/components/SearchFilters/ResolvedByFilter"
+import { useCurrentUser } from "@/context/CurrentUserContext"
 import { createReportCsv } from "@/services/reports/csvGeneration/createReportCsv"
 import { xlsxFilename } from "@/services/reports/utils/xlsxFilename"
 import AuditResolvedBy from "@/types/AuditResolvedBy"
@@ -31,6 +32,7 @@ export const ReportSelectionFilter: React.FC<{
   resolvedBy?: AuditResolvedBy[]
   canUseTriggerAndExceptionQualityAuditing?: boolean
 }> = ({ resolvedBy = [], canUseTriggerAndExceptionQualityAuditing = false }) => {
+  const currentUser = useCurrentUser()
   const [isStreaming, setIsStreaming] = useState(false)
   const [rows, setRows] = useState<Record<string, unknown>[] | null>(null)
   const [fileDownloadUrl, setFileDownloadUrl] = useState<string | null>(null)
@@ -140,7 +142,7 @@ export const ReportSelectionFilter: React.FC<{
   const handleDownload = async () => {
     try {
       const reportType = filterValues.reportType as ReportType
-      const urlQuery = buildReportQueryParams(filterValues, resolvedBy)
+      const urlQuery = buildReportQueryParams(filterValues, resolvedBy, currentUser.visibleForces)
 
       const parsedData = await downloadReport(reportType, urlQuery)
 

@@ -12,6 +12,7 @@ describe("buildReportQueryParams", () => {
     exceptions: true,
     resolvedBy: [] as string[],
     resultCodes: [] as string[],
+    policeForceAreaCodes: ["E23000002"],
     canUseTriggerAndExceptionQualityAuditing: false,
     isAutomatedReport: false,
     dateFromError: null,
@@ -100,6 +101,24 @@ describe("buildReportQueryParams", () => {
 
       expect(query.getAll("resultCodes")).toEqual([])
       expect(query.has("resultCodes")).toBe(false)
+    })
+
+    it("appends the policeForceAreaCode associated with the user's force", () => {
+      const query = buildReportQueryParams({ ...communitySentenceFilterValues }, mockResolvers, ["05"])
+
+      expect(query.getAll("policeForceAreaCodes")).toEqual(["E23000004"])
+    })
+
+    it("appends all policeForceAreaCodes associated with the user's forces", () => {
+      const query = buildReportQueryParams({ ...communitySentenceFilterValues }, mockResolvers, ["01", "02", "05"])
+
+      expect(query.getAll("policeForceAreaCodes")).toEqual(["E23000001", "E23000004"])
+    })
+
+    it("omits policeForceAreaCodes when user has no visible forces", () => {
+      const query = buildReportQueryParams({ ...communitySentenceFilterValues }, mockResolvers)
+
+      expect(query.has("policeForceAreaCodes")).toBe(false)
     })
   })
 

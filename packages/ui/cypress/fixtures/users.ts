@@ -274,7 +274,7 @@ const users: Record<string, Partial<User> & { groups: UserGroup[] }> = {
   },
   CommunitySentenceReport: {
     username: "CommunitySentenceReport",
-    visibleForces: ["001"],
+    visibleForces: ["01"],
     forenames: "CommunitySentenceReport",
     surname: "User",
     email: "communitysentencereport@example.com",
