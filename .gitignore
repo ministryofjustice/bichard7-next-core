@@ -76,3 +76,6 @@ packages/**/public/images/govuk-crest.png
 packages/**/public/images/govuk-logotype-crown.png
 packages/**/public/images/govuk-mask-icon.svg
 packages/**/public/images/govuk-opengraph-image.png
+
+# Temporary files
+packages/standing-data-updater/tmp
