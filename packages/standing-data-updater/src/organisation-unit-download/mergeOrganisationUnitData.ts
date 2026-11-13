@@ -8,10 +8,10 @@ import type { OrganisationUnit } from "../types/OrganisationUnit"
 
 export const mergeOrganisationUnitData = async () => {
   const cjsOrganisationUnitData = await readFile<OrganisationUnit[]>(
-    path.resolve(__dirname, "../input-data/organisation-unit/cjs-data.json")
+    path.resolve(__dirname, "../../input-data/organisation-unit/cjs-data.json")
   )
   const policeOrganisationUnitData = await readFile<OrganisationUnit[]>(
-    path.resolve(__dirname, "../input-data/organisation-unit/police-forces.json")
+    path.resolve(__dirname, "../../input-data/organisation-unit/police-forces.json")
   )
   const allOrganisationUnitData = cjsOrganisationUnitData.concat(policeOrganisationUnitData)
   const mergedData = mergeOrganisationUnits(allOrganisationUnitData, existingOrganisationUnitData)
