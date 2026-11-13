@@ -1,5 +1,4 @@
-import offenceCategory from "@moj-bichard7/standing-data/data/offence-category.json"
-import yesNo from "@moj-bichard7/standing-data/data/yes-no.json"
+import { offenceCategory, yesNo } from "@moj-bichard7/standing-data"
 import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import {

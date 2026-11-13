@@ -1,5 +1,5 @@
 import ForceOwnerApiResponse from "@/types/ForceOwnerApiResponse"
-import forces from "@moj-bichard7/standing-data/data/forces.json"
+import { forces } from "@moj-bichard7/standing-data"
 import { FormGroup } from "components/FormGroup"
 import { MAX_NOTE_LENGTH } from "config"
 import { useCourtCase } from "context/CourtCaseContext"

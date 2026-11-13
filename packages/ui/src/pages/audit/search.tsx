@@ -22,8 +22,7 @@ import BichardApiV1 from "../../services/api/BichardApiV1"
 import ApiClient from "../../services/api/ApiClient"
 import AuditResolvedBy from "../../types/AuditResolvedBy"
 import getVisibleTriggers from "../../utils/getVisibleTriggers"
-import { triggerDefinitions } from "@moj-bichard7/standing-data"
-import forceExcludedTriggers from "@moj-bichard7/standing-data/data/excluded-trigger-config.json"
+import { triggerDefinitions, excludedTriggerConfig as forceExcludedTriggers } from "@moj-bichard7/standing-data"
 
 type Props = {
   csrfToken: string

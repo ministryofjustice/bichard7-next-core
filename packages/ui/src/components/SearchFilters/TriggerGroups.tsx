@@ -1,6 +1,6 @@
+import { excludedTriggerConfig as forceExcludedTriggers } from "@moj-bichard7/standing-data"
 import ExpandingFilters from "@/features/CourtCaseFilters/ExpandingFilters"
 import getLongTriggerCode from "@/services/entities/transformers/getLongTriggerCode"
-import forceExcludedTriggers from "@moj-bichard7/standing-data/data/excluded-trigger-config.json"
 import GroupedTriggerCodes from "@moj-bichard7/standing-data/types/GroupedTriggerCodes"
 import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { useCurrentUser } from "context/CurrentUserContext"
