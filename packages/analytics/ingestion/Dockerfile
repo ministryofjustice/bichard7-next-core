@@ -24,7 +24,7 @@ ENV UV_NO_DEV=1
 # Ensure installed tools can be executed out of the box
 ENV UV_TOOL_BIN_DIR=/usr/local/bin
 
-COPY pyproject.toml uv.lock ./
+COPY packages/analytics/ingestion/pyproject.toml packages/analytics/ingestion/uv.lock ./
 
 # Install the project's dependencies using the lockfile and settings
 RUN --mount=type=cache,target=/root/.cache/uv \
@@ -32,7 +32,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 # Then, add the rest of the project source code and install it
 # Installing separately from its dependencies allows optimal layer caching
-COPY ./src ./src
+COPY packages/analytics/ingestion/src ./src
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-build
 
