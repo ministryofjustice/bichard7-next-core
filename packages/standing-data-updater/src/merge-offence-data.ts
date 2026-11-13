@@ -40,7 +40,9 @@ const main = async () => {
 
   const notifiableToHo = new NotifiableToHOPriority(currentOffenceCodeLookup, pnldOffenceCodeLookup)
 
-  const offenceCodeB7CategoryOverrides = await readFile<string[]>("../input-data/offence-code/b7-overrides.json")
+  const offenceCodeB7CategoryOverrides = await readFile<string[]>(
+    path.resolve(__dirname, "../input-data/offence-code/b7-overrides.json")
+  )
   const offenceCategory = new OffenceCategoryPriority(
     currentOffenceCodeLookup,
     cjsOffenceCodeLookup,
