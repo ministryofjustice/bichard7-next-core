@@ -11,6 +11,7 @@ USER root
 WORKDIR /core
 
 COPY package*.json ./
+COPY packages/standing-data/package.json ./packages/standing-data/package.json
 COPY packages/common/package.json ./packages/common/package.json
 COPY packages/core/package.json ./packages/core/package.json
 COPY packages/api/package.json ./packages/api/package.json
@@ -28,6 +29,7 @@ WORKDIR /core
 COPY --from=deps ./core ./
 
 COPY tsconfig*.json ./
+COPY packages/standing-data ./packages/standing-data
 COPY packages/common ./packages/common
 COPY packages/core ./packages/core
 COPY packages/api ./packages/api
@@ -63,6 +65,9 @@ RUN adduser --system --no-create-home --shell=/sbin/nologin supervisor && \
     npm config set cache /tmp/npm --global
 
 COPY --from=builder /core/node_modules ./node_modules
+
+COPY --from=builder /core/packages/standing-data/package.json ./packages/standing-data/package.json
+COPY --from=builder /core/packages/standing-data/node_modules ./packages/standing-data/node_modules
 
 COPY --from=builder /core/packages/common/package.json ./packages/common/package.json
 COPY --from=builder /core/packages/common/dist ./packages/common/dist

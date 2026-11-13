@@ -12,6 +12,7 @@ WORKDIR /core
 
 # Copy in package info so we don't have to re-install packages for every code change
 COPY package*.json ./
+COPY packages/standing-data/package.json ./packages/standing-data/package.json
 COPY packages/core/package.json ./packages/core/package.json
 COPY packages/common/package.json ./packages/common/package.json
 COPY packages/ui/package.json ./packages/ui/package.json
@@ -33,6 +34,7 @@ WORKDIR /core
 COPY --from=deps ./core ./
 
 COPY tsconfig*.json ./
+COPY packages/standing-data ./packages/standing-data
 COPY packages/core ./packages/core
 COPY packages/common ./packages/common
 COPY packages/ui ./packages/ui

@@ -13,6 +13,7 @@ WORKDIR /core
 COPY scripts ./scripts
 
 COPY package*.json ./
+COPY packages/standing-data/package.json ./packages/standing-data/package.json
 COPY packages/core/package.json ./packages/core/package.json
 COPY packages/common/package.json ./packages/common/package.json
 COPY packages/conductor/package.json ./packages/conductor/package.json
@@ -30,6 +31,7 @@ WORKDIR /core
 COPY --from=deps ./core ./
 
 COPY tsconfig*.json ./
+COPY packages/standing-data ./packages/standing-data
 COPY packages/core ./packages/core
 COPY packages/common ./packages/common
 COPY packages/conductor ./packages/conductor
