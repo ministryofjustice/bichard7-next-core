@@ -22,4 +22,5 @@ phases:
       - ./scripts/build-message-forwarder-docker.sh
       - ./scripts/build-ui-docker.sh
       - ./scripts/build-user-service-docker.sh
+      - ./scripts/build-analytics-docker.sh
 ---

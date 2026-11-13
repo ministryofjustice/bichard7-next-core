@@ -24,7 +24,7 @@ ENV UV_NO_DEV=1
 # Ensure installed tools can be executed out of the box
 ENV UV_TOOL_BIN_DIR=/usr/local/bin
 
-COPY pyproject.toml uv.lock README.md ./
+COPY pyproject.toml uv.lock ./
 
 # Install the project's dependencies using the lockfile and settings
 RUN --mount=type=cache,target=/root/.cache/uv \

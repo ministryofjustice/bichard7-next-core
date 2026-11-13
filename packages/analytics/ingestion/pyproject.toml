@@ -2,7 +2,6 @@
 name = "ingestion"
 version = "0.1.0"
 description = "Python project for ingesting data into the analytics data store"
-readme = "README.md"
 authors = [
     { name = "joe-u-mt", email = "joe.unwin@madetech.com" }
 ]
