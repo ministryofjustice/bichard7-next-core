@@ -24129,6 +24129,15 @@
     "recordableOnPnc": false
   },
   {
+    "cjsCode": "42ESx084",
+    "description": "42ESx084",
+    "homeOfficeClassification": "000/00",
+    "notifiableToHo": false,
+    "offenceCategory": "CE",
+    "offenceTitle": "Reg 100 Con & Use Regs",
+    "recordableOnPnc": false
+  },
+  {
     "cjsCode": "42ESX085",
     "description": "42ESX085",
     "homeOfficeClassification": "000/00",
@@ -24342,15 +24351,6 @@
     "notifiableToHo": false,
     "offenceCategory": "CE",
     "offenceTitle": "Excess speed",
-    "recordableOnPnc": false
-  },
-  {
-    "cjsCode": "42ESx084",
-    "description": "42ESx084",
-    "homeOfficeClassification": "000/00",
-    "notifiableToHo": false,
-    "offenceCategory": "CE",
-    "offenceTitle": "Reg 100 Con & Use Regs",
     "recordableOnPnc": false
   },
   {
