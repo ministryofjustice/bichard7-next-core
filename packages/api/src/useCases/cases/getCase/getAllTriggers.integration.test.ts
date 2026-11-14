@@ -1,7 +1,7 @@
 import type { TriggerRow } from "@moj-bichard7/common/types/Trigger"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { isError } from "@moj-bichard7/common/types/Result"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 import { createCases } from "../../../tests/helpers/caseHelper"
 import { createTriggers } from "../../../tests/helpers/triggerHelper"

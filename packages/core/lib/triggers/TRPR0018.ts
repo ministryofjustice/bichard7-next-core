@@ -1,7 +1,7 @@
 import type { Offence } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PoliceOffence, PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 import type { Trigger } from "../../types/Trigger"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"

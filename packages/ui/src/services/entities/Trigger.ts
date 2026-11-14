@@ -3,7 +3,7 @@ import { AfterLoad, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 
 
 import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import getTriggerWithDescription from "@moj-bichard7/common/utils/getTriggerWithDescription"
 import getShortTriggerCode from "@moj-bichard7/common/utils/getShortTriggerCode"
 import CourtCase from "./CourtCase"

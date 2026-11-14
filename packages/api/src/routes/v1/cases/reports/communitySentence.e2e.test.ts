@@ -2,12 +2,12 @@ import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/Annotat
 import type { FastifyInstance } from "fastify"
 
 import { expect } from "@jest/globals"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import parseAhoXml from "@moj-bichard7/common/aho/parseAhoXml/parseAhoXml"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import { isError, type Result } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import serialiseToXml from "@moj-bichard7/core/lib/serialise/ahoXml/serialiseToXml"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { subDays } from "date-fns"
 
 import { testAhoXml } from "../../../../tests/helpers/ahoHelper"

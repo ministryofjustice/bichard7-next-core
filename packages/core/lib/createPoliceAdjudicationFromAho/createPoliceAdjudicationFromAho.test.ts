@@ -1,7 +1,7 @@
 jest.mock("./createPoliceAdjudication")
 import type { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
-import { verdict } from "@moj-bichard7-developers/bichard7-next-data"
+import { verdict } from "@moj-bichard7/standing-data"
 
 import createPoliceAdjudication from "./createPoliceAdjudication"
 import createPoliceAdjudicationFromAho from "./createPoliceAdjudicationFromAho"

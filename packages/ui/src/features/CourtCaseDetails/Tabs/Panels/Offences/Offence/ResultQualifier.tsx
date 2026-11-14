@@ -1,4 +1,4 @@
-import ResultQualifierCodes from "@moj-bichard7-developers/bichard7-next-data/dist/data/result-qualifier-code.json"
+import { resultQualifierCode } from "@moj-bichard7/standing-data"
 import { Result } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { InfoRow } from "../../InfoRow"
 
@@ -23,7 +23,7 @@ const ResultQualifier = ({ result }: QualifierProps): React.ReactNode => {
   }
 
   const qualifierCodes: ResultQualifierCode[] = result.ResultQualifierVariable.map((qualifier) => {
-    const result = ResultQualifierCodes.find((qualifierCode) => qualifierCode.cjsCode === qualifier.Code)
+    const result = resultQualifierCode.find((qualifierCode) => qualifierCode.cjsCode === qualifier.Code)
 
     if (result) {
       return { code: result.cjsCode, description: result.description }

@@ -1,4 +1,4 @@
-import { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import { OrganisationUnit } from "@moj-bichard7/standing-data/types/types"
 import { createContext, useContext } from "react"
 
 interface OrganisationUnitsContextType {

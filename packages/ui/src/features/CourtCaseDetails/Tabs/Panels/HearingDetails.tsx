@@ -1,4 +1,4 @@
-import courtTypes from "@moj-bichard7-developers/bichard7-next-data/dist/data/court-type.json"
+import { courtType } from "@moj-bichard7/standing-data"
 import { Hearing } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import { Card } from "components/Card"
 import { formatDisplayedDate } from "utils/date/formattedDate"
@@ -24,7 +24,7 @@ export const HearingDetails = ({ hearing }: HearingDetailsProps) => {
 
   const getCourtType = (courtCode: string | null | undefined) => {
     let courtTypeWithDescription = courtCode
-    courtTypes.forEach((type) => {
+    courtType.forEach((type) => {
       if (type.cjsCode === courtCode) {
         courtTypeWithDescription = `${courtCode} (${type.description})`
       }

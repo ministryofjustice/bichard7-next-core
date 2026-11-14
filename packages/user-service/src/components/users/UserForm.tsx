@@ -1,4 +1,4 @@
-import { forces, triggerDefinitions } from "@moj-bichard7-developers/bichard7-next-data"
+import { forces, triggerDefinitions } from "@moj-bichard7/standing-data"
 import CheckboxMultiSelect from "components/CheckboxMultiSelect"
 import Details from "components/Details"
 import TextInput from "components/TextInput"

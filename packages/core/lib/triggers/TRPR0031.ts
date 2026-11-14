@@ -1,5 +1,5 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { TRPR0031_RESULT_CODES } from "@moj-bichard7/common/utils/triggerConstants"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 import type TriggerConfig from "../../types/TriggerConfig"
 import type { TriggerGenerator } from "../../types/TriggerGenerator"

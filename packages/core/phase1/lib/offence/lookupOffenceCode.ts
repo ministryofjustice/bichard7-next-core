@@ -1,5 +1,5 @@
-import type { OffenceCode } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import type { OffenceCode as OffenceCodeLocal, OffenceReason } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
+import type { OffenceCode } from "@moj-bichard7/standing-data/types/types"
 
 import { lookupLocalOffenceByCjsCode, lookupNationalOffenceByCjsCode } from "@moj-bichard7/common/aho/dataLookup/index"
 

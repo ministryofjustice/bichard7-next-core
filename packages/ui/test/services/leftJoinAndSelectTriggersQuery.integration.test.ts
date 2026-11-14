@@ -1,7 +1,7 @@
 import type { DataSource, Repository, SelectQueryBuilder } from "typeorm"
 
 import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import CourtCase from "services/entities/CourtCase"
 import Trigger from "services/entities/Trigger"
 import getDataSource from "services/getDataSource"

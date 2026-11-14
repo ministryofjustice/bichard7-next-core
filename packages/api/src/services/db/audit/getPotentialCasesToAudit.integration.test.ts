@@ -1,8 +1,8 @@
 import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { ResolutionStatusNumber } from "@moj-bichard7/common/types/ResolutionStatus"
 import { isError } from "@moj-bichard7/common/types/Result"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { format, subDays, subWeeks } from "date-fns"
 
 import type { CasesToAuditByUser } from "../../../types/CasesToAuditByUser"

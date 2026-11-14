@@ -1,5 +1,5 @@
 import type OrganisationUnitNameAndCode from "@/types/OrganisationUnitNameAndCode"
-import type { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import type { OrganisationUnit } from "@moj-bichard7/standing-data/types/types"
 import {
   getFullOrganisationCode,
   getFullOrganisationName

@@ -1,5 +1,5 @@
-import GroupedTriggerCodes from "@moj-bichard7-developers/bichard7-next-data/dist/types/GroupedTriggerCodes"
-import { TriggerCodeGroups } from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import GroupedTriggerCodes from "@moj-bichard7/standing-data/types/GroupedTriggerCodes"
+import { TriggerCodeGroups } from "@moj-bichard7/standing-data/types/TriggerCode"
 import TriggerGroup from "components/SearchFilters/TriggerGroup"
 import { ReasonCode } from "types/CourtCaseFilter"
 

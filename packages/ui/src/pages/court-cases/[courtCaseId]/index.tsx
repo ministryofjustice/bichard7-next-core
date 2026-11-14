@@ -1,7 +1,10 @@
+import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
+import Head from "next/head"
+import { useEffect, useState } from "react"
 import { OrganisationUnitsContext, OrganisationUnitsContextType } from "@/context/OrganisationUnitsContext"
 import apiLogger from "@/services/api/apiLogger"
-import OrganisationUnits from "@moj-bichard7-developers/bichard7-next-data/data/organisation-unit.json"
-import { OrganisationUnit } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import { organisationUnit } from "@moj-bichard7/standing-data"
+import { OrganisationUnit } from "@moj-bichard7/standing-data/types/types"
 import Permission from "@moj-bichard7/common/types/Permission"
 import UnlockReason from "@moj-bichard7/common/types/UnlockReason"
 import { sortCourtOrganisationUnits } from "@moj-bichard7/common/utils/searchCourtOrganisationUnits"
@@ -17,10 +20,6 @@ import Header from "features/CourtCaseDetails/Header"
 import { canUseTriggerAndExceptionQualityAuditing } from "features/flags/canUseTriggerAndExceptionQualityAuditing"
 import { withAuthentication, withMultipleServerSideProps } from "middleware"
 import withCsrf from "middleware/withCsrf/withCsrf"
-import type { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next"
-import Head from "next/head"
-import { ParsedUrlQuery } from "querystring"
-import { useEffect, useState } from "react"
 import addNote from "services/addNote"
 import ApiClient from "services/api/ApiClient"
 import BichardApiV1 from "services/api/BichardApiV1"
@@ -66,7 +65,7 @@ const allIssuesCleared = (courtCase: CourtCase | DisplayFullCourtCase, triggerTo
 export const getServerSideProps = withMultipleServerSideProps(
   withAuthentication,
   withCsrf,
-  async (context: GetServerSidePropsContext<ParsedUrlQuery>): Promise<GetServerSidePropsResult<Props>> => {
+  async (context: GetServerSidePropsContext): Promise<GetServerSidePropsResult<Props>> => {
     const startTime = new Date().getTime()
     const { req, currentUser, query, csrfToken, formData } = context as AuthenticationServerSidePropsContext &
       CsrfServerSidePropsContext
@@ -271,7 +270,7 @@ export const getServerSideProps = withMultipleServerSideProps(
       ? (apiCase as DisplayFullCourtCase)
       : courtCaseToDisplayFullCourtCaseDto(courtCase as CourtCase, currentUser)
 
-    const organisationUnits: OrganisationUnit[] = sortCourtOrganisationUnits(OrganisationUnits)
+    const organisationUnits: OrganisationUnit[] = sortCourtOrganisationUnits(organisationUnit)
 
     return {
       props: {

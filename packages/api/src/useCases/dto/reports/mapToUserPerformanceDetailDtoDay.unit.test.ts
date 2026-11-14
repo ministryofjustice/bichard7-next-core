@@ -7,10 +7,12 @@ jest.mock("../../data/exceptionDefinitions.json", () => ({
   def3: { code: "EXC_EMPTY" }
 }))
 
-jest.mock("@moj-bichard7-developers/bichard7-next-data/dist/data/trigger-definitions.json", () => ({
-  def1: { code: "TRG_SHORT", description: "Long description", shortDescription: "Trigger short description" },
-  def2: { code: "TRG_LONG", description: "Trigger long description only" },
-  def3: { code: "TRG_EMPTY" }
+jest.mock("@moj-bichard7/standing-data", () => ({
+  triggerDefinitions: [
+    { code: "TRG_SHORT", description: "Long description", shortDescription: "Trigger short description" },
+    { code: "TRG_LONG", description: "Trigger long description only" },
+    { code: "TRG_EMPTY" }
+  ]
 }))
 
 describe("mapToUserPerformanceDetailDtoDay", () => {

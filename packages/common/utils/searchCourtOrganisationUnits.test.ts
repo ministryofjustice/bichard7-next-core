@@ -1,4 +1,4 @@
-import OrganisationUnits from "@moj-bichard7-developers/bichard7-next-data/data/organisation-unit.json"
+import { organisationUnit } from "@moj-bichard7/standing-data"
 
 import searchCourtOrganisationUnits, {
   getFullOrganisationName,
@@ -7,7 +7,7 @@ import searchCourtOrganisationUnits, {
 } from "./searchCourtOrganisationUnits"
 
 describe("searchCourtOrganisationUnits", () => {
-  const sortedOrganisationUnits = sortCourtOrganisationUnits(OrganisationUnits)
+  const sortedOrganisationUnits = sortCourtOrganisationUnits(organisationUnit)
 
   it("Should return an array with all organisation units when search keyword is an empty string", () => {
     expect(searchCourtOrganisationUnits("", sortedOrganisationUnits)).toHaveLength(sortedOrganisationUnits.length)

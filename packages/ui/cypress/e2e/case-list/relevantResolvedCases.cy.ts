@@ -1,6 +1,6 @@
 import { subHours } from "date-fns"
 import { confirmMultipleFieldsDisplayed, confirmMultipleFieldsNotDisplayed, loginAndVisit } from "../../support/helpers"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import CourtCase from "@/services/entities/CourtCase"
 
 describe("Only shows relevant resolved cases to the user", () => {

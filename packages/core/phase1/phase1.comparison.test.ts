@@ -4,9 +4,9 @@ import "../tests/helpers/setEnvironmentVariables"
 
 import type Exception from "@moj-bichard7/common/types/Exception"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { extractExceptionsFromXml } from "@moj-bichard7/common/aho/parseAhoXml/index"
 import { AuditLogEventSource } from "@moj-bichard7/common/types/AuditLogEvent"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import "jest-xml-matcher"
 
 import type { OldPhase1Comparison } from "../tests/types/ComparisonFile"

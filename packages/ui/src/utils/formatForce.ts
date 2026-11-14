@@ -1,4 +1,4 @@
-import { forces } from "@moj-bichard7-developers/bichard7-next-data"
+import { forces } from "@moj-bichard7/standing-data"
 import type { Case } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 
 export default (force: NonNullable<Case["ForceOwner"]>): string | null => {

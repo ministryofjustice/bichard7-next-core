@@ -1,6 +1,6 @@
 import type { DataSource } from "typeorm"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
 import { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 

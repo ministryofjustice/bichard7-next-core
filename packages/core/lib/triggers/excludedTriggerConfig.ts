@@ -1,5 +1,5 @@
-import { excludedTriggerConfig as excludedTriggers } from "@moj-bichard7-developers/bichard7-next-data"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import { excludedTriggerConfig as excludedTriggers } from "@moj-bichard7/standing-data"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 const excludedTriggerConfig = () => {
   if (process.env.NODE_ENV === "test" && "01" in excludedTriggers) {

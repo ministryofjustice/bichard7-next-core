@@ -1,4 +1,4 @@
-import triggerDefinitions from "@moj-bichard7-developers/bichard7-next-data/dist/data/trigger-definitions.json"
+import { triggerDefinitions } from "@moj-bichard7/standing-data"
 
 import getShortTriggerCode from "./getShortTriggerCode"
 

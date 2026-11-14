@@ -1,5 +1,5 @@
 import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
-import type TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import type TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 import CourtCase from "../../src/services/entities/CourtCase"
 import Trigger from "../../src/services/entities/Trigger"

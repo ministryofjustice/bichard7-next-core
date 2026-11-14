@@ -1,7 +1,7 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 import TRPR0018 from "./TRPR0018"
 

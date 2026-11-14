@@ -1,9 +1,9 @@
-import type { Force } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
+import type { Force } from "@moj-bichard7/standing-data/types/types"
 import type { Case } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import formatForce from "./formatForce"
 
 const mockForces = jest.fn()
-jest.mock("@moj-bichard7-developers/bichard7-next-data", () => ({
+jest.mock("@moj-bichard7/standing-data", () => ({
   get forces() {
     return mockForces()
   }

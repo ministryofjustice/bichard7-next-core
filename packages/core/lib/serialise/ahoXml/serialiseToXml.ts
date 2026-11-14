@@ -1,4 +1,3 @@
-import type { CjsCodeAndDescription } from "@moj-bichard7-developers/bichard7-next-data/dist/types/types"
 import type {
   Adj,
   AhoXml,
@@ -43,6 +42,7 @@ import type {
   PoliceOffence,
   PoliceQueryResult
 } from "@moj-bichard7/common/types/PoliceQueryResult"
+import type { CjsCodeAndDescription } from "@moj-bichard7/standing-data/types/types"
 
 import {
   lookupAlcoholLevelMethodByCjsCode,

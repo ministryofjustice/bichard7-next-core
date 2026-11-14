@@ -1,13 +1,12 @@
 import type { AnnotatedHearingOutcome } from "@moj-bichard7/common/types/AnnotatedHearingOutcome"
 import type { PoliceQueryResult } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
 import parseSpiResult from "@moj-bichard7/common/aho/parse/parseSpiResult"
 import transformSpiToAho from "@moj-bichard7/common/aho/parse/transformSpiToAho/index"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import MockDate from "mockdate"
 
-import type AuditLogger from "../../../types/AuditLogger"
 import type PoliceGateway from "../../../types/PoliceGateway"
 import type { default as enrichWithQueryType } from "./enrichWithPncQuery"
 
@@ -21,7 +20,6 @@ describe("enrichWithPoliceQuery", () => {
     let incomingMessage: string
     let aho: AnnotatedHearingOutcome
     let pncGateway: PoliceGateway
-    let auditLogger: AuditLogger
     let response: PoliceQueryResult
     let isIgnored = false
     let enrichWithPncQuery: typeof enrichWithQueryType
@@ -214,7 +212,6 @@ describe("enrichWithPoliceQuery", () => {
     let incomingMessage: string
     let aho: AnnotatedHearingOutcome
     let ledsGateway: PoliceGateway
-    let auditLogger: AuditLogger
     let response: PoliceQueryResult
     let isIgnored = false
     let enrichWithPncQuery: typeof enrichWithQueryType

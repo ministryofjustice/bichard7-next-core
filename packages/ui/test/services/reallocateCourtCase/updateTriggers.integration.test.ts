@@ -1,4 +1,4 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import type { AuditLogEvent } from "@moj-bichard7/common/types/AuditLogEvent"
 import type { Trigger } from "@moj-bichard7/core/types/Trigger"
 import { randomUUID } from "crypto"

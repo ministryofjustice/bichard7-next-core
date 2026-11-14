@@ -1,4 +1,4 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import nextHearingLocationExceptions from "../../../test/test-data/NextHearingLocationExceptions.json"
 import type { TestTrigger } from "../../../test/utils/manageTriggers"
 

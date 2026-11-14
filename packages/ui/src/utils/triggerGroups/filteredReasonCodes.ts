@@ -1,4 +1,4 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import getLongTriggerCode from "services/entities/transformers/getLongTriggerCode"
 import type { ReasonCode } from "types/CourtCaseFilter"
 

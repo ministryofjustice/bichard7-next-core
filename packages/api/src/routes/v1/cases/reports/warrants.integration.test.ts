@@ -2,11 +2,11 @@ import type { CaseForWarrantsReportDto } from "@moj-bichard7/common/types/report
 import type { FastifyInstance } from "fastify"
 
 import { expect } from "@jest/globals"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { V1 } from "@moj-bichard7/common/apiEndpoints/versionedEndpoints"
 import EventCode from "@moj-bichard7/common/types/EventCode"
 import { isError } from "@moj-bichard7/common/types/Result"
 import { UserGroup } from "@moj-bichard7/common/types/UserGroup"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { addDays, format, set, subDays } from "date-fns"
 import { formatInTimeZone } from "date-fns-tz"
 import { BAD_REQUEST, FORBIDDEN } from "http-status"

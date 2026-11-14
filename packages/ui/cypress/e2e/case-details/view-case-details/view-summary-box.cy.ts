@@ -1,4 +1,4 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import CourtCase from "../../../../../../src/services/entities/CourtCase"
 import dummyAho from "../../../../test/test-data/error_list_aho.json"
 import { TestTrigger } from "../../../../test/utils/manageTriggers"

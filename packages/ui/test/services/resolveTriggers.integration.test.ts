@@ -1,4 +1,4 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { differenceInMinutes } from "date-fns"
 import Note from "services/entities/Note"
 import type User from "services/entities/User"

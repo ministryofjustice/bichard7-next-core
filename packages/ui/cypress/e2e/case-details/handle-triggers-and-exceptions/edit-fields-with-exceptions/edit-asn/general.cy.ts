@@ -5,7 +5,7 @@ import ExceptionHO100239 from "../../../../../../test/test-data/HO100239_1.json"
 import HO100300 from "../../../../../../test/test-data/HO100300.json"
 import { clickTab, loginAndVisit, submitAndConfirmExceptions } from "../../../../../support/helpers"
 import type { TestTrigger } from "../../../../../../test/utils/manageTriggers"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 describe("ASN", () => {
   beforeEach(() => {

@@ -1,5 +1,5 @@
 import type { Amendments } from "types/Amendments"
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import getOffenceAlertsDetails, { exceptionsResolvedFn } from "./getOffenceAlertsDetails"
 import createDummyAho from "../../test/helpers/createDummyAho"
 import { HO100102, HO100200, HO100322 } from "../../test/helpers/exceptions"

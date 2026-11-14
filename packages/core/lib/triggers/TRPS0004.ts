@@ -1,6 +1,6 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
 import { PncOperation } from "@moj-bichard7/common/types/PncOperation"
 import { isPncUpdateDataset } from "@moj-bichard7/common/types/PncUpdateDataset"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 
 import type { TriggerGenerator } from "../../types/TriggerGenerator"
 

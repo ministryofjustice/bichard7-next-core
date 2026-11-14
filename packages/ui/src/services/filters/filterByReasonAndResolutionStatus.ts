@@ -1,5 +1,5 @@
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import { every } from "lodash"
 import type CourtCase from "services/entities/CourtCase"
 import type User from "services/entities/User"

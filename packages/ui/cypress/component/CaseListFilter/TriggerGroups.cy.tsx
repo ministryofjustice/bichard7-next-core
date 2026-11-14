@@ -1,4 +1,4 @@
-import TriggerCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/TriggerCode"
+import TriggerCode from "@moj-bichard7/standing-data/types/TriggerCode"
 import TriggerGroups from "components/SearchFilters/TriggerGroups"
 import { CurrentUserContext } from "context/CurrentUserContext"
 import { DisplayFullUser } from "types/display/Users"

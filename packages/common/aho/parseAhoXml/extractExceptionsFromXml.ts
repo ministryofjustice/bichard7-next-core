@@ -1,4 +1,4 @@
-import type ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import type ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 
 import { XMLParser } from "fast-xml-parser"
 

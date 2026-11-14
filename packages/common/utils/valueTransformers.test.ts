@@ -10,17 +10,18 @@ import {
   getYesOrNo
 } from "./valueTransformers"
 
-jest.mock("@moj-bichard7-developers/bichard7-next-data/dist/data/plea-status.json", () => [
-  { cjsCode: "G", description: "GUILTY" },
-  { cjsCode: "NG", description: "NOT GUILTY" }
-])
+jest.mock("@moj-bichard7/standing-data", () => ({
+  pleaStatus: [
+    { cjsCode: "G", description: "GUILTY" },
+    { cjsCode: "NG", description: "NOT GUILTY" }
+  ],
+  verdict: [
+    { cjsCode: "G", description: "GUILTY" },
+    { cjsCode: "NG", description: "NOT GUILTY" }
+  ]
+}))
 
-jest.mock("@moj-bichard7-developers/bichard7-next-data/dist/data/verdict.json", () => [
-  { cjsCode: "G", description: "GUILTY" },
-  { cjsCode: "NG", description: "NOT GUILTY" }
-])
-
-jest.mock("@moj-bichard7-developers/bichard7-next-data/dist/types/Duration", () => ({
+jest.mock("@moj-bichard7/standing-data/types/Duration", () => ({
   Durations: {
     D: "Days",
     H: "Hours",

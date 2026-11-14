@@ -1,7 +1,7 @@
 import type { ResolutionStatus } from "@moj-bichard7/common/types/ResolutionStatus"
 import type { CreateAuditInput } from "@moj-bichard7/common/contracts/CreateAuditInput"
 
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 import { defineConfig } from "cypress"
 import pgPromise from "pg-promise"
 import CourtCase from "./src/services/entities/CourtCase"

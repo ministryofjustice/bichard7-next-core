@@ -6,8 +6,8 @@ import type {
   PoliceQueryResult
 } from "@moj-bichard7/common/types/PoliceQueryResult"
 
-import ExceptionCode from "@moj-bichard7-developers/bichard7-next-data/dist/types/ExceptionCode"
 import errorPaths from "@moj-bichard7/common/aho/exceptions/errorPaths"
+import ExceptionCode from "@moj-bichard7/standing-data/types/ExceptionCode"
 
 import annotatePncMatch, { CaseType } from "./annotatePncMatch"
 import offenceCategoryIsNonRecordable from "./offenceCategoryIsNonRecordable"
